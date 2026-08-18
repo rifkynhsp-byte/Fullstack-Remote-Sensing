@@ -29,6 +29,16 @@ jobs:
         with:
           python-version: "3.11"
 
+      # Generate the code listings BEFORE Quarto starts.
+      #
+      # _quarto.yml also declares this as a pre-render script, but for book
+      # projects Quarto resolves {{< include >}} directives while scanning
+      # chapters, which happens before pre-render scripts execute. On a fresh
+      # clone _snippets/ does not exist yet (it is gitignored), so the include
+      # fails. Running it here removes the ordering dependency entirely.
+      - name: Generate code snippets
+        run: python3 tools/build_snippets.py
+
       - name: Render English
         run: quarto render --profile en
 
