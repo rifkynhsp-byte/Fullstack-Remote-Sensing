@@ -87,7 +87,7 @@ The two versions produce results that look identical and differ by several accur
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch15_sampling_design.qmd >}}
+{{< include _snippets/ch15_sampling_design.qmd >}}
 
 ## Two checks before you trust the samples
 

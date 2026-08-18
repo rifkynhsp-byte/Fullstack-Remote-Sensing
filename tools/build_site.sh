@@ -7,36 +7,53 @@
 #   docs/index.html   language chooser
 #   docs/en/          English book
 #   docs/id/          Indonesian book
+#   docs/lms/         learning platform assets, shared by both editions
+#   docs/assets/      favicon and shared static files
 #   docs/.nojekyll    stops GitHub Pages stripping directories starting with _
 #
-# Point GitHub Pages at the docs/ folder on the main branch, or let the
-# workflow in .github/workflows/publish.yml do it on every push.
+# Structure note
+#   en/ and id/ are two independent Quarto book projects, each with its own
+#   _quarto.yml. Quarto requires a book's home page to be index.qmd at the
+#   project root, and a project has only one root, so a single project cannot
+#   serve two languages. This script renders each in turn and assembles the
+#   results.
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-# Generate code listings first. Quarto's pre-render hook runs too late for
-# book projects, whose include directives are resolved during chapter scanning.
-echo "==> Generating code snippets"
+SHARED=(theme.scss theme-dark.scss styles.css references.bib)
+
+echo "==> Generating code listings"
+# Must run before Quarto starts. Book projects resolve include directives
+# while scanning chapters, which happens before the pre-render hook fires.
 python3 tools/build_snippets.py
 
-echo "==> English"
-quarto render --profile en
+for LANG in en id; do
+  echo "==> Preparing $LANG"
+  # One source of truth at the repository root, copied into each project.
+  # The copies are gitignored; never edit them.
+  for FILE in "${SHARED[@]}"; do
+    cp "$FILE" "$LANG/$FILE"
+  done
+  cp landing/assets/favicon.svg "$LANG/favicon.svg"
 
-echo "==> Bahasa Indonesia"
-quarto render --profile id
+  echo "==> Rendering $LANG"
+  quarto render "$LANG"
+done
 
-echo "==> Landing page, assets and learning platform"
-mkdir -p docs
+echo "==> Assembling docs/"
+rm -rf docs
+mkdir -p docs docs/lms
+
+cp -r en/_book docs/en
+cp -r id/_book docs/id
+
 cp landing/index.html docs/index.html
-rm -rf docs/assets docs/lms
 cp -r landing/assets docs/assets
 
-# The two books live in docs/en and docs/id and both reference "../lms/",
-# so one shared copy at docs/lms serves both editions.
-mkdir -p docs/lms
+# Both books reference "../lms/", so one shared copy serves both editions.
 cp lms/lms.js lms/lms.css lms/config.js docs/lms/
 
 # GitHub Pages runs Jekyll by default, which ignores any directory whose name

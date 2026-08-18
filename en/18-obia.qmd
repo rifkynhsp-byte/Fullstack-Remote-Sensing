@@ -49,7 +49,7 @@ Set `neighborhoodSize` larger than `size`, usually several times larger. Earth E
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch18_obia_snic.qmd >}}
+{{< include _snippets/ch18_obia_snic.qmd >}}
 
 ## Where OBIA wins, and where it makes things worse
 

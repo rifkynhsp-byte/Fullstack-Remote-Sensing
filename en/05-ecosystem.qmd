@@ -39,7 +39,7 @@ Geometries drawn on the map, and datasets added with the Import button, are stor
 
 The listing below loads a single global image, inspects it, and paints it two different ways. Paste it into the centre panel and press **Run**.
 
-{{< include ../_snippets/en/ch05_first_script.qmd >}}
+{{< include _snippets/ch05_first_script.qmd >}}
 
 ## Reading the reply
 

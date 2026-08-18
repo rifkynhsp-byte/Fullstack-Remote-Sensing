@@ -22,7 +22,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch10_multisensor_stack.qmd >}}
+{{< include _snippets/ch10_multisensor_stack.qmd >}}
 
 ## Latihan {.unnumbered}
 

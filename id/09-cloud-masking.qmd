@@ -22,7 +22,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch09_annual_composite.qmd >}}
+{{< include _snippets/ch09_annual_composite.qmd >}}
 
 ## Latihan {.unnumbered}
 

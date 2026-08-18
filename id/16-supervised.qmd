@@ -23,7 +23,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch16_ensemble_classification.qmd >}}
+{{< include _snippets/ch16_ensemble_classification.qmd >}}
 
 ## Latihan {.unnumbered}
 

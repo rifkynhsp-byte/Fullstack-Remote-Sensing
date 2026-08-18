@@ -44,7 +44,7 @@ The QA60 band was deprecated and stopped being populated for scenes processed af
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch09_annual_composite.qmd >}}
+{{< include _snippets/ch09_annual_composite.qmd >}}
 
 ## Anatomy of the mask
 

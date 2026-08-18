@@ -23,7 +23,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch19_satellite_embeddings.qmd >}}
+{{< include _snippets/ch19_satellite_embeddings.qmd >}}
 
 ## Latihan {.unnumbered}
 

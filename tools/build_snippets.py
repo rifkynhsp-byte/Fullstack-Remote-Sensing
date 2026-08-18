@@ -5,24 +5,30 @@ build_snippets.py
 
 Single source of truth for every code listing in this book.
 
-Teaching scripts live under `scripts/<lang>/` as real, runnable files. A
-reader copies one into the Earth Engine Code Editor, or into a Colab cell
-for the Python chapters, and presses Run. This script wraps each one in a
-fenced Quarto code block and writes it to `_snippets/<lang>/`, so chapters
-pull the listing in with an include shortcode:
+Teaching scripts live under `scripts/<lang>/` as real, runnable files. This
+script wraps each one in a fenced Quarto code block and writes it into the
+matching book project as `<lang>/_snippets/`, so chapters pull the listing in
+with a project relative include:
 
-    {{< include ../_snippets/en/ch09_annual_composite.qmd >}}
+    {{< include _snippets/ch09_annual_composite.qmd >}}
 
-Because snippets are regenerated before every render, the printed listing
-can never fall out of sync with the file the reader downloads.
+Snippets are written INSIDE each language project rather than at the
+repository root, for two reasons. Quarto resolves includes relative to the
+project, so a path climbing out of it with ../ is fragile. And any directory
+whose name starts with an underscore is skipped by the project scan, so
+_snippets never gets rendered as a set of stray pages.
+
+Run this before `quarto render`. The Quarto pre-render hook is too late for
+book projects: includes are resolved while chapters are scanned, which happens
+before pre-render scripts execute.
 
 Language fallback
 -----------------
-A script only needs an Indonesian variant when the comments are genuinely
-translated. If `scripts/id/ch09_annual_composite.js` does not exist, this
-builder uses the English source for the Indonesian book instead, so that
-book never has a hole where a listing should be. Each fallback is reported
-on stdout during the build, which doubles as a translation to do list.
+A script only needs an Indonesian variant when its comments are genuinely
+translated. If `scripts/id/ch10_multisensor_stack.js` does not exist, the
+English source is used for the Indonesian book instead, so that book never has
+a hole where a listing should be. Each fallback is reported on stdout, which
+doubles as a translation to do list.
 
 Optional per file directives
 ----------------------------
@@ -33,13 +39,11 @@ read, then stripped from the printed listing:
     //| lines: 12-48          print only this line range
     //| hide: true            skip printing entirely, download only
 
-Python scripts use the same syntax with a `#|` prefix.
+Python scripts use `#|` instead of `//|`.
 
 Usage
 -----
     python3 tools/build_snippets.py
-
-Quarto calls this automatically through the `pre-render` key in _quarto.yml.
 """
 
 from __future__ import annotations
@@ -50,7 +54,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT_DIR = ROOT / "scripts"
-SNIPPET_DIR = ROOT / "_snippets"
 
 LANGUAGES = ["en", "id"]
 FALLBACK_FROM = "en"
@@ -119,7 +122,7 @@ def main() -> int:
     for lang in LANGUAGES:
         source_dir = SCRIPT_DIR / lang
         fallback_dir = SCRIPT_DIR / FALLBACK_FROM
-        target_dir = SNIPPET_DIR / lang
+        target_dir = ROOT / lang / "_snippets"
         target_dir.mkdir(parents=True, exist_ok=True)
 
         names = set()

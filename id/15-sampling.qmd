@@ -22,7 +22,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch15_sampling_design.qmd >}}
+{{< include _snippets/ch15_sampling_design.qmd >}}
 
 ## Latihan {.unnumbered}
 

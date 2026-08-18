@@ -21,7 +21,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch08_optical_search.qmd >}}
+{{< include _snippets/ch08_optical_search.qmd >}}
 
 ## Latihan {.unnumbered}
 

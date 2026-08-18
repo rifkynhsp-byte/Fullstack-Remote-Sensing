@@ -23,7 +23,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch18_obia_snic.qmd >}}
+{{< include _snippets/ch18_obia_snic.qmd >}}
 
 ## Latihan {.unnumbered}
 

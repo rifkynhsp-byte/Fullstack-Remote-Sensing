@@ -53,7 +53,7 @@ Every conclusion from this model inherits the assumption above. When presenting 
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch22_site_selection.qmd >}}
+{{< include _snippets/ch22_site_selection.qmd >}}
 
 ## The perfect model that means nothing
 

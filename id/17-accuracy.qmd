@@ -24,7 +24,7 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Alur kerja lengkap
 
-{{< include ../_snippets/id/ch17_accuracy_assessment.qmd >}}
+{{< include _snippets/ch17_accuracy_assessment.qmd >}}
 
 ## Latihan {.unnumbered}
 

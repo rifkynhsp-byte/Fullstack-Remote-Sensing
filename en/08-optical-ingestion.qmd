@@ -48,7 +48,7 @@ An NDVI computed on Level-1C and an NDVI computed on Level-2A over the same fore
 
 The full script for this chapter loads the Sentinel-2 archive, narrows it to one delta and one year, and displays the clearest available scene.
 
-{{< include ../_snippets/en/ch08_optical_search.qmd >}}
+{{< include _snippets/ch08_optical_search.qmd >}}
 
 ## Reading the chain
 

@@ -16,7 +16,7 @@ Everything below is already configured. This is what you do once.
 2. In **Settings → Pages**, set *Source* to **GitHub Actions**.
 3. Push. The workflow in `.github/workflows/publish.yml` renders both languages and deploys.
 4. Optional: set a custom domain in Settings → Pages, then uncomment the `CNAME` line in `tools/build_site.sh`.
-5. Optional: uncomment `repo-url` and `repo-actions` in `_quarto-en.yml` and `_quarto-id.yml` so readers get an "edit this page" link. This is the cheapest source of typo fixes you will ever find.
+5. Optional: uncomment `repo-url` and `repo-actions` in `en/_quarto.yml` and `id/_quarto.yml` so readers get an "edit this page" link. This is the cheapest source of typo fixes you will ever find.
 
 Build locally before pushing:
 
@@ -25,17 +25,42 @@ bash tools/build_site.sh
 python3 -m http.server -d docs 8080
 ```
 
+To work on one language with live reload, prepare it once then preview:
+
+```bash
+python3 tools/build_snippets.py
+cp theme.scss theme-dark.scss styles.css references.bib en/
+cp landing/assets/favicon.svg en/favicon.svg
+quarto preview en
+```
+
+Both preparation steps are necessary on a fresh clone, because `_snippets/` and the copied assets are generated output and therefore gitignored. Quarto resolves `{{< include >}}` directives while scanning chapters, which happens before its own pre-render hook fires, so the snippets must exist before Quarto starts.
+
 ---
 
 ## How the bilingual setup works
 
-Quarto profiles. One shared `_quarto.yml` holds formats and theming; `_quarto-en.yml` and `_quarto-id.yml` hold everything language specific.
+`en/` and `id/` are two **independent Quarto book projects**, each with its own `_quarto.yml`.
+
+This is not the arrangement you would guess. Quarto profiles look like the obvious tool, and they do not work here: a book requires its home page to be `index.qmd` at the project root, and a project has exactly one root, so a single project cannot host two home pages. Two projects is the only structure Quarto supports for this.
 
 ```
-quarto render --profile en   ->  docs/en/
-quarto render --profile id   ->  docs/id/
-landing/index.html           ->  docs/index.html   (language chooser)
+quarto render en    ->  en/_book/   ->  docs/en/
+quarto render id    ->  id/_book/   ->  docs/id/
+landing/index.html               ->  docs/index.html   (language chooser)
 ```
+
+`tools/build_site.sh` does all of that in one command, and the CI workflow calls the same script, so the local build and the deployed build cannot drift apart.
+
+Chapter filenames are identical in `en/` and `id/`, which keeps the two editions aligned and makes the sidebar language switcher trivial. A reader on `en/09-cloud-masking.html` can be sent straight to `id/09-cloud-masking.html`.
+
+### Shared files, and why they get copied
+
+Four files live once at the repository root and are copied into each language project at build time: `theme.scss`, `theme-dark.scss`, `styles.css` and `references.bib`, plus the favicon.
+
+Quarto resolves theme and bibliography paths relative to the project, so referencing them with `../` is fragile. Copying is boring and it always works. The copies are gitignored. **Edit the originals at the root, never the copies.**
+
+The format block in `en/_quarto.yml` is duplicated in `id/_quarto.yml`. That is deliberate. Sharing it through a parent metadata file works until it does not, and a broken build costs more than forty lines of repeated YAML.
 
 Chapter filenames are identical in `en/` and `id/`, which keeps the two editions aligned and makes a language switcher in the sidebar trivial. A reader on `en/09-cloud-masking.html` can be sent straight to `id/09-cloud-masking.html`.
 
@@ -45,10 +70,12 @@ Chapter filenames are identical in `en/` and `id/`, which keeps the two editions
 
 **Edit `scripts/<lang>/`. Never edit `_snippets/`.**
 
-Every listing in the book is generated from a real, runnable file. Quarto runs `tools/build_snippets.py` before each render, which wraps each script in a fenced block and writes it to `_snippets/<lang>/`. Chapters pull it in:
+`_snippets/` is generated output. It is gitignored and must be built before the first render on any new machine, with `python3 tools/build_snippets.py`.
+
+Every listing in the book is generated from a real, runnable file. Quarto runs `tools/build_snippets.py` before each render, which wraps each script in a fenced block and writes it to `_snippets/<lang>/`. Chapters pull it in with a project relative path:
 
 ```markdown
-{{< include ../_snippets/en/ch09_annual_composite.qmd >}}
+{{< include _snippets/ch09_annual_composite.qmd >}}
 ```
 
 A reader can copy `scripts/en/ch09_annual_composite.js` straight into the Code Editor and it will run. The printed version cannot drift away from it.
@@ -77,22 +104,24 @@ Python scripts use `#|` instead of `//|`.
 
 ```
 .
-├── _quarto.yml               shared: formats, theme, execution
-├── _quarto-en.yml            English profile and table of contents
-├── _quarto-id.yml            Indonesian profile and table of contents
-├── en/                       English chapters
-├── id/                       Indonesian chapters
+├── en/_quarto.yml            English book project config
+├── en/index.qmd              English home page, required at project root
+├── en/*.qmd                  English chapters
+├── en/_snippets/             generated listings, gitignored
+├── id/_quarto.yml            Indonesian book project config
+├── id/index.qmd              Indonesian home page
+├── id/*.qmd                  Indonesian chapters
+├── id/_snippets/             generated listings, gitignored
 ├── scripts/en/               runnable code, source of truth
 ├── scripts/id/               translated variants, optional
-├── _snippets/                generated, gitignored, never edited
 ├── landing/index.html        root language chooser
 ├── landing/assets/           favicon and shared static assets
 ├── tools/build_snippets.py   script to snippet generator (pre-render)
 ├── tools/build_site.sh       render both languages and assemble docs/
-├── theme.scss                light theme
-├── theme-dark.scss           dark theme
-├── styles.css                structural helpers
-├── references.bib            shared bibliography
+├── theme.scss                light theme, copied into each project at build
+├── theme-dark.scss           dark theme, copied into each project at build
+├── styles.css                structural helpers, copied in at build
+├── references.bib            shared bibliography, copied in at build
 └── docs/                     build output, served by GitHub Pages
 ```
 
@@ -106,6 +135,7 @@ Python scripts use `#|` instead of `//|`.
 4. Add prose before and after: concept first, then the code, then close analysis of the two or three decisions in it that could have gone another way.
 5. End with exercises. One that changes a parameter, one that breaks the script deliberately, one applied to the reader's own study area.
 6. Mirror the file in `id/`.
+7. Add it to the `chapters:` list in **both** `en/_quarto.yml` and `id/_quarto.yml`.
 
 ### Callout conventions
 

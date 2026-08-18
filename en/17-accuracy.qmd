@@ -73,7 +73,7 @@ Spend your field validation budget where the models disagree. Chapter 16 produce
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch17_accuracy_assessment.qmd >}}
+{{< include _snippets/ch17_accuracy_assessment.qmd >}}
 
 ## Area is not a pixel count
 

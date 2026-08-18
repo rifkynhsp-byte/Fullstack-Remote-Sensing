@@ -55,7 +55,7 @@ Building the error matrix from the training samples reports resubstitution accur
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch16_ensemble_classification.qmd >}}
+{{< include _snippets/ch16_ensemble_classification.qmd >}}
 
 ## The ensemble
 

@@ -23,7 +23,7 @@ this chapter is still being written; the section plan shows what is coming.
 
 ## The full workflow
 
-{{< include ../_snippets/en/ch19_satellite_embeddings.qmd >}}
+{{< include _snippets/ch19_satellite_embeddings.qmd >}}
 
 ## Source material
 
