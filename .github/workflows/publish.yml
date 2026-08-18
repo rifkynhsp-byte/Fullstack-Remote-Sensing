@@ -29,29 +29,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      # Generate the code listings BEFORE Quarto starts.
-      #
-      # _quarto.yml also declares this as a pre-render script, but for book
-      # projects Quarto resolves {{< include >}} directives while scanning
-      # chapters, which happens before pre-render scripts execute. On a fresh
-      # clone _snippets/ does not exist yet (it is gitignored), so the include
-      # fails. Running it here removes the ordering dependency entirely.
-      - name: Generate code snippets
-        run: python3 tools/build_snippets.py
-
-      - name: Render English
-        run: quarto render --profile en
-
-      - name: Render Bahasa Indonesia
-        run: quarto render --profile id
-
-      - name: Assemble site
-        run: |
-          mkdir -p docs docs/lms
-          cp landing/index.html docs/index.html
-          cp -r landing/assets docs/assets
-          cp lms/lms.js lms/lms.css lms/config.js docs/lms/
-          touch docs/.nojekyll
+      # One command builds everything: generates code listings, copies shared
+      # assets into each language project, renders both books, and assembles
+      # docs/. Keeping the logic in a script rather than in YAML means the
+      # local build and the CI build cannot drift apart.
+      - name: Build site
+        run: bash tools/build_site.sh
 
       - uses: actions/upload-pages-artifact@v3
         with:
