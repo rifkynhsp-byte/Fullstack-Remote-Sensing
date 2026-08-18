@@ -1,0 +1,76 @@
+project:
+  output-dir: docs/en
+
+lang: en
+
+book:
+  title: "Planetary-Scale Cloud GIS"
+  subtitle: "Earth Engine and GeoAI, taught the way it is actually practised"
+  author:
+    - name: "Rifky Nauval Hendrawan"
+      affiliation: "Geospatial Data Science, Remote Sensing and Environmental Analytics"
+  date: today
+  date-format: "MMMM YYYY"
+  search: true
+  reader-mode: true
+  page-navigation: true
+  downloads: [pdf]
+  favicon: assets/favicon.svg
+  navbar:
+    right:
+      - text: "Bahasa Indonesia"
+        href: ../id/index.html
+  sidebar:
+    style: docked
+    collapse-level: 1
+    border: true
+    tools:
+      - icon: translate
+        text: "Bahasa Indonesia"
+        href: ../id/index.html
+  chapters:
+    - en/index.qmd
+    - en/00-different.qmd
+    - part: "Part I: Foundations, Purpose and Physics"
+      chapters:
+        - en/01-why-monitor.qmd
+        - en/02-physics.qmd
+        - en/03-sensors.qmd
+        - en/04-paradigm-shift.qmd
+    - part: "Part II: The Platform"
+      chapters:
+        - en/05-ecosystem.qmd
+        - en/06-javascript.qmd
+        - en/07-server-side.qmd
+    - part: "Part III: Analysis Ready Data"
+      chapters:
+        - en/08-optical-ingestion.qmd
+        - en/09-cloud-masking.qmd
+        - en/10-sar-fusion.qmd
+        - en/11-terrain.qmd
+    - part: "Part IV: Feature Engineering"
+      chapters:
+        - en/12-band-math.qmd
+        - en/13-visualisation.qmd
+        - en/14-texture.qmd
+        - en/15-sampling.qmd
+    - part: "Part V: Machine Learning"
+      chapters:
+        - en/16-supervised.qmd
+        - en/17-accuracy.qmd
+        - en/18-obia.qmd
+    - part: "Part VI: GeoAI and Impact"
+      chapters:
+        - en/19-embeddings.qmd
+        - en/20-regression-biomass.qmd
+        - en/21-time-series.qmd
+        - en/22-vector-geoai.qmd
+        - en/23-apps-mrv.qmd
+    - en/dashboard.qmd
+    - en/references.qmd
+  appendices:
+    - en/appendix-a-setup.qmd
+    - en/appendix-b-errors.qmd
+    - en/appendix-c-style.qmd
+    - en/appendix-d-glossary.qmd
+    - en/instructor.qmd

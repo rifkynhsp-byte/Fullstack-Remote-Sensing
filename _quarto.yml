@@ -1,0 +1,62 @@
+# Shared configuration. Everything language specific lives in
+# _quarto-en.yml and _quarto-id.yml, selected with --profile.
+#
+#   quarto render --profile en     -> docs/en
+#   quarto render --profile id     -> docs/id
+#   bash tools/build_site.sh       -> both, plus the root landing page
+
+project:
+  type: book
+  pre-render: tools/build_snippets.py
+
+bibliography: references.bib
+csl: https://www.zotero.org/styles/apa
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme.scss]
+      dark: [darkly, theme-dark.scss]
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 2
+    code-copy: true
+    code-overflow: wrap
+    code-line-numbers: true
+    code-annotations: hover
+    code-tools: false
+    highlight-style: github
+    callout-appearance: simple
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    link-external-newwindow: true
+    link-external-icon: false
+    include-in-header:
+      - text: |
+          <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+          <link rel="stylesheet" href="../lms/lms.css">
+    include-after-body:
+      - text: |
+          <script src="../lms/config.js"></script>
+          <script src="../lms/lms.js"></script>
+
+  pdf:
+    documentclass: scrbook
+    classoption: [oneside]
+    papersize: a4
+    geometry: [inner=3cm, outer=3cm, top=2.5cm, bottom=2.5cm]
+    fontsize: 10pt
+    colorlinks: true
+    linkcolor: teal
+    urlcolor: teal
+    citecolor: teal
+    code-annotations: below
+    code-block-bg: "#f7f7f9"
+    code-block-border-left: "#1b8a6b"
+    highlight-style: github
+
+execute:
+  echo: true
+  freeze: auto
