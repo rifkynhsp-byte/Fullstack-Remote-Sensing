@@ -17,6 +17,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# Generate code listings first. Quarto's pre-render hook runs too late for
+# book projects, whose include directives are resolved during chapter scanning.
+echo "==> Generating code snippets"
+python3 tools/build_snippets.py
+
 echo "==> English"
 quarto render --profile en
 
