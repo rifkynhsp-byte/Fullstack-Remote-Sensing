@@ -1,0 +1,20 @@
+---
+title: "Your Progress"
+subtitle: "Everything the site has recorded about your work through this book"
+---
+
+::: {.callout-note collapse="true"}
+## Where this data lives
+
+If you have not signed in, all of it is stored in this browser and nowhere else. It never leaves your machine, nobody else can see it, and clearing your browser data will delete it. Use **Export my data** below if you want a copy.
+
+If you have signed in with an email link, it is stored against your account and follows you between devices.
+:::
+
+<div id="lms-dashboard"></div>
+
+## Stuck on something?
+
+Use the **Ask a question** button in the corner of any page. The question arrives with the chapter you were reading attached, so there is no need to explain where you are.
+
+Questions go to Rifky Nauval Hendrawan at [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com). Include an error message if you have one, and a link to your script from **Get Link** in the Code Editor if the problem is in code. Those two things turn a question that takes a week of back and forth into one that takes a single reply.

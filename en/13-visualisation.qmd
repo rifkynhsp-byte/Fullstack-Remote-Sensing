@@ -1,0 +1,30 @@
+# Composites and Visualisation {#sec-visualisation}
+
+::: {.chapter-goal}
+#### In this chapter
+You will move from default stretches to deliberate cartography: false colour combinations that make ecological structure visible, and palettes that survive being printed in greyscale.
+:::
+
+::: {.callout-note}
+## In progress
+The section plan below is settled. Prose and annotated listings are being
+written part by part; check the roadmap in the preface for the current order.
+:::
+
+## Planned sections
+
+1. **Anatomy of a visualisation dictionary**: bands, min, max, gamma, palette
+2. **True colour and its limits over dark, wet surfaces**
+3. **False colour infrared**: why vegetation turns red and why that helps
+4. **Shortwave infrared composites for wetland, burn scar and moisture mapping**
+5. **Choosing stretch bounds from the histogram rather than by trial and error**
+6. **Palette design**: sequential, diverging and categorical, and colour vision accessibility
+7. **Legends, layer ordering and building a map a non specialist can read**
+
+## Source material
+
+Lab 1 visualisation parameter tables and your Bushfire Mapping with Earth Engine material.
+
+## Exercises {.unnumbered}
+
+To be written alongside the chapter.

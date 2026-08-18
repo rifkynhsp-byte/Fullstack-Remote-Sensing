@@ -1,0 +1,59 @@
+# Setting Up {#sec-setup .unnumbered}
+
+## Registering for Earth Engine
+
+1. Sign in to a Google account at [earthengine.google.com](https://earthengine.google.com) and request access.
+2. Choose the non commercial option if your work is research, teaching or non profit. Commercial deployment requires a paid plan.
+3. Create or attach a Google Cloud project. Recent registrations require one even on the free tier.
+4. Open [code.earthengine.google.com](https://code.earthengine.google.com). If the map loads, you are ready.
+
+Approval is usually same day and occasionally takes longer. There is nothing to configure on your own machine.
+
+## Making scripts survive
+
+Three habits keep work recoverable.
+
+**Use repositories, not the untitled buffer.** Create a repository in the Scripts panel and save into it. Repositories are Git backed, so every save is versioned and any version is recoverable.
+
+**Share by link, not by paste.** The **Get Link** button produces a URL carrying the script and its imports. A pasted script loses the Imports block, and the recipient gets an undefined variable error before reaching anything interesting.
+
+**Name assets so they survive eighteen months.** `mangrove_training_mahakam_2023_v2` will still make sense. `training2` will not.
+
+## The Python alternative
+
+Everything in this book has a Python equivalent through the `earthengine-api` package, usually with `var` replaced by an assignment and camelCase method names unchanged.
+
+```bash
+pip install earthengine-api geemap
+earthengine authenticate
+```
+
+```python
+import ee, geemap
+ee.Initialize(project="your-cloud-project")
+
+aoi = ee.Geometry.Point([117.58, -0.84])
+s2 = (ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+        .filterDate("2023-01-01", "2023-12-31")
+        .filterBounds(aoi))
+
+m = geemap.Map()
+m.center_object(aoi, 10)
+m.add_layer(s2.median(), {"bands": ["B4", "B3", "B2"], "min": 0, "max": 3000}, "Composite")
+m
+```
+
+Choose Python when Earth Engine is one stage of a longer pipeline, when you need libraries the platform does not offer, or when results must be reproducible outside a browser. Choose JavaScript when you want the Inspector, instant sharing and no environment to maintain.
+
+## Building this book locally
+
+The project renders with [Quarto](https://quarto.org). No R or Python knowledge is needed beyond having Python 3 available for the snippet generator.
+
+```bash
+quarto preview                 # live reloading local site
+quarto render --to html        # static site in _book/
+quarto render --to pdf         # requires a LaTeX install
+quarto install tinytex         # the easiest way to get one
+```
+
+The `pre-render` step regenerates `_snippets/` from `scripts/`, so edit the `.js` files and never the snippets.

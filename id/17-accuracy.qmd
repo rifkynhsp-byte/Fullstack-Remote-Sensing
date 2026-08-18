@@ -1,0 +1,31 @@
+# Penilaian Akurasi {#sec-accuracy}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan menyusun matriks kekeliruan, membaca akurasi produsen dan pengguna dengan benar, dan memahami mengapa akurasi keseluruhan adalah angka paling tidak informatif di dalamnya.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Matriks kekeliruan**: penyusunan dan orientasinya
+2. **Akurasi keseluruhan dan mengapa ia menyanjung peta yang tidak seimbang**
+3. **Akurasi produsen dan galat omisi**: apa yang terlewat peta
+4. **Akurasi pengguna dan galat komisi**: apa yang diklaim peta padahal tidak ada
+5. **Koefisien kappa dan kritik serius terhadapnya dalam literatur mutakhir**
+6. **Validasi internal versus validasi lapangan independen**
+7. **Estimasi luas beserta selang kepercayaan**
+8. **Membandingkan dengan produk yang ada**: Global Mangrove Watch, ESRI, Dynamic World
+
+## Alur kerja lengkap
+
+{{< include ../_snippets/id/ch17_accuracy_assessment.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

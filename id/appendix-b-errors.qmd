@@ -1,0 +1,44 @@
+# Mendiagnosis Galat {#sec-errors .unnumbered}
+
+Pesan galat Earth Engine luar biasa tidak membantu, karena evaluasi malas membuat kegagalan muncul jauh dari kesalahannya. Lampiran ini adalah tabel rujukan.
+
+## Metode isolasi
+
+Ketika skrip panjang gagal dan pesannya tidak bermakna, jangan membaca skripnya lebih keras. Pangkas saja.
+
+1. Komentari semua yang ada setelah `Map.addLayer` atau `print` yang pertama.
+2. Jalankan. Bila berhasil, buka komentar blok berikutnya lalu jalankan lagi.
+3. Ulangi sampai rusak. Blok yang gagal kini tiga baris, bukan tiga ratus.
+4. Di dalam blok itu, cetak setiap objek antara satu per satu.
+
+Ini memakan lima menit dan hampir selalu menemukan penyebabnya. Membaca seluruh skrip sambil berharap menemukannya memakan sejam dan biasanya gagal.
+
+## Tabel galat
+
+| Pesan | Penyebab lazim | Perbaikan |
+|---|---|---|
+| `Image.select: Pattern 'X' did not match any bands` | Band berganti nama oleh operasi sebelumnya, atau salah koleksi | `print(image.bandNames())` tepat sebelum baris yang gagal |
+| `User memory limit exceeded` | Terlalu banyak dihitung sekaligus pada wilayah terlalu luas | Naikkan `tileScale` ke 4, 8 atau 16; perkasar `scale`; atau ekspor alih alih menampilkan |
+| `Computation timed out` | Rantai terlalu dalam, atau menampilkan hasil mahal secara interaktif | Ekspor ke Asset, lalu muat asetnya untuk ditampilkan |
+| `Collection query aborted after accumulating over 5000 elements` | Mencetak seluruh koleksi | Cetak `.size()` dan `.first()` saja |
+| `Number (Error) Invalid argument` | Nilai klien dan server tercampur | Bungkus dengan `ee.Number`, atau susun ulang agar operasinya tetap di sisi server |
+| `... is not a function` | Metode milik tipe lain, sering Image versus ImageCollection | Cetak objeknya dan periksa tipenya |
+| `Cannot read property of undefined` | Blok Imports hilang setelah salin tempel | Definisikan geometri dalam kode, atau bagikan lewat **Get Link** |
+| Layer tergambar abu abu penuh | Batas peregangan salah untuk rentang datanya | Periksa penskalaan, lalu tetapkan min dan max dari histogram |
+| Layer sama sekali tidak tergambar | Semuanya termask, atau `shown` bernilai false | Cetak versi tanpa mask; periksa logika masknya |
+| `Unexpected token ILLEGAL` | Tanda kutip pintar dari pengolah kata | Ketik ulang tanda kutipnya |
+
+## Khusus galat memori
+
+`tileScale` adalah hal pertama yang harus dicoba dan yang paling jarang diketahui. Ia memecah komputasi menjadi ubin lebih kecil dengan ongkos kecepatan.
+
+```javascript
+var samples = image.sampleRegions({
+  collection: trainingPoints,
+  properties: ['landcover'],
+  scale: 10,
+  tileScale: 4        // coba 4, lalu 8, lalu 16
+});
+```
+
+Bila itu belum menyelesaikan, perbaikan yang jujur biasanya berhenti mencoba menampilkan komputasi mahal secara interaktif. Ekspor ke Asset, tunggu, lalu muat produk jadinya. Render interaktif menghitung ulang setiap kali digeser dan diperbesar; aset yang sudah diekspor dihitung sekali.

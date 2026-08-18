@@ -1,0 +1,64 @@
+# Gaya Penulisan Kode {#sec-style .unnumbered}
+
+Konsistensi listing adalah bagian dari pengajaran. Berikut aturan yang diikuti seluruh skrip.
+
+## Struktur
+
+Setiap skrip dibuka dengan komentar blok yang menyebut babnya, tujuannya, dan aset apa yang harus sudah ada. Antar bagian dipisahkan garis komentar agar pembaca dapat bernavigasi sambil menggulir.
+
+```javascript
+/**
+ * BAB N | Judul singkat
+ * ---------------------------------------------------------------------------
+ * Tujuan
+ *   Satu atau dua kalimat tentang apa yang dihasilkan.
+ *
+ * Ketergantungan aset
+ *   Apa pun yang harus diimpor pembaca sebelum menjalankan.
+ */
+
+// ---------------------------------------------------------------------------
+// LANGKAH 1. Apa yang dikerjakan blok ini
+// ---------------------------------------------------------------------------
+```
+
+## Komentar memuat keputusan, bukan terjemahan
+
+Komentar yang mengulang kode adalah derau. Komentar yang mencatat mengapa satu pilihan dimenangkan atas pilihan lain adalah alasan buku ini ada.
+
+```javascript
+// Buruk: memilih band 8
+var nir = image.select('B8');
+
+// Lebih baik: B8 adalah band inframerah dekat lebar pada 10 m. B8A lebih
+// sempit dan kalibrasinya lebih baik, tetapi hanya 20 m, sehingga B8 menang
+// di mana kerincian spasial lebih penting daripada presisi radiometrik.
+var nir = image.select('B8');
+```
+
+## Penamaan
+
+`camelCase` untuk variabel dan fungsi. `UPPER_SNAKE_CASE` untuk nilai yang memang diharapkan diubah pembaca di bagian atas skrip, seperti `START_YEAR` dan `CLOUD_THRESHOLD`. Deskriptif mengalahkan singkat: `cloudFreeComposite` mengalahkan `img2`.
+
+## Perangkaian
+
+Pecah rangkaian panjang antar baris dengan titik di awal tiap sambungan, menjorok dua spasi. Penyisipan titik koma otomatis membuat alternatifnya rapuh.
+
+```javascript
+var filtered = collection
+  .filterDate(START, END)
+  .filterBounds(aoi)
+  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', CLOUD_THRESHOLD));
+```
+
+## Parameter
+
+Gunakan argumen bernama di mana pun fungsi menerimanya. Argumen posisional itu ringkas dan tidak terbaca enam bulan kemudian.
+
+```javascript
+var samples = image.sampleRegions({
+  collection: points,
+  properties: ['landcover'],
+  scale: 10
+});
+```

@@ -1,0 +1,103 @@
+# Optical Stream Ingestion {#sec-optical}
+
+::: {.chapter-goal}
+#### In this chapter
+You will choose between Landsat and Sentinel-2 on evidence rather than habit, filter a global archive down to a usable scene in four lines, and learn which metadata properties are worth filtering on.
+:::
+
+## The two workhorses
+
+Almost every optical analysis in environmental monitoring runs on one of two programmes, and the choice is driven by what you need to see and how far back you need to see it.
+
+| | Landsat 8 and 9 | Sentinel-2 |
+|---|---|---|
+| Pixel size, visible and NIR | 30 m | 10 m |
+| Shortwave infrared | 30 m | 20 m |
+| Revisit, combined constellation | 8 days | 5 days |
+| Archive begins | 1972 (Landsat programme) | 2015 |
+| Red edge bands | none | three |
+| Thermal bands | two | none |
+
+: Choosing between the two main optical archives {.striped}
+
+The decision rule is straightforward. If your question needs history before 2015, deforestation baselines, long term coastal change, urban growth over decades, you need Landsat, and there is no substitute. If your question needs spatial detail or vegetation stress sensitivity, smallholder plots, narrow mangrove fringes, crop condition, Sentinel-2 wins clearly. If your question needs land surface temperature, only Landsat carries a thermal sensor.
+
+Many serious projects use both: Landsat for the historical baseline, Sentinel-2 for the recent detail. Chapter 21 handles the harmonisation that makes joint use defensible.
+
+::: {.callout-note}
+## Concept: the red edge
+Sentinel-2 carries three narrow bands between the red and near infrared, at roughly 705, 740 and 783 nanometres. Chlorophyll absorption falls away extremely steeply across that interval, and the exact position of that fall shifts when a plant is stressed, well before any change is visible to the eye or in NDVI. This is why Sentinel-2 outperforms Landsat for crop condition and disease detection by a margin larger than the resolution difference alone would suggest.
+:::
+
+## Collections, and the letters that matter
+
+Dataset identifiers encode processing level, and picking the wrong one silently invalidates quantitative work.
+
+`COPERNICUS/S2_HARMONIZED` is Level-1C: top of atmosphere reflectance. The atmosphere is still in the measurement.
+
+`COPERNICUS/S2_SR_HARMONIZED` is Level-2A: surface reflectance, atmospherically corrected. **Use this one** for anything where values must be comparable across dates or locations.
+
+`LANDSAT/LC09/C02/T1_L2` is Landsat 9, Collection 2, Tier 1, Level-2. Tier 1 means the geometric registration met the strict standard, which is what you want. Tier 2 scenes exist and are usable for visual work, but should be excluded from time series analysis.
+
+::: {.callout-warning}
+## Common failure: mixing processing levels
+An NDVI computed on Level-1C and an NDVI computed on Level-2A over the same forest will differ, sometimes substantially, because atmospheric scattering affects the red band more than the near infrared. A time series that switches between them will show a step change that looks exactly like a real ecological event. Fix the collection once, at the top of the script, and never change it mid analysis.
+:::
+
+## The filter chain
+
+The full script for this chapter loads the Sentinel-2 archive, narrows it to one delta and one year, and displays the clearest available scene.
+
+{{< include ../_snippets/en/ch08_optical_search.qmd >}}
+
+## Reading the chain
+
+Four filters do the work, and they operate on different things.
+
+`filterDate()` restricts by acquisition time. The end date is exclusive, which trips people up at year boundaries: `filterDate('2023-01-01', '2023-12-31')` omits the last day of the year. Use `'2024-01-01'` as the upper bound if you want the full calendar year.
+
+`filterBounds()` restricts by geography. It keeps any scene whose footprint intersects your geometry, which for a point is exactly the scenes covering that point.
+
+`filter(ee.Filter.lt(...))` restricts by metadata. `CLOUDY_PIXEL_PERCENTAGE` is one property among many that Sentinel-2 scenes carry. Others worth knowing include `MGRS_TILE`, which pins you to one tile grid cell, and `SENSING_ORBIT_NUMBER`, which is useful when consistent viewing geometry matters.
+
+`sort()` then `first()` picks a single scene. Sorting ascends by default, so the least cloudy scene ends up first.
+
+::: {.callout-important}
+## Scientific integrity: scene level cloud is a blunt instrument
+`CLOUDY_PIXEL_PERCENTAGE` describes an entire scene, roughly 110 kilometres square. A scene reported as 40 percent cloudy may be completely clear over your ten kilometre study area, and a scene reported as 5 percent cloudy may have its entire cloud burden sitting directly over your site. Filtering on this property is convenient for picking one image to look at. It is the wrong tool for building a composite, and Chapter 9 replaces it with per pixel masking.
+:::
+
+## Checking before proceeding
+
+Two print statements belong in every ingestion script, and their absence explains a large share of confusing downstream errors.
+
+```javascript
+print('Scenes after filtering:', filtered.size());
+```
+
+If this returns zero, everything after it will fail in ways that do not mention filtering. Common causes are coordinates entered latitude first, a date range with the wrong year, or a cloud threshold set so tight that nothing survives.
+
+```javascript
+print('Acquisition dates:', filtered.aggregate_array('system:time_start')
+  .map(function (millis) { return ee.Date(millis).format('YYYY-MM-dd'); }));
+```
+
+This surfaces temporal gaps. A collection of thirty scenes sounds healthy until the dates show that twenty eight of them fall in the dry season and the wet season is effectively unobserved. That imbalance will bias any composite built from the collection, and it is invisible unless you look.
+
+## Scaling and the offset trap
+
+Sentinel-2 Level-2A reflectance is stored as integers scaled by 10,000. A stored value of 2,500 means a reflectance of 0.25. Landsat Collection 2 Level-2 uses a different convention again, with both a scale factor and an additive offset:
+
+```javascript
+// Landsat Collection 2 Level-2 surface reflectance to physical units
+var scaled = image.select('SR_B.*').multiply(0.0000275).add(-0.2);
+```
+
+Normalised indices such as NDVI are immune to a pure scale factor, since it cancels in the ratio. They are **not** immune to an additive offset, and they are not immune to mixing scaled and unscaled bands in the same expression. Apply the conversion once, immediately after loading, and work in physical units from there.
+
+## Exercises {.unnumbered}
+
+1. Run the script over your own study area. Record how many scenes survive each successive filter, and identify which filter removes the most.
+2. Raise the cloud threshold in steps from 5 to 80 percent. At what threshold does the best available scene become usable, and what does that tell you about the local climate?
+3. Load the Landsat 9 Collection 2 Level-2 archive over the same area and year. Apply the scale and offset above, display it in true colour, and compare it visually to the Sentinel-2 result.
+4. Print the full metadata of one scene and identify three properties, beyond cloud percentage, that you could usefully filter on.

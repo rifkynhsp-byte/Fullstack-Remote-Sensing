@@ -1,0 +1,25 @@
+# Matematika Band dan Indeks Spektral {#sec-indices}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan membangun pustaka indeks standar dari prinsip dasar, memahami kapan masing masing gagal, dan menulis indeks sendiri dengan ee.Image.expression.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **Bentuk beda ternormalisasi dan mengapa rasio meniadakan efek pencahayaan**
+2. **NDVI**: rumus, tafsir, dan masalah kejenuhan pada tajuk rapat
+3. **EVI dan SAVI**: koreksi latar tanah dan sisa atmosfer
+4. **NDWI dan MNDWI**: memisahkan air terbuka dari vegetasi basah
+5. **Indeks khusus mangrove**: CMRI, MVI, dan logika penyusunannya
+6. **normalizedDifference versus expression, dan jebakan pembagian bilangan bulat**
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

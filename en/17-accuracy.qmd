@@ -1,0 +1,175 @@
+# Accuracy Assessment {#sec-accuracy}
+
+::: {.chapter-goal}
+#### In this chapter
+You will build a confusion matrix, read producer and user accuracy correctly, understand why overall accuracy is the least informative number in the table, and report an area estimate with a confidence interval instead of a bare figure.
+:::
+
+## The chapter that separates a map from a result
+
+Anyone can produce a classified image. The step that turns it into something a reviewer, a ministry or a carbon verifier will accept is this one, and it is the step most often rushed.
+
+There is a reason for the rush. Accuracy assessment is the point where the work is graded, and the honest number is nearly always lower than the number you would like to report. Doing it properly means finding out that your map is worse than you hoped, in public, in writing.
+
+Doing it improperly means finding out later, from someone else.
+
+## The confusion matrix
+
+Classify the held out validation points, then tabulate prediction against label. Rows are the actual class, columns are the predicted class. Get that orientation backwards and you will swap producer and user accuracy, which inverts the story the map tells about itself.
+
+The diagonal is agreement. Everything off the diagonal is error, and the off diagonal cells are the part most people skip, which is a mistake, because they are the part that tells you what to fix.
+
+|  | Predicted mangrove | Predicted other forest | Predicted water |
+|---|---|---|---|
+| **Actual mangrove** | 142 | 23 | 5 |
+| **Actual other forest** | 18 | 176 | 2 |
+| **Actual water** | 3 | 1 | 148 |
+
+: A confusion matrix worth reading, not just scoring {.striped}
+
+The overall accuracy here is 89 percent, which sounds respectable and tells you almost nothing. What the table actually says is that mangrove and other forest are confusing each other in both directions, 23 one way and 18 the other, while water is essentially solved. Every improvement worth making lives in that one class pair.
+
+## Three numbers, three different questions
+
+**Overall accuracy** is the proportion of validation points classified correctly. It is a single number describing a multi class problem and it is dominated by whichever class covers the most area. A map that is perfect on water and useless on mangrove can report 88 percent. Quote it, and never stop there.
+
+**Producer accuracy** asks: of the mangrove that is really there, how much did the map find? Its complement is **omission error**, what the map missed.
+
+**User accuracy** asks: of the pixels the map calls mangrove, how many really are? Its complement is **commission error**, what the map invented.
+
+::: {.callout-important}
+## Scientific integrity: which error is worse depends on the decision
+For a carbon claim, **commission** is the dangerous direction. You are being paid for area you cannot prove exists, and an over reported extent is a financial and legal exposure rather than a technical shortcoming.
+
+For a deforestation alert system, **omission** is worse. A missed clearing is a clearing nobody responded to, and a false alarm only costs a patrol.
+
+State which direction matters for your use, then optimise and report accordingly. A single accuracy figure hides exactly this.
+:::
+
+## Kappa, and why to be careful with it
+
+The kappa coefficient adjusts observed agreement for the agreement expected by chance. It appeared in nearly every remote sensing paper for two decades and it is now widely criticised.
+
+The core objection, argued forcefully by Pontius and Millones, is that chance agreement is not a meaningful baseline for a map. Nobody classifies by guessing, so correcting for guessing corrects for something that does not happen. Kappa is also highly sensitive to class prevalence, which means two maps of the same quality over landscapes with different class proportions get different kappas.
+
+Report it if a journal or a methodology requires it. Do not lead with it, and do not let it substitute for per class accuracy, which carries the information kappa was standing in for.
+
+## Internal versus independent
+
+This distinction is the heart of the chapter.
+
+**Internal validation** uses the held out split from Chapter 15. It answers a narrow question: does the model generalise to points it did not train on, drawn the same way, by the same person, from the same imagery.
+
+**Independent validation** uses data collected by a different process: field plots, high resolution imagery interpreted by someone else, an existing product used as a cross check.
+
+They routinely differ by five to ten points, and the gap is diagnostic rather than embarrassing.
+
+A gap of a few points is normal and expected. A gap of twenty points means your training data does not represent the landscape, and no amount of tuning will close it, because the problem is upstream in Chapter 15.
+
+::: {.callout-tip}
+## From the field
+Spend your field validation budget where the models disagree. Chapter 16 produced a layer showing where Random Forest, SVM and gradient boosting gave different answers. Sampling validation points from that layer, rather than at random, tells you far more per site visit, because random points mostly land in places every model already agrees on.
+:::
+
+## The full workflow
+
+{{< include ../_snippets/en/ch17_accuracy_assessment.qmd >}}
+
+## Area is not a pixel count
+
+Counting classified pixels and multiplying by pixel area gives the **map area**. It is not the population area, because the map has known errors and those errors are not symmetric: if commission exceeds omission for mangrove, the pixel count systematically overstates the extent.
+
+The good practice correction, following Olofsson and colleagues, uses the confusion matrix to adjust the count and returns a standard error alongside it. The derivation is worth reading once. The practical point for this book is short.
+
+An extent reported as **41,200 hectares** is incomplete.
+
+An extent reported as **41,200 hectares, 95 percent confidence interval 39,600 to 42,800, computed at 10 metre scale** is a result.
+
+The second version is what a carbon methodology requires, and it is what distinguishes work that gets accepted from work that gets sent back.
+
+## Comparing against existing products
+
+Global Mangrove Watch, ESRI Global Land Cover and Dynamic World all cover most study areas, and comparing against them is a useful sanity check.
+
+Treat them as comparison, not truth. A 40 percent disagreement is not automatically your error, and it does need an explanation before publication. Legitimate reasons include different years, different minimum mapping units, different definitions of what counts as mangrove, and different treatment of degraded or sparse stands. A map with a 10 metre minimum mapping unit will find fringing stands that a 100 metre product cannot resolve, and the disagreement is then a feature of your map rather than a fault in it.
+
+What you cannot do is discover a large disagreement, decline to explain it, and publish anyway.
+
+## What to write in the methods section
+
+The shortest complete version of what this chapter produces:
+
+> Classification accuracy was assessed using 218 held out validation points, stratified by class and spatially thinned to a minimum separation of 60 m. Overall accuracy was 89.1 percent. Producer accuracy for mangrove was 83.5 percent and user accuracy 86.1 percent, with the dominant confusion occurring between mangrove and other forest. Independent validation against 47 field plots returned an overall accuracy of 84.0 percent. Area was estimated following Olofsson et al. (2014) at 10 m scale, giving 41,200 ha of mangrove with a 95 percent confidence interval of 39,600 to 42,800 ha.
+
+Every clause in that paragraph is a decision this chapter and Chapter 15 asked you to make deliberately. That is the point of both chapters.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch17-accuracy",
+  "questions": [
+    {
+      "q": "Your map reports 92 percent overall accuracy. Why might it still be unusable for mangrove monitoring?",
+      "options": [
+        "92 percent is below the accepted threshold",
+        "Overall accuracy is dominated by the largest class, so the map can be perfect on water and poor on mangrove",
+        "Overall accuracy cannot be computed for more than three classes",
+        "It needs to be converted to kappa first"
+      ],
+      "answer": 1,
+      "why": "A single figure for a multi class problem hides per class performance. The producer and user accuracy for the class you actually care about are the numbers that matter."
+    },
+    {
+      "q": "You are producing a map to support a carbon credit claim. Which error direction is more dangerous?",
+      "options": [
+        "Omission, because missed area reduces the payment",
+        "Commission, because you are claiming area you cannot prove exists",
+        "Neither, they are symmetric",
+        "Whichever is larger in the matrix"
+      ],
+      "answer": 1,
+      "why": "Over reported extent in a financial instrument is an exposure rather than a technical shortcoming. For an alert system the priority inverts, which is why you have to state which direction matters."
+    },
+    {
+      "q": "Internal validation gives 91 percent and field validation gives 71 percent. What does that gap indicate?",
+      "options": [
+        "The field data is wrong",
+        "The classifier needs more trees",
+        "The training data does not represent the landscape, which is a Chapter 15 problem rather than a modelling one",
+        "The scale used for validation was too coarse"
+      ],
+      "answer": 2,
+      "why": "A few points of gap is normal. Twenty points means the model generalises within your samples and not to the real landscape, and tuning cannot fix that."
+    },
+    {
+      "q": "Why is a mangrove extent of 41,200 hectares an incomplete result?",
+      "options": [
+        "It should be reported in square kilometres",
+        "It carries no uncertainty estimate and no scale, both of which change the number",
+        "Hectares are not accepted by carbon methodologies",
+        "It should be rounded to the nearest thousand"
+      ],
+      "answer": 1,
+      "why": "Area computed at 10 m and at 100 m differ, and a pixel count uncorrected for classification error is biased. The scale and the confidence interval are part of the number, not decoration."
+    },
+    {
+      "q": "Your map disagrees with Global Mangrove Watch by 30 percent. What is the correct response?",
+      "options": [
+        "Adjust your classification until it matches",
+        "Discard the comparison, since your map is higher resolution",
+        "Investigate and explain the disagreement, since different years, definitions and minimum mapping units all produce legitimate differences",
+        "Report both without comment"
+      ],
+      "answer": 2,
+      "why": "Existing products are comparison, not truth. A 10 m map finding fringes a 100 m product cannot resolve is a feature, but only once you have shown that is what happened."
+    }
+  ]
+}
+</script>
+
+## Exercises {.unnumbered}
+
+1. Find the largest off diagonal cell in your matrix. Name the two classes and propose one predictor that would separate them physically rather than statistically.
+2. Report internal and independent accuracy side by side. If the gap exceeds ten points, write one paragraph on what about your training data caused it.
+3. Overlay your map and Global Mangrove Watch. Pick three disagreement areas and determine from high resolution imagery which is right.
+4. Compute area at 10 m and at 100 m and report both with the scale stated. Explain to a non specialist why both are correct.
+5. Write the methods paragraph for your own map, following the template above. If you cannot fill in a clause, you have found a decision you made by accident.

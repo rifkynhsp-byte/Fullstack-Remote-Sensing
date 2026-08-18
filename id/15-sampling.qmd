@@ -1,0 +1,29 @@
+# Data Lapangan dan Rancangan Sampling {#sec-sampling}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan merancang skema latih dan validasi yang tidak dapat dibongkar penelaah: terstratifikasi, seimbang antar kelas, bebas dari kebocoran spasial, dan dibagi sebelum klasifikator melihatnya.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Apa sebenarnya sampel latih, dan mengapa mutunya mengalahkan pilihan model**
+2. **Titik versus poligon, dan masalah autokorelasi spasial**
+3. **randomPoints dan stratifiedSample**: sintaks dan kapan masing masing tepat
+4. **Ketidakseimbangan kelas**: mengapa kelas langka butuh proporsi sampel lebih besar
+5. **Membagi sebelum mencuplik citra, dan mengapa urutannya menentukan**
+6. **Data validasi independen**: plot lapangan, citra resolusi tinggi, produk yang ada
+
+## Alur kerja lengkap
+
+{{< include ../_snippets/id/ch15_sampling_design.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

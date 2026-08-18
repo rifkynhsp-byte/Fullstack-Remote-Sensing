@@ -1,0 +1,30 @@
+# Analisis Citra Berbasis Objek {#sec-obia}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan berhenti mengklasifikasikan piksel dan mulai mengklasifikasikan objek, menghilangkan derau garam merica dan menghasilkan batas yang menyerupai objek yang diwakilinya.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Mengapa klasifikasi berbasis piksel berderau dan mengapa penghalusan bukan solusinya**
+2. **Segmentasi SNIC**: ukuran, kekompakan, konektivitas, jarak benih
+3. **Meringkas nilai spektral dan tekstur per segmen**
+4. **Mengklasifikasikan segmen, bukan piksel, dan akibatnya pada akurasi**
+5. **Vektorisasi hasil dengan reduceToVectors untuk dibawa ke SIG desktop**
+6. **Unit pemetaan minimum dan kapan penghalusan dapat dipertahankan**
+7. **Kapan OBIA gagal**: batas gradasional dan habitat tepi campuran
+
+## Alur kerja lengkap
+
+{{< include ../_snippets/id/ch18_obia_snic.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

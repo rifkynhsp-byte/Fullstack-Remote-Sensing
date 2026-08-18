@@ -1,0 +1,29 @@
+# Fusi Radar Apertur Sintetis {#sec-sar}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan menambahkan sumber data segala cuaca ke dalam stack: hamburan balik Sentinel-1 dan mosaik tahunan ALOS PALSAR, difilter speckle dan difusikan dengan band optik menjadi satu citra siap analisis.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Pengindraan aktif versus pasif**: mengapa radar mengabaikan awan
+2. **Polarisasi VV dan VH, dan struktur apa yang direspons masing masing**
+3. **Menyaring Sentinel-1**: mode IW, daftar polarisasi, arah orbit
+4. **Speckle dan penghilangannya tanpa merusak tepi**
+5. **Penetrasi L band**: konversi digital number PALSAR ke gamma nought
+6. **Menyusun stack multi sensor sebagai fungsi dari tahun**
+
+## Alur kerja lengkap
+
+{{< include ../_snippets/id/ch10_multisensor_stack.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

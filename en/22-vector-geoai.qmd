@@ -1,0 +1,147 @@
+# Vector GeoAI and Site Selection {#sec-vector}
+
+::: {.chapter-goal}
+#### In this chapter
+The same workflow you have been running on satellite imagery, applied to a commercial question with no imagery in it at all. You will build a suitability surface for opening a coffee shop, discover a data leak that produces a perfect and worthless model, and interpret the result with SHAP.
+:::
+
+## Why this chapter is in a remote sensing book
+
+Everything up to here used raster features derived from satellites. Notice, though, that nothing in Chapters 15 to 18 actually cared about that. The sampling design, the train and validate split, the classifier, the confusion matrix: none of it knows or needs to know that the numbers came from an orbiting sensor.
+
+Swap reflectance for distance to the nearest school. Swap pixel for hexagon. Swap ground truth polygons for the locations of businesses that already exist. The machine is identical and the question becomes commercial.
+
+Recognising that is worth more than either technique on its own, and practically it is what makes these skills portable. The same person who maps mangroves for a conservation NGO can build a site selection model for a retail chain without learning a new method, only a new domain.
+
+## The problem
+
+Location is among the strongest determinants of whether a food and beverage business survives, and it has traditionally been decided by intuition and a walk around the neighbourhood. The conventional GIS improvement on that is multi criteria decision analysis, where an analyst assigns weights to criteria by judgement and overlays them. That is better than intuition, and it still has the weights coming out of somebody's head.
+
+The GeoAI version learns the weights from what has already happened. Instead of asserting that proximity to a university matters twice as much as population density, we let a model observe where coffee shops actually cluster and derive the relationship, then use SHAP to read the weights back out in a form a human can argue with.
+
+## Building the features
+
+Raw geometry cannot enter a model. Points, lines and polygons must become numbers attached to a consistent unit of analysis, and two decisions dominate the quality of the result.
+
+**The unit.** Administrative districts are the obvious choice and the wrong one, because they vary enormously in size, so a count of anything is not comparable between them. A regular grid fixes it. Hexagons beat squares for two reasons: every neighbour of a hexagon is equidistant from its centre, whereas a square's diagonal neighbours are 1.41 times further away, which distorts any adjacency reasoning; and hexagons have no preferred axis, so they do not impose a north south artefact on a city whose structure runs diagonally. Uber's H3 system provides a global hierarchical hexagonal index, and resolution 9, roughly 175 metres across, matches a two minute walk.
+
+**The feature families.** Two kinds of spatial feature answer genuinely different questions.
+
+*Proximity* asks how far to the nearest instance. It measures accessibility.
+
+*Density* asks how many within a radius. It measures intensity.
+
+Both are needed. One school 300 metres away and twelve schools 300 metres away produce identical proximity values and very different footfall.
+
+::: {.callout-warning}
+## Common failure: computing distance in degrees
+Every distance operation must run in a projected coordinate system with metres as its unit. If your GeoDataFrame is in EPSG:4326 when you call `.distance()`, the result is in degrees of arc, which vary with latitude and are not metres. The code will run, the numbers will look plausible, and the model will be built on a measurement that does not exist. Reproject to the correct UTM zone first, every time.
+:::
+
+## Manufacturing a label
+
+This is the conceptually hardest step in the chapter and the one most tutorials skip.
+
+There is no dataset of good coffee shop locations. So we assume that a place where a coffee shop already trades is a place that works, and label those hexagons 1. That assumption deserves to be said out loud, because it encodes the existing market's judgement including its blind spots. A genuinely underserved neighbourhood looks like a bad location to this model, for the simple reason that nobody has opened there yet.
+
+The absence side is worse. An empty hexagon is not a proven failure. It may be untried, or unavailable, or zoned for something else. Ecologists hit this problem long ago in species distribution modelling and gave it a name: presence and pseudo absence. The standard treatment is to sample a balanced number of unoccupied cells at random and label them 0, while remembering that they represent a typical unoccupied location rather than a known bad one.
+
+::: {.callout-important}
+## Scientific integrity: the label is an assumption, not an observation
+Every conclusion from this model inherits the assumption above. When presenting the result, say so. A suitability map built on presence and pseudo absence is a map of where the location resembles places that already work, which is a useful and defensible statement, and it is not the same statement as where a new shop would succeed.
+:::
+
+## The full workflow
+
+{{< include ../_snippets/en/ch22_site_selection.qmd >}}
+
+## The perfect model that means nothing
+
+Run the model with every feature and it reports 1.00 precision, 1.00 recall, 1.00 f1, and an out of bag score of 0.99. In a textbook that is success. In real work it is an alarm.
+
+The leak is obvious once seen. A presence hexagon contains a cafe. Therefore its distance to the nearest competitor is close to zero *by construction*. The model has not learned what makes a location good. It has learned to recognise a hexagon with a cafe in it, which is the label restated as a feature.
+
+Remove that one variable and accuracy falls to around 0.84, which is a real number about a real relationship.
+
+::: {.callout-tip}
+## From the field
+Treat any classifier that reports near perfect accuracy as guilty until proven innocent. Ask, for every feature, whether it could have been observed before the label existed. If the answer is no, it is leaking. This single reflex catches more bad models than any amount of cross validation, and it applies identically to remote sensing: a mangrove classifier trained on a feature stack that includes an existing mangrove extent product will report spectacular accuracy and have learned nothing.
+:::
+
+Note which competitor feature survives. Distance to the nearest competitor leaks; count of competitors within 500 metres does not, because it describes the neighbourhood rather than the cell itself. Understanding why one leaks and the other does not is the point of the exercise.
+
+## Reading the model with SHAP
+
+Random Forest feature importance tells you which variables the model used. It does not tell you in which direction, and for a business decision the direction is the entire value.
+
+SHAP decomposes each individual prediction into per feature contributions, so you learn not only that competitor density mattered but that more competitors pushed the prediction upward.
+
+That last finding is the commercially interesting one and it contradicts intuition. Clustering attracts rather than repels: a street known for cafes draws people who are looking for a cafe, and the agglomeration effect outweighs the competition effect at this scale. A consultant charging for a location study would be earning their fee on that sentence alone.
+
+The tourism finding runs the other way and should be treated with more caution. Tourist density pushes the prediction down, which is counterintuitive. There are plausible explanations, tourist zones dominated by other business types, footfall that is seasonal rather than daily, but the model has generated a hypothesis rather than a finding. Test it before acting on it.
+
+## From classification to a score
+
+The classifier answers a binary question about a few hundred labelled cells. The business needs a continuous ranking of all of them.
+
+You could predict class probability directly. This chapter instead uses the SHAP weights to build an explicit weighted sum, for one practical reason: a client can see exactly why a cell scored what it did, and can override a weight they disagree with on business grounds they have and you do not. An interpretable model that a decision maker will actually use beats a marginally better model they will not.
+
+Two mechanical points matter in that calculation. Features must be normalised to a common 0 to 1 scale before weighting, or a variable measured in thousands of people per square kilometre will dominate one measured in counts. And distance features must be inverted, because for distance a low value is good. Forgetting the inversion produces a map that looks entirely plausible and recommends precisely the wrong locations.
+
+## What the score is not
+
+It is a structured, reproducible, interpretable ranking of locations by measurable characteristics, and it is a substantial improvement on walking around and forming an impression.
+
+It is not a prediction of profit. It contains no rent, no lease availability, no parking, no local regulation, no competitor quality, and no knowledge of who actually walks down which street at eight in the morning. Its highest scoring cell may well be a cemetery.
+
+Use it to reduce a thousand candidate locations to ten. Then send someone to stand on the corner for an hour. The model narrows the search; it does not make the decision.
+
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch22-leakage",
+  "questions": [
+    {
+      "q": "The model reports 1.00 precision, recall and f1. What is the correct first reaction?",
+      "options": [
+        "Publish it, the features were well chosen",
+        "Assume a feature is leaking the label and go looking for it",
+        "Increase the number of trees to confirm stability",
+        "Collect more training data"
+      ],
+      "answer": 1,
+      "why": "Outside a textbook, perfect accuracy means a predictor encodes the answer. Treat any near perfect classifier as guilty until proven innocent."
+    },
+    {
+      "q": "Distance to the nearest competitor leaks, but count of competitors within 500 m does not. Why?",
+      "options": [
+        "Counts are always safer than distances",
+        "A presence cell contains a cafe, so its distance to the nearest cafe is near zero by construction; the count describes the neighbourhood instead",
+        "The count has lower variance",
+        "The distance feature was measured in degrees"
+      ],
+      "answer": 1,
+      "why": "The test is whether a feature could have been observed before the label existed. Understanding why one leaks and the other does not is the point of the exercise."
+    },
+    {
+      "q": "What does the presence and pseudo absence approach actually assume?",
+      "options": [
+        "That every empty cell is a proven bad location",
+        "That a cell where a business already trades is a location that works, and a random empty cell represents a typical unoccupied one",
+        "That the market is perfectly efficient",
+        "That population density predicts success"
+      ],
+      "answer": 1,
+      "why": "Every conclusion inherits this assumption, including its blind spot: a genuinely underserved neighbourhood looks like a bad location because nobody has opened there yet."
+    }
+  ]
+}
+</script>
+
+## Exercises {.unnumbered}
+
+1. Rerun at H3 resolution 8 and explain what happens to the agglomeration effect and why.
+2. Redefine pseudo absence as cells more than one kilometre from any existing cafe. Argue for or against that being a better definition than random sampling.
+3. Add one feature of your own and use SHAP to decide whether it earned its place.
+4. Take the ten highest scoring cells and inspect each on street level imagery. Count how many are plausible. That count is your real accuracy.
+5. Map this chapter's workflow onto Chapter 16 line by line. Write down which step in each corresponds to which step in the other.
