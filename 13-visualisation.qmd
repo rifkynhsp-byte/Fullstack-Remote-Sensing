@@ -1,0 +1,25 @@
+# Komposit dan Visualisasi {#sec-visualisation}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan beranjak dari peregangan baku ke kartografi yang disengaja: kombinasi warna semu yang menampakkan struktur ekologis, dan palet yang tetap terbaca saat dicetak hitam putih.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **Anatomi kamus visualisasi**: bands, min, max, gamma, palette
+2. **Warna sejati dan batasnya di atas permukaan gelap dan basah**
+3. **Inframerah warna semu**: mengapa vegetasi menjadi merah dan mengapa itu membantu
+4. **Komposit inframerah gelombang pendek untuk lahan basah dan bekas terbakar**
+5. **Memilih batas peregangan dari histogram, bukan dari coba coba**
+6. **Rancangan palet, legenda, dan urutan layer untuk pembaca awam**
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

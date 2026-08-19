@@ -1,0 +1,29 @@
+# Band Math and Spectral Indices {#sec-indices}
+
+::: {.chapter-goal}
+#### In this chapter
+You will build the standard index library from first principles, understand when each one fails, and write your own with ee.Image.expression.
+:::
+
+::: {.callout-note}
+## In progress
+The section plan below is settled. Prose and annotated listings are being
+written part by part; check the roadmap in the preface for the current order.
+:::
+
+## Planned sections
+
+1. **The normalised difference form, and why ratios cancel illumination effects**
+2. **NDVI**: formula, interpretation, and the saturation problem in dense canopy
+3. **EVI and SAVI**: correcting for soil background and atmospheric residual
+4. **NDWI and MNDWI**: separating open water from wet vegetation using shortwave infrared
+5. **Mangrove specific indices**: CMRI, MVI, and their construction logic
+6. **normalizedDifference versus expression**: syntax, band renaming, and the integer division trap
+
+## Source material
+
+The addIndices function from your mangrove monitoring script, plus the EE101 NDVI and SAVI examples.
+
+## Exercises {.unnumbered}
+
+To be written alongside the chapter.

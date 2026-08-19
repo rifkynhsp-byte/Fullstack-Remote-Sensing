@@ -1,0 +1,30 @@
+# Pembelajaran Terbimbing Klasik {#sec-supervised}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan melatih, menyetel dan membandingkan Random Forest, mesin vektor pendukung dan gradient tree boosting, lalu menggabungkannya menjadi ansambel suara terbanyak.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Cara kerja Random Forest dan mengapa ia cocok untuk data penginderaan jauh**
+2. **SVM dengan kernel RBF**: gamma dan cost dalam praktik
+3. **Gradient tree boost**: koreksi galat berurutan dan risiko overfitting
+4. **sampleRegions dan katup pelepas memori tileScale**
+5. **Penyetelan hiperparameter dan cara membaca kurva akurasi**
+6. **Kepentingan fitur dari classifier.explain dan cara memangkas stack**
+7. **Ansambel suara terbanyak dan penghalusan focal mode**
+
+## Alur kerja lengkap
+
+{{< include _snippets/ch16_ensemble_classification.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

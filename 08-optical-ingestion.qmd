@@ -1,0 +1,28 @@
+# Mengambil Aliran Data Optik {#sec-optical}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan memilih antara Landsat dan Sentinel-2 berdasarkan bukti, menyaring arsip global menjadi satu citra layak pakai dalam empat baris, dan mengetahui metadata mana yang layak dijadikan filter.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Memilih koleksi**: Level-1C versus Level-2A, dan arti kata HARMONIZED
+2. **Rantai filter**: filterDate, filterBounds, filter metadata, sort, first
+3. **Memeriksa sebelum melanjutkan**: ukuran koleksi dan sebaran tanggal
+4. **Faktor skala dan offset, serta indeks yang kebal terhadap salah satunya saja**
+5. **Mengapa filter awan tingkat citra adalah alat tumpul**
+
+## Alur kerja lengkap
+
+{{< include _snippets/ch08_optical_search.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

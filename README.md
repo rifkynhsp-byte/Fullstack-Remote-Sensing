@@ -2,7 +2,7 @@
 
 Source for the bilingual book *Planetary-Scale Cloud GIS: Earth Engine and GeoAI, taught the way it is actually practised*, by Rifky Nauval Hendrawan.
 
-Built with [Quarto](https://quarto.org). One source tree renders an English site, an Indonesian site and a PDF of each, published to GitHub Pages.
+Built with [Quarto](https://quarto.org). Renders an English site and an Indonesian site, published to GitHub Pages.
 
 **Live at:** `https://<username>.github.io/<repo>/`
 
@@ -226,6 +226,30 @@ Chapters that already have one: EN 1, 2, 3, 9, 22 and ID 1, 2, 3.
 It cannot take the book down with it. `lms.js` wraps its startup in a catch, logs a warning and stops. Chapters still render, listings still copy, navigation still works.
 
 ---
+
+## About PDF output
+
+PDF is disabled, deliberately.
+
+Two chapters carry mermaid diagrams. In HTML those render in the reader's browser through mermaid.js, which costs nothing at build time. For PDF, Quarto must rasterise them first, and that needs headless Chromium. On a runner without Chromium the step does not fail cleanly. It hangs, and the job spends its entire time budget on a single diagram.
+
+To turn PDF back on, do both of these:
+
+1. Restore the commented `pdf:` block at the bottom of `en/_quarto.yml` and `id/_quarto.yml`, and add `downloads: [pdf]` back under the `book:` key.
+2. Add these to `.github/workflows/publish.yml` before the build step:
+
+```yaml
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+      - run: quarto install tool chromium --no-prompt
+```
+
+Expect the build to go from roughly four minutes to fifteen or more. Worth it if readers actually want a PDF; not worth it by default.
+
+## Build times
+
+A healthy run is three to six minutes. The workflow sets `timeout-minutes: 20`, because a job approaching twenty minutes is hung rather than slow, and a hung job silently consumes the whole billing budget.
 
 ## Licensing
 

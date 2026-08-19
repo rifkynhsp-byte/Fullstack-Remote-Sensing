@@ -1,0 +1,21 @@
+---
+title: "Instructor Inbox"
+subtitle: "Reader questions, and your replies"
+---
+
+::: {.callout-warning}
+## Instructor only
+This page shows nothing unless you are signed in as the instructor. It is not hidden, because hiding a page in a static site is theatre. It is protected by row level security in the database, which is the part that actually works.
+:::
+
+<div id="lms-instructor"></div>
+
+---
+
+### If this page is empty
+
+Two possibilities.
+
+**Account mode is not configured.** Questions are arriving as email at [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com) rather than in a table. That is the default and it is a perfectly reasonable way to run a public book. To move questions into this inbox, follow `lms/README-lms.md`.
+
+**You are not signed in as the instructor.** Use the sign in button in the navigation bar with the instructor address. The database policy recognises that address and unlocks the inbox; every other signed in reader sees only their own questions.

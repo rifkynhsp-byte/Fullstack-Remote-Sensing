@@ -1,0 +1,20 @@
+---
+title: "Kemajuan Anda"
+subtitle: "Semua yang tercatat dari pekerjaan Anda melewati buku ini"
+---
+
+::: {.callout-note collapse="true"}
+## Di mana data ini tersimpan
+
+Bila Anda belum masuk, semuanya tersimpan di peramban ini dan tidak di tempat lain. Data tidak pernah meninggalkan perangkat Anda, tidak ada orang lain yang dapat melihatnya, dan menghapus data peramban akan menghapusnya. Gunakan **Ekspor data saya** di bawah bila Anda ingin salinannya.
+
+Bila Anda sudah masuk lewat tautan email, data tersimpan pada akun Anda dan ikut berpindah antar perangkat.
+:::
+
+<div id="lms-dashboard"></div>
+
+## Tersangkut di suatu bagian?
+
+Gunakan tombol **Ajukan pertanyaan** di sudut halaman mana pun. Pertanyaan Anda terkirim beserta bab yang sedang dibaca, jadi tidak perlu menjelaskan posisi Anda.
+
+Pertanyaan diteruskan ke Rifky Nauval Hendrawan di [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com). Sertakan pesan galat bila ada, dan tautan skrip Anda dari **Get Link** di Code Editor bila masalahnya ada di kode. Dua hal itu mengubah pertanyaan yang biasanya butuh bolak balik seminggu menjadi satu kali balasan.

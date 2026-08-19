@@ -1,4 +1,4 @@
-# Quarto book project for the Bahasa Indonesia edition.
+# Quarto book project for the English edition.
 #
 # en/ and id/ are two independent Quarto projects rather than two profiles of
 # one project. Quarto requires a book's home page to be index.qmd at the
@@ -18,14 +18,14 @@ project:
   type: book
   output-dir: _book
 
-lang: id
+lang: en
 
 book:
-  title: "GIS Awan Skala Planet"
-  subtitle: "Earth Engine dan GeoAI, diajarkan seperti yang benar benar dipraktikkan"
+  title: "Planetary-Scale Cloud GIS"
+  subtitle: "Earth Engine and GeoAI, taught the way it is actually practised"
   author:
     - name: "Rifky Nauval Hendrawan"
-      affiliation: "Sains Data Geospasial, Penginderaan Jauh dan Analitik Lingkungan"
+      affiliation: "Geospatial Data Science, Remote Sensing and Environmental Analytics"
   date: today
   date-format: "MMMM YYYY"
   search: true
@@ -34,48 +34,48 @@ book:
   favicon: favicon.svg
   navbar:
     right:
-      - text: "English"
-        href: ../en/index.html
+      - text: "Bahasa Indonesia"
+        href: ../id/index.html
   sidebar:
     style: docked
     collapse-level: 1
     border: true
     tools:
       - icon: translate
-        text: "English"
-        href: ../en/index.html
+        text: "Bahasa Indonesia"
+        href: ../id/index.html
   chapters:
     - index.qmd
     - 00-different.qmd
-    - part: "Bagian I: Fondasi, Tujuan dan Fisika"
+    - part: "Part I: Foundations, Purpose and Physics"
       chapters:
         - 01-why-monitor.qmd
         - 02-physics.qmd
         - 03-sensors.qmd
         - 04-paradigm-shift.qmd
-    - part: "Bagian II: Platform"
+    - part: "Part II: The Platform"
       chapters:
         - 05-ecosystem.qmd
         - 06-javascript.qmd
         - 07-server-side.qmd
-    - part: "Bagian III: Data Siap Analisis"
+    - part: "Part III: Analysis Ready Data"
       chapters:
         - 08-optical-ingestion.qmd
         - 09-cloud-masking.qmd
         - 10-sar-fusion.qmd
         - 11-terrain.qmd
-    - part: "Bagian IV: Rekayasa Fitur"
+    - part: "Part IV: Feature Engineering"
       chapters:
         - 12-band-math.qmd
         - 13-visualisation.qmd
         - 14-texture.qmd
         - 15-sampling.qmd
-    - part: "Bagian V: Pembelajaran Mesin"
+    - part: "Part V: Machine Learning"
       chapters:
         - 16-supervised.qmd
         - 17-accuracy.qmd
         - 18-obia.qmd
-    - part: "Bagian VI: GeoAI dan Dampak"
+    - part: "Part VI: GeoAI and Impact"
       chapters:
         - 19-embeddings.qmd
         - 20-regression-biomass.qmd

@@ -1,0 +1,26 @@
+# Deret Waktu dan Deteksi Perubahan {#sec-timeseries}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan memisahkan perubahan ekologis sungguhan dari derau musiman memakai regresi harmonik, dan membangun deteksi perubahan yang tetap bekerja menembus awan dengan radar.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **Membangun dan memetakan deret waktu pada satu titik dan satu wilayah**
+2. **Regresi harmonik**: memodelkan fenologi dengan suku sinus dan kosinus
+3. **Residual sebagai sinyal**: mendeteksi degradasi setelah musim dihilangkan
+4. **Deteksi perubahan optik**: selisih, rasio dan ambang batas
+5. **Deteksi perubahan rasio logaritmik SAR dan mengapa ia menembus awan**
+6. **Pendekatan titik patah**: logika di balik LandTrendr, CCDC dan BFAST
+7. **Mengubah peta perubahan menjadi peringatan**: unit minimum, aturan persistensi
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

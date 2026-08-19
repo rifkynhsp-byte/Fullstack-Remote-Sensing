@@ -1,0 +1,25 @@
+# Ansambel dan Prediksi Kontinu {#sec-regression}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan beralih dari mengklasifikasikan kategori ke memprediksi besaran: tinggi tajuk, biomassa dan stok karbon, dikalibrasi terhadap data rujukan yang jarang.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **Klasifikasi versus regresi**: kapan kategori adalah keluaran yang salah
+2. **Regresi random forest, gradient boosting, dan batas ekstrapolasinya**
+3. **Mengalibrasi LiDAR GEDI yang jarang terhadap citra liputan penuh**
+4. **Ansambel bertumpuk**: bagging, boosting dan komponen jaringan saraf
+5. **Dari tinggi tajuk ke biomassa ke karbon, dan asumsi alometrik di antaranya**
+6. **Perambatan ketidakpastian, dan mengapa angka karbon tanpa galat bukan hasil**
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

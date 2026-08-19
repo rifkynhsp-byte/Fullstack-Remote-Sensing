@@ -1,0 +1,29 @@
+# Menjelajah Ekosistem GEE {#sec-ecosystem}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan berkeliling setiap panel Code Editor, menjalankan skrip pertama, membaca model elevasi global, dan membentuk tiga kebiasaan diagnostik yang akan menghemat waktu lebih banyak daripada teknik mana pun di buku ini.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Dua pintu masuk**: Explorer untuk pengintaian, Code Editor untuk membangun
+2. **Empat panel**: pustaka, editor, umpan balik, peta
+3. **Membaca balasan server**: nama band, tipe data, proyeksi dan skala
+4. **Tiga kebiasaan**: cetak lebih awal, periksa ukuran koleksi, pakai Inspector
+5. **Blok Imports yang tidak ikut tersalin, dan cara berbagi lewat Get Link**
+6. **Aset, kuota, dan penamaan yang masih masuk akal delapan belas bulan lagi**
+
+## Alur kerja lengkap
+
+{{< include _snippets/ch05_first_script.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

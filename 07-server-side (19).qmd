@@ -1,0 +1,160 @@
+# Server Side Paradigms {#sec-server-side}
+
+::: {.chapter-goal}
+#### In this chapter
+The five object types that every Earth Engine script is built from, and the single most important technique on the platform: mapping a function over a collection instead of looping.
+:::
+
+## Five containers
+
+Everything in Earth Engine is one of five things. Learning what each holds, and which methods it accepts, converts most of the API from memorisation into deduction.
+
+| Object | Holds | Everyday analogy |
+|--------|-------|------------------|
+| `ee.Image` | A raster with one or more bands | One photograph |
+| `ee.ImageCollection` | An ordered stack of images | A time lapse album |
+| `ee.Geometry` | Pure shape: point, line, polygon | A pencil outline on tracing paper |
+| `ee.Feature` | A geometry plus attributes | That outline with a label attached |
+| `ee.FeatureCollection` | Many features | An attribute table with shapes |
+
+: The Earth Engine type system in full {.striped}
+
+The distinction between `ee.Geometry` and `ee.Feature` is worth pausing on, because it causes recurring confusion. A geometry is only a shape. A feature is a shape carrying properties, which is what lets a training polygon say "this area is mangrove". When Chapter 15 assigns a `landcover` property to sample points, it is turning geometries into features so that a classifier has something to learn from.
+
+## Bands, and why band names matter so much
+
+An `ee.Image` is not a picture. It is a stack of co registered numeric grids called bands, each holding a different measurement of the same ground.
+
+A Sentinel-2 image carries thirteen spectral bands plus quality layers. A single band image such as SRTM carries one. A classification output carries one, usually named `classification`. A composite you have built might carry twenty five: the original reflectance bands, several indices, radar backscatter, elevation, slope and texture measures.
+
+Select a band by name, never by position:
+
+```javascript
+var nearInfrared = image.select('B8');            // one band
+var visible = image.select(['B4', 'B3', 'B2']);   // three, in that order
+var allSpectral = image.select('B.*');            // regular expression
+```
+
+::: {.callout-warning}
+## Common failure: silent band name changes
+Operations rename bands, and the new names are not always what you expect.
+`normalizedDifference()` produces a band called `nd` unless you `.rename()` it.
+`reduce(ee.Reducer.median())` appends `_median` to every band name, while the
+shorthand `.median()` leaves names unchanged. Mixing the two forms in one
+script produces layers that refuse to draw, with an error naming a band you
+are certain you created. When that happens, `print(image.bandNames())` first.
+:::
+
+## Why `for` loops fail here
+
+This is the central technique of the platform, and the point where programmers with existing experience most often go wrong.
+
+Consider adding NDVI to every image in a year of Sentinel-2 data, roughly seventy scenes. The instinct from ordinary programming is a loop.
+
+```javascript
+// Do not do this.
+var imageList = collection.toList(collection.size());
+var results = [];
+for (var i = 0; i < 70; i++) {
+  var image = ee.Image(imageList.get(i));
+  results.push(addNdvi(image));
+}
+```
+
+Every iteration of that loop runs in your browser. Each one issues a separate request, waits for a reply, and only then proceeds. Seventy sequential round trips is slow at best, and on a real collection of several thousand scenes the browser stops responding entirely. Worse, `collection.size()` is a server value, so the loop bound has to be pulled to the client with `getInfo()`, which blocks everything until it returns.
+
+The server side equivalent is one line.
+
+```javascript
+var results = collection.map(addNdvi);
+```
+
+That expresses the same intent as a single instruction. Google's planner distributes it across as many machines as the work requires, and they run at the same time rather than one after another. Nothing returns to your browser until you ask for a result.
+
+```{mermaid}
+%%| label: fig-map-vs-loop
+%%| fig-cap: "The same work, arranged two ways. The loop is bounded by round trip latency; the map is bounded only by how many machines are free."
+flowchart TB
+    subgraph loop["for loop (client side, sequential)"]
+        direction LR
+        L1["scene 1"] --> L2["scene 2"] --> L3["scene 3"] --> LN["... scene 70"]
+    end
+    subgraph mapped["map (server side, parallel)"]
+        direction LR
+        M0["one instruction"]
+        M0 --> M1["scene 1"]
+        M0 --> M2["scene 2"]
+        M0 --> M3["scene 3"]
+        M0 --> MN["... scene 70"]
+    end
+```
+
+### The rules of a mappable function
+
+A function passed to `.map()` runs on the server, which imposes three constraints.
+
+It must accept exactly one argument and return exactly one object of the same type it received. An image in, an image out.
+
+It cannot use `print()`, `Map.addLayer()` or `getInfo()`. Those are client operations and there is no client where the function is running. This is a frequent surprise: debugging inside a mapped function requires returning diagnostic values as properties, then printing the collection afterwards.
+
+It cannot use JavaScript `if` statements on server values. Use `ee.Algorithms.If()`, or restructure so the branch is not needed, which is usually possible and usually cleaner.
+
+## Reducers: collapsing a stack
+
+`.map()` transforms a collection into another collection of the same length. A **reducer** collapses many values into fewer, and it works along whichever axis you point it at.
+
+Along **time**, a reducer turns a stack of images into one image. This is compositing, and Chapter 9 uses it heavily.
+
+```javascript
+var annual = collection.median();       // one image, per pixel median
+```
+
+Along **space**, a reducer turns an image into statistics over a region.
+
+```javascript
+var meanNdvi = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: studyArea,
+  scale: 10,           // metres. A scientific choice, not a speed setting.
+  maxPixels: 1e9       // raise the safety ceiling for large areas
+});
+```
+
+Along **bands**, a reducer combines several measurements at one location, which is how the ensemble vote in Chapter 16 works.
+
+::: {.callout-important}
+## Scientific integrity: `scale` is an analytical decision
+`reduceRegion` requires a `scale`, and the number you pass changes the answer. Computing mangrove area at 10 metres captures narrow fringing stands that disappear at 100 metres. Neither figure is wrong. Choose the scale that matches the feature size you are reporting on, state it, and use it consistently across every year of a time series. A change in scale between years will manifest as an apparent change on the ground.
+:::
+
+## Putting the pieces together
+
+Almost every workflow in this book has the same skeleton, and recognising it makes new scripts easier to read.
+
+```javascript
+// 1. Define where and when.
+var aoi = ee.Geometry.Point([117.58, -0.84]);
+
+// 2. Filter a collection down to what is relevant.
+var collection = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+  .filterBounds(aoi)
+  .filterDate('2023-01-01', '2023-12-31');
+
+// 3. Map a per image function across it.
+var processed = collection.map(maskCloudsAndAddIndices);
+
+// 4. Reduce the stack to a single analysis ready image.
+var composite = processed.median().clip(aoi);
+
+// 5. Do something with the result: classify, chart, or export.
+Map.addLayer(composite, visualisation, 'Composite');
+```
+
+Filter, map, reduce, act. Chapter 9 fills that skeleton in completely.
+
+## Exercises {.unnumbered}
+
+1. Write a function that adds a band holding the acquisition year of each image, and map it over a collection. Hint: `image.date().get('year')` and `ee.Image.constant()`.
+2. Take the loop above and rewrite it with `.map()`. Time both if you have the patience, and note where the loop stops being merely slow and becomes unusable.
+3. Compute the mean elevation of your study area at 30 metres and at 300 metres. Explain the difference in one sentence.
+4. Deliberately write a mapped function with no `return` statement and read the error. It is not obvious, and recognising it once is worth the exercise.

@@ -1,0 +1,148 @@
+# Object Based Image Analysis {#sec-obia}
+
+::: {.chapter-goal}
+#### In this chapter
+You will stop classifying pixels and start classifying objects, removing salt and pepper noise, gaining predictors that pixel based work cannot produce, and delivering vector polygons a planner can open in desktop GIS. You will also learn where the approach makes things worse.
+:::
+
+## The problem with the pixel
+
+A ten metre pixel is an arbitrary square. Nothing on the ground is a ten metre square. The boundaries that matter, a stand of mangrove, an aquaculture pond, a plantation block, exist at their own scales and in their own shapes, and imposing a regular grid on them is a convenience of the sensor rather than a property of the landscape.
+
+Two consequences follow, and they are the reasons this chapter exists.
+
+**Salt and pepper noise.** A pixel based classifier decides each pixel independently, so a single anomalous pixel in the middle of a forest gets called water and stays that way. The map is speckled with isolated errors that a human interpreter would never make, because a human uses context.
+
+**Unusable boundaries.** Vectorising a pixel classification produces tens of thousands of ragged squares. Nobody can put that in a management plan.
+
+::: {.callout-warning}
+## Common failure: smoothing instead of segmenting
+The obvious response to salt and pepper is a modal filter, and Chapter 16 used one. It works, and it is a blunt instrument: it removes noise and real small features indiscriminately, because it cannot tell them apart. A three pixel filter erases an isolated misclassified pixel and an isolated genuine 20 metre mangrove patch with equal enthusiasm. Segmentation addresses the cause; smoothing addresses the symptom.
+:::
+
+## What segmentation does
+
+Segmentation groups adjacent pixels that resemble each other into objects, before any classification happens. Each object is then described by its aggregate properties and classified as a unit.
+
+Two things change as a result.
+
+The unit of analysis becomes something that resembles a feature on the ground. Every pixel within an object gets the same class, so isolated errors are impossible by construction.
+
+And a new family of predictors becomes available. A pixel has a value. An object has a mean, a standard deviation, a size, a shape and a perimeter. Standard deviation within an object is the interesting one: a uniform plantation has low internal variance, a structurally complex natural stand has high variance, and the two may have identical means. That is the same insight as the GLCM texture of Chapter 14, arriving by a different route and often more cleanly.
+
+## SNIC, and its three real parameters
+
+Simple Non Iterative Clustering grows superpixels outward from a regular grid of seeds, assigning each pixel to whichever seed it is closest to in a combined spectral and spatial distance. It is fast, deterministic and available in Earth Engine, which is why it is the segmentation algorithm this book uses.
+
+Three parameters do the work, and each is an ecological decision rather than a computational one.
+
+**`size`** sets seed spacing in pixels, and therefore approximate object size. At 10 metre resolution, size 10 produces objects roughly 100 metres across. This is the parameter to think hardest about, because setting it larger than the features you are mapping makes those features disappear inside bigger objects. Over narrow fringing mangrove, small is safer than efficient.
+
+**`compactness`** controls how strongly the algorithm favours regular shapes over following spectral boundaries. Zero lets objects take whatever shape the imagery dictates, which is correct when boundaries are real and irregular, such as a coastline. Higher values produce tidier, more square objects, which suits agricultural fields and suits nothing at all on a delta.
+
+**`connectivity`** is 4 or 8. Eight allows diagonal connection, so objects can follow narrow diagonal features such as tidal creeks. Four is stricter and produces blockier results.
+
+::: {.callout-tip}
+## From the field
+Set `neighborhoodSize` larger than `size`, usually several times larger. Earth Engine processes in tiles, and if the neighbourhood is too small, objects get cut at tile boundaries and you see a regular grid pattern in the output that has nothing to do with the landscape. It is an easy fix and a confusing symptom.
+:::
+
+## The full workflow
+
+{{< include _snippets/ch18_obia_snic.qmd >}}
+
+## Where OBIA wins, and where it makes things worse
+
+This is the honest part, and it is missing from most treatments, which present segmentation as a straightforward upgrade.
+
+**It wins clearly over landscapes with genuine discrete objects.** Agricultural fields, aquaculture ponds, plantation blocks, urban parcels. These are objects on the ground, so making them objects in the analysis aligns the method with the reality. Accuracy usually improves and the cartographic quality improves dramatically.
+
+**It can lose over landscapes with gradational boundaries.** The transition from mangrove to upland forest across an elevation gradient is a gradient, not a line. Segmentation forces a hard boundary somewhere in it, and then commits every pixel in the straddling object to a single answer. A pixel based classifier at least degrades gracefully across the transition, producing a mixed zone that honestly represents an uncertain one.
+
+The practical rule: ask whether the thing you are mapping has edges. If it does, segment. If it fades, be careful, and check the per class accuracy rather than the overall figure, because the loss will be concentrated in exactly the transitional class you care about.
+
+::: {.callout-important}
+## Scientific integrity: the minimum mapping unit belongs in the metadata
+Filtering out polygons below a threshold is standard cartographic practice and it changes your area statistics. A 0.5 hectare minimum mapping unit removes every fringing stand narrower than a few pixels, which over a delta can be a substantial share of the mangrove extent.
+
+State the minimum mapping unit alongside the scale and the confidence interval from Chapter 17. Two maps of the same coastline reporting different extents have sometimes differed by nothing more than this.
+:::
+
+## Vectors as the actual deliverable
+
+There is a practical argument for OBIA with nothing to do with accuracy.
+
+Object boundaries vectorise into clean polygons. A district planner can open them in QGIS, edit them, attach attributes, calculate areas per village, and put the result in a report. That is the form in which geospatial work usually has to arrive to be acted on, and it is worth remembering that Chapter 1 defined the whole purpose of the exercise as informing a decision.
+
+A pixel based classification vectorises into a mess. If the deliverable is a shapefile that someone else will work with, segmentation earns its place on that ground alone, even in a landscape where the accuracy gain is zero.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch18-obia",
+  "questions": [
+    {
+      "q": "Why is segmentation a better response to salt and pepper noise than a modal filter?",
+      "options": [
+        "It runs faster",
+        "It addresses the cause rather than the symptom, whereas a filter erases real small features and noise indiscriminately",
+        "Modal filters are deprecated in Earth Engine",
+        "Segmentation produces higher overall accuracy in every landscape"
+      ],
+      "answer": 1,
+      "why": "A three pixel filter cannot tell an isolated misclassified pixel from an isolated genuine 20 metre patch, and removes both. Segmentation makes isolated errors impossible by construction."
+    },
+    {
+      "q": "You are segmenting a delta coastline. What compactness value is appropriate and why?",
+      "options": [
+        "High, because tidy objects are easier to interpret",
+        "Zero, because the boundaries are real and irregular and objects should follow them",
+        "It makes no difference on coastlines",
+        "Compactness only affects processing speed"
+      ],
+      "answer": 1,
+      "why": "High compactness suits agricultural fields, which genuinely are regular. Imposing regularity on a coastline invents boundaries the landscape does not have."
+    },
+    {
+      "q": "What new predictor does object based analysis make available that pixel based analysis cannot produce?",
+      "options": [
+        "NDVI",
+        "Elevation",
+        "Standard deviation within an object, which separates uniform plantation from structurally complex natural forest with the same mean",
+        "Radar backscatter"
+      ],
+      "answer": 2,
+      "why": "A pixel has a value; an object has a distribution. Internal variance reaches the same insight as GLCM texture by a different and often cleaner route."
+    },
+    {
+      "q": "In which situation might OBIA perform WORSE than pixel based classification?",
+      "options": [
+        "Over agricultural fields",
+        "Over aquaculture ponds",
+        "Across a gradational mangrove to upland forest transition, where a hard boundary is imposed on a gradient",
+        "Over urban parcels"
+      ],
+      "answer": 2,
+      "why": "Segmentation commits every pixel in a straddling object to one answer. A pixel classifier degrades gracefully across a transition, producing a mixed zone that honestly represents an uncertain one."
+    },
+    {
+      "q": "Your SNIC output shows a regular grid pattern unrelated to the landscape. What is the likely cause?",
+      "options": [
+        "The seed grid spacing is too small",
+        "neighborhoodSize is not large enough relative to size, so objects are cut at processing tile edges",
+        "The input bands are correlated",
+        "Connectivity is set to 8"
+      ],
+      "answer": 1,
+      "why": "An easy fix with a confusing symptom. Set neighborhoodSize several times larger than size and the tile artefact disappears."
+    }
+  ]
+}
+</script>
+
+## Exercises {.unnumbered}
+
+1. Run SNIC at size 5, 10 and 25. Find the size at which a narrow mangrove fringe stops being its own object and gets absorbed into the water.
+2. Set compactness to 5 and compare the coastline against compactness 0. Explain in one sentence why compactness suits farmland and not deltas.
+3. Compare object and pixel accuracy per class rather than overall. Which classes gained and which lost, and does that match the gradational boundary argument above?
+4. Raise the minimum mapping unit to 2 hectares and report how much mangrove area disappeared. That number belongs in your metadata.
+5. Export both a pixel based and an object based shapefile and open them in QGIS. Count the polygons in each. That ratio is the practical argument for this chapter.

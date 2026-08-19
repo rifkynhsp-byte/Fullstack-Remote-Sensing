@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planetary-Scale Cloud GIS &middot; GIS Awan Skala Planet</title>
+<meta name="description" content="Google Earth Engine and GeoAI for environmental monitoring. Physics first, then code. Available in English and Bahasa Indonesia.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0f6b57;
+    --teal-bright: #14a37f;
+    --ink: #1b1f23;
+    --muted: #5c6773;
+    --rule: #e4e0d8;
+    --sand: #faf8f4;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Source Serif 4", Georgia, serif;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(20,163,127,0.10), transparent 55%),
+      radial-gradient(ellipse at 90% 10%, rgba(15,107,87,0.08), transparent 45%),
+      #fff;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 4rem;
+  }
+
+  .eyebrow {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 700;
+    margin: 0 0 1rem;
+  }
+
+  h1 {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+  }
+
+  h1 .alt {
+    display: block;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.52em;
+    letter-spacing: -0.01em;
+    margin-top: 0.5rem;
+  }
+
+  .lede {
+    font-size: 1.14rem;
+    max-width: 34em;
+    color: #333;
+    margin: 1.5rem 0 0;
+  }
+
+  .lede + .lede { margin-top: 0.9rem; color: var(--muted); font-size: 1.02rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem;
+    margin: 3rem 0 0;
+  }
+
+  @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+
+  .card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--teal-bright);
+    border-radius: 6px;
+    padding: 1.6rem 1.5rem 1.4rem;
+    background: #fff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(15,107,87,0.13);
+  }
+
+  .card h2 {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 1.28rem;
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.015em;
+  }
+
+  .card p {
+    margin: 0 0 0.9rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .card .go {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--teal);
+  }
+
+  .facts {
+    margin: 3.5rem 0 0;
+    padding: 1.8rem 0 0;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.4rem;
+  }
+
+  @media (max-width: 700px) { .facts { grid-template-columns: 1fr 1fr; } }
+
+  .fact .n {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: -0.03em;
+    display: block;
+    line-height: 1.1;
+  }
+
+  .fact .l {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .note {
+    margin-top: 3rem;
+    padding: 1.2rem 1.4rem;
+    background: var(--sand);
+    border-left: 3px solid var(--teal-bright);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #3d4148;
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.82rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: space-between;
+  }
+
+  footer a { color: var(--teal); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Rifky Nauval Hendrawan</p>
+
+  <h1>
+    Planetary-Scale Cloud GIS
+    <span class="alt">GIS Awan Skala Planet</span>
+  </h1>
+
+  <p class="lede">
+    Google Earth Engine and GeoAI for environmental monitoring, taught in the
+    order the material has to be learned. The physics comes first. The code
+    comes after, and it is all runnable.
+  </p>
+
+  <p class="lede">
+    Google Earth Engine dan GeoAI untuk pemantauan lingkungan, diajarkan dalam
+    urutan yang memang harus dipelajari. Fisika lebih dulu. Kode menyusul, dan
+    semuanya dapat dijalankan.
+  </p>
+
+  <div class="cards">
+    <a class="card" href="en/">
+      <h2>Read in English</h2>
+      <p>Twenty three chapters, six parts, from spectral signatures to a
+         deployed monitoring application.</p>
+      <span class="go">Start reading &rarr;</span>
+    </a>
+    <a class="card" href="id/">
+      <h2>Baca dalam Bahasa Indonesia</h2>
+      <p>Dua puluh tiga bab, enam bagian, dari tanda tangan spektral sampai
+         aplikasi pemantauan yang siap dipakai.</p>
+      <span class="go">Mulai membaca &rarr;</span>
+    </a>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="n">6</span><span class="l">years of practice and teaching</span></div>
+    <div class="fact"><span class="n">23</span><span class="l">chapters, six parts</span></div>
+    <div class="fact"><span class="n">2</span><span class="l">languages, one source</span></div>
+    <div class="fact"><span class="n">100%</span><span class="l">runnable code, no fragments</span></div>
+  </div>
+
+  <div class="note">
+    <strong>Why another Earth Engine resource?</strong>
+    Because almost every free tutorial opens the Code Editor on page one and
+    never explains what the numbers in the image physically are. This one
+    starts with the instrument, uses the tropics as the default case rather
+    than the exception, documents the failures alongside the successes, and
+    carries the chain all the way to the decision the map is meant to inform.<br><br>Progress tracking, knowledge checks and a direct line to the author are built into every chapter. Ask a question from any page and it arrives with the chapter attached.
+  </div>
+
+  <footer>
+    <span>&copy; Rifky Nauval Hendrawan &middot; <a href="mailto:rifkynauvalhsp@gmail.com">rifkynauvalhsp@gmail.com</a><br>Content CC BY 4.0, code MIT.</span>
+    <span>
+      <a href="en/00-different.html">How this book differs</a> &middot;
+      <a href="id/00-different.html">Apa bedanya buku ini</a>
+    </span>
+  </footer>
+
+</div>
+</body>
+</html>
