@@ -1,6 +1,0 @@
-_freeze/
-_snippets/
-.quarto/
-*.tex
-.DS_Store
-__pycache__/
