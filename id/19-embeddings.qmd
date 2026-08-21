@@ -1,0 +1,30 @@
+# Paradigma GeoAI {#sec-embeddings}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan mengganti feature stack rakitan tangan dengan satellite embeddings 64 band milik Google, dan mencapai akurasi sebanding dari dua puluh titik latih alih alih dua ribu.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
+ditulis; rencana bagian menunjukkan apa yang akan datang.
+:::
+
+## Rencana bagian
+
+1. **Pembelajaran mandiri dan model fondasi geospasial**: apa yang berubah
+2. **AlphaEarth dan dataset embedding tahunan**: apa yang dikodekan 64 dimensinya
+3. **Mengapa embedding tidak memerlukan masking awan, indeks atau tekstur**
+4. **Klasifikasi low shot**: model layak pakai dari segelintir label
+5. **Pencarian kemiripan**: temukan semua tempat yang mirip tempat ini
+6. **Reduksi dimensi dengan PCA dan deteksi perubahan di ruang embedding**
+7. **Batas dan catatan jujur**: granularitas tahunan, keburaman, ketergantungan rilis
+
+## Alur kerja lengkap
+
+{{< include _snippets/ch19_satellite_embeddings.qmd >}}
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

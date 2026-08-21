@@ -1,0 +1,45 @@
+{
+  // Codespaces configuration.
+  //
+  // This gives you a full Linux machine with Quarto and Python already
+  // installed, running in a browser tab, reachable from the green Code button
+  // on the repository page. It is the answer to "I do not want to install
+  // anything locally" without giving up the ability to build and see errors
+  // in seconds rather than minutes.
+  //
+  // Open one: Code button -> Codespaces tab -> Create codespace on main.
+  // Then in the terminal:  bash tools/build_site.sh
+  //
+  // Free accounts include 60 core hours per month. A build uses a few minutes.
+
+  "name": "Planetary-Scale Cloud GIS",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+
+  "features": {
+    "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {
+      "version": "1.6.39",
+      "installTinyTex": false
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+
+  "postCreateCommand": "pip install pyyaml && python3 tools/build_snippets.py",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "quarto.quarto",
+        "ms-python.python"
+      ]
+    }
+  },
+
+  // Quarto preview serves on 4000; the assembled site preview uses 8080.
+  "forwardPorts": [4000, 8080],
+  "portsAttributes": {
+    "4000": { "label": "Quarto preview" },
+    "8080": { "label": "Assembled site" }
+  }
+}

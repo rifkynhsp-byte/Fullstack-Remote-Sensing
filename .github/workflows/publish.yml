@@ -1,0 +1,90 @@
+name: Publish book
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # Structural validation runs on its own, before anything is installed.
+  # It takes about ten seconds and catches the errors that would otherwise
+  # surface several minutes into a Quarto render, deep in a log.
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install pyyaml
+
+      - name: Generate code listings
+        run: python3 tools/build_snippets.py
+
+      - name: Pre-flight checks
+        run: python3 tools/check_project.py
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+
+    # A render should take three to six minutes. Anything approaching twenty
+    # is hung rather than slow, and a hung job silently burns the whole
+    # billing budget on one chapter. Fail fast instead.
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.6.39
+          # tinytex is not installed because PDF output is disabled. See the
+          # note at the bottom of en/_quarto.yml for what to restore if you
+          # want PDF downloads back.
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # One command builds everything: generates code listings, copies shared
+      # assets into each language project, renders both books, and assembles
+      # docs/. Keeping the logic in a script rather than in YAML means the
+      # local build and the CI build cannot drift apart.
+      - name: Build site
+        run: bash tools/build_site.sh
+
+      - name: Show what was built
+        run: |
+          echo "Top level:"
+          ls -la docs
+          echo
+          echo "Page counts:"
+          echo "  en: $(find docs/en -name '*.html' | wc -l) pages"
+          echo "  id: $(find docs/id -name '*.html' | wc -l) pages"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

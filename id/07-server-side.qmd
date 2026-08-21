@@ -1,0 +1,25 @@
+# Paradigma Sisi Server {#sec-server-side}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Lima tipe objek yang menyusun setiap skrip Earth Engine, dan teknik terpenting di platform ini: memetakan fungsi ke koleksi alih alih melakukan perulangan.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **ee.Image, ee.ImageCollection, ee.Geometry, ee.Feature, ee.FeatureCollection**
+2. **Band dan mengapa namanya berubah diam diam**
+3. **Mengapa perulangan for gagal, dan apa yang dilakukan .map() sebagai gantinya**
+4. **Aturan fungsi yang dapat dipetakan**
+5. **Reducer sepanjang waktu, ruang dan band**
+6. **Kerangka baku**: filter, map, reduce, act
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

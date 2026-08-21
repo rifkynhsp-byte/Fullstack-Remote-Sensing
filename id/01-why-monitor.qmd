@@ -1,0 +1,135 @@
+# Mengapa Kita Memantau dari Antariksa {#sec-why}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Sebelum teknik apa pun, tujuannya. Anda akan memahami apa yang membuat sebuah ekosistem layak dipantau, bagaimana sebuah peta menjadi instrumen kebijakan atau instrumen keuangan, dan mengapa jawaban atas pertanyaan itu menentukan seluruh keputusan teknis sesudahnya.
+:::
+
+## Mulai dari pertanyaan, bukan dari alat
+
+Ada satu mode kegagalan yang cukup sering muncul di bidang ini sampai punya bentuk baku. Seorang analis menghasilkan peta yang secara teknis mulus: awan sudah dibersihkan, klasifikasinya rapi, akurasi keseluruhan sembilan puluh satu persen, kartografinya indah. Tidak ada yang memakainya. Peta itu menjawab pertanyaan yang tidak pernah diajukan siapa pun, pada resolusi yang tidak dibutuhkan siapa pun, untuk batas wilayah yang tidak cocok dengan unit administrasi atau unit pengelolaan mana pun.
+
+Bab bab teknis dalam buku ini tidak ada gunanya tanpa bab ini. Jadi kita mulai di sini: siapa yang membutuhkan peta itu, keputusan apa yang diinformasikannya, dan apa yang harus dilewatinya agar dipercaya.
+
+## Studi kasus yang mengalir sepanjang buku
+
+Sebagian besar bab memakai ekosistem mangrove di Indonesia sebagai contoh kerja. Ini bukan sentimen. Mangrove kebetulan adalah kasus tersulit yang menarik dalam penginderaan jauh tropis, dan itu menjadikannya guru yang luar biasa.
+
+Strukturnya mirip hutan berdaun lebar lain, sehingga data spektral saja kesulitan memisahkannya. Ia berada di zona pasang surut, sehingga permukaan di bawahnya bisa air atau lumpur tergantung jam perekaman. Ia tumbuh di sabuk pesisir paling berawan di Bumi. Ia membentuk jalur sempit yang lebarnya hanya beberapa piksel. Apa pun yang berhasil di atas mangrove akan berhasil di atas hampir apa saja.
+
+Nilainya pun besar, dalam tiga mata uang yang berbeda.
+
+**Karbon.** Mangrove menyimpan sekitar tiga sampai empat kali lebih banyak karbon per hektar dibanding hutan tropis daratan, dan sekitar 87 persen darinya berada di tanah tergenang, bukan di pohonnya. Karbon tanah itulah alasan perhitungannya penting: membuka mangrove melepaskan karbon bawah permukaan yang terkumpul berabad abad, bukan hanya biomassa yang berdiri.
+
+**Perlindungan.** Jaringan akarnya meredam energi gelombang, mengurangi gelombang badai dan abrasi bagi masyarakat di belakangnya. Di masa muka laut naik, ini adalah infrastruktur, dan ia merawat dirinya sendiri.
+
+**Perikanan dan penghidupan.** Mangrove adalah habitat asuhan bagi sebagian besar spesies ikan, kepiting dan udang bernilai komersial. Proporsi yang besar dari tangkapan ikan global bergantung padanya, langsung maupun tidak langsung.
+
+::: {.callout-note}
+## Konsep: satu angka yang lebih penting dari sisanya
+Indonesia memiliki luas mangrove terbesar di dunia. Mangrove mencakup sekitar 2,6 persen luas hutan nasional, tetapi degradasinya secara historis menyumbang mendekati 10 persen emisi gas rumah kaca sektor kehutanan. Ketimpangan itulah seluruh argumen untuk memantau mangrove secara khusus, alih alih memperlakukannya sebagai bagian dari hutan pada umumnya. Area kecil, dipantau dengan baik, menggerakkan angka nasional.
+:::
+
+## Dari peta menjadi instrumen kebijakan
+
+Di bawah Persetujuan Paris, NDC Indonesia yang telah ditingkatkan menargetkan penurunan emisi sekitar 32 persen tanpa syarat dan hingga 43 persen dengan dukungan internasional pada 2030. Kendaraan operasionalnya untuk sektor lahan adalah rencana FOLU Net Sink 2030, yang menargetkan sektor kehutanan dan penggunaan lahan lain menjadi penyerap karbon neto sekitar minus 140 juta ton setara karbon dioksida. Konservasi dan rehabilitasi mangrove disebut secara eksplisit sebagai strategi di dalamnya.
+
+Semua itu mustahil tanpa pengukuran. Komitmen menurunkan emisi hanya kredibel bila perubahannya dapat dikuantifikasi, berulang kali, dengan metode yang dapat diperiksa pihak di luar negara pelapor. Persyaratan itu punya nama: Monitoring, Reporting and Verification, biasa disingkat MRV.
+
+Di titik inilah muatan teknis buku ini menjadi relevan bagi kebijakan. Setiap sistem MRV memerlukan tiga kemampuan yang sama.
+
+**Garis dasar.** Apa yang ada di awal periode perhitungan. Bab 16 dan 19 membangun ini.
+
+**Deteksi perubahan.** Apa yang terjadi sejak itu, dan kapan. Bab 21 membangun ini.
+
+**Kuantifikasi beserta ketidakpastian.** Berapa banyak karbon, plus minus berapa. Bab 20 membangun ini.
+
+Bila sebuah bab dalam buku ini pada akhirnya tidak memasok salah satu dari ketiganya, bab itu salah tempat.
+
+## Dari peta menjadi uang
+
+Pasar karbon mengubah perubahan ekosistem yang terukur menjadi pembiayaan. Satu kredit mewakili kira kira satu ton karbon dioksida yang diserap dari atmosfer atau dicegah masuk ke sana. Proyek yang melindungi mangrove yang masih berdiri atau merestorasi yang terdegradasi dapat menerbitkan kredit dan menjualnya.
+
+Kredit blue carbon diperdagangkan dengan premi di atas kredit kehutanan daratan, umumnya pada kisaran 13 sampai 35 dolar per ton berbanding 8 sampai 11,50, karena karbonnya lebih permanen di tanah anaerobik dan karena manfaat sertanya, keanekaragaman hayati dan perlindungan pesisir, mudah dibuktikan. Indonesia diperkirakan memiliki 17 sampai 23 persen ekosistem blue carbon dunia.
+
+::: {.callout-important}
+## Integritas ilmiah: inilah sebabnya penilaian akurasi tidak opsional
+Ketika sebuah peta menjadi dasar instrumen keuangan, luas yang dilebihkan bukan sekadar kekurangan teknis. Itu klaim yang dibayar seseorang. Bab 17 membahas penilaian akurasi lebih rinci daripada yang mungkin dikira perlu oleh sebagian besar pembaca, dan inilah alasannya. Angka yang jujur adalah angka dari validasi lapangan independen, bukan angka yang dipantulkan kembali oleh data latih Anda sendiri.
+:::
+
+## Logika yang sama, ranah yang berbeda
+
+Tidak ada satu pun bagian di atas yang khas konservasi. Bab 22 mengerjakan pemilihan lokasi komersial, menentukan di mana membuka kedai kopi di Kota Malang, dan logikanya identik secara struktural.
+
+| | Pemantauan mangrove | Pemilihan lokasi |
+|---|---|---|
+| Unit analisis | Piksel atau segmen | Sel grid heksagonal |
+| Fitur | Reflektansi, indeks, radar, topografi | Proksimitas, densitas, demografi |
+| Label | Tutupan lahan tervalidasi lapangan | Keberadaan usaha yang sudah berjalan |
+| Keluaran | Luas dan perubahan | Skor kesesuaian 0 sampai 1 |
+| Keputusan | Di mana patroli, restorasi, klaim kredit | Di mana buka, dan di mana jangan |
+
+: Mesin yang sama, dua ranah {.striped}
+
+Menyadari bahwa keduanya adalah persoalan yang sama bernilai lebih besar daripada salah satu tekniknya sendiri. Secara praktis, itu juga yang membuat keterampilan ini dapat dipekerjakan lintas sektor, bukan hanya di dalam konservasi.
+
+## Sebenarnya peta ini untuk siapa
+
+Peta yang hanya bisa dibaca spesialis penginderaan jauh sudah gagal di langkah terakhir. Dalam praktiknya keluaran harus mendarat pada salah satu dari empat khalayak, dan tiap khalayak butuh hal berbeda.
+
+**Pengelola lapangan** perlu tahu ke mana pergi minggu ini. Ia butuh peta di ponsel, koordinat yang bisa dinavigasi, dan indikasi jujur soal tingkat keyakinan.
+
+**Pejabat kebijakan** perlu angka yang teragregasi rapi ke batas administrasi dan deskripsi metode yang tahan telaah teknis.
+
+**Pengembang proyek karbon** perlu kesesuaian dengan metodologi tertentu, estimasi ketidakpastian yang terdokumentasi, dan proses yang dapat diulang.
+
+**Masyarakat** perlu mampu menjalankan analisisnya sendiri. Inilah argumen di balik aplikasi low code seperti Indraja Buana: alat yang menuntut ahli dari luar setiap kali dipakai menciptakan ketergantungan, bukan kapasitas. Tujuannya bergerak dari konservasi berbasis masyarakat menjadi konservasi yang dimiliki masyarakat, dan rancangan perangkat lunak di Bab 23 mengikuti tujuan itu.
+
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch01-purpose",
+  "questions": [
+    {
+      "q": "Mangrove mencakup sekitar 2,6 persen luas hutan Indonesia. Mengapa porsi sekecil itu tetap layak dipantau secara khusus?",
+      "options": [
+        "Karena mangrove jenis hutan yang paling mudah diklasifikasikan dari satelit",
+        "Karena degradasinya menyumbang mendekati 10 persen emisi sektor kehutanan",
+        "Karena hanya mangrove yang dicakup Persetujuan Paris",
+        "Karena citra resolusi tertingginya paling mudah didapat"
+      ],
+      "answer": 1,
+      "why": "Ketimpangan itulah seluruh argumennya. Area kecil yang degradasinya membawa biaya emisi berlebih justru tempat pemantauan cermat menggerakkan angka nasional."
+    },
+    {
+      "q": "Sistem MRV memerlukan tiga kemampuan. Mana yang BUKAN salah satunya?",
+      "options": [
+        "Garis dasar tentang apa yang ada di awal periode",
+        "Deteksi perubahan: apa yang terjadi dan kapan",
+        "Kuantifikasi beserta estimasi ketidakpastian",
+        "Publikasi ilmiah yang telah ditelaah sejawat"
+      ],
+      "answer": 3,
+      "why": "Publikasi adalah praktik baik, bukan syarat. Garis dasar, perubahan, dan ketidakpastian terkuantifikasi adalah tiga hal yang benar benar diperiksa verifikator."
+    },
+    {
+      "q": "Sebuah peta unggul secara teknis tetapi tidak dipakai siapa pun. Menurut bab ini, apa penyebab paling mungkin?",
+      "options": [
+        "Klasifikatornya kurang akurat",
+        "Resolusinya terlalu kasar",
+        "Peta itu menjawab pertanyaan yang tidak diajukan siapa pun, pada batas wilayah yang tidak dipakai siapa pun",
+        "Formatnya salah saat diekspor"
+      ],
+      "answer": 2,
+      "why": "Inilah mode kegagalan yang membuka bab ini. Mutu teknis tidak dapat menyelamatkan peta yang sejak awal tidak terhubung ke sebuah keputusan atau pengambil keputusan."
+    }
+  ]
+}
+</script>
+
+## Latihan {.unnumbered}
+
+1. Tuliskan, dalam satu kalimat, keputusan apa yang hendak diinformasikan peta Anda. Bila Anda tidak bisa menyebut sebuah keputusan atau seseorang, yang Anda punya adalah visualisasi, bukan analisis.
+2. Identifikasi mana dari tiga kemampuan MRV yang sudah disediakan pekerjaan Anda dan mana yang belum.
+3. Cari komitmen nasional atau subnasional yang menaungi area studi Anda. Catat targetnya, tahun dasarnya, dan lembaga pelapornya.
+4. Untuk area studi Anda, sebutkan satu alasan paling mungkin seorang penelaah menolak peta Anda. Simpan catatan itu. Bab 17 akan kembali kepadanya.

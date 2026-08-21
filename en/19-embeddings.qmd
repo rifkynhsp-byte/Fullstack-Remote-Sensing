@@ -1,0 +1,34 @@
+# The GeoAI Paradigm {#sec-embeddings}
+
+::: {.chapter-goal}
+#### In this chapter
+You will replace hand built feature stacks with Google's 64 band satellite embeddings, and reach comparable accuracy from twenty training points instead of two thousand.
+:::
+
+::: {.callout-note}
+## In progress
+The working script below is complete and runnable. The narrative prose for
+this chapter is still being written; the section plan shows what is coming.
+:::
+
+## Planned sections
+
+1. **Self supervised learning and geospatial foundation models**: what changed
+2. **AlphaEarth and the annual satellite embedding dataset**: what the 64 dimensions encode
+3. **Why embeddings need no cloud masking, index calculation or texture engineering**
+4. **Low shot classification**: training a usable model from a handful of labels
+5. **Embedding similarity search**: find everywhere that looks like this place
+6. **Dimensionality reduction with PCA, and change detection in embedding space**
+7. **Limits and honest caveats**: annual granularity, opacity, and dependence on Google's release cadence
+
+## The full workflow
+
+{{< include _snippets/ch19_satellite_embeddings.qmd >}}
+
+## Source material
+
+Your Export.classifier.toAsset workflow built on GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL, and session 6 of Akselerasi Konservasi.
+
+## Exercises {.unnumbered}
+
+To be written alongside the chapter.

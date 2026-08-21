@@ -1,0 +1,108 @@
+# The Paradigm Shift {#sec-paradigm}
+
+::: {.chapter-goal}
+#### In this chapter
+You will understand why desktop GIS cannot answer regional environmental questions any more, what Earth Engine does differently, and what that difference costs you. No code yet. This is the mental model everything else rests on.
+:::
+
+## The arithmetic that broke the old workflow
+
+Start with a number. Sentinel-2 alone delivers roughly 1.6 terabytes of compressed imagery every day. Landsat 8 and 9 add to it. Sentinel-1 radar adds more. MODIS has been contributing since 1999. The public Earth observation archive now passes 100 petabytes and grows faster each year as new constellations reach orbit.
+
+Now put a modest question against that archive. Suppose you want annual mangrove extent for the Indonesian archipelago from 2016 to 2024. Indonesia spans roughly 5,000 kilometres of longitude. At Sentinel-2's ten metre resolution, one year of coverage over the coastal zone alone runs to several thousand scenes.
+
+On a desktop, that project has a shape you can predict. You would spend the first month on downloads. You would spend the second discovering that your disk is full and that a third of your scenes are unusable because of cloud. You would spend the third writing batch scripts to correct and mosaic what survived. Somewhere in month four, if the machine held, you might see a first result. Whether that result was any good would then take another month to establish, and any change to the method would restart the clock.
+
+The problem is not that the analysis is hard. Masking cloud and computing a vegetation index are undergraduate operations. The problem is that the data is in the wrong place. Every hour of that project went into moving bytes rather than answering a question.
+
+## Moving the question instead
+
+Earth Engine inverts the arrangement. The archive is already resident on Google's storage, already spatially indexed, already atmospherically corrected for the collections that offer it. You do not fetch it. You describe an operation, and the description travels to where the data already sits.
+
+The consequence is that the same nine year, archipelago wide mangrove question becomes a script of perhaps two hundred lines that returns a first result the same afternoon. Not because Earth Engine is clever about mangroves, but because nothing was transported.
+
+::: {.callout-note}
+## Concept: why this is not simply a faster computer
+A faster laptop shortens step three of the old workflow. It does nothing for steps one and two, which is where the time actually went. Earth Engine deletes steps one and two entirely. That is a change in kind, not a change in degree, and it is why the skills in this book do not reduce to "the same GIS, hosted".
+:::
+
+## Client and server, and the line between them
+
+The single most useful idea in this book arrives now, and everything in Part I exists to make it instinctive.
+
+When you write a line of Earth Engine code, you are not performing a calculation. You are building a description of a calculation. That description sits in your browser as a small object with an address on Google's servers attached to it. Nothing has happened yet. Nothing happens until something demands an actual answer: the map needs to draw a tile, `print()` needs a value for the Console, or an export task starts writing a file.
+
+```{mermaid}
+%%| label: fig-client-server
+%%| fig-cap: "The request path. Nothing on the left holds imagery; everything on the left holds instructions."
+flowchart LR
+    subgraph client["Your browser (client)"]
+        A["Script:<br/>ee.ImageCollection(...)<br/>.filterDate(...)<br/>.median()"]
+        B["Object graph<br/>(a recipe, not data)"]
+    end
+    subgraph server["Google infrastructure (server)"]
+        C["Query planner"]
+        D["Petabyte archive"]
+        E["Parallel tile workers"]
+    end
+    F["Map tiles<br/>Console values<br/>Exported files"]
+
+    A --> B
+    B -->|"JSON request"| C
+    C --> D
+    D --> E
+    E --> F
+    F -->|"result only"| client
+```
+
+The practical reading of that diagram: your laptop's specification is nearly irrelevant to how large an analysis you can run, and entirely relevant to how much you can `print()`.
+
+## Lazy evaluation and its two consequences
+
+The technical name for this arrangement is lazy evaluation. The good consequence is efficiency. Because Earth Engine sees the whole recipe before running any of it, it can plan. If your final map covers one delta, the planner never touches imagery outside that delta, even though your script named a global collection. If you filter to 2023, the archive for 2022 is never read. Chaining twenty operations costs no more to set up than chaining one.
+
+The awkward consequence is that errors arrive late and in the wrong place. A mistake written on line 12 will often surface as a failure on line 90, at the moment something finally forces evaluation. Debugging Earth Engine means learning to force evaluation deliberately and early, which is the habit Chapter 5 builds and Appendix B systematises.
+
+::: {.callout-warning}
+## Common failure: the loop that never finishes
+A JavaScript `for` loop runs in your browser. If you write one that iterates over a thousand images, your browser attempts a thousand sequential round trips to Google and freezes. The server side equivalent, `.map()`, sends one instruction that fans out across thousands of machines at once. Chapter 7 covers the distinction properly. It is the single most common way that experienced programmers new to Earth Engine make a fast platform slow.
+:::
+
+## Tiles, pyramids and scale
+
+One more mechanism explains behaviour that otherwise looks like Earth Engine being inconsistent.
+
+Raster data on the platform is stored as a pyramid: the full resolution imagery at the base, and progressively coarser aggregations stacked above it. When the map draws, it requests whichever pyramid level matches your current zoom. Zoomed out to a whole province, you are looking at heavily aggregated pixels. Zoomed in to a river mouth, you are looking at native resolution.
+
+This is why a classification can look clean at province scale and noisy at village scale, and why an area figure computed at one `scale` argument will differ from the same figure computed at another. Neither result is a bug. The scale at which a computation runs is a parameter you choose, and it is a scientific decision, not a performance setting.
+
+::: {.callout-important}
+## Scientific integrity: state your scale
+Any area statistic quoted from Earth Engine is meaningless without the scale it was computed at. A mangrove extent of 41,200 hectares at 10 metres and 39,800 hectares at 100 metres are both defensible numbers about the same landscape. Reporting either without the scale is not.
+:::
+
+## What you give up
+
+Honesty about the trade offs, because there are real ones and they surface in every serious project.
+
+**Memory limits are real and arrive without warning.** Complex chains over large regions fail with a computation timeout or an out of memory error. Recovery means restructuring the analysis, not requesting more resources, since you cannot.
+
+**You cannot see the machine.** When something is slow, there is no profiler that tells you which operation is expensive. Diagnosis is empirical: cut the script down until it works, then add back.
+
+**The algorithm library is fixed.** Earth Engine offers a specific set of classifiers and reducers. If your method needs a custom deep learning architecture, the platform will get your data ready and then hand off to Vertex AI, SageMaker or your own hardware. Chapter 23 covers that hand off.
+
+**Licensing constrains commercial use.** Free access is for research, education and non profit work. Commercial deployment requires a paid plan.
+
+None of this changes the conclusion. For the class of question this book addresses, monitoring ecosystems across large areas over long periods, the trade is heavily favourable.
+
+## Where this is heading
+
+By Chapter 17 you will have a validated land cover classification with a confusion matrix you could defend to a reviewer. By Chapter 19 you will produce comparable accuracy from twenty training points instead of two thousand, using Google's satellite embeddings. By Chapter 23 that capability will be behind an interface someone with no technical background can operate.
+
+The next chapter opens the Code Editor and puts an image on a map.
+
+## Exercises {.unnumbered}
+
+1. Estimate the download volume for your own current or most recent project: number of scenes, average scene size, and the hours spent transferring and unpacking. Keep the figure. It is the baseline you are replacing.
+2. Write one sentence describing an environmental question you would ask if data volume were not a constraint. Return to it after Chapter 17 and assess how close you now are.
+3. Explain the client and server distinction to a colleague who does not code. If the explanation takes more than two minutes, the mental model is not settled yet.

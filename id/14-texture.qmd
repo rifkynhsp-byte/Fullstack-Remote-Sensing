@@ -1,0 +1,25 @@
+# Ekstraksi Tekstur Spasial {#sec-texture}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Anda akan menambahkan pola ke spektrum: fitur GLCM yang memungkinkan klasifikator membedakan perkebunan seragam dari hutan alam berstruktur rumit yang memantulkan cahaya nyaris identik.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **Batas klasifikasi berbasis spektral saja**: dua hutan, satu tanda tangan
+2. **Matriks ko-okurensi aras keabuan dan apa yang diukurnya**
+3. **Metrik inti**: kontras, entropi, angular second moment, korelasi
+4. **Menyiapkan band untuk glcmTexture**: kuantisasi dan pengecoran ke integer
+5. **Ukuran jendela sebagai pilihan ekologis, dicocokkan dengan diameter tajuk**
+6. **Band tekstur mana yang disimpan, dan ongkos dimensionalitasnya**
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

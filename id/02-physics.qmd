@@ -1,0 +1,155 @@
+# Fisika Melihat {#sec-physics}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Apa yang sebenarnya diukur satelit, mengapa vegetasi tampak seperti itu di sepanjang spektrum, dan dari mana masalah piksel campuran berasal. Inilah bab yang membuat proses debug mungkin dilakukan nanti, jadi layak dibaca perlahan.
+:::
+
+## Menyimpulkan bagian dalam dari permukaan
+
+Ada satu hasil dalam kalkulus vektor, teorema divergensi Gauss, yang menyatakan bahwa total fluks yang keluar melalui suatu permukaan tertutup memberi tahu kita tentang sumber yang ada di dalam volumenya. Anda dapat mencirikan bagian dalam hanya dengan mengukur batasnya.
+
+Penginderaan jauh adalah gagasan itu yang diterapkan pada ekosistem. Satelit tidak dapat melihat ke dalam hutan. Ia mengukur energi elektromagnetik yang meninggalkan puncak tajuk. Dari pengukuran permukaan itu kita menyimpulkan sifat bagian dalam: berapa luas daunnya, berapa banyak air yang dikandung daun, bagaimana tajuk tersusun secara vertikal, berapa banyak karbon tersimpan di bawah.
+
+Analogi ini layak dipegang karena ia menetapkan batas secara jujur. Kesimpulan hanya sebaik kaitan fisik antara sifat internal dan sinyal permukaan. Ketika kaitannya kuat, klorofil dan penyerapan merah, kita memperoleh pengukuran yang andal. Ketika kaitannya lemah, karbon tanah di bawah mangrove, yang kita peroleh adalah proksi yang perlu dikalibrasi terhadap data lapangan, dan kita harus mengatakannya.
+
+## Apa yang dikerjakan sensor satelit
+
+Nilai piksel bukan warna. Ia adalah angka yang sebanding dengan energi radian yang tiba di detektor, dalam interval panjang gelombang tertentu, dari petak tanah tertentu, pada saat tertentu.
+
+Empat hal terjadi antara matahari dan angka itu.
+
+**Emisi.** Matahari memancar pada spektrum lebar, dengan puncak di daerah tampak.
+
+**Transmisi atmosfer, saat turun.** Atmosfer menyerap dan menghamburkan secara selektif. Uap air, karbon dioksida dan ozon memblokir pita panjang gelombang tertentu hampir sepenuhnya. Interval tempat energi tetap lolos disebut jendela atmosfer, dan band satelit ditempatkan di dalamnya. Karena itu posisi band sensor terlihat sembarang sampai Anda menumpangkannya pada kurva transmisi atmosfer, dan setelah itu terlihat tak terhindarkan.
+
+**Interaksi di permukaan.** Energi yang datang dipantulkan, diserap atau diteruskan, dengan proporsi yang bergantung pada jenis materialnya. Bagian inilah yang membawa informasi.
+
+**Transmisi atmosfer, saat naik.** Gangguan yang sama, sekali lagi. Mengoreksinya adalah yang mengubah radiansi puncak atmosfer menjadi reflektansi permukaan, dan itulah sebabnya Bab 8 bersikeras memakai produk reflektansi permukaan untuk apa pun yang bersifat kuantitatif.
+
+::: {.callout-note}
+## Konsep: reflektansi adalah rasio, bukan kuantitas
+Reflektansi permukaan adalah fraksi energi datang pada suatu panjang gelombang yang dikembalikan permukaan, antara 0 dan 1. Karena berupa rasio, nilainya sebanding antara citra Juli yang terang dan citra Desember yang redup. Radiansi mentah tidak. Inilah seluruh alasan koreksi atmosfer penting: ia mengubah pengukuran kondisi menjadi pengukuran permukaan.
+:::
+
+## Tanda tangan spektral
+
+Plot reflektansi terhadap panjang gelombang untuk sebuah material dan Anda memperoleh tanda tangan spektralnya. Tiga tanda tangan menjelaskan sebagian besar peristiwa dalam klasifikasi tutupan lahan, dan bila Anda bisa menggambarnya dari ingatan, Anda bisa mendiagnosis sebagian besar kegagalan klasifikasi.
+
+**Vegetasi sehat** memiliki bentuk khas. Reflektansi rendah di biru dan merah, karena klorofil menyerap kuat di kedua ujung daerah tampak untuk fotosintesis. Ada tonjolan sedang di hijau, dan itulah sebabnya daun tampak hijau: hijau adalah panjang gelombang tampak yang paling banyak ditolak klorofil. Lalu, tepat setelah merah, reflektansi melompat naik lima kali lipat atau lebih. Itulah plateau inframerah dekat.
+
+**Air** adalah tanda tangan paling sederhana sekaligus paling berguna. Ia memantul sedikit di biru dan hijau, lebih sedikit di merah, dan praktis tidak sama sekali di inframerah dekat dan seterusnya. Air jernih dalam pada inframerah dekat mendekati hitam. Setiap indeks air di Bab 12 dibangun dari fakta ini.
+
+**Tanah terbuka** naik perlahan dan mantap dari daerah tampak ke inframerah gelombang pendek, tanpa fitur dramatis. Kecerahannya sangat bergantung pada kelembapan: tanah basah lebih gelap secara menyeluruh, dan itu penting di atas hamparan pasang surut, karena lumpur yang sama terekam berbeda saat pasang dan surut.
+
+::: {.callout-important}
+## Plateau inframerah dekat bukan disebabkan klorofil
+Ini miskonsepsi paling umum dalam penginderaan jauh pengantar, dan ia penting karena mengubah pemahaman tentang apa yang sebenarnya diukur NDVI.
+
+Klorofil menyerap di merah. Ia praktis tidak ada urusannya dengan inframerah dekat. Plateau inframerah dekat disebabkan struktur internal daun: lapisan mesofil bunga karang adalah susunan tak beraturan dari dinding sel dan rongga udara dengan indeks bias yang sangat berbeda, dan cahaya inframerah dekat yang masuk ke dalamnya dihamburkan berulang kali sampai sebagian besar keluar, entah kembali ke atas atau menembus daun.
+
+Dua konsekuensi mengikuti.
+
+Tanaman yang tertekan sering kehilangan struktur sel sebelum kehilangan klorofil. Jadi reflektansi inframerah dekat turun sebelum daunnya berubah warna secara kasatmata. Indeks berbasis inframerah mendeteksi cekaman beberapa hari sampai beberapa minggu sebelum terlihat mata.
+
+Dan daun yang sudah mati tetapi strukturnya masih utuh, atau lapisan seresah kering, tetap dapat menghasilkan respons inframerah dekat yang cukup besar. NDVI di atas lahan yang baru dibuka dengan sisa serasah tidak akan turun sejauh yang diduga intuisi, dan ini sumber negatif palsu yang terdokumentasi dalam deteksi deforestasi.
+:::
+
+## Empat resolusi
+
+Kemampuan sensor dijelaskan pada empat sumbu yang saling bebas, dan setiap satelit adalah kompromi di antaranya karena fisika memaksa adanya pertukaran.
+
+**Resolusi spasial** adalah ukuran di permukaan tanah dari satu piksel. Sentinel-2 memberi 10 meter di daerah tampak dan inframerah dekat, Landsat 30 meter. Piksel lebih kecil mampu menampakkan fitur lebih kecil, dengan ongkos penyimpanan dan frekuensi kunjungan ulang.
+
+**Resolusi temporal** adalah seberapa sering sensor kembali. Sekitar 5 hari untuk konstelasi Sentinel-2, 16 hari untuk satu Landsat dan 8 hari bila keduanya digabung. Di wilayah berawan, inilah resolusi yang menentukan apakah Anda punya data sama sekali.
+
+**Resolusi spektral** adalah jumlah dan kesempitan band. Band yang lebih banyak dan lebih sempit memisahkan material yang tampak mirip pada band lebar. Tiga band red edge Sentinel-2 adalah contoh paling jelas.
+
+**Resolusi radiometrik** adalah kepekaan detektor, dinyatakan dalam bit. Sentinel-2 merekam 12 bit, memberi 4.096 tingkat yang dapat dibedakan per band berbanding 256 pada sensor 8 bit. Ini paling penting di atas permukaan gelap: memisahkan air dalam dari lumpur mangrove yang basah menuntut kemampuan membedakan selisih yang sangat kecil di ujung gelap.
+
+::: {.callout-note}
+## Konsep: mengapa keempatnya tidak bisa dimiliki sekaligus
+Detektor mengumpulkan foton dalam jumlah terbatas. Persempit interval panjang gelombang dan lebih sedikit foton tiba, sehingga untuk menjaga sinyal di atas derau Anda harus memperlebar jejak di tanah atau memperpanjang waktu tinggal. Piksel lebih kecil dan band lebih sempit sama sama membuat detektor kelaparan. Setiap desain satelit adalah keputusan tentang ke mana anggaran foton yang tetap itu dibelanjakan, dan itulah sebabnya tidak ada sensor tunggal yang tepat untuk semua pertanyaan, dan mengapa Bab 3 berbicara tentang memilih, bukan tentang satu favorit.
+:::
+
+## Red edge
+
+Antara lembah merah dan plateau inframerah dekat, reflektansi naik sangat curam pada kisaran 690 sampai 740 nanometer. Transisi itu disebut red edge, dan posisinya bergeser ketika tanaman tertekan, biasanya bergerak ke panjang gelombang lebih pendek.
+
+Landsat sama sekali tidak dapat melihatnya: band merah dan inframerah dekatnya berada di kedua sisi transisi tanpa apa pun di tengah. Sentinel-2 menempatkan tiga band sempit di dalamnya, kira kira pada 705, 740 dan 783 nanometer. Itulah sebabnya Sentinel-2 mengungguli Landsat untuk kondisi tanaman dan deteksi penyakit dengan selisih jauh lebih besar daripada yang bisa dijelaskan perbedaan resolusi saja, dan itulah sebabnya band red edge layak masuk feature stack bahkan ketika Anda belum bisa langsung merumuskan sumbangannya.
+
+## Piksel campuran
+
+Piksel sepuluh meter di atas jalur mangrove jarang hanya berisi mangrove. Ia berisi tajuk, sedikit air, sedikit lumpur terbuka, mungkin sebuah alur pasang surut. Nilai yang terekam adalah rata rata terbobot dari semuanya.
+
+Inilah masalah piksel campuran, dan ia sumber galat dominan pada bentang pesisir dan bentang yang terfragmentasi. Konsekuensi praktisnya tiga.
+
+Tepi terklasifikasi keliru secara sistematis, dan jalur mangrove hampir seluruhnya adalah tepi.
+
+Batas kelas tidak tajam, sehingga klasifikasi keras memaksakan ketegasan yang tidak dikandung datanya.
+
+Dan tanah yang sama dapat menghasilkan nilai berbeda pada tanggal berbeda, karena hamparan pasang surut yang direkam saat air tinggi dan saat air rendah secara spektral adalah dua permukaan yang berbeda. Deret waktu mangrove yang mengabaikan kondisi pasang surut memuat sinyal periodik yang sama sekali tidak berkaitan dengan vegetasinya.
+
+::: {.callout-tip}
+## Dari lapangan
+Periksa tabel pasang surut terhadap tanggal perekaman Anda sebelum menafsirkan deret waktu pesisir. Penurunan NDWI yang tampak seperti peristiwa drainase sering kali hanyalah surut purnama. Pemeriksaan ini tidak berbiaya dan sudah mempermalukan banyak pekerjaan yang sebenarnya cermat.
+:::
+
+Ada dua respons. Unmixing spektral linear memperkirakan fraksi tutupan tiap komponen di dalam piksel, bila diberi spektrum murni komponennya, yang disebut endmember. Earth Engine menyediakan `ee.Image.unmix()` untuk ini. Alternatifnya, naik satu tingkat dan klasifikasikan objek alih alih piksel, yaitu Bab 18.
+
+## Di luar optik
+
+Semua di atas mengandaikan sinar matahari yang dipantulkan, artinya sensor optik buta pada malam hari dan buta menembus awan. Dua rezim fisik lain tersedia.
+
+**Termal.** Setiap benda di atas nol mutlak memancarkan radiasi inframerah sebanding dengan suhunya. Landsat membawa band termal dan Sentinel-2 tidak, dan itulah sebabnya pekerjaan pulau panas perkotaan dan suhu permukaan lahan adalah pekerjaan Landsat.
+
+**Gelombang mikro, aktif.** Alih alih menunggu sinar matahari, sensor memancarkan pulsa gelombang mikronya sendiri dan mengukur yang kembali. Karena gelombang mikro pada panjang gelombang ini menembus awan dan tidak memerlukan matahari, sensor bekerja pada malam hari dan menembus cuaca. Apa yang kembali bergantung pada kekasaran permukaan, geometri dan kelembapan, bukan pada pigmen, sehingga radar mengukur struktur sementara optik mengukur komposisi. Sifat saling melengkapi itulah seluruh argumen Bab 10.
+
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch02-signatures",
+  "questions": [
+    {
+      "q": "Apa penyebab fisik plateau inframerah dekat pada daun sehat?",
+      "options": [
+        "Klorofil memantulkan inframerah dekat dengan kuat",
+        "Mesofil bunga karang menghamburkan cahaya di antara dinding sel dan rongga udara",
+        "Air di dalam daun memantulkan inframerah",
+        "Lapisan lilin di permukaan daun berfungsi seperti cermin"
+      ],
+      "answer": 1,
+      "why": "Klorofil bekerja di merah dan praktis tidak berurusan dengan inframerah dekat. Plateau berasal dari struktur internal, dan itulah sebabnya tanaman tertekan kehilangan respons inframerah sebelum berubah warna."
+    },
+    {
+      "q": "Mengapa tidak ada satelit yang dapat unggul pada resolusi spasial, spektral dan radiometrik sekaligus?",
+      "options": [
+        "Biaya pembuatan",
+        "Lebar pita transmisi data dari orbit",
+        "Detektor mengumpulkan foton dalam jumlah terbatas, dan mempersempit band maupun jejak sama sama membuatnya kelaparan",
+        "Batasan perjanjian internasional atas kemampuan sensor"
+      ],
+      "answer": 2,
+      "why": "Ini kendala fisika, bukan kendala rekayasa atau kebijakan. Setiap desain satelit adalah keputusan tentang ke mana anggaran foton yang tetap dibelanjakan."
+    },
+    {
+      "q": "Deret waktu NDWI pesisir menunjukkan penurunan teratur setiap beberapa minggu. Apa yang harus diperiksa sebelum menafsirkannya sebagai peristiwa drainase?",
+      "options": [
+        "Ambang batas mask awan",
+        "Kondisi pasang surut pada setiap waktu perekaman",
+        "Matriks kekeliruan klasifikatornya",
+        "Apakah citranya Tier 1 atau Tier 2"
+      ],
+      "answer": 1,
+      "why": "Hamparan pasang surut yang direkam saat air tinggi dan rendah secara spektral adalah dua permukaan berbeda. Memeriksa tabel pasang surut tidak berbiaya dan sudah mempermalukan banyak pekerjaan yang sebenarnya cermat."
+    }
+  ]
+}
+</script>
+
+## Latihan {.unnumbered}
+
+1. Gambar dari ingatan kurva reflektansi vegetasi sehat, air dan tanah terbuka dari 400 sampai 2400 nanometer. Tandai posisi band Sentinel-2. Ulangi sampai bisa tanpa rujukan.
+2. Jelaskan dalam satu kalimat mengapa NDVI tidak dapat membedakan mangrove sehat dari kelapa sawit sehat. Lalu sebutkan tiga sifat fisik yang bisa.
+3. Cari kurva respons spektral Sentinel-2 dan kurva transmisi atmosfer lalu tumpangkan. Jelaskan posisi setiap band.
+4. Seorang rekan melaporkan peta deforestasinya melewatkan sebuah pembukaan lahan yang terlihat di foto. Berikan dua penjelasan berbasis fisika sebelum menyarankan perubahan apa pun pada kodenya.

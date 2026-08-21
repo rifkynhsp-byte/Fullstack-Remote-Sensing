@@ -1,0 +1,33 @@
+# Synthetic Aperture Radar Fusion {#sec-sar}
+
+::: {.chapter-goal}
+#### In this chapter
+You will add an all weather data source to the stack: Sentinel-1 backscatter and ALOS PALSAR yearly mosaics, speckle filtered and fused with optical bands into a single analysis ready image.
+:::
+
+::: {.callout-note}
+## In progress
+The working script below is complete and runnable. The narrative prose for
+this chapter is still being written; the section plan shows what is coming.
+:::
+
+## Planned sections
+
+1. **Active versus passive sensing**: why radar ignores cloud entirely
+2. **Polarisation states, VV and VH, and what each responds to structurally**
+3. **Filtering Sentinel-1**: instrument mode IW, polarisation lists, orbit direction
+4. **Speckle and its removal**: focal median, Lee and Refined Lee filters compared
+5. **L band penetration**: ALOS PALSAR HH and HV, and the digital number to gamma nought conversion
+6. **Assembling the multi sensor stack**: optical bands, indices, radar, terrain, texture
+
+## The full workflow
+
+{{< include _snippets/ch10_multisensor_stack.qmd >}}
+
+## Source material
+
+scripts/ch07_multisensor_stack.js, derived from the getAnalysisReadyData function in your Advanced Mangrove Monitoring and Carbon Stock Assessment script.
+
+## Exercises {.unnumbered}
+
+To be written alongside the chapter.

@@ -1,0 +1,25 @@
+# JavaScript untuk Earth Engine {#sec-javascript}
+
+::: {.chapter-goal}
+#### Dalam bab ini
+Cukup JavaScript untuk menulis skrip Earth Engine, tidak lebih. Bila Anda sudah bisa memprogram, langsung ke bagian jebakan.
+:::
+
+::: {.callout-note}
+## Sedang dikerjakan
+Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
+bagian demi bagian; lihat prakata untuk urutannya.
+:::
+
+## Rencana bagian
+
+1. **Variabel, titik koma, dan tanda kutip pintar yang merusak segalanya**
+2. **Daftar dan kamus**: urutan band dan parameter visualisasi
+3. **Fungsi, dan mengapa setiap fungsi yang dipetakan harus mengembalikan sesuatu**
+4. **Komentar yang mencatat keputusan, bukan menerjemahkan kode**
+5. **print() dan batas 5.000 elemen di Console**
+6. **Jebakan khas**: nilai klien versus nilai server, getInfo(), penyisipan titik koma otomatis
+
+## Latihan {.unnumbered}
+
+Ditulis bersamaan dengan naskah babnya.

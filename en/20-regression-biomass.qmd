@@ -1,0 +1,29 @@
+# Ensembles and Continuous Prediction {#sec-regression}
+
+::: {.chapter-goal}
+#### In this chapter
+You will move from classifying categories to predicting quantities: canopy height, biomass and carbon stock, calibrated against sparse reference data.
+:::
+
+::: {.callout-note}
+## In progress
+The section plan below is settled. Prose and annotated listings are being
+written part by part; check the roadmap in the preface for the current order.
+:::
+
+## Planned sections
+
+1. **Classification versus regression**: when a category is the wrong output
+2. **Random forest regression, gradient boosting and their extrapolation limits**
+3. **Calibrating sparse LiDAR against wall to wall imagery**
+4. **Stacked ensembles**: bagging, boosting and neural components combined
+5. **From canopy height to above ground biomass to carbon, and the allometric assumptions in between**
+6. **Uncertainty propagation, and why a carbon figure without an error bar is not a result**
+
+## Source material
+
+Your AI model comparison notes and the carbon farming explorer methodology.
+
+## Exercises {.unnumbered}
+
+To be written alongside the chapter.

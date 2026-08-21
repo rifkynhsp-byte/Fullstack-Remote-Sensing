@@ -1,0 +1,135 @@
+# Why We Monitor From Space {#sec-why}
+
+::: {.chapter-goal}
+#### In this chapter
+Before any technique, the purpose. You will understand what makes an ecosystem worth the cost of monitoring it, how a map becomes a policy instrument or a financial one, and why the answer to that question determines every technical decision that follows.
+:::
+
+## Starting with the question, not the tool
+
+There is a failure mode common enough in this field to have a shape. An analyst produces a technically flawless map: cloud masked, well classified, ninety one percent overall accuracy, beautiful cartography. Nobody uses it. It answered a question nobody had asked, at a resolution nobody needed, for a boundary that does not match any administrative or management unit anyone works with.
+
+The technical chapters of this book are worthless without this one. So we start here: who needs the map, what decision does it inform, and what does it have to survive to be trusted.
+
+## The case study running through this book
+
+Most chapters use mangrove ecosystems in Indonesia as the worked example. That is not sentiment. Mangroves happen to be the hardest interesting case in tropical remote sensing, which makes them an unusually good teacher.
+
+They are structurally similar to other broadleaf forest, so spectral data alone struggles to separate them. They sit in the intertidal zone, so the ground beneath them is water or mud depending on the hour of the overpass. They grow in the cloudiest coastal band on Earth. They form narrow fringes only a few pixels wide. Anything that works over mangroves will work over almost anything.
+
+They are also worth a great deal, in three distinct currencies.
+
+**Carbon.** Mangroves store roughly three to four times more carbon per hectare than terrestrial tropical forest, and around 87 percent of it sits in waterlogged soil rather than in the trees. That soil carbon is why the accounting matters: clearing a mangrove releases centuries of accumulated below ground carbon, not just the standing biomass.
+
+**Protection.** The root network dissipates wave energy, reducing storm surge and coastal erosion for the communities behind it. In a period of rising sea levels this is infrastructure, and it maintains itself.
+
+**Fisheries and livelihoods.** Mangroves are nursery habitat for a large share of commercially important fish, crab and shrimp species. A significant proportion of the global fish catch depends on them directly or indirectly.
+
+::: {.callout-note}
+## Concept: why one number matters more than the rest
+Indonesia holds the largest mangrove area of any country. Mangroves make up around 2.6 percent of the national forest area, but their historical degradation has accounted for close to 10 percent of forestry sector greenhouse gas emissions. That disproportion is the entire argument for monitoring them specifically rather than treating them as a subset of forest. A small area, monitored well, moves a national number.
+:::
+
+## From a map to a policy instrument
+
+Under the Paris Agreement, Indonesia's enhanced Nationally Determined Contribution commits to emissions reductions of roughly 32 percent unconditionally and up to 43 percent with international support by 2030. The operational vehicle for the land sector is the FOLU Net Sink 2030 plan, which aims for forestry and other land use to become a net carbon sink of around minus 140 megatonnes of carbon dioxide equivalent. Mangrove conservation and rehabilitation are named strategies within it.
+
+None of that is achievable without measurement. A commitment to reduce emissions is only credible if the change can be quantified, repeatedly, by a method somebody outside the reporting country can check. That requirement has a name: Monitoring, Reporting and Verification, usually shortened to MRV.
+
+This is where the technical content of this book becomes policy relevant. Every MRV system needs the same three capabilities.
+
+**A baseline.** What was here at the start of the accounting period. Chapters 16 and 19 build this.
+
+**Change detection.** What happened since, and when. Chapter 21 builds this.
+
+**Quantification with uncertainty.** How much carbon, plus or minus how much. Chapter 20 builds this.
+
+If a chapter in this book does not eventually feed one of those three, it is in the wrong book.
+
+## From a map to money
+
+Carbon markets convert measured ecosystem change into finance. One credit represents roughly one tonne of carbon dioxide either removed from the atmosphere or prevented from entering it. Projects that protect standing mangroves or restore degraded ones can generate credits and sell them.
+
+Blue carbon credits trade at a premium over terrestrial forestry credits, commonly in the range of 13 to 35 dollars per tonne against 8 to 11.50, because the carbon is more permanent in anaerobic soil and because the co benefits, biodiversity and coastal protection, are easy to demonstrate. Indonesia holds an estimated 17 to 23 percent of the world's blue carbon ecosystems.
+
+::: {.callout-important}
+## Scientific integrity: this is why accuracy assessment is not optional
+When a map is the basis of a financial instrument, an overstated extent is not a technical shortcoming. It is a claim that somebody is paying for. Chapter 17 covers accuracy assessment in more detail than most readers will initially think necessary, and this is why. The honest number is the one from independent field validation, not the one your training data reports back to you.
+:::
+
+## The same logic, a different domain
+
+Nothing in the preceding sections is specific to conservation. Chapter 22 works through commercial site selection, choosing where to open a coffee shop in Malang, and the logic is structurally identical.
+
+| | Mangrove monitoring | Site selection |
+|---|---|---|
+| Unit of analysis | Pixel or segment | Hexagonal grid cell |
+| Features | Reflectance, indices, radar, terrain | Proximity, density, demography |
+| Label | Field validated land cover | Presence of an existing successful business |
+| Output | Extent and change | Suitability score from 0 to 1 |
+| Decision | Where to patrol, restore, claim credits | Where to open, and where not to |
+
+: The same machine, two domains {.striped}
+
+Recognising that these are the same problem is worth more than either technique alone. It is also, practically, what makes these skills employable across sectors rather than only inside conservation.
+
+## Who the map is actually for
+
+A map that only a remote sensing specialist can read has failed at the last step. In practice the output has to land with one of four audiences, and each needs a different thing.
+
+**A field manager** needs to know where to go this week. They need a map on a phone, with a coordinate they can navigate to, and an honest indication of confidence.
+
+**A policy officer** needs numbers that aggregate cleanly to an administrative boundary and a method description that will survive a technical review.
+
+**A carbon project developer** needs conformity with a specific methodology, a documented uncertainty estimate and a repeatable process.
+
+**A community** needs to be able to run the analysis themselves. This is the argument behind low code applications like Indraja Buana: a tool that requires an outside expert every time it is used creates dependency rather than capacity. The goal is to move from community based conservation to community owned conservation, and the software design in Chapter 23 follows from that goal.
+
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch01-purpose",
+  "questions": [
+    {
+      "q": "Mangroves make up about 2.6 percent of Indonesia's forest area. Why does that small share justify monitoring them specifically?",
+      "options": [
+        "Because they are the easiest forest type to classify from satellite",
+        "Because their degradation has accounted for close to 10 percent of forestry sector emissions",
+        "Because they are the only forest type covered by the Paris Agreement",
+        "Because they have the highest spatial resolution imagery available"
+      ],
+      "answer": 1,
+      "why": "The disproportion is the whole argument. A small area whose degradation carries an outsized emissions cost is exactly where careful monitoring moves a national number."
+    },
+    {
+      "q": "An MRV system needs three capabilities. Which is NOT one of them?",
+      "options": [
+        "A baseline of what was there at the start",
+        "Change detection showing what happened and when",
+        "Quantification with an uncertainty estimate",
+        "A published peer reviewed paper describing the method"
+      ],
+      "answer": 3,
+      "why": "Publication is good practice and not a requirement. Baseline, change and quantified uncertainty are the three things a verifier actually checks."
+    },
+    {
+      "q": "A map is technically excellent but nobody uses it. Based on this chapter, what is the most likely cause?",
+      "options": [
+        "The classifier was not accurate enough",
+        "The resolution was too coarse",
+        "It answered a question nobody asked, at a boundary nobody works with",
+        "It was not exported in the right file format"
+      ],
+      "answer": 2,
+      "why": "This is the failure mode the chapter opens with. Technical quality cannot rescue a map that was never tied to a decision or a decision maker."
+    }
+  ]
+}
+</script>
+
+## Exercises {.unnumbered}
+
+1. Write down, in one sentence, the decision your own map is meant to inform. If you cannot name a decision or a person, you have a visualisation rather than an analysis.
+2. Identify which of the three MRV capabilities your work currently provides and which it does not.
+3. Find the national or subnational commitment your study area falls under. Note the target, the baseline year and the reporting body.
+4. For your study area, name the single most likely reason a reviewer would reject your map. Keep the note. Chapter 17 will come back to it.
