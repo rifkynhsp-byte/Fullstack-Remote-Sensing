@@ -1,0 +1,223 @@
+```{=html}
+<div class="rs-widget rs-explorer" id="rs-explorer">
+  <div class="rsx-head">
+    <span class="rsx-tag" data-i18n-en="Interactive" data-i18n-id="Interaktif">Interactive</span>
+    <span class="rsx-title" data-i18n-en="Spectral signature and index explorer"
+          data-i18n-id="Penjelajah tanda tangan spektral dan indeks">Spectral signature and index explorer</span>
+  </div>
+
+  <p class="rsx-lead" data-i18n-en="Pick two land cover types and an index. The chart shows their reflectance across the spectrum; the bar below shows how far apart the index puts them. An index that leaves the two bars nearly equal cannot separate those classes, whatever the map looks like."
+     data-i18n-id="Pilih dua tipe tutupan lahan dan satu indeks. Grafik menunjukkan reflektansi keduanya di sepanjang spektrum; batang di bawahnya menunjukkan seberapa jauh indeks itu memisahkan keduanya. Indeks yang menghasilkan dua batang hampir sama tidak bisa memisahkan kelas itu, seperti apa pun tampilan petanya.">
+    Pick two land cover types and an index. The chart shows their reflectance across the spectrum;
+    the bar below shows how far apart the index puts them.
+  </p>
+
+  <div class="rsx-controls">
+    <label class="rsx-field">
+      <span data-i18n-en="Class A" data-i18n-id="Kelas A">Class A</span>
+      <select id="rsx-a"></select>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="Class B" data-i18n-id="Kelas B">Class B</span>
+      <select id="rsx-b"></select>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="Index" data-i18n-id="Indeks">Index</span>
+      <select id="rsx-index"></select>
+    </label>
+  </div>
+
+  <svg id="rsx-chart" viewBox="0 0 700 260" preserveAspectRatio="xMidYMid meet"></svg>
+
+  <div id="rsx-result" class="rsx-result"></div>
+  <div id="rsx-verdict" class="rsx-verdict"></div>
+</div>
+
+<style>
+/* The widget frame, the control row and the verdict box live in lms/lms.css,
+   shared with every other widget. What follows is specific to this one. */
+#rsx-chart{width:100%;height:auto;background:#fff;border-radius:5px;
+  border:1px solid var(--lms-rule,#e4e0d8)}
+.rsx-result{margin-top:1rem}
+.rsx-bar-row{display:flex;align-items:center;gap:.6rem;margin:.35rem 0;font-size:.85rem}
+.rsx-bar-label{width:120px;text-align:right;color:var(--lms-muted,#5c6773)}
+.rsx-bar-track{flex:1;height:20px;background:#fff;border:1px solid var(--lms-rule,#e4e0d8);
+  border-radius:3px;position:relative;overflow:hidden}
+.rsx-bar-fill{position:absolute;top:0;bottom:0;transition:all .25s ease}
+.rsx-bar-zero{position:absolute;top:0;bottom:0;width:1px;background:#c9c4bb}
+.rsx-bar-value{width:56px;font-variant-numeric:tabular-nums;font-weight:600}
+</style>
+
+<script>
+(function () {
+  var host = document.getElementById('rs-explorer');
+  if (!host) return;
+
+  var isID = (document.documentElement.lang || 'en').slice(0,2) === 'id';
+
+  // Translate any element carrying data-i18n attributes.
+  host.querySelectorAll('[data-i18n-en]').forEach(function (el) {
+    el.textContent = isID ? el.getAttribute('data-i18n-id') : el.getAttribute('data-i18n-en');
+  });
+
+  // Representative Sentinel-2 surface reflectance per class.
+  // These are typical published values, not a measurement of one place.
+  // Bands: B2 490, B3 560, B4 665, B5 705, B6 740, B8 842, B11 1610, B12 2190.
+  var CLASSES = {
+    'Healthy mangrove':   {id:'Mangrove sehat',  r:{B2:.030,B3:.055,B4:.030,B5:.075,B6:.240,B8:.310,B11:.115,B12:.050}},
+    'Other dense forest': {id:'Hutan lebat lain',r:{B2:.028,B3:.052,B4:.029,B5:.072,B6:.245,B8:.330,B11:.135,B12:.060}},
+    'Oil palm':           {id:'Kelapa sawit',    r:{B2:.032,B3:.060,B4:.035,B5:.080,B6:.250,B8:.345,B11:.155,B12:.070}},
+    'Open water':         {id:'Air terbuka',     r:{B2:.045,B3:.040,B4:.025,B5:.018,B6:.012,B8:.008,B11:.004,B12:.003}},
+    'Turbid water':       {id:'Air keruh',       r:{B2:.075,B3:.090,B4:.080,B5:.060,B6:.040,B8:.028,B11:.010,B12:.006}},
+    'Tidal mudflat':      {id:'Lumpur pasut',    r:{B2:.070,B3:.100,B4:.130,B5:.150,B6:.170,B8:.195,B11:.230,B12:.190}},
+    'Bare soil':          {id:'Tanah terbuka',   r:{B2:.090,B3:.130,B4:.180,B5:.210,B6:.235,B8:.265,B11:.330,B12:.290}},
+    'Built up':           {id:'Terbangun',       r:{B2:.130,B3:.150,B4:.170,B5:.180,B6:.190,B8:.205,B11:.240,B12:.220}}
+  };
+
+  var WL = {B2:490,B3:560,B4:665,B5:705,B6:740,B8:842,B11:1610,B12:2190};
+
+  var nd = function (a, b) { return (a - b) / (a + b); };
+
+  var INDICES = {
+    'NDVI': {
+      en:'(NIR - Red)/(NIR + Red)', f:function(r){return nd(r.B8,r.B4);},
+      noteEN:'Separates vegetation from everything else, and saturates over dense canopy.',
+      noteID:'Memisahkan vegetasi dari yang lain, dan jenuh di atas tajuk rapat.'},
+    'NDWI': {
+      en:'(Green - NIR)/(Green + NIR)', f:function(r){return nd(r.B3,r.B8);},
+      noteEN:'Finds open water, and reads built surfaces as water too.',
+      noteID:'Menemukan air terbuka, dan membaca permukaan terbangun sebagai air juga.'},
+    'MNDWI': {
+      en:'(Green - SWIR1)/(Green + SWIR1)', f:function(r){return nd(r.B3,r.B11);},
+      noteEN:'Water again, with the built up confusion largely removed.',
+      noteID:'Air lagi, dengan kekeliruan area terbangun sebagian besar hilang.'},
+    'CMRI': {
+      en:'NDVI - NDWI', f:function(r){return nd(r.B8,r.B4) - nd(r.B3,r.B8);},
+      noteEN:'Built for mangrove: vegetated AND wet at the same time.',
+      noteID:'Dibuat untuk mangrove: bervegetasi DAN basah sekaligus.'},
+    'MVI': {
+      en:'(NIR - Green)/(SWIR1 - Green)',
+      f:function(r){var d=r.B11-r.B3; if(Math.abs(d)<0.001) d=0.001; return (r.B8-r.B3)/d;},
+      noteEN:'Unbounded, so watch the denominator. Strong on mangrove against terrestrial forest.',
+      noteID:'Tidak terbatas, jadi awasi penyebutnya. Kuat untuk mangrove lawan hutan daratan.'},
+    'Red edge slope': {
+      en:'(B6 - B5)/(740 - 705)', f:function(r){return (r.B6-r.B5)/35*100;},
+      noteEN:'Steepness of the red edge. Landsat cannot compute this at all.',
+      noteID:'Kecuraman red edge. Landsat sama sekali tidak bisa menghitungnya.'}
+  };
+
+  var selA = document.getElementById('rsx-a');
+  var selB = document.getElementById('rsx-b');
+  var selI = document.getElementById('rsx-index');
+
+  Object.keys(CLASSES).forEach(function (k) {
+    [selA, selB].forEach(function (sel) {
+      var o = document.createElement('option');
+      o.value = k; o.textContent = isID ? CLASSES[k].id : k;
+      sel.appendChild(o);
+    });
+  });
+  Object.keys(INDICES).forEach(function (k) {
+    var o = document.createElement('option');
+    o.value = k; o.textContent = k;
+    selI.appendChild(o);
+  });
+
+  selA.value = 'Healthy mangrove';
+  selB.value = 'Other dense forest';
+  selI.value = 'NDVI';
+
+  var BANDS = ['B2','B3','B4','B5','B6','B8','B11','B12'];
+
+  function draw() {
+    var a = CLASSES[selA.value].r, b = CLASSES[selB.value].r;
+    var svg = document.getElementById('rsx-chart');
+    var W = 700, H = 260, L = 46, R = 16, T = 18, B = 42;
+    var xw = W - L - R, yh = H - T - B;
+
+    var xs = function (w) { return L + (Math.log(w) - Math.log(450)) /
+      (Math.log(2300) - Math.log(450)) * xw; };
+    var ys = function (v) { return T + yh - (v / 0.40) * yh; };
+
+    var parts = [];
+    // grid
+    [0, 0.1, 0.2, 0.3, 0.4].forEach(function (v) {
+      parts.push('<line x1="'+L+'" y1="'+ys(v)+'" x2="'+(W-R)+'" y2="'+ys(v)+
+        '" stroke="#eee" stroke-width="1"/>');
+      parts.push('<text x="'+(L-8)+'" y="'+(ys(v)+3.5)+'" font-size="9" fill="#8b97a3" text-anchor="end">'+
+        v.toFixed(1)+'</text>');
+    });
+    // band ticks
+    BANDS.forEach(function (bd) {
+      parts.push('<text x="'+xs(WL[bd])+'" y="'+(H-24)+'" font-size="8.5" fill="#8b97a3" text-anchor="middle">'+bd+'</text>');
+      parts.push('<text x="'+xs(WL[bd])+'" y="'+(H-12)+'" font-size="7.5" fill="#c0bcb4" text-anchor="middle">'+WL[bd]+'</text>');
+    });
+
+    function path(r, colour) {
+      var d = BANDS.map(function (bd, i) {
+        return (i ? 'L' : 'M') + xs(WL[bd]).toFixed(1) + ' ' + ys(r[bd]).toFixed(1);
+      }).join(' ');
+      var dots = BANDS.map(function (bd) {
+        return '<circle cx="'+xs(WL[bd]).toFixed(1)+'" cy="'+ys(r[bd]).toFixed(1)+
+          '" r="3" fill="'+colour+'"/>';
+      }).join('');
+      return '<path d="'+d+'" fill="none" stroke="'+colour+'" stroke-width="2.2" '+
+        'stroke-linejoin="round"/>' + dots;
+    }
+
+    parts.push(path(a, '#14a37f'));
+    parts.push(path(b, '#c8792b'));
+    parts.push('<text x="'+(L+6)+'" y="'+(T+12)+'" font-size="10" fill="#14a37f" font-weight="600">'+
+      (isID ? CLASSES[selA.value].id : selA.value)+'</text>');
+    parts.push('<text x="'+(L+6)+'" y="'+(T+26)+'" font-size="10" fill="#c8792b" font-weight="600">'+
+      (isID ? CLASSES[selB.value].id : selB.value)+'</text>');
+    parts.push('<text x="'+(L-34)+'" y="'+(T+yh/2)+'" font-size="9" fill="#8b97a3" '+
+      'transform="rotate(-90 '+(L-34)+' '+(T+yh/2)+')" text-anchor="middle">'+
+      (isID?'Reflektansi':'Reflectance')+'</text>');
+
+    svg.innerHTML = parts.join('');
+
+    // index bars
+    var idx = INDICES[selI.value];
+    var va = idx.f(a), vb = idx.f(b);
+    var span = Math.max(Math.abs(va), Math.abs(vb), 1) * 1.15;
+
+    function bar(label, v, colour) {
+      var zero = 50, pct = (v / span) * 50;
+      var left = v >= 0 ? zero : zero + pct;
+      return '<div class="rsx-bar-row">' +
+        '<span class="rsx-bar-label">'+label+'</span>' +
+        '<span class="rsx-bar-track">' +
+          '<span class="rsx-bar-zero" style="left:50%"></span>' +
+          '<span class="rsx-bar-fill" style="left:'+left+'%;width:'+Math.abs(pct)+
+            '%;background:'+colour+'"></span>' +
+        '</span>' +
+        '<span class="rsx-bar-value">'+v.toFixed(3)+'</span></div>';
+    }
+
+    document.getElementById('rsx-result').innerHTML =
+      '<div style="font-size:.78rem;color:#5c6773;margin-bottom:.4rem">' +
+      selI.value + ' = <code>' + idx.en + '</code></div>' +
+      bar(isID ? CLASSES[selA.value].id : selA.value, va, '#14a37f') +
+      bar(isID ? CLASSES[selB.value].id : selB.value, vb, '#c8792b');
+
+    var sep = Math.abs(va - vb);
+    var scale = selI.value === 'MVI' || selI.value === 'Red edge slope' ? 1.0 : 0.12;
+    var good = sep > scale;
+    var v = document.getElementById('rsx-verdict');
+    v.className = 'rsx-verdict ' + (good ? 'rsx-good' : 'rsx-weak');
+    v.innerHTML = '<strong>' +
+      (good ? (isID ? 'Terpisah: ' : 'Separable: ')
+            : (isID ? 'Tidak terpisah: ' : 'Not separable: ')) +
+      (isID ? 'selisih ' : 'gap of ') + sep.toFixed(3) + '</strong> &nbsp;' +
+      (isID ? idx.noteID : idx.noteEN) +
+      (good ? '' : ' ' + (isID
+        ? 'Classifier tidak akan memisahkan kedua kelas ini dengan indeks ini saja. Bab 10, 11 dan 14 menambahkan radar, elevasi dan tekstur justru untuk kasus seperti ini.'
+        : 'A classifier will not separate these two on this index alone. Chapters 10, 11 and 14 add radar, elevation and texture for exactly this case.'));
+  }
+
+  [selA, selB, selI].forEach(function (s) { s.addEventListener('change', draw); });
+  draw();
+})();
+</script>
+```

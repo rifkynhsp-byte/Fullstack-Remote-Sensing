@@ -173,6 +173,137 @@
 
   footer a { color: var(--teal); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
+
+  /* What is inside: the interactive parts, named, because "interactive" on
+     its own is a word every site uses and none of them mean. */
+
+  .inside {
+    margin: 3.5rem 0 0;
+    padding: 1.8rem 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .inside h2 {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 1.1rem;
+    margin: 0 0 1.2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+    gap: 1.1rem;
+  }
+
+  .feature {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1rem 1.1rem 1.1rem;
+    background: #fff;
+  }
+
+  .feature .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background: rgba(20,163,127,0.12);
+    color: var(--teal);
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .feature h3 {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.95rem;
+    margin: 0 0 0.3rem;
+  }
+
+  .feature p {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .feature .alt2 {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    color: #7c8791;
+    font-style: italic;
+  }
+
+  /* Ask the author */
+
+  .ask {
+    margin: 3rem 0 0;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--teal-bright);
+    border-radius: 6px;
+    background: var(--sand);
+    padding: 1.5rem 1.6rem;
+  }
+
+  .ask h2 {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .ask p { margin: 0 0 1rem; font-size: 0.95rem; color: #3d4148; }
+  .ask p:last-of-type { margin-bottom: 0; }
+
+  .ask-btn {
+    display: inline-block;
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    background: var(--teal);
+    color: #fff;
+    padding: 0.55rem 1.1rem;
+    border-radius: 5px;
+  }
+
+  .ask-btn:hover { background: var(--teal-bright); }
+
+  .ask-small {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-left: 0.8rem;
+  }
+
+  /* The reader counter, injected by lms/visitors.js when it answers. */
+
+  #lms-visitors { min-height: 1px; }
+
+  .lms-visitors {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.4rem;
+  }
+
+  .lms-visitors strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .lms-vis-sep { opacity: 0.5; }
+
+  .lms-vis-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal-bright);
+    box-shadow: 0 0 0 3px rgba(20,163,127,0.18);
+    flex: none;
+  }
 </style>
 </head>
 <body>
@@ -219,6 +350,61 @@
     <div class="fact"><span class="n">100%</span><span class="l">runnable code, no fragments</span></div>
   </div>
 
+  <section class="inside">
+    <h2>What you can do here, not just read &middot; Yang bisa Anda lakukan, bukan hanya dibaca</h2>
+    <div class="features">
+
+      <div class="feature">
+        <span class="icon" aria-hidden="true">&#9654;</span>
+        <h3>Python that runs as you read</h3>
+        <p>Chapters compute their own figures and tables when the book is
+           built, and the cells marked <em>Run</em> execute in your browser
+           so you can change a number and look again.
+           <span class="alt2">Python yang berjalan sambil Anda membaca.</span></p>
+      </div>
+
+      <div class="feature">
+        <span class="icon" aria-hidden="true">&#9635;</span>
+        <h3>Four interactive laboratories</h3>
+        <p>Test whether an index separates two land covers, filter sensors
+           against your own requirements, watch a cloud composite fill in,
+           and score a confusion matrix you type yourself.
+           <span class="alt2">Empat laboratorium interaktif.</span></p>
+      </div>
+
+      <div class="feature">
+        <span class="icon" aria-hidden="true">&#10003;</span>
+        <h3>Knowledge checks and progress</h3>
+        <p>Every chapter ends with a check that explains the answer whether
+           you got it right or wrong, plus a private notepad and a progress
+           dashboard.
+           <span class="alt2">Uji pemahaman dan pelacak kemajuan.</span></p>
+      </div>
+
+      <div class="feature">
+        <span class="icon" aria-hidden="true">&#9993;</span>
+        <h3>A direct line to the author</h3>
+        <p>Ask from any page and the question arrives with the chapter and
+           your position in it attached, so nobody has to explain where they
+           were.
+           <span class="alt2">Saluran langsung ke penulis.</span></p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="ask">
+    <h2>Ask a question &middot; Ajukan pertanyaan</h2>
+    <p>Stuck on a chapter, found an error, or want to know whether this
+       approach fits your own site? Write, in English or Bahasa Indonesia.
+       Corrections are as welcome as questions, and a typo report is a
+       contribution.</p>
+    <p>
+      <a class="ask-btn" href="mailto:rifky.nhsp@gmail.com?subject=Planetary-Scale%20Cloud%20GIS%20%E2%80%94%20question&amp;body=Which%20chapter%3A%0A%0AMy%20question%3A%0A">Email the author</a>
+      <span class="ask-small">rifky.nhsp@gmail.com</span>
+    </p>
+  </section>
+
   <div class="note">
     <strong>Why another Earth Engine resource?</strong>
     Because almost every free tutorial opens the Code Editor on page one and
@@ -229,13 +415,21 @@
   </div>
 
   <footer>
-    <span>&copy; Rifky Nauval Hendrawan &middot; <a href="mailto:rifkynauvalhsp@gmail.com">rifkynauvalhsp@gmail.com</a><br>Content CC BY 4.0, code MIT.</span>
+    <span>&copy; Rifky Nauval Hendrawan &middot; <a href="mailto:rifky.nhsp@gmail.com">rifky.nhsp@gmail.com</a><br>Content CC BY 4.0, code MIT.</span>
     <span>
       <a href="en/00-different.html">How this book differs</a> &middot;
       <a href="id/00-different.html">Apa bedanya buku ini</a>
     </span>
   </footer>
 
+  <!-- Filled in by lms/visitors.js once the counter answers, and left empty
+       if it does not. -->
+  <div id="lms-visitors"></div>
+
 </div>
+
+<script src="lms/config.js"></script>
+<script>window.LMS_VISITORS_AUTOSTART = true;</script>
+<script src="lms/visitors.js"></script>
 </body>
 </html>

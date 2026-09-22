@@ -70,6 +70,13 @@ Radar carries one cost that optical does not: speckle. Because the return is the
 
 **Google satellite embeddings.** Not a sensor. A learned representation derived from many sensors, 64 dimensions per 10 metre pixel per year. Chapter 19.
 
+## Try the trade yourself
+
+The table above lists what each mission can do. The filter below makes you choose, which is a different exercise: every requirement you add removes options, and the moment nothing is left is the moment the trade stops being abstract.
+
+{{< include ../interactive/sensor-chooser.qmd >}}
+
+
 ## A decision procedure
 
 Work through these in order. The first constraint that binds usually determines the answer.

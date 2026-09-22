@@ -1,0 +1,24 @@
+# Python packages the render needs.
+#
+# The book executes Python at build time, so these are build dependencies in
+# the same sense as Quarto itself. Every chunk runs on synthetic or published
+# numbers rather than on live satellite data: a chapter that needed Earth
+# Engine credentials to render would be a chapter that nobody but the author
+# could build.
+#
+#     pip install -r requirements.txt
+#
+# Versions are pinned to a minimum rather than exactly. A book render is not
+# a scientific result that needs bit-for-bit reproducibility, and a hard pin
+# becomes a security nag six months later.
+
+jupyter>=1.0            # the kernel Quarto drives for ```{python} chunks
+nbformat>=5.9
+nbclient>=0.9
+
+numpy>=1.26
+pandas>=2.1
+matplotlib>=3.8         # static figures, rendered into the page
+plotly>=5.18            # hover-and-zoom figures, rendered into the page
+
+pyyaml>=6.0             # tools/check_project.py

@@ -70,6 +70,13 @@ Radar membawa satu ongkos yang tidak dimiliki optik: speckle. Karena pantulan ad
 
 **Google satellite embeddings.** Bukan sensor. Sebuah representasi terpelajar yang diturunkan dari banyak sensor, 64 dimensi per piksel 10 meter per tahun. Bab 19.
 
+## Coba sendiri pertukarannya
+
+Tabel di atas mendaftar apa yang bisa dilakukan setiap misi. Alat pilih di bawah memaksa Anda memilih, dan itu latihan yang berbeda: setiap syarat yang Anda tambahkan menghapus pilihan, dan saat tidak ada yang tersisa adalah saat pertukaran itu berhenti menjadi abstrak.
+
+{{< include ../interactive/sensor-chooser.qmd >}}
+
+
 ## Prosedur pengambilan keputusan
 
 Kerjakan berurutan. Kendala pertama yang mengikat biasanya menentukan jawabannya.

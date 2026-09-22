@@ -2,28 +2,305 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan merancang skema latih dan validasi yang tidak dapat dibongkar penelaah: terstratifikasi, seimbang antar kelas, bebas dari kebocoran spasial, dan dibagi sebelum klasifikator melihatnya.
+Anda akan merancang skema data latih dan validasi yang tidak bisa dibongkar penelaah: terstratifikasi, seimbang agar kelas langka tetap terwakili, ditipiskan secara spasial agar piksel bertetangga tidak bocor antar bagian, dan diekspor supaya setiap percobaan berikutnya memakai sampel yang sama.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
+## Tahap tempat akurasi sebenarnya ditentukan
+
+Mengganti Random Forest dengan gradient boosting menggeser akurasi satu atau dua poin. Memperbaiki rancangan sampling menggesernya sepuluh poin, dan yang lebih penting, ia mengubah apakah angka yang Anda laporkan itu benar, bukan sekadar besar.
+
+Ketimpangan ini tidak terlihat dari literatur, karena makalah membandingkan model dan jarang membandingkan skema sampling. Ia menjadi sangat terlihat setelah beberapa tahun bekerja secara operasional, ketika model yang sama di atas citra yang sama menghasilkan peta yang layak pakai atau peta yang tidak, sepenuhnya bergantung pada apa yang ditunjukkan kepadanya.
+
+Karena itu bab ini datang sebelum bab classifier, dan ia lebih panjang daripada dugaan orang untuk sebuah bab tentang menggambar poligon.
+
+## Apa sebenarnya sebuah sampel latih
+
+Sampel latih adalah sebuah klaim. Ia menyatakan: pada lokasi ini, pada tanggal ini, tutupan lahannya adalah kelas ini, dan saya cukup yakin untuk mengajarkannya kepada sebuah model.
+
+Tiga hal mengikuti dari menganggap klaim itu serius.
+
+Klaimnya harus benar pada **tanggal perekaman**, bukan hari ini. Poligon yang digambar di atas citra basemap resolusi tinggi masa kini, lalu dipakai melatih model pada composite 2019, sedang mengajarkan tutupan lahan 2024 kepada model itu. Di atas delta tempat tambak meluas setiap tahun, galat itu besar dan sistematis.
+
+Klaimnya harus **murni**. Poligon yang menyerempet sedikit alur pasang surut sedang memberi tahu model bahwa air adalah mangrove. Di tepi sebuah kelas, jangan menggambar. Bagian dalam petak yang homogen adalah tempat label yang meyakinkan berada.
+
+Dan klaimnya harus **bisa diperiksa orang lain**. Kalau Anda tidak bisa menyebutkan alasan sebuah poligon itu mangrove dan bukan hutan lain, penelaah juga tidak bisa, dan petanya mewarisi ketidakpastian itu.
+
+::: {.callout-important}
+## Integritas ilmiah: label Anda membatasi akurasi Anda
+Kalau lima persen sampel Anda salah label, tidak ada model yang bisa melampaui 95 persen, dan confusion matrix tidak akan memberi tahu lima persen yang mana. Memeriksa dua puluh sampel acak terhadap citra independen sebelum pelatihan menghabiskan dua puluh menit dan memberi tahu batas atas yang sedang Anda hadapi. Hampir tidak ada yang melakukannya.
 :::
 
-## Rencana bagian
+## Titik, poligon, dan ilusi jumlah piksel
 
-1. **Apa sebenarnya sampel latih, dan mengapa mutunya mengalahkan pilihan model**
-2. **Titik versus poligon, dan masalah autokorelasi spasial**
-3. **randomPoints dan stratifiedSample**: sintaks dan kapan masing masing tepat
-4. **Ketidakseimbangan kelas**: mengapa kelas langka butuh proporsi sampel lebih besar
-5. **Membagi sebelum mencuplik citra, dan mengapa urutannya menentukan**
-6. **Data validasi independen**: plot lapangan, citra resolusi tinggi, produk yang ada
+Kedua pendekatan bisa dipertahankan dan keduanya gagal dengan cara berbeda.
+
+**Poligon** menangkap keragaman di dalam kelas. Poligon hutan yang mencakup tajuk tersinari sekaligus celah terbayangi mengajarkan kepada model bahwa keduanya hutan, dan satu titik tidak bisa melakukan itu. Poligon juga mengundang kontaminasi tepi, dan ia menciptakan satu ilusi yang layak disebut namanya.
+
+Tiga puluh poligon pada resolusi Sentinel-2 bisa menghasilkan empat puluh ribu piksel. Itu terlihat seperti data latih yang sangat besar. Bukan. Setiap piksel di dalam satu poligon nyaris identik dengan tetangganya, sehingga ukuran sampel efektifnya lebih dekat ke tiga puluh daripada ke empat puluh ribu. Model yang divalidasi pada piksel piksel itu melaporkan akurasi yang nyaris tidak bermakna, karena piksel validasinya nyaris duplikat piksel latihnya.
+
+**Titik** bersifat presisi dan saling bebas, dan ia kurang mewakili keragaman kecuali Anda menempatkan banyak.
+
+Jalan yang ditempuh buku ini adalah jalan yang biasanya dicapai pekerjaan operasional: gambar poligon kecil yang meyakinkan kemurniannya, lalu cuplik sejumlah **titik** yang terkendali dari dalamnya. Kenyamanan poligon, statistik titik.
+
+## Stratifikasi, dan kenapa sama rata tidak berarti adil
+
+`stratifiedSample()` menjamin sejumlah titik per kelas alih alih mencuplik sebanding dengan luas. Perbedaan itulah seluruh alasan fungsi ini ada.
+
+Pada citra pesisir, air bisa menutupi 40 persen bingkai dan petak mangrove hasil restorasi baru 0,3 persen. Sampling acak proporsional mengembalikan sekitar 400 titik air dan 3 titik restorasi, dan model belajar bahwa menebak air hampir selalu aman. Stratifikasi memaksa kelas langka itu terwakili.
+
+Target yang sama rata per kelas juga tidak otomatis benar. Ukuran sampel sebaiknya mengikuti seberapa sulit sebuah kelas, bukan berapa banyak kelas yang ada.
+
+| Kelas | Alasan targetnya sebesar itu |
+|---|---|
+| Mangrove | Kelas yang dituju. Galat di sini paling berdampak. Cuplik banyak. |
+| Hutan lain | Pasangan kekeliruan utamanya. Batas antara keduanya adalah tempat akurasi dimenangkan atau hilang, jadi ia butuh sebanyak kelas targetnya. |
+| Air | Khas secara spektral, mudah, keragaman internalnya rendah. Titik lebih sedikit sudah memadai. |
+| Lahan terbuka atau pertanian | Keragaman internalnya besar: tanah kering, tanah basah, tanaman di setiap fase. Butuh lebih banyak daripada yang disiratkan luasnya. |
+| Terbangun | Khas, tetapi heterogen pada tingkat piksel. Jumlah menengah. |
+
+: Target sampel mengikuti tingkat kesulitan, bukan luas {.striped}
+
+### Berapa banyak titik, dihitung dan bukan dikira kira
+
+"Sebanyak yang Anda mampu" adalah jawaban yang biasa dan itu bukan jawaban. Rumus Olofsson memberi jawaban yang bisa dipertahankan: pilih presisi yang Anda butuhkan pada akurasi keseluruhan, dan rumus itu mengembalikan ukuran sampel yang memberikannya.
+
+$$n = \left(\frac{\sum_i W_i S_i}{SE}\right)^2 \qquad S_i = \sqrt{U_i(1 - U_i)}$$
+
+$W_i$ adalah proporsi peta yang ditutupi kelas $i$, $U_i$ adalah akurasi pengguna yang Anda harapkan darinya, dan $SE$ adalah galat standar yang bersedia Anda laporkan. Kelas yang Anda perkirakan paling buruk menyumbang paling besar, dan itu cara rumusnya memberi tahu sesuatu yang benar tentang ke mana tenaga Anda seharusnya pergi.
+
+```{python}
+#| label: tbl-sample-size
+import pandas as pd
+import booklib as bk
+
+kelas    = ["Air", "Hutan lain", "Mangrove", "Lahan terbuka", "Restorasi"]
+bobot    = [0.40, 0.25, 0.20, 0.12, 0.03]     # bagian dari peta
+harapan  = [0.90, 0.80, 0.75, 0.70, 0.65]     # akurasi pengguna yang diharapkan
+
+rows = []
+for se in [0.02, 0.015, 0.01, 0.005]:
+    n = bk.sample_size(se, harapan, bobot)
+    rows.append({
+        "Target SE": f"±{se:.1%}",
+        "Total titik": n,
+        "Bagian proporsional kelas 3%": round(n * 0.03),
+        "Hari lapangan pada 25 titik/hari": round(n / 25),
+    })
+
+bk.table(pd.DataFrame(rows), caption=(
+    "Presisi dibeli dengan harga kuadratik. Memotong galat standar menjadi "
+    "setengah melipatempatkan kerja lapangan, dan itulah perhitungan yang "
+    "harus dilakukan sebelum menjanjikan sebuah angka kepada siapa pun."
+))
+```
+
+Dua hal keluar dari tabel itu, dan keduanya mengubah cara sebuah proyek direncanakan.
+
+Presisi bersifat kuadratik. Beralih dari plus minus dua persen ke plus minus satu persen memerlukan empat kali titik, bukan dua kali. Ketika pemberi dana meminta angka yang lebih rapat di akhir proyek, aritmetika inilah yang mengatakan berapa harganya.
+
+Dan alokasi proporsional membuat kelas yang Anda pedulikan kelaparan. Pada galat standar satu persen, kelas restorasi tiga persen mendapat sekitar 42 titik bila dialokasikan menurut luas. Empat puluh dua titik tidak bisa menopang klaim akurasi pengguna untuk kelas itu; selang kepercayaannya akan selebar dua puluh poin. Karena itu rekomendasi Olofsson sendiri adalah menetapkan batas bawah, biasanya 50 sampai 100 titik per kelas, lalu mengambil sisa titiknya dari kelas yang mudah.
+
+::: {.callout-important}
+## Kelas yang jarang justru intinya
+Sebuah proyek restorasi dinilai dari luas yang direstorasi, dan itu kelas terkecil dan terjarang di peta. Sampling proporsional memberi kelas itu bukti paling sedikit dan rentang galat paling lebar, yang berarti satu angka yang menjadi alasan proyek itu ada justru angka yang tidak ditopang oleh desain samplingnya. Tetapkan batas bawahnya lebih dulu, baru alokasikan sisanya.
+:::
+
+::: {.py-live}
+```python
+import math
+
+def ukuran_sampel(target_se, akurasi_harapan, bobot):
+    """n Olofsson untuk target galat standar akurasi keseluruhan."""
+    s = [math.sqrt(u * (1 - u)) for u in akurasi_harapan]
+    return math.ceil((sum(w * si for w, si in zip(bobot, s)) / target_se) ** 2)
+
+kelas   = ["Air", "Hutan lain", "Mangrove", "Lahan terbuka", "Restorasi"]
+bobot   = [0.40, 0.25, 0.20, 0.12, 0.03]
+harapan = [0.90, 0.80, 0.75, 0.70, 0.65]
+
+n = ukuran_sampel(0.01, harapan, bobot)
+print(f"total titik untuk SE ±1%: {n}\n")
+
+batas = 75      # titik minimum per kelas, apa pun luasnya
+print(f"{'kelas':16s} {'luas':>6s} {'proporsional':>13s} {'dengan batas':>13s}")
+for nama, w in zip(kelas, bobot):
+    print(f"{nama:16s} {w:5.0%} {round(n * w):13d} {max(round(n * w), batas):13d}")
+
+# Coba ini: atur akurasi harapan Restorasi menjadi 0.5, seburuk buruknya
+# sebuah kelas secara jujur, lalu jalankan lagi. Kelas yang Anda perkirakan
+# akan salah menentukan total ukuran sampel, dan itu rumusnya sedang
+# menganjurkan kerja rintisan sebelum kampanye utama.
+```
+:::
+
+
+## Autokorelasi spasial, penggelembung akurasi yang diam diam
+
+Dua sampel berjarak sepuluh meter, untuk keperluan praktis, adalah satu sampel yang diukur dua kali. Keduanya berbagi pencahayaan, atmosfer, tajuk, dan sering kali pohon yang sama.
+
+Kalau satu mendarat di data latih dan kembarannya di data validasi, model sedang diuji terhadap data yang secara efektif sudah pernah dilihatnya. Akurasi kembali empat sampai delapan poin terlalu tinggi, secara konsisten, dan tidak ada apa pun di keluarannya yang terlihat keliru.
+
+Inilah alasan utama akurasi internal begitu sering melampaui akurasi lapangan dengan selisih lebar. Ini bukan overfitting dalam pengertian buku teks. Data validasinya memang tidak pernah benar benar independen.
+
+Perbaikannya adalah penipisan: paksakan jarak minimum antar sampel. Skrip di bawah menempelkan sampel ke grid kasar lalu menyimpan satu per sel, cara yang tidak canggih dan menangkap hampir seluruh manfaat yang tersedia.
+
+::: {.callout-warning}
+## Kesalahan umum: membagi pikselnya, bukan titiknya
+```javascript
+// Salah. Piksel dari poligon yang sama berakhir di kedua sisi.
+var samples = image.sampleRegions({collection: polygons, ...});
+var split = samples.randomColumn('random');
+
+// Benar. Bagi titiknya lebih dulu, baru cuplik citranya dengan tiap bagian.
+var split = points.randomColumn('random');
+var training = split.filter(ee.Filter.lt('random', 0.7));
+var validation = split.filter(ee.Filter.gte('random', 0.7));
+```
+Kedua versi menghasilkan keluaran yang terlihat identik dan berbeda beberapa poin akurasi. Bab 16 meminta Anda menjalankan keduanya dan mengukur sendiri selisihnya.
+:::
 
 ## Alur kerja lengkap
 
 {{< include _snippets/ch15_sampling_design.qmd >}}
 
+## Penipisan saja tidak cukup: validasi silang blok spasial
+
+Penipisan memaksakan jarak minimum antar sampel, dan itu menangani gejalanya. Hukum pertama Tobler tidak berhenti di 60 meter.
+
+Sampel yang diambil dari muara yang sama berbagi kondisi pasang surut, kimia air, komposisi jenis, sudut matahari, dan kondisi atmosfer, berapa pun jarak antar sampelnya. Model bisa mempelajari *muara ini rupanya begini* lalu memperoleh nilai bagus pada titik uji dari muara yang sama, kemudian gagal di muara berikutnya di sepanjang pantai. Pembagian acak mengukur interpolasi di dalam satu bentang lahan lalu melaporkannya seolah itu prediksi.
+
+Mode kegagalan itu punya nama, **data leakage** spasial, dan itulah sebabnya model yang melaporkan 95 persen pada validasi rutin menghasilkan 60 persen ketika diterapkan di provinsi sebelah.
+
+::: {.callout-important}
+## Integritas ilmiah: angka mana yang dilaporkan
+Kalau sebuah model hanya akan diterapkan di area tempat ia dilatih, pembagian acak adalah gambaran yang adil tentang kinerjanya. Begitu ada kemungkinan orang menerapkannya di tempat lain, dan dalam praktik itu selalu terjadi, angka dari pembagian acak adalah pernyataan yang berlebihan.
+
+Laporkan keduanya, dan beri label yang jelas. Menyebut hanya angka pembagian acak bukan salah, melainkan tidak lengkap, dan penelaah yang menguasai literatur ini akan menanyakannya.
+:::
+
+### Cara blok memperbaikinya
+
+Bagi area studi menjadi blok blok geografis. Tetapkan **blok utuh** ke setiap fold, jangan pernah titik per titik. Latih pada sebagian blok, uji pada blok yang disisihkan. Model lalu terpaksa menggeneralisasi melintasi ruang, bukan menginterpolasi di dalamnya.
+
+![Pembagian acak menyisakan titik uji yang selalu dekat dari setiap titik latih. Pembagian blok memindahkan titik uji terdekat kira kira dua setengah kali lebih jauh, dan selisih itulah kebocoran yang sedang dihilangkan.](../images/block-cv.png){#fig-blockcv}
+
+Jarak di bawah setiap panel pada @fig-blockcv dihitung, bukan sekadar ilustrasi. Pada pembagian acak, jarak rata rata dari titik latih ke titik uji terdekat adalah 0,53 satuan; pada pembagian blok ia menjadi 1,30.
+
+Ukuran blok adalah parameter yang menentukan, dan ia keputusan ekologis, bukan keputusan statistik.
+
+Terlalu kecil, dan blok bersebelahan tetap berkorelasi, sehingga Anda hanya membuat pembagian acak sedikit lebih sulit. Terlalu besar, dan setiap fold mencakup bentang lahan yang sama sekali berbeda, sehingga skornya mencerminkan perbedaan bentang lahan, bukan mutu model.
+
+Titik awal yang bisa dipertahankan adalah rentang tempat prediktor Anda masih berkorelasi. Anda bisa memperkirakannya dari semivariogram, atau mendekatinya dari apa yang Anda ketahui tentang bentang lahannya. Di atas delta, skala tempat kondisinya benar benar berubah adalah sub muara, beberapa kilometer.
+
+{{< include _snippets/ch15_block_cross_validation.qmd >}}
+
+### Membaca hasilnya
+
+Ada dua angka yang keluar, dan keduanya penting.
+
+**Rata rata antar fold** adalah akurasi jujur Anda. Bandingkan dengan angka pembagian acak dari data yang sama. Selisih dua sampai empat poin itu wajar. Selisih sepuluh poin atau lebih berarti pembagian acaknya sedang mengukur sesuatu yang lain dari yang Anda kira.
+
+**Simpangan baku antar fold** adalah angka yang hampir tidak pernah dilaporkan siapa pun dan mungkin justru yang lebih berguna. Model yang mencetak 0,84 plus minus 0,02 berpindah tempat dengan andal. Rata rata yang sama pada plus minus 0,15 bekerja di sebagian bentang lahan dan gagal di sebagian lain, dan itu fakta yang seharusnya diketahui seseorang sebelum mengambil keputusan dari petanya.
+
+::: {.callout-tip}
+## Dari lapangan
+Variasikan ukuran blok dari 1 km sampai 20 km lalu plot akurasi terhadapnya. Akurasi menurun seiring blok membesar, lalu mendatar. Titik saat ia berhenti menurun adalah perkiraan empiris rentang autokorelasi data Anda, diperoleh tanpa perlu mencocokkan variogram. Ia juga memberi tahu seberapa jauh dua area studi harus terpisah sebelum model yang dilatih di satu area mengatakan sesuatu yang berguna tentang yang lain.
+:::
+
+## Dua pemeriksaan sebelum memercayai sampelnya
+
+**Keterpisahan spektral.** Plot dua band prediktor saling berhadapan, diwarnai per kelas. Kalau mangrove dan hutan lain bertumpuk sepenuhnya pada NDVI tetapi memisah sepanjang backscatter radar, Anda baru saja memastikan alasan Bab 10 memasukkan radar ke dalam stack. Kalau dua kelas bertumpuk pada segalanya, tidak ada classifier yang akan memisahkannya, dan sebaiknya keduanya digabung atau Anda mencari prediktor lain.
+
+**Di mana sampelnya berada.** Petakan. Ini menangkap pengelompokan di satu sudut yang kebetulan mudah dijangkau, kelas yang hanya digambar di satu sisi sungai, dan titik yang jatuh ke laut. Tiga puluh detik, dan sudah menyelamatkan banyak sore.
+
+## Validasi independen adalah hal yang berbeda
+
+Semua yang di atas membagi satu himpunan data. Itu validasi internal, dan ia menjawab pertanyaan yang sempit: apakah model menggeneralisasi ke titik yang tidak dipakai melatihnya, digambar dengan cara yang sama, oleh orang yang sama, dari citra yang sama.
+
+Ia tidak bisa mendeteksi galat pelabelan yang sistematis. Kalau Anda secara konsisten mengira nipah sebagai mangrove, kedua bagian pembagian itu memuat kekeliruan yang sama dan confusion matrix melaporkan akurasi yang sangat baik.
+
+Validasi independen memakai data yang dikumpulkan lewat proses berbeda. Plot lapangan, dalam kasus buku ini data plot CIFOR dari Papua Barat. Citra komersial resolusi tinggi yang ditafsirkan orang yang tidak menggambar poligon latihnya. Produk yang sudah ada seperti Global Mangrove Watch, dipakai sebagai pemeriksaan silang dan bukan sebagai kebenaran.
+
+Selisih antara akurasi internal dan akurasi independen adalah angka yang jujur, dan Bab 17 membahas cara melaporkannya.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch15-sampling",
+  "questions": [
+    {
+      "q": "Tiga puluh poligon menghasilkan empat puluh ribu piksel latih. Mengapa itu bukan data latih yang besar?",
+      "options": [
+        "Empat puluh ribu tergolong kecil untuk pembelajaran mesin",
+        "Piksel di dalam satu poligon nyaris duplikat, sehingga ukuran sampel efektifnya lebih dekat ke tiga puluh",
+        "Poligon tidak bisa dipakai dengan Random Forest",
+        "Pikselnya berada pada skala yang keliru"
+      ],
+      "answer": 1,
+      "why": "Autokorelasi spasial membuat piksel bertetangga nyaris tidak membawa informasi yang saling bebas. Jumlahnya terlihat mengesankan dan statistiknya berperilaku seolah Anda punya tiga puluh sampel."
+    },
+    {
+      "q": "Mengapa stratifiedSample ada, padahal sampling acak lebih sederhana?",
+      "options": [
+        "Ia berjalan lebih cepat di wilayah luas",
+        "Ia menjamin keterwakilan kelas langka yang nyaris terlewat oleh sampling proporsional",
+        "Ia otomatis membuang titik yang salah label",
+        "Ia menghasilkan titik, bukan poligon"
+      ],
+      "answer": 1,
+      "why": "Kelas yang menutupi 0,3 persen citra hanya mendapat sekitar tiga titik dari sampling proporsional. Stratifikasi memaksanya terwakili agar model punya sesuatu untuk dipelajari."
+    },
+    {
+      "q": "Anda membagi sampel setelah memanggil sampleRegions, bukan sebelumnya. Apa akibatnya?",
+      "options": [
+        "Skrip gagal dengan galat ketidakcocokan band",
+        "Tidak ada, kedua urutan itu setara",
+        "Piksel dari poligon yang sama mendarat di kedua bagian, menggelembungkan akurasi yang dilaporkan beberapa poin",
+        "Pelatihan menjadi jauh lebih lambat"
+      ],
+      "answer": 2,
+      "why": "Kegagalannya diam diam. Petanya terlihat sama, akurasinya beberapa poin terlalu tinggi, dan tidak ada apa pun di keluaran yang memberi sinyal ada masalah."
+    },
+    {
+      "q": "Anda sudah menipiskan sampel ke jarak minimum 60 m. Mengapa akurasi yang dilaporkan masih bisa menggelembung?",
+      "options": [
+        "60 m terlalu kecil untuk Sentinel-2",
+        "Sampel dari muara yang sama tetap berbagi pasang surut, kimia air, jenis, dan atmosfer, sehingga model bisa mempelajari tempatnya alih alih kelasnya",
+        "Penipisan membuang terlalu banyak sampel untuk bisa diandalkan",
+        "Penipisan hanya bekerja untuk sampling berbasis poligon"
+      ],
+      "answer": 1,
+      "why": "Penipisan menangani gejalanya. Autokorelasi tidak berhenti di 60 m, dan itulah sebabnya validasi silang blok membagi wilayah utuh alih alih memaksakan jarak."
+    },
+    {
+      "q": "Validasi silang blok memberi 0,84 dengan simpangan baku 0,15 antar fold. Apa yang diberitahukan sebarannya?",
+      "options": [
+        "Modelnya tidak stabil dan perlu lebih banyak pohon",
+        "Bloknya terlalu kecil",
+        "Model bekerja di sebagian bentang lahan dan gagal di sebagian lain, dan itu perlu diketahui sebelum orang bertindak atas petanya",
+        "Hasilnya tidak sah dan harus dibuang"
+      ],
+      "answer": 2,
+      "why": "Rata rata adalah judulnya; sebarannya sering lebih berguna. Sebaran lebar adalah temuan nyata tentang di mana peta bisa dan tidak bisa dipercaya, bukan cacat yang perlu disembunyikan."
+    },
+    {
+      "q": "Apa yang TIDAK bisa dideteksi validasi internal?",
+      "options": [
+        "Model yang menghafal data latihnya",
+        "Galat pelabelan sistematis, misalnya secara konsisten menyebut nipah sebagai mangrove",
+        "Kelas dengan sampel terlalu sedikit",
+        "Classifier yang tidak stabil"
+      ],
+      "answer": 1,
+      "why": "Kedua bagian pembagian mewarisi kekeliruan yang sama, sehingga confusion matrix melaporkan akurasi yang sangat baik. Hanya data rujukan yang dikumpulkan secara independen yang bisa membukanya."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Atur setiap target kelas ke angka yang sama lalu jalankan ulang. Kelas mana yang menjadi lebih sulit dimodelkan, dan mengapa sampling yang sama rata tidak berarti sampling yang adil?
+2. Matikan penipisan dengan mengatur jarak minimum ke 10 meter, lalu jalankan Bab 16 dengan hasilnya. Catat berapa poin akurasi yang dilaporkan naik. Simpan angkanya.
+3. Ekspor sampelnya sebagai CSV lalu periksa dua puluh di antaranya secara acak terhadap citra resolusi tinggi. Tingkat salah label Anda adalah batas atas akurasi peta Anda.
+4. Jalankan validasi silang blok pada ukuran blok 1 km, 5 km, dan 20 km. Plot akurasi terhadap ukuran blok dan tentukan rentang autokorelasi data Anda.
+5. Gambar poligon latih untuk satu kelas yang Anda anggap mudah, lalu minta rekan kerja menggambarnya secara terpisah. Bandingkan. Tingkat ketidaksepakatannya lebih informatif daripada sebagian besar penyetelan model.

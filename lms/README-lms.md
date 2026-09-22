@@ -19,6 +19,8 @@ Local mode is honest and adequate for a public self study book. Account mode is 
 
 Switch between them by filling in two values in `lms/config.js`. Nothing else changes.
 
+Questions in local mode arrive at the address in `instructorEmail`. That one value feeds the floating button, the card at the end of every chapter, and the message on the instructor page, and `tools/check_project.py` fails the build if the landing page's own mailto link disagrees with it.
+
 ## What the reader gets, in both modes
 
 **A reading progress bar** across the top of every chapter.
@@ -32,6 +34,10 @@ Switch between them by filling in two values in `lms/config.js`. Nothing else ch
 **Ask a question.** A floating button on every page. The question carries the chapter and URL automatically, so nobody has to explain where they are.
 
 **A dashboard** at `en/dashboard.html` and `id/dashboard.html` showing progress, quiz scores, notes and their question history, with export and reset.
+
+**Runnable Python.** Twelve cells in the book have a Run button and execute in the reader's own browser through Pyodide. No server, no account, no quota. Nothing downloads until somebody presses Run, and the reader can edit the code first. Configured under `pyodide` in `config.js`; see the README at the repository root for how to write one.
+
+**A reader count** at the foot of each chapter, from a free third party counter. It counts browsers rather than people, once per browser per twelve hours, and hides itself if the service is unreachable. Configured under `visitors` in `config.js`.
 
 ## Enabling account mode
 
@@ -72,7 +78,7 @@ The last one lets you test locally.
 
 ### 6. Sign in as yourself once
 
-Visit the site, sign in with `rifkynauvalhsp@gmail.com`, then open `en/instructor.html`. The policies in the schema recognise that address and unlock the question inbox. Any other signed in reader sees only their own questions.
+Visit the site, sign in with `rifky.nhsp@gmail.com`, then open `en/instructor.html`. The policies in the schema recognise that address and unlock the question inbox. Any other signed in reader sees only their own questions.
 
 ## Getting notified about new questions
 
@@ -127,13 +133,19 @@ features: {
   quizzes: true,
   notes: true,
   questions: true,
-  reading: false     // no scroll bar at the top
+  reading: false,    // no scroll bar at the top
+  visitors: false,   // no reader count
+  pyodide: false     // .py-live blocks stay plain code listings
 }
 ```
+
+Switching `pyodide` off is the one with a visible consequence for the text: the chapters invite the reader to press Run, and with the feature off there is no button to press. Turn it off only if you also remove those invitations.
 
 ## What this is not
 
 It is not Moodle. There are no enrolments, no cohorts, no grade book, no assignment submission, no certificates, no SCORM, no discussion forums.
+
+It is not analytics either. The reader counter is two integers. There is no session recording, no funnel, no per reader trail, and adding one would mean collecting data about people who came to read a book.
 
 It is the subset of an LMS that a self study technical book actually benefits from: know where you are, check that you understood, keep notes, and reach the author. Those four cover most of what readers of a book like this need, and each one that got left out is a maintenance burden that did not get created.
 

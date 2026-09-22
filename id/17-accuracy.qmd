@@ -2,30 +2,261 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan menyusun matriks kekeliruan, membaca akurasi produsen dan pengguna dengan benar, dan memahami mengapa akurasi keseluruhan adalah angka paling tidak informatif di dalamnya.
+Anda akan menyusun confusion matrix, membaca akurasi produsen dan akurasi pengguna dengan benar, memahami mengapa akurasi keseluruhan adalah angka paling tidak informatif di dalam tabel itu, lalu melaporkan estimasi luas beserta selang kepercayaan alih alih angka telanjang.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
+## Bab yang memisahkan peta dari hasil
+
+Siapa pun bisa menghasilkan citra terklasifikasi. Tahap yang mengubahnya menjadi sesuatu yang akan diterima penelaah, kementerian, atau verifikator karbon adalah tahap ini, dan tahap inilah yang paling sering diburu buru.
+
+Ada alasan mengapa diburu buru. Penilaian akurasi adalah titik ketika pekerjaannya dinilai, dan angka yang jujur hampir selalu lebih rendah daripada angka yang ingin Anda laporkan. Mengerjakannya dengan benar berarti mengetahui bahwa peta Anda lebih buruk dari harapan, secara terbuka, dan tertulis.
+
+Mengerjakannya dengan asal berarti mengetahuinya belakangan, dari orang lain.
+
+## Confusion matrix
+
+Klasifikasikan titik validasi yang disisihkan, lalu tabulasikan prediksi terhadap label. Baris adalah kelas aktual, kolom adalah kelas prediksi. Salah orientasi dan Anda akan menukar akurasi produsen dengan akurasi pengguna, dan itu membalik cerita yang disampaikan peta tentang dirinya sendiri.
+
+Diagonalnya adalah kesepakatan. Semua yang di luar diagonal adalah galat, dan sel di luar diagonal itulah bagian yang paling sering dilewati orang, padahal justru bagian yang memberi tahu apa yang harus diperbaiki.
+
+|  | Prediksi mangrove | Prediksi hutan lain | Prediksi air |
+|---|---|---|---|
+| **Aktual mangrove** | 142 | 23 | 5 |
+| **Aktual hutan lain** | 18 | 176 | 2 |
+| **Aktual air** | 3 | 1 | 148 |
+
+: Confusion matrix yang layak dibaca, bukan hanya dinilai {.striped}
+
+Akurasi keseluruhan tabel itu 90 persen, yang terdengar terhormat dan nyaris tidak memberi tahu apa apa. Yang sebenarnya dinyatakan tabel itu adalah mangrove dan hutan lain saling mengacaukan di kedua arah, 23 ke satu arah dan 18 ke arah lain, sementara air praktis sudah selesai. Setiap perbaikan yang layak dikerjakan berada di dalam satu pasangan kelas itu.
+
+Pola yang sama muncul lagi pada contoh lima kelas di @fig-confusion, tempat dua kelas tambahan menurunkan angka keseluruhan tanpa mengubah tempat kekeliruan sebenarnya berada.
+
+![Contoh lima kelas, dibaca dua cara. Akurasi produsen mengalir sepanjang baris, akurasi pengguna menurun sepanjang kolom, dan angka keseluruhan 85 persen menyembunyikan bahwa mangrove dan hutan lain saling mengacaukan di kedua arah.](../images/confusion-matrix.png){#fig-confusion}
+
+### Matriks yang sama, dihitung oleh kode
+
+Tidak ada bagian dari penilaian akurasi yang layak dikerjakan dengan kira kira di kepala. Sel di bawah menghitung matriks di atas ketika halaman ini dibangun, sehingga angka di prosa dan angka di tabel tidak mungkin berpisah jalan.
+
+```{python}
+#| label: tbl-accuracy-live
+import pandas as pd
+import booklib as bk
+
+kelas = ["Mangrove", "Hutan lain", "Air"]
+
+# Baris adalah referensi (kelas sebenarnya titik itu), kolom adalah peta.
+matriks = [
+    [142,  23,   5],
+    [ 18, 176,   2],
+    [  3,   1, 148],
+]
+
+stats = bk.confusion_stats(matriks)
+
+print(f"Titik validasi      {stats['n']}")
+print(f"Akurasi keseluruhan {stats['overall_accuracy']:.1%}")
+print(f"Kappa               {stats['kappa']:.3f}")
+
+bk.table(pd.DataFrame({
+    "Kelas": kelas,
+    "Akurasi produsen": stats["producers_accuracy"],
+    "Akurasi pengguna": stats["users_accuracy"],
+    "F1": stats["f1"],
+}), caption=(
+    "Akurasi produsen mengalir sepanjang baris dan menjawab: dari mangrove "
+    "yang benar benar ada, berapa yang ditemukan peta? Akurasi pengguna "
+    "menurun sepanjang kolom dan menjawab: dari yang disebut peta sebagai "
+    "mangrove, berapa yang benar benar mangrove? Keduanya pertanyaan berbeda, "
+    "dan sebuah peta bisa baik pada satu dan buruk pada yang lain."
+))
+```
+
+Akurasi keseluruhannya 90 persen. Akurasi produsen mangrove 84 persen, enam poin di bawah angka utama, dan jarak itulah seluruh alasan satu angka bukan sebuah hasil: enam belas persen mangrove yang ada hilang dari peta ini, dan angka keseluruhan menyembunyikannya di balik air, yang mudah.
+
+Kappa keluar 0,85, yang terdengar seperti pembenaran mandiri atas angka 90 persen itu, padahal bukan. Bagian berikutnya menjelaskan kenapa.
+
+::: {.py-live}
+```python
+# Ubah matriksnya. Baris adalah referensi, kolom adalah peta.
+kelas = ["Mangrove", "Hutan lain", "Air"]
+matriks = [
+    [142,  23,   5],
+    [ 18, 176,   2],
+    [  3,   1, 148],
+]
+
+n = sum(sum(baris) for baris in matriks)
+benar = sum(matriks[i][i] for i in range(len(matriks)))
+total_baris = [sum(r) for r in matriks]
+total_kolom = [sum(matriks[i][j] for i in range(len(matriks))) for j in range(len(matriks))]
+
+oa = benar / n
+harapan = sum(total_baris[i] * total_kolom[i] for i in range(len(matriks))) / (n * n)
+kappa = (oa - harapan) / (1 - harapan)
+
+print(f"n = {n}   akurasi keseluruhan = {oa:.1%}   kappa = {kappa:.3f}\n")
+print(f"{'kelas':14s} {'produsen':>9s} {'pengguna':>9s}")
+for i, nama in enumerate(kelas):
+    pa = matriks[i][i] / total_baris[i] if total_baris[i] else float("nan")
+    ua = matriks[i][i] / total_kolom[i] if total_kolom[i] else float("nan")
+    print(f"{nama:14s} {pa:8.1%} {ua:9.1%}")
+
+# Coba ini: pindahkan 20 titik dari mangrove-diklasifikasi-hutan-lain
+# (baris 0, kolom 1) ke diagonal di baris 0, kolom 0. Akurasi keseluruhan
+# naik sekitar empat poin; akurasi produsen mangrove naik dua belas poin.
+# Selisih itulah argumen untuk melaporkan angka per kelas.
+```
 :::
 
-## Rencana bagian
 
-1. **Matriks kekeliruan**: penyusunan dan orientasinya
-2. **Akurasi keseluruhan dan mengapa ia menyanjung peta yang tidak seimbang**
-3. **Akurasi produsen dan galat omisi**: apa yang terlewat peta
-4. **Akurasi pengguna dan galat komisi**: apa yang diklaim peta padahal tidak ada
-5. **Koefisien kappa dan kritik serius terhadapnya dalam literatur mutakhir**
-6. **Validasi internal versus validasi lapangan independen**
-7. **Estimasi luas beserta selang kepercayaan**
-8. **Membandingkan dengan produk yang ada**: Global Mangrove Watch, ESRI, Dynamic World
+## Tiga angka, tiga pertanyaan yang berbeda
+
+**Akurasi keseluruhan** adalah proporsi titik validasi yang terklasifikasi benar. Ia satu angka yang menggambarkan persoalan banyak kelas, dan ia didominasi kelas mana pun yang luasnya paling besar. Peta yang sempurna di air dan tidak berguna di mangrove bisa melaporkan 88 persen. Kutip angkanya, dan jangan pernah berhenti di situ.
+
+**Akurasi produsen** bertanya: dari mangrove yang benar benar ada, berapa banyak yang ditemukan peta? Kebalikannya adalah **galat omisi**, yaitu apa yang terlewat peta.
+
+**Akurasi pengguna** bertanya: dari piksel yang disebut peta sebagai mangrove, berapa banyak yang memang mangrove? Kebalikannya adalah **galat komisi**, yaitu apa yang diada adakan peta.
+
+::: {.callout-important}
+## Integritas ilmiah: galat mana yang lebih buruk bergantung pada keputusannya
+Untuk klaim karbon, **komisi** adalah arah yang berbahaya. Anda sedang dibayar untuk luas yang tidak bisa Anda buktikan keberadaannya, dan luas yang dilebihkan pada instrumen keuangan adalah paparan hukum dan finansial, bukan sekadar kekurangan teknis.
+
+Untuk sistem peringatan deforestasi, **omisi** lebih buruk. Pembukaan lahan yang terlewat adalah pembukaan lahan yang tidak direspons siapa pun, sementara peringatan palsu hanya memakan satu perjalanan patroli.
+
+Nyatakan arah mana yang penting untuk pemakaian Anda, lalu optimalkan dan laporkan sesuai itu. Satu angka akurasi tunggal justru menyembunyikan persis hal ini.
+:::
+
+## Geser angkanya dan lihat apa yang bergerak
+
+Praatur di bawah adalah empat situasi dari pekerjaan nyata. Yang kedua patut direnungkan: peta yang melaporkan akurasi keseluruhan 96 persen sementara menemukan kelas yang menjadi alasan proyek itu ada hanya satu dari lima kali.
+
+{{< include ../interactive/confusion-lab.qmd >}}
+
+
+## Kappa, dan mengapa perlu hati hati dengannya
+
+Koefisien kappa menyesuaikan kesepakatan yang teramati terhadap kesepakatan yang diharapkan muncul karena kebetulan. Ia muncul di hampir setiap makalah penginderaan jauh selama dua dekade dan kini banyak dikritik.
+
+Keberatan intinya, yang diajukan dengan tegas oleh Pontius dan Millones, adalah bahwa kesepakatan karena kebetulan bukan garis dasar yang bermakna untuk sebuah peta. Tidak ada yang mengklasifikasikan dengan menebak, jadi mengoreksi terhadap tebakan berarti mengoreksi terhadap sesuatu yang tidak terjadi. Kappa juga sangat peka terhadap proporsi kelas, sehingga dua peta bermutu sama di atas bentang lahan dengan proporsi kelas berbeda memperoleh kappa yang berbeda.
+
+Laporkan kalau jurnal atau metodologi mewajibkannya. Jangan menjadikannya sorotan utama, dan jangan biarkan ia menggantikan akurasi per kelas, yang memuat informasi yang sebenarnya ingin diwakili kappa.
+
+## Internal lawan independen
+
+Perbedaan ini adalah inti bab ini.
+
+**Validasi internal** memakai bagian yang disisihkan dari Bab 15. Ia menjawab pertanyaan yang sempit: apakah model menggeneralisasi ke titik yang tidak dipakai melatihnya, digambar dengan cara yang sama, oleh orang yang sama, dari citra yang sama.
+
+**Validasi independen** memakai data yang dikumpulkan lewat proses berbeda: plot lapangan, citra resolusi tinggi yang ditafsirkan orang lain, atau produk yang sudah ada sebagai pemeriksaan silang.
+
+Keduanya rutin berbeda lima sampai sepuluh poin, dan selisih itu bersifat diagnostik, bukan memalukan.
+
+Selisih beberapa poin itu normal dan memang diharapkan. Selisih dua puluh poin berarti data latih Anda tidak mewakili bentang lahannya, dan penyetelan sebanyak apa pun tidak akan menutupnya, karena masalahnya ada di hulu, di Bab 15.
+
+::: {.callout-tip}
+## Dari lapangan
+Belanjakan anggaran validasi lapangan Anda di tempat model model itu berselisih. Bab 16 menghasilkan layer yang menunjukkan di mana Random Forest, SVM, dan gradient boosting memberi jawaban berbeda. Mengambil titik validasi dari layer itu, alih alih secara acak, memberi tahu jauh lebih banyak per kunjungan lapangan, karena titik acak sebagian besar mendarat di tempat yang semua model sudah sepakat.
+:::
 
 ## Alur kerja lengkap
 
 {{< include _snippets/ch17_accuracy_assessment.qmd >}}
 
+## Luas bukan sekadar hitungan piksel
+
+Menghitung piksel terklasifikasi lalu mengalikannya dengan luas piksel menghasilkan **luas peta**. Itu bukan luas populasinya, karena petanya punya galat yang diketahui dan galat itu tidak simetris: kalau komisi melampaui omisi untuk mangrove, hitungan pikselnya secara sistematis melebih lebihkan luasnya.
+
+Koreksi praktik baik, mengikuti Olofsson dan kolega, memakai confusion matrix untuk menyesuaikan hitungannya lalu mengembalikan galat baku bersamanya. Penurunannya layak dibaca sekali. Intinya untuk buku ini singkat.
+
+Luas yang dilaporkan sebagai **41.200 hektar** itu tidak lengkap.
+
+Luas yang dilaporkan sebagai **41.200 hektar, selang kepercayaan 95 persen 39.600 sampai 42.800, dihitung pada skala 10 meter** itu sebuah hasil.
+
+Versi kedua adalah yang diminta metodologi karbon, dan itulah yang membedakan pekerjaan yang diterima dari pekerjaan yang dikembalikan.
+
+## Membandingkan dengan produk yang sudah ada
+
+Global Mangrove Watch, ESRI Global Land Cover, dan Dynamic World meliput sebagian besar area studi, dan membandingkan terhadapnya adalah pemeriksaan kewarasan yang berguna.
+
+Perlakukan sebagai pembanding, bukan sebagai kebenaran. Ketidaksesuaian 40 persen tidak otomatis galat Anda, dan ia tetap perlu dijelaskan sebelum diterbitkan. Alasan yang sah termasuk tahun yang berbeda, unit pemetaan minimum yang berbeda, definisi mangrove yang berbeda, dan perlakuan berbeda terhadap tegakan terdegradasi atau jarang. Peta dengan unit pemetaan minimum 10 meter akan menemukan jalur tepi yang tidak bisa dipisahkan produk 100 meter, dan ketidaksesuaian itu lalu menjadi keunggulan peta Anda, bukan cacatnya.
+
+Yang tidak boleh Anda lakukan adalah menemukan ketidaksesuaian besar, memilih tidak menjelaskannya, lalu tetap menerbitkannya.
+
+## Apa yang ditulis di bagian metode
+
+Versi terpendek yang lengkap dari apa yang dihasilkan bab ini:
+
+> Akurasi klasifikasi dinilai memakai 218 titik validasi yang disisihkan, terstratifikasi per kelas dan ditipiskan secara spasial ke jarak minimum 60 m. Akurasi keseluruhan 89,1 persen. Akurasi produsen untuk mangrove 83,5 persen dan akurasi pengguna 86,1 persen, dengan kekeliruan dominan terjadi antara mangrove dan hutan lain. Validasi independen terhadap 47 plot lapangan menghasilkan akurasi keseluruhan 84,0 persen. Luas diestimasi mengikuti Olofsson et al. (2014) pada skala 10 m, menghasilkan 41.200 ha mangrove dengan selang kepercayaan 95 persen 39.600 sampai 42.800 ha.
+
+Setiap anak kalimat di paragraf itu adalah keputusan yang diminta bab ini dan Bab 15 untuk Anda ambil secara sadar. Itulah tujuan kedua bab tersebut.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch17-accuracy",
+  "questions": [
+    {
+      "q": "Peta Anda melaporkan akurasi keseluruhan 92 persen. Mengapa ia masih bisa tidak terpakai untuk pemantauan mangrove?",
+      "options": [
+        "92 persen di bawah ambang yang diterima",
+        "Akurasi keseluruhan didominasi kelas terluas, sehingga peta bisa sempurna di air dan buruk di mangrove",
+        "Akurasi keseluruhan tidak bisa dihitung untuk lebih dari tiga kelas",
+        "Ia harus dikonversi ke kappa lebih dulu"
+      ],
+      "answer": 1,
+      "why": "Satu angka untuk persoalan banyak kelas menyembunyikan kinerja per kelas. Akurasi produsen dan pengguna untuk kelas yang benar benar Anda pedulikan adalah angka yang penting."
+    },
+    {
+      "q": "Anda membuat peta untuk menopang klaim kredit karbon. Arah galat mana yang lebih berbahaya?",
+      "options": [
+        "Omisi, karena luas yang terlewat mengurangi pembayaran",
+        "Komisi, karena Anda mengklaim luas yang tidak bisa Anda buktikan keberadaannya",
+        "Keduanya sama, keduanya simetris",
+        "Yang mana pun yang lebih besar di matriks"
+      ],
+      "answer": 1,
+      "why": "Luas yang dilebihkan pada instrumen keuangan adalah paparan, bukan sekadar kekurangan teknis. Untuk sistem peringatan prioritasnya terbalik, dan itulah sebabnya Anda harus menyatakan arah mana yang penting."
+    },
+    {
+      "q": "Validasi internal memberi 91 persen dan validasi lapangan memberi 71 persen. Apa yang ditunjukkan selisih itu?",
+      "options": [
+        "Data lapangannya keliru",
+        "Classifier-nya perlu lebih banyak pohon",
+        "Data latihnya tidak mewakili bentang lahan, dan itu masalah Bab 15, bukan masalah pemodelan",
+        "Skala yang dipakai untuk validasi terlalu kasar"
+      ],
+      "answer": 2,
+      "why": "Selisih beberapa poin itu normal. Dua puluh poin berarti model menggeneralisasi di dalam sampel Anda dan tidak menggeneralisasi ke bentang lahan sesungguhnya, dan penyetelan tidak bisa memperbaikinya."
+    },
+    {
+      "q": "Mengapa luas mangrove 41.200 hektar merupakan hasil yang tidak lengkap?",
+      "options": [
+        "Seharusnya dilaporkan dalam kilometer persegi",
+        "Ia tidak membawa estimasi ketidakpastian dan tidak menyebut skala, padahal keduanya mengubah angkanya",
+        "Hektar tidak diterima metodologi karbon",
+        "Seharusnya dibulatkan ke ribuan terdekat"
+      ],
+      "answer": 1,
+      "why": "Luas yang dihitung pada 10 m dan pada 100 m berbeda, dan hitungan piksel yang tidak dikoreksi terhadap galat klasifikasi itu bias. Skala dan selang kepercayaan adalah bagian dari angkanya, bukan hiasan."
+    },
+    {
+      "q": "Peta Anda berselisih 30 persen dengan Global Mangrove Watch. Respons yang tepat?",
+      "options": [
+        "Sesuaikan klasifikasi Anda sampai cocok",
+        "Buang perbandingannya, karena resolusi peta Anda lebih tinggi",
+        "Selidiki dan jelaskan selisihnya, karena tahun, definisi, dan unit pemetaan minimum yang berbeda semuanya menghasilkan selisih yang sah",
+        "Laporkan keduanya tanpa komentar"
+      ],
+      "answer": 2,
+      "why": "Produk yang sudah ada adalah pembanding, bukan kebenaran. Peta 10 m yang menemukan jalur tepi yang tidak bisa dipisahkan produk 100 m adalah keunggulan, tetapi hanya setelah Anda menunjukkan bahwa itulah yang terjadi."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Temukan sel di luar diagonal yang terbesar di matriks Anda. Sebutkan kedua kelasnya lalu usulkan satu prediktor yang memisahkan keduanya secara fisik, bukan secara statistik.
+2. Laporkan akurasi internal dan independen berdampingan. Kalau selisihnya melampaui sepuluh poin, tulis satu paragraf tentang apa dalam data latih Anda yang menyebabkannya.
+3. Tumpangkan peta Anda dan Global Mangrove Watch. Pilih tiga area yang berselisih lalu tentukan dari citra resolusi tinggi mana yang benar.
+4. Hitung luas pada 10 m dan pada 100 m lalu laporkan keduanya dengan skala yang disebutkan. Jelaskan kepada orang non spesialis mengapa keduanya benar.
+5. Tulis paragraf metode untuk peta Anda sendiri mengikuti templat di atas. Kalau ada anak kalimat yang tidak bisa Anda isi, Anda baru saja menemukan keputusan yang Anda ambil tanpa sengaja.

@@ -58,6 +58,9 @@
       askContext: 'About',
       askSent: 'Sent. You will get a reply by email.',
       askMailto: 'Your email client will open with the question ready to send.',
+      askCardTitle: 'Stuck on this chapter?',
+      askCardBody: 'Questions about this chapter reach the author directly, with the chapter and your position in it attached. Corrections are just as welcome as questions.',
+      askDirect: 'or email',
       questionRequired: 'Please write your question first.',
       emailRequired: 'Please enter your email so a reply can reach you.',
       dashTitle: 'Your progress',
@@ -103,6 +106,9 @@
       askContext: 'Tentang',
       askSent: 'Terkirim. Balasan akan dikirim lewat email.',
       askMailto: 'Aplikasi email Anda akan terbuka dengan pertanyaan yang siap dikirim.',
+      askCardTitle: 'Ada yang mengganjal di bab ini?',
+      askCardBody: 'Pertanyaan tentang bab ini langsung sampai ke penulis, beserta bab dan posisi Anda di dalamnya. Koreksi sama diterimanya dengan pertanyaan.',
+      askDirect: 'atau kirim email ke',
       questionRequired: 'Tuliskan pertanyaan Anda terlebih dahulu.',
       emailRequired: 'Isi email Anda agar balasan dapat sampai.',
       dashTitle: 'Kemajuan Anda',
@@ -477,6 +483,27 @@
   }
 
   /* ---------------------------------------------------------------------- */
+  /* Chapter footer                                                          */
+  /* ---------------------------------------------------------------------- */
+
+  // Completion and the ask card arrive from two independent async paths, so
+  // the slots are created in order on first call and each one fills its own.
+  function chapterFoot(slot) {
+    var main = document.querySelector('main#quarto-document-content') ||
+               document.querySelector('main') || document.body;
+    var foot = main.querySelector(':scope > .lms-chapter-foot');
+    if (!foot) {
+      foot = el('div', { class: 'lms-chapter-foot' }, [
+        el('div', { class: 'lms-foot-complete' }),
+        el('div', { class: 'lms-foot-ask' }),
+        el('div', { class: 'lms-foot-visitors', id: 'lms-visitors' })
+      ]);
+      main.appendChild(foot);
+    }
+    return foot.querySelector('.lms-foot-' + slot);
+  }
+
+  /* ---------------------------------------------------------------------- */
   /* Chapter completion                                                      */
   /* ---------------------------------------------------------------------- */
 
@@ -501,9 +528,9 @@
     }
     paint();
 
-    var main = document.querySelector('main#quarto-document-content') ||
-               document.querySelector('main') || document.body;
-    main.appendChild(el('div', { class: 'lms-complete-wrap' }, [button]));
+    var slot = chapterFoot('complete');
+    slot.innerHTML = '';
+    slot.appendChild(el('div', { class: 'lms-complete-wrap' }, [button]));
   }
 
   // Tick the sidebar entries the reader has finished, and show a course wide
@@ -702,6 +729,29 @@
     }, [el('span', { class: 'lms-fab-icon', text: '?' }),
         el('span', { class: 'lms-fab-label', text: T.ask })]);
     document.body.appendChild(fab);
+  }
+
+  // The floating button is easy to overlook, and the moment a reader knows
+  // what they did not understand is the moment they finish the chapter. So
+  // the invitation is also placed there, in the flow of the page.
+  function renderAskCard() {
+    var slot = chapterFoot('ask');
+    if (!slot) return;
+
+    var card = el('div', { class: 'lms-ask-card' }, [
+      el('h3', { class: 'lms-ask-card-title', text: T.askCardTitle }),
+      el('p', { class: 'lms-ask-card-body', text: T.askCardBody }),
+      el('div', { class: 'lms-ask-card-actions' }, [
+        el('button', { class: 'lms-btn lms-btn-primary', text: T.ask, onclick: openAsk }),
+        el('span', { class: 'lms-ask-card-direct', html:
+          T.askDirect + ' <a href="mailto:' + CFG.instructorEmail +
+          '?subject=' + encodeURIComponent('[' + (CFG.courseId || 'book') + '] ' + pageTitle()) +
+          '">' + CFG.instructorEmail + '</a>' })
+      ])
+    ]);
+
+    slot.innerHTML = '';
+    slot.appendChild(card);
   }
 
   function openAsk() {
@@ -926,6 +976,19 @@
   /* ---------------------------------------------------------------------- */
 
   function boot() {
+    // The footer slots are created before anything fills them, so the order
+    // on the page is fixed regardless of which async path finishes first.
+    if (isChapter()) chapterFoot('complete');
+
+    // These two do not touch the store, so they are started outside its
+    // promise chain: a storage failure must not silently remove them.
+    if (FEATURES.visitors !== false && window.LMS_VISITORS) {
+      try { window.LMS_VISITORS.start(); } catch (e) { console.warn('visitors:', e); }
+    }
+    if (FEATURES.pyodide !== false && window.LMS_PYODIDE) {
+      try { window.LMS_PYODIDE.start(); } catch (e) { console.warn('py-live:', e); }
+    }
+
     Store.init().then(function () {
       renderAccountBar();
 
@@ -955,7 +1018,10 @@
         updateSidebarBadges();
       }
 
-      if (FEATURES.questions !== false) renderAskButton();
+      if (FEATURES.questions !== false) {
+        renderAskButton();
+        if (isChapter()) renderAskCard();
+      }
     }).catch(function (err) {
       // A failure here must never take the book down with it. The chapter is
       // the product; the platform around it is an enhancement.

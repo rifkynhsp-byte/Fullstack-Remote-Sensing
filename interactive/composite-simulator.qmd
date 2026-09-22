@@ -1,0 +1,254 @@
+```{=html}
+<!--
+  interactive/composite-simulator.qmd
+  ===================================
+  A pixel grid that fills in as scenes are added.
+
+  The executed Python in this chapter plots 1 - p^n, which is the right
+  answer and the wrong intuition: a curve does not look like a map with holes
+  in it. This draws the map. Each square is a pixel, each scene is a pass of
+  the satellite, and the reader watches coverage arrive fast and then stall.
+
+  The clustered mode is the part that matters. With cloud arriving in
+  organised systems rather than independently per pixel, the same number of
+  scenes leaves permanent holes, which is the real behaviour of a wet season
+  and the reason radar exists in Chapter 10.
+-->
+<div class="rs-widget" id="cmp">
+  <div class="rsx-head">
+    <span class="rsx-tag" data-i18n-en="Interactive" data-i18n-id="Interaktif">Interactive</span>
+    <span class="rsx-title" data-i18n-en="Watch a composite fill in"
+          data-i18n-id="Lihat sebuah composite terisi">Watch a composite fill in</span>
+  </div>
+
+  <p class="rsx-lead"
+     data-i18n-en="Every square is a pixel. Add scenes and a pixel turns green the first time any scene sees it clear. Independent cloud fills the grid quickly. Clustered cloud, which is what a wet season actually does, leaves holes that more scenes do not fix."
+     data-i18n-id="Setiap kotak adalah satu piksel. Tambah scene dan sebuah piksel menjadi hijau pada saat pertama kali ada scene melihatnya bersih. Awan yang bebas mengisi kisi dengan cepat. Awan yang menggerombol, yang memang perilaku musim hujan, meninggalkan lubang yang tidak diperbaiki oleh tambahan scene.">
+    Every square is a pixel.
+  </p>
+
+  <div class="rsx-controls">
+    <label class="rsx-field">
+      <span data-i18n-en="Cloud cover" data-i18n-id="Tutupan awan">Cloud cover</span>
+      <input type="range" id="cmp-cloud" min="10" max="95" step="5" value="75">
+      <small class="cmp-out" id="cmp-cloud-out"></small>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="Scenes in the window" data-i18n-id="Scene dalam jendela">Scenes in the window</span>
+      <input type="range" id="cmp-scenes" min="1" max="73" step="1" value="12">
+      <small class="cmp-out" id="cmp-scenes-out"></small>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="How cloud behaves" data-i18n-id="Perilaku awan">How cloud behaves</span>
+      <select id="cmp-mode">
+        <option value="independent" data-i18n-en="Independent per pixel (the textbook)"
+                data-i18n-id="Bebas per piksel (versi buku teks)">Independent per pixel</option>
+        <option value="clustered" selected data-i18n-en="Clustered in systems (the tropics)"
+                data-i18n-id="Menggerombol dalam sistem (tropis)">Clustered in systems</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="cmp-stage">
+    <canvas id="cmp-canvas" width="480" height="300" role="img"
+            aria-label="Pixel coverage grid"></canvas>
+  </div>
+
+  <div class="cmp-stats" id="cmp-stats"></div>
+  <div class="rsx-verdict" id="cmp-verdict"></div>
+</div>
+
+<style>
+.cmp-out{font-size:.78rem;color:var(--lms-teal,#0f6b57);font-weight:700;
+  text-transform:none;letter-spacing:0}
+.cmp-stage{background:var(--lms-surface,#fff);border:1px solid var(--lms-rule,#e4e0d8);
+  border-radius:5px;padding:.5rem;line-height:0}
+#cmp-canvas{width:100%;height:auto;image-rendering:pixelated}
+.cmp-stats{display:flex;gap:1.6rem;flex-wrap:wrap;margin:.9rem 0 0}
+.cmp-stat{display:flex;flex-direction:column}
+.cmp-stat-n{font-size:1.4rem;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.cmp-stat-l{font-size:.71rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;
+  color:var(--lms-muted,#5c6773)}
+</style>
+
+<script>
+(function () {
+  var host = document.getElementById('cmp');
+  if (!host) return;
+
+  var isID = (document.documentElement.lang || 'en').slice(0, 2) === 'id';
+  host.querySelectorAll('[data-i18n-en]').forEach(function (el) {
+    el.textContent = isID ? el.getAttribute('data-i18n-id') : el.getAttribute('data-i18n-en');
+  });
+
+  var canvas = document.getElementById('cmp-canvas');
+  var ctx = canvas.getContext('2d');
+  var COLS = 80, ROWS = 50, CELL = 6;
+
+  var cloudEl = document.getElementById('cmp-cloud');
+  var scenesEl = document.getElementById('cmp-scenes');
+  var modeEl = document.getElementById('cmp-mode');
+
+  // A fixed seed, so moving a slider back and forth shows the same landscape
+  // rather than a new one. Reproducibility matters even in a toy.
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 4294967296;
+    };
+  }
+
+  // Clustered cloud: a handful of smooth blobs per scene, drifting between
+  // scenes, plus a standing field that favours the same ridges every pass.
+  // Crude, and it reproduces the behaviour that matters: some pixels are
+  // unlucky every single time.
+  function persistentField() {
+    var r = rng(20240917);
+    var field = new Float32Array(COLS * ROWS);
+    var centres = [];
+    for (var k = 0; k < 5; k++) {
+      centres.push({x: r() * COLS, y: r() * ROWS, s: 6 + r() * 14, w: 0.25 + r() * 0.55});
+    }
+    for (var y = 0; y < ROWS; y++) {
+      for (var x = 0; x < COLS; x++) {
+        var v = 0;
+        centres.forEach(function (c) {
+          var d2 = (x - c.x) * (x - c.x) + (y - c.y) * (y - c.y);
+          v += c.w * Math.exp(-d2 / (2 * c.s * c.s));
+        });
+        field[y * COLS + x] = Math.min(v, 1);
+      }
+    }
+    return field;
+  }
+
+  var PERSISTENT = persistentField();
+
+  function simulate(cloud, scenes, mode) {
+    var clear = new Uint8Array(COLS * ROWS);      // 0 = never seen clear
+    var firstSeen = new Int16Array(COLS * ROWS).fill(-1);
+    var r = rng(987654321);
+
+    for (var s = 0; s < scenes; s++) {
+      if (mode === 'independent') {
+        for (var i = 0; i < clear.length; i++) {
+          if (!clear[i] && r() > cloud) { clear[i] = 1; firstSeen[i] = s; }
+        }
+        continue;
+      }
+
+      // Clustered: three to six blobs of cloud per scene, wherever they
+      // happen to drift, on top of the standing field.
+      var blobs = [];
+      var nb = 3 + Math.floor(r() * 4);
+      for (var b = 0; b < nb; b++) {
+        blobs.push({x: r() * COLS, y: r() * ROWS, s: 8 + r() * 18});
+      }
+
+      for (var y = 0; y < ROWS; y++) {
+        for (var x = 0; x < COLS; x++) {
+          var idx = y * COLS + x;
+          if (clear[idx]) continue;
+
+          var p = 0;
+          blobs.forEach(function (bl) {
+            var d2 = (x - bl.x) * (x - bl.x) + (y - bl.y) * (y - bl.y);
+            p += Math.exp(-d2 / (2 * bl.s * bl.s));
+          });
+          // Scale the blob field and the standing field to the requested
+          // average cloud cover.
+          //
+          // The cap is 0.99 rather than 1: a pixel under persistent cloud
+          // should be very unlucky, not excluded by construction. Without the
+          // cap the grid stops filling at all, and a year of Sentinel-2 over a
+          // wet region does eventually clear most pixels, which is the honest
+          // behaviour to reproduce. What survives is a small set of pixels
+          // that take the whole year, and they are the ones worth reporting.
+          var pCloud = Math.min(0.99,
+            cloud * (0.35 + 1.0 * Math.min(p, 1) + 0.65 * PERSISTENT[idx]));
+          if (r() > pCloud) { clear[idx] = 1; firstSeen[idx] = s; }
+        }
+      }
+    }
+    return {clear: clear, firstSeen: firstSeen};
+  }
+
+  function paint() {
+    var cloud = parseInt(cloudEl.value, 10) / 100;
+    var scenes = parseInt(scenesEl.value, 10);
+    var mode = modeEl.value;
+
+    document.getElementById('cmp-cloud-out').textContent = (cloud * 100).toFixed(0) + '%';
+    document.getElementById('cmp-scenes-out').textContent = scenes +
+      (isID ? ' scene · ' : ' scenes · ') + (scenes * 5) + (isID ? ' hari' : ' days');
+
+    var out = simulate(cloud, scenes, mode);
+    var covered = 0;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var y = 0; y < ROWS; y++) {
+      for (var x = 0; x < COLS; x++) {
+        var idx = y * COLS + x;
+        if (out.clear[idx]) {
+          covered++;
+          // Earlier is darker: the shade carries how many scenes it took.
+          var age = out.firstSeen[idx] / Math.max(scenes - 1, 1);
+          var light = 0.25 + 0.6 * age;
+          ctx.fillStyle = 'rgba(20,163,127,' + (1.05 - light).toFixed(3) + ')';
+        } else {
+          ctx.fillStyle = '#e8e4dc';
+        }
+        ctx.fillRect(x * CELL, y * CELL, CELL - 1, CELL - 1);
+      }
+    }
+
+    var pct = covered / (COLS * ROWS);
+    var theory = 1 - Math.pow(cloud, scenes);
+
+    document.getElementById('cmp-stats').innerHTML =
+      stat((pct * 100).toFixed(1) + '%', isID ? 'piksel terisi' : 'pixels filled') +
+      stat((theory * 100).toFixed(1) + '%', isID ? 'prediksi 1 - pⁿ' : '1 - pⁿ predicts') +
+      stat(String(COLS * ROWS - covered), isID ? 'piksel masih kosong' : 'pixels still empty');
+
+    var v = document.getElementById('cmp-verdict');
+    var gap = theory - pct;
+
+    if (mode === 'independent') {
+      v.className = 'rsx-verdict ' + (pct > 0.95 ? 'rsx-good' : 'rsx-weak');
+      v.innerHTML = '<strong>' + (isID
+        ? 'Awan bebas: kisi mengikuti rumusnya.'
+        : 'Independent cloud: the grid follows the formula.') + '</strong> ' + (isID
+        ? 'Inilah dunia tempat aritmetika di atas berlaku, dan bukan dunia tempat Anda bekerja. Ganti ke awan menggerombol dan bandingkan dua angka pertama.'
+        : 'This is the world the arithmetic above describes, and not the world you work in. Switch to clustered cloud and compare the first two numbers.');
+    } else if (gap > 0.08) {
+      v.className = 'rsx-verdict rsx-weak';
+      v.innerHTML = '<strong>' + (isID
+        ? 'Rumusnya melebih lebihkan cakupan sebesar ' + (gap * 100).toFixed(0) + ' poin.'
+        : 'The formula overstates coverage by ' + (gap * 100).toFixed(0) + ' points.') +
+        '</strong> ' + (isID
+        ? 'Lubang yang tersisa bukan sebaran acak; itu piksel yang sama pada setiap pass, di bawah awan yang menetap di tempat yang sama. Menambah scene tidak memperbaikinya, dan di titik itulah radar berhenti menjadi topik lanjutan.'
+        : 'The holes that remain are not scattered at random; they are the same pixels on every pass, under cloud that sits in the same place. More scenes do not fix them, and that is the point at which radar stops being an advanced topic.');
+    } else {
+      v.className = 'rsx-verdict rsx-good';
+      v.innerHTML = '<strong>' + (isID
+        ? 'Cakupan hampir lengkap.'
+        : 'Coverage is nearly complete.') + '</strong> ' + (isID
+        ? 'Composite dengan panjang ini bisa dipertahankan di sini. Laporkan jumlah observasi per piksel, karena piksel yang terisi pada scene ke-60 tidak sekuat piksel yang terisi pada scene pertama.'
+        : 'A composite of this length is defensible here. Report the observation count per pixel anyway: a pixel filled on the sixtieth scene is not as well evidenced as one filled on the first.');
+    }
+  }
+
+  function stat(value, label) {
+    return '<span class="cmp-stat"><span class="cmp-stat-n">' + value +
+           '</span><span class="cmp-stat-l">' + label + '</span></span>';
+  }
+
+  [cloudEl, scenesEl, modeEl].forEach(function (el) {
+    el.addEventListener('input', paint);
+    el.addEventListener('change', paint);
+  });
+  paint();
+})();
+</script>
+```

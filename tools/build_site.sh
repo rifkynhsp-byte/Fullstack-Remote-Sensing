@@ -23,7 +23,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-SHARED=(theme.scss theme-dark.scss styles.css references.bib)
+# booklib.py is imported by the executed Python chunks in the chapters. It
+# travels with the other shared assets for the same reason they do: one copy
+# at the root is the source of truth, and both editions compute from it.
+SHARED=(theme.scss theme-dark.scss styles.css references.bib booklib.py)
 
 echo "==> Generating code listings"
 # Must run before Quarto starts. Book projects resolve include directives
@@ -38,6 +41,17 @@ for LANG in en id; do
     cp "$FILE" "$LANG/$FILE"
   done
   cp landing/assets/favicon.svg "$LANG/favicon.svg"
+
+  # Images are shared between editions. Copying rather than referencing with
+  # ../ keeps every path inside the Quarto project, which is the arrangement
+  # Quarto handles reliably.
+  rm -rf "$LANG/images"
+  cp -r images "$LANG/images"
+
+  # Interactive widgets, shared between editions. Each one detects the page
+  # language at runtime and labels itself accordingly.
+  rm -rf "$LANG/interactive"
+  cp -r interactive "$LANG/interactive"
 
   echo "==> Rendering $LANG"
   quarto render "$LANG"
@@ -54,7 +68,7 @@ cp landing/index.html docs/index.html
 cp -r landing/assets docs/assets
 
 # Both books reference "../lms/", so one shared copy serves both editions.
-cp lms/lms.js lms/lms.css lms/config.js docs/lms/
+cp lms/lms.js lms/lms.css lms/config.js lms/visitors.js lms/pyodide-cell.js docs/lms/
 
 # GitHub Pages runs Jekyll by default, which ignores any directory whose name
 # begins with an underscore. Quarto emits several. This file disables Jekyll.

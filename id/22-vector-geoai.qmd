@@ -26,6 +26,47 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 {{< include _snippets/ch22_site_selection.qmd >}}
 
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch22-leakage",
+  "questions": [
+    {
+      "q": "Model melaporkan presisi, recall, dan f1 bernilai 1,00. Apa reaksi pertama yang benar?",
+      "options": [
+        "Terbitkan, berarti fiturnya dipilih dengan baik",
+        "Anggap ada fitur yang membocorkan labelnya lalu cari fitur itu",
+        "Tambah jumlah pohonnya untuk memastikan kestabilan",
+        "Kumpulkan lebih banyak data latih"
+      ],
+      "answer": 1,
+      "why": "Di luar buku teks, akurasi sempurna berarti ada prediktor yang menyandikan jawabannya. Perlakukan setiap classifier yang hampir sempurna sebagai bersalah sampai terbukti tidak."
+    },
+    {
+      "q": "Jarak ke pesaing terdekat membocorkan label, tetapi jumlah pesaing dalam radius 500 m tidak. Kenapa?",
+      "options": [
+        "Hitungan selalu lebih aman daripada jarak",
+        "Sel berlabel ada berisi sebuah kafe, sehingga jaraknya ke kafe terdekat mendekati nol secara konstruksi; hitungannya justru menggambarkan lingkungannya",
+        "Hitungan punya varians lebih rendah",
+        "Fitur jaraknya diukur dalam derajat"
+      ],
+      "answer": 1,
+      "why": "Ujinya adalah apakah sebuah fitur bisa diamati sebelum labelnya ada. Memahami kenapa yang satu bocor dan yang lain tidak adalah inti latihan ini."
+    },
+    {
+      "q": "Apa yang sebenarnya diasumsikan pendekatan presence dan pseudo absence?",
+      "options": [
+        "Bahwa setiap sel kosong adalah lokasi buruk yang sudah terbukti",
+        "Bahwa sel tempat sebuah usaha sudah berdagang adalah lokasi yang berhasil, dan sel kosong acak mewakili sel tak terpakai yang tipikal",
+        "Bahwa pasarnya efisien sempurna",
+        "Bahwa kepadatan penduduk memprediksi keberhasilan"
+      ],
+      "answer": 1,
+      "why": "Setiap kesimpulan mewarisi asumsi ini, termasuk titik butanya: lingkungan yang benar benar kurang terlayani terlihat seperti lokasi buruk hanya karena belum ada yang membuka di sana."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.

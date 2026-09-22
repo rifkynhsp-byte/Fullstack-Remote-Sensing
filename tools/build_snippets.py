@@ -58,6 +58,24 @@ SCRIPT_DIR = ROOT / "scripts"
 LANGUAGES = ["en", "id"]
 FALLBACK_FROM = "en"
 
+# Earth Engine repository that hosts the runnable scripts, in the form
+# users/<account>/<repo>. When set, every JavaScript listing gets an
+# "Open in Earth Engine" button above it that loads the script straight into
+# the Code Editor, already authenticated, ready to Run.
+#
+# To set this up:
+#   1. In the Code Editor, Scripts panel, New -> Repository. Name it
+#      something durable such as `book`.
+#   2. Add each file from scripts/en/ as a script inside it, keeping the
+#      filename without the .js extension.
+#   3. Settings icon next to the repository -> Share -> tick "Anyone can read".
+#   4. Put the path below, then rebuild.
+#
+# Leave empty to omit the buttons.
+EE_REPO = ""   # e.g. "users/rifkynauval/book"
+
+EE_LINK_BASE = "https://code.earthengine.google.com/?scriptPath="
+
 DIRECTIVE = re.compile(r"^(?://\||#\|)\s*(\w+)\s*:\s*(.+?)\s*$")
 
 HIGHLIGHT = {".js": "javascript", ".py": "python", ".sh": "bash", ".json": "json"}
@@ -91,7 +109,7 @@ def slice_lines(lines: list[str], spec: str | None) -> list[str]:
     return lines[first - 1 : last]
 
 
-def build(path: Path, display_path: str) -> str | None:
+def build(path: Path, display_path: str, lang_code: str = "en") -> str | None:
     raw = path.read_text(encoding="utf-8").replace("\r\n", "\n").split("\n")
     meta, body = parse_directives(raw)
 
@@ -108,7 +126,18 @@ def build(path: Path, display_path: str) -> str | None:
     lang = HIGHLIGHT.get(path.suffix, "text")
     fence = "```{." + lang + f' filename="{display_path}"' + "}"
 
-    return "\n".join([fence, *body, "```", ""])
+    parts = []
+
+    # An "Open in Earth Engine" button, for JavaScript only. Python listings
+    # run in Colab rather than the Code Editor, so the link would be wrong.
+    if EE_REPO and path.suffix == ".js":
+        script_path = f"{EE_REPO}:{path.stem}".replace("/", "%2F").replace(":", "%3A")
+        label = "Open in Earth Engine" if lang_code == "en" else "Buka di Earth Engine"
+        parts.append(
+            f'[{label}]({EE_LINK_BASE}{script_path}){{.ee-link target="_blank"}}\n')
+
+    parts += [fence, *body, "```", ""]
+    return "\n".join(parts)
 
 
 def main() -> int:
@@ -142,7 +171,7 @@ def main() -> int:
             if not chosen.exists():
                 continue
 
-            snippet = build(chosen, display)
+            snippet = build(chosen, display, lang)
             if snippet is None:
                 continue
 

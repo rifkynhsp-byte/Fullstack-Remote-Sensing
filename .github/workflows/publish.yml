@@ -27,7 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
 
+      # The checks need PyYAML only. Installing the full render dependency
+      # set here would add two minutes to a job whose whole point is to fail
+      # in ten seconds.
       - run: pip install pyyaml
 
       - name: Generate code listings
@@ -58,6 +62,27 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
+
+      # The chapters execute Python when they render, so these are build
+      # dependencies exactly as Quarto is. Without them the render fails on
+      # an import inside a kernel, several minutes in.
+      - name: Install Python render dependencies
+        run: pip install -r requirements.txt
+
+      # Executed chunks are cached by Quarto in _freeze/. Restoring that cache
+      # means a commit touching only prose re-executes nothing, which is most
+      # commits. The key includes the chunk sources so a changed computation
+      # invalidates it.
+      - name: Restore executed chunk cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            en/_freeze
+            id/_freeze
+          key: freeze-${{ hashFiles('booklib.py', 'en/*.qmd', 'id/*.qmd', 'requirements.txt') }}
+          restore-keys: |
+            freeze-
 
       # One command builds everything: generates code listings, copies shared
       # assets into each language project, renders both books, and assembles
@@ -74,6 +99,13 @@ jobs:
           echo "Page counts:"
           echo "  en: $(find docs/en -name '*.html' | wc -l) pages"
           echo "  id: $(find docs/id -name '*.html' | wc -l) pages"
+          echo
+          echo "Platform assets that both editions load from ../lms/:"
+          ls -1 docs/lms
+          echo
+          echo "Executed figures and tables:"
+          echo "  plotly charts: $(grep -rl 'plotly-graph-div' docs/en docs/id | wc -l) page(s)"
+          echo "  runnable cells: $(grep -ro 'class=\"py-live\"' docs/en docs/id | wc -l)"
 
       - uses: actions/upload-pages-artifact@v3
         with:

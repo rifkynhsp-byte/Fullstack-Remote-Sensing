@@ -60,6 +60,80 @@ Equal targets per class are not automatically correct either. Sample sizes shoul
 
 : Sample targets follow difficulty, not area {.striped}
 
+### How many points, computed rather than guessed
+
+"As many as you can afford" is the usual answer and it is not an answer. Olofsson's formula gives a defensible one: choose the precision you need on overall accuracy, and it returns the sample size that delivers it.
+
+$$n = \left(\frac{\sum_i W_i S_i}{SE}\right)^2 \qquad S_i = \sqrt{U_i(1 - U_i)}$$
+
+$W_i$ is the proportion of the map that class $i$ covers, $U_i$ is the user's accuracy you expect from it, and $SE$ is the standard error you are willing to report. The classes you expect to be worst contribute most, which is the formula telling you something true about where your effort should go.
+
+```{python}
+#| label: tbl-sample-size
+import pandas as pd
+import booklib as bk
+
+classes = ["Water", "Other forest", "Mangrove", "Bareland", "Restoration"]
+weights = [0.40, 0.25, 0.20, 0.12, 0.03]     # share of the map
+expected = [0.90, 0.80, 0.75, 0.70, 0.65]    # user's accuracy you expect
+
+rows = []
+for se in [0.02, 0.015, 0.01, 0.005]:
+    n = bk.sample_size(se, expected, weights)
+    rows.append({
+        "Target SE": f"±{se:.1%}",
+        "Total points": n,
+        "Proportional share for the 3% class": round(n * 0.03),
+        "Field days at 25 points a day": round(n / 25),
+    })
+
+bk.table(pd.DataFrame(rows), caption=(
+    "Precision is bought at a quadratic price. Halving the standard error "
+    "quadruples the fieldwork, which is the calculation to do before "
+    "promising anybody a number."
+))
+```
+
+Two things fall out of that table, and both change how a project is planned.
+
+Precision is quadratic. Going from plus or minus two percent to plus or minus one percent takes four times the points, not twice. If a funder asks for a tighter number late in a project, this is the arithmetic that says what it costs.
+
+And proportional allocation starves the class you care about. At a standard error of one percent, the three percent restoration class gets about 42 points if you allocate by area. Forty two points cannot support a user's accuracy claim for that class; the confidence interval around it will be twenty points wide. This is why Olofsson's own recommendation is to set a floor, typically 50 to 100 points per class, and to take the extra points from the classes that are easy.
+
+::: {.callout-important}
+## The rare class is the whole point
+A restoration project is judged on the restored area, which is the smallest and rarest class on the map. Proportional sampling gives that class the least evidence and the widest error bars, which means the one number the project exists to report is the one the sampling design left unsupported. Set the floor first, then allocate what is left.
+:::
+
+::: {.py-live}
+```python
+import math
+
+def sample_size(target_se, expected_accuracies, weights):
+    """Olofsson's n for a target standard error of overall accuracy."""
+    s = [math.sqrt(u * (1 - u)) for u in expected_accuracies]
+    return math.ceil((sum(w * si for w, si in zip(weights, s)) / target_se) ** 2)
+
+classes  = ["Water", "Other forest", "Mangrove", "Bareland", "Restoration"]
+weights  = [0.40, 0.25, 0.20, 0.12, 0.03]
+expected = [0.90, 0.80, 0.75, 0.70, 0.65]
+
+n = sample_size(0.01, expected, weights)
+print(f"total points for SE ±1%: {n}\n")
+
+floor = 75      # minimum points per class, whatever its area
+print(f"{'class':14s} {'area':>6s} {'proportional':>13s} {'with a floor':>13s}")
+for name, w in zip(classes, weights):
+    print(f"{name:14s} {w:5.0%} {round(n * w):13d} {max(round(n * w), floor):13d}")
+
+# Try this: set the expected accuracy of Restoration to 0.5, the worst a
+# class can honestly be, and run again. A class you expect to get wrong
+# drives the total sample size, which is the formula arguing for pilot work
+# before the main campaign.
+```
+:::
+
+
 ## Spatial autocorrelation, the quiet accuracy inflator
 
 Two samples ten metres apart are, for practical purposes, one sample measured twice. They share illumination, atmosphere, canopy and often the same tree.
@@ -94,6 +168,51 @@ The two versions produce results that look identical and differ by several accur
 **Spectral separability.** Plot two predictor bands against each other, coloured by class. If mangrove and other forest overlap completely on NDVI but separate along radar backscatter, you have just confirmed why Chapter 10 put radar in the stack. If two classes overlap on everything, no classifier will separate them, and you should either merge them or find another predictor.
 
 **Where the samples are.** Map them. This catches clustering in one convenient corner, a class drawn only on one side of the river, and points that fell in the sea. Thirty seconds, and it has saved a lot of afternoons.
+
+
+## Thinning is not enough: spatial block cross validation
+
+Thinning enforces a minimum distance between samples, and it treats a symptom. Tobler's first law does not stop at 60 metres.
+
+Samples drawn from the same estuary share tide state, water chemistry, species composition, sun angle and atmospheric conditions, whatever the spacing between them. A model can learn *this estuary looks like this* and score beautifully on held out points from the same estuary, then fail on the next one along the coast. Random splitting measures interpolation within a landscape and reports it as though it were prediction.
+
+That failure mode has a name, **spatial data leakage**, and it is the reason models reporting 95 percent in validation routinely deliver 60 percent when applied to a neighbouring province.
+
+::: {.callout-important}
+## Scientific integrity: which number to report
+If a model will only ever be applied to the area it was trained on, a random split is a fair description of its performance. The moment anyone might apply it elsewhere, and in practice they always do, the random split figure is an overstatement.
+
+Report both, and label them. Quoting only the random split is not wrong so much as incomplete, and a reviewer who knows this literature will ask.
+:::
+
+![Random splitting leaves every training point with a test point close by. Block splitting moves the nearest test point roughly two and a half times further away, which is the leakage being removed.](../images/block-cv.png){#fig-blockcv}
+
+The distances under each panel are computed, not illustrative. In the random split the mean distance from a training point to the nearest test point is 0.53 units; under block splitting it is 1.30.
+
+### How blocks fix it
+
+Partition the study area into geographic blocks. Assign **whole blocks** to folds, never individual points. Train on some blocks, test on the ones held out. The model is forced to generalise across space rather than interpolate within it.
+
+Block size is the parameter that matters, and it is an ecological decision rather than a statistical one.
+
+Too small, and adjacent blocks stay correlated, so you have only made the random split slightly harder. Too large, and each fold covers a different landscape entirely, so the score reflects landscape difference rather than model quality.
+
+The defensible starting point is the range over which your predictors are autocorrelated. You can estimate that from a semivariogram, or approximate it from what you know of the landscape. Over a delta, the scale at which conditions genuinely change is the sub estuary, a few kilometres.
+
+{{< include _snippets/ch15_block_cross_validation.qmd >}}
+
+### Reading the result
+
+Two numbers come out, and both matter.
+
+**The mean across folds** is your honest accuracy. Compare it to the random split figure from the same data. A gap of two to four points is normal. A gap of ten or more means the random split was measuring something other than what you thought.
+
+**The standard deviation across folds** is the number almost nobody reports and it may be the more useful one. A model scoring 0.84 plus or minus 0.02 transfers reliably. The same mean at plus or minus 0.15 works in some parts of the landscape and fails in others, which is a fact somebody should know before making a decision from the map.
+
+::: {.callout-tip}
+## From the field
+Vary the block size from 1 km to 20 km and plot accuracy against it. Accuracy falls as blocks grow, then flattens. The point where it stops falling is an empirical estimate of your data's autocorrelation range, obtained without fitting a variogram. It also tells you how far apart two study areas must be before a model trained on one says anything useful about the other.
+:::
 
 ## Independent validation is a different thing
 
@@ -152,6 +271,28 @@ The gap between internal and independent accuracy is the honest number, and Chap
       ],
       "answer": 1,
       "why": "Both splits inherit the same mistake, so the confusion matrix reports excellent accuracy. Only independently collected reference data exposes it."
+    },
+    {
+      "q": "You thinned your samples to a 60 m minimum separation. Why might reported accuracy still be inflated?",
+      "options": [
+        "60 m is too small a separation for Sentinel-2",
+        "Samples from the same estuary still share tide, chemistry, species and atmosphere, so the model can learn the place rather than the class",
+        "Thinning removes too many samples to be reliable",
+        "Thinning only works for polygon based sampling"
+      ],
+      "answer": 1,
+      "why": "Thinning treats a symptom. Autocorrelation does not stop at 60 m, which is why block cross validation partitions whole regions rather than enforcing a distance."
+    },
+    {
+      "q": "Block CV gives 0.84 with a standard deviation of 0.15 across folds. What does the spread tell you?",
+      "options": [
+        "The model is unstable and needs more trees",
+        "The blocks were too small",
+        "The model works in some parts of the landscape and fails in others, which someone should know before acting on the map",
+        "The result is invalid and should be discarded"
+      ],
+      "answer": 2,
+      "why": "The mean is the headline; the spread is often more useful. A wide spread is a real finding about where the map can and cannot be trusted, not a defect to hide."
     }
   ]
 }

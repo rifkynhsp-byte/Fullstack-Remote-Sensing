@@ -6,7 +6,7 @@ Dwibahasa, karena sebagian besar pembaca akan bekerja dalam dua bahasa dan karen
 |---|---|---|
 | Backscatter | Hamburan balik | Fraction of a radar pulse returned to the sensor |
 | Band | Band, saluran | One measurement layer within an image |
-| Cloud masking | Pemulihan awan, masking awan | Removing cloud contaminated pixels before analysis |
+| Cloud masking | Cloud masking, masking awan | Removing cloud contaminated pixels before analysis |
 | Composite | Komposit | One image assembled from many acquisitions |
 | Confusion matrix | Matriks kekeliruan | Table of predicted against actual classes |
 | Data leakage | Kebocoran data | A predictor that secretly encodes the label |

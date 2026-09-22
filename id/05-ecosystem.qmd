@@ -2,28 +2,122 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan berkeliling setiap panel Code Editor, menjalankan skrip pertama, membaca model elevasi global, dan membentuk tiga kebiasaan diagnostik yang akan menghemat waktu lebih banyak daripada teknik mana pun di buku ini.
+Anda akan berkeliling setiap panel Code Editor, menjalankan skrip pertama, membaca model elevasi global, dan membentuk tiga kebiasaan diagnostik yang akan menghemat waktu Anda lebih banyak daripada teknik apa pun di buku ini.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
+## Dua pintu masuk
+
+Earth Engine menyediakan dua cara masuk, dan memilih yang tepat sejak awal menghemat banyak rasa frustrasi.
+
+**Explorer** adalah penjelajah katalog berbasis klik. Anda mencari dataset, menambahkannya ke peta, mengatur peregangan warna, lalu mengekspor. Tidak ada kode sama sekali. Untuk memastikan sebuah dataset benar benar meliput area Anda, atau untuk menunjukkan kepada rekan kerja seperti apa citra Sentinel-2 di atas kabupatennya, Explorer adalah alat tercepat yang tersedia. Ia juga tempat yang aman untuk ditinggalkan bersama pemangku kepentingan yang bukan orang teknis.
+
+**Code Editor** adalah tempat buku ini tinggal. Semua yang reproducible, semua yang bisa diotomasi, dan semua yang lebih rumit dari beberapa operasi terjadi di sini. Bayarannya adalah sebuah bahasa pemrograman, yang dibahas Bab 6 mulai dari nol.
+
+::: {.callout-tip}
+## Dari lapangan
+Pakai Explorer untuk pengintaian, lalu pindah ke Code Editor untuk membangun. Urutan sebaliknya, yaitu baru menyadari di bulan kedua bahwa dataset pilihan Anda punya lubang tiga bulan di atas area studi, adalah pemborosan yang sebenarnya bisa dicegah dan sering terjadi.
 :::
 
-## Rencana bagian
+## Empat panel
 
-1. **Dua pintu masuk**: Explorer untuk pengintaian, Code Editor untuk membangun
-2. **Empat panel**: pustaka, editor, umpan balik, peta
-3. **Membaca balasan server**: nama band, tipe data, proyeksi dan skala
-4. **Tiga kebiasaan**: cetak lebih awal, periksa ukuran koleksi, pakai Inspector
-5. **Blok Imports yang tidak ikut tersalin, dan cara berbagi lewat Get Link**
-6. **Aset, kuota, dan penamaan yang masih masuk akal delapan belas bulan lagi**
+Buka [code.earthengine.google.com](https://code.earthengine.google.com). Antarmukanya terbagi menjadi empat wilayah, dan masing masing sesuai dengan satu tahap pekerjaan yang berbeda.
 
-## Alur kerja lengkap
+**Kiri, perpustakaan.** Tiga tab. *Scripts* menyimpan repositori kode Anda, ditopang Git, artinya pekerjaan Anda terversi dan bisa dibagikan lewat tautan. *Docs* adalah rujukan API yang lengkap dan bisa dicari, dan lebih baik dipakai daripada mencari di web, karena isinya selalu sesuai dengan versi yang sedang berjalan. *Assets* menyimpan data yang Anda unggah sendiri: shapefile batas wilayah, poligon data latih, raster dari sumber lain.
+
+**Tengah, editor.** Skrip Anda. Di atasnya ada **Run** untuk menjalankan, **Save**, dan **Get Link** yang menghasilkan URL yang mereproduksi skrip persis seperti adanya bagi siapa pun yang membukanya. Tautan itu adalah cara baku pekerjaan Earth Engine dibagikan di makalah dan laporan.
+
+**Kanan, umpan balik.** Tiga tab, dan ke sinilah perhatian Anda seharusnya tertuju selama masih belajar. *Console* menerima semua yang Anda `print()`, termasuk grafik dan deskripsi objek yang lengkap. *Inspector* mengubah peta menjadi alat kueri: klik piksel mana pun dan Anda membaca nilainya di setiap band dari setiap layer yang tampil. *Tasks* menampung ekspor yang menunggu, ke Drive, Cloud Storage, atau Assets.
+
+**Bawah, peta.** Bukan sekadar keluaran. Alat gambar di pojok kiri atas membuat geometri secara langsung, dan geometri itu muncul di blok *Imports* di bagian atas skrip Anda. Begitulah poligon data latih digambar di Bab 15.
+
+::: {.callout-warning}
+## Kesalahan umum: blok Imports yang tidak ikut pindah
+Geometri yang digambar di peta, dan dataset yang ditambahkan lewat tombol Import, disimpan di blok Imports di atas kode Anda. Ketika Anda menyalin skrip ke email atau ke dokumen, blok itu biasanya tertinggal. Penerimanya mendapat galat variabel tak terdefinisi di baris pertama. Entah definisikan geometri di dalam kode, seperti yang dilakukan buku ini, atau bagikan lewat **Get Link**, yang membawa serta blok Imports.
+:::
+
+## Skrip pertama Anda
+
+Listing di bawah memuat satu citra global, memeriksanya, lalu menggambarnya dengan dua cara berbeda. Tempel ke panel tengah dan tekan **Run**.
 
 {{< include _snippets/ch05_first_script.qmd >}}
 
+## Membaca balasannya
+
+Bagian yang menarik bukan petanya. Bagian yang menarik ada di Console.
+
+Ketika Anda membentangkan objek yang tercetak, Anda melihat Earth Engine menjelaskan apa yang sedang dipegangnya: tipe citranya, daftar band beserta tipe data dan dimensi pikselnya, dan sekumpulan properti metadata. Tiga hal dalam balasan itu lebih penting daripada sisanya.
+
+**Nama band.** Di sini `elevation`, tetapi `B4` di Sentinel-2, `SR_B4` di Landsat Collection 2, `VV` di Sentinel-1. Menebak nama band adalah penyebab nomor satu munculnya kalimat "layer ini tidak ada" di Console Anda.
+
+**Tipe data.** Elevasi SRTM adalah bilangan bulat 16 bit bertanda. Itu penting begitu Anda membaginya, karena pembagian bilangan bulat memotong hasilnya. Bab 12 kembali ke soal ini ketika indeks mulai menghasilkan nol yang mencurigakan.
+
+**Proyeksi dan skala.** Setiap band membawa ukuran piksel aslinya. Ketika Anda menggabungkan band dengan ukuran berbeda, Earth Engine menyelesaikan konfliknya dengan aturan yang terdokumentasi tetapi mudah dilupakan, dan hasilnya bisa diam diam menyampel ulang data 10 meter Anda menjadi 90 meter.
+
+## Tiga kebiasaan yang layak dibentuk sekarang
+
+Ini bukan selera gaya. Masing masing mencegah satu kelas galat yang kalau tidak dicegah akan sangat sulit didiagnosis.
+
+**Cetak sejak awal, cetak sering.** Setelah setiap langkah yang berarti, cetak hasilnya dan lihat. Evaluasi malas berarti kesalahan yang dibuat sekarang baru muncul jauh kemudian, dan pada saat itu penyebabnya sudah tidak terlihat. Perintah `print` adalah cara Anda memaksa evaluasi pada jadwal Anda sendiri.
+
+**Periksa ukuran koleksi sebelum melanjutkan.** Tulis `print('scenes:', collection.size())` setelah setiap rantai filter. Koleksi kosong tidak memunculkan galat di titik ia menjadi kosong. Ia memunculkan galat yang membingungkan dua puluh baris kemudian.
+
+**Pakai Inspector untuk melawan dugaan Anda sendiri.** Ketika sebuah klasifikasi terlihat salah, klik piksel yang salah klasifikasi itu dan baca setiap nilai prediktornya. Sembilan dari sepuluh kali alasannya langsung terlihat: ada band yang termask, ada nilai pada skala yang keliru, atau ada awan yang lolos dari cloud masking.
+
+::: {.callout-note}
+## Konsep: argumen `shown` dan `opacity`
+`Map.addLayer()` menerima lima argumen, dan dua yang terakhir jarang dipakai orang. Menambahkan layer dengan `shown` bernilai `0` mendaftarkannya di kontrol Layers tanpa menggambarnya di peta, sehingga Anda bisa menumpuk selusin layer diagnostik dan berpindah pindah di antaranya. Sementara `opacity` bernilai `0.5` di atas basemap adalah cara tercepat memeriksa apakah klasifikasi Anda benar benar sejajar dengan objek yang terlihat di permukaan.
+:::
+
+## Catatan tentang aset dan kuota
+
+Tab Assets adalah penyimpanan pribadi Anda, sekitar 250 gigabita pada akun gratis. Unggahan menerima shapefile, GeoTIFF, dan berkas titik CSV. Ada dua kebiasaan operasional yang layak diambil sejak awal.
+
+Beri aset nama yang deskriptif, karena `projects/proyek-anda/assets/mangrove_training_2023_v2` akan tetap masuk akal delapan belas bulan lagi dan `asset1` tidak. Dan siapkan diri bahwa unggahan terasa lambat dibanding semua hal lain di platform ini, karena inilah satu satunya arah di mana Anda masih memindahkan data.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch05-ecosystem",
+  "questions": [
+    {
+      "q": "Anda menyalin skrip ke email dan rekan Anda mendapat galat variabel tak terdefinisi di baris pertama. Apa penyebab paling mungkin?",
+      "options": [
+        "Versi Earth Engine mereka berbeda",
+        "Blok Imports berisi geometri yang digambar di peta tidak ikut tersalin",
+        "Skripnya terlalu panjang untuk email",
+        "Mereka belum punya akses ke dataset yang dipakai"
+      ],
+      "answer": 1,
+      "why": "Geometri yang digambar dan dataset yang diimpor lewat tombol disimpan di blok Imports, bukan di badan skrip. Bagikan lewat Get Link, atau definisikan geometri di dalam kode seperti yang dilakukan buku ini."
+    },
+    {
+      "q": "Mengapa mencetak ukuran koleksi setelah setiap filter dianggap kebiasaan penting?",
+      "options": [
+        "Untuk memantau penggunaan kuota",
+        "Koleksi kosong tidak memunculkan galat saat menjadi kosong, melainkan memunculkan galat membingungkan jauh di bawahnya",
+        "Untuk mempercepat komputasi",
+        "Karena size() memaksa Earth Engine menyimpan cache"
+      ],
+      "answer": 1,
+      "why": "Ini akibat langsung dari evaluasi malas. Mencetak ukuran koleksi memaksa evaluasi pada jadwal Anda, bukan pada jadwal yang ditentukan galat."
+    },
+    {
+      "q": "Klasifikasi Anda terlihat salah di satu area. Apa langkah diagnostik pertama yang paling cepat?",
+      "options": [
+        "Menambah jumlah pohon pada classifier",
+        "Klik piksel yang salah dengan Inspector dan baca semua nilai prediktornya",
+        "Mengganti algoritma klasifikasi",
+        "Menambah data latih di area itu"
+      ],
+      "answer": 1,
+      "why": "Sembilan dari sepuluh kali penyebabnya langsung terlihat: band yang termask, nilai pada skala yang keliru, atau awan yang lolos. Mengubah model tanpa melihat datanya adalah menebak."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Jalankan skripnya, lalu pakai Inspector untuk menemukan elevasi titik tertinggi di dalam batas negara Anda. Bandingkan dengan angka resmi dan jelaskan selisihnya.
+2. Ubah `max` dari 1200 menjadi 3000, jalankan ulang, dan tulis satu kalimat tentang informasi apa yang didapat peta dan apa yang hilang.
+3. Cari `ee.Terrain.slope` di tab Docs. Tambahkan layer slope ke skrip tanpa melihat Bab 11 lebih dulu.
+4. Simpan skripnya ke sebuah repositori lalu buat URL lewat **Get Link**. Buka di jendela penyamaran untuk memastikan ia benar benar bisa direproduksi.

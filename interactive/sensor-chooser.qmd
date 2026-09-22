@@ -1,0 +1,216 @@
+```{=html}
+<!--
+  interactive/sensor-chooser.qmd
+  ==============================
+  Pick the requirements, see which missions survive.
+
+  Chapter 3 makes the argument that the four resolutions trade against each
+  other and that no sensor wins on all of them. A table of specifications
+  states that; a filter demonstrates it, because the reader watches the list
+  empty out as they ask for more.
+
+  The mission figures are nominal published values for the free and openly
+  licensed archives the book uses, plus two commercial entries for contrast.
+  Nominal is the right word: revisit is at the equator without cloud, and
+  cost is a category rather than a price.
+-->
+<div class="rs-widget" id="snc">
+  <div class="rsx-head">
+    <span class="rsx-tag" data-i18n-en="Interactive" data-i18n-id="Interaktif">Interactive</span>
+    <span class="rsx-title" data-i18n-en="Which sensor survives your requirements?"
+          data-i18n-id="Sensor mana yang bertahan pada syarat Anda?">Which sensor survives your requirements?</span>
+  </div>
+
+  <p class="rsx-lead"
+     data-i18n-en="Set what the work actually needs. Missions that cannot meet it grey out, with the reason given. Ask for everything and nothing is left, which is the trade this chapter is about."
+     data-i18n-id="Atur apa yang benar benar dibutuhkan pekerjaan Anda. Misi yang tidak bisa memenuhinya meredup, dengan alasannya disebutkan. Minta segalanya dan tidak ada yang tersisa, dan itulah pertukaran yang dibahas bab ini.">
+    Set what the work actually needs.
+  </p>
+
+  <div class="rsx-controls">
+    <label class="rsx-field">
+      <span data-i18n-en="Pixel size at most" data-i18n-id="Ukuran piksel maksimum">Pixel size at most</span>
+      <input type="range" id="snc-res" min="0" max="4" step="1" value="2">
+      <small class="snc-out" id="snc-res-out"></small>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="Revisit at most" data-i18n-id="Revisit maksimum">Revisit at most</span>
+      <input type="range" id="snc-rev" min="0" max="4" step="1" value="3">
+      <small class="snc-out" id="snc-rev-out"></small>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="Must see through cloud" data-i18n-id="Harus menembus awan">Must see through cloud</span>
+      <select id="snc-cloud">
+        <option value="no" data-i18n-en="Not required" data-i18n-id="Tidak wajib">Not required</option>
+        <option value="yes" data-i18n-en="Required" data-i18n-id="Wajib">Required</option>
+      </select>
+    </label>
+    <label class="rsx-field">
+      <span data-i18n-en="Budget" data-i18n-id="Anggaran">Budget</span>
+      <select id="snc-cost">
+        <option value="free" data-i18n-en="Free archives only" data-i18n-id="Hanya arsip gratis">Free archives only</option>
+        <option value="any" data-i18n-en="Commercial acceptable" data-i18n-id="Komersial boleh">Commercial acceptable</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="snc-extra">
+    <label><input type="checkbox" id="snc-rededge">
+      <span data-i18n-en="Needs red edge bands" data-i18n-id="Perlu band red edge">Needs red edge bands</span></label>
+    <label><input type="checkbox" id="snc-thermal">
+      <span data-i18n-en="Needs thermal" data-i18n-id="Perlu termal">Needs thermal</span></label>
+    <label><input type="checkbox" id="snc-archive">
+      <span data-i18n-en="Needs history before 2000" data-i18n-id="Perlu riwayat sebelum 2000">Needs history before 2000</span></label>
+  </div>
+
+  <div class="snc-list" id="snc-list"></div>
+  <div class="rsx-verdict" id="snc-verdict"></div>
+</div>
+
+<style>
+.snc-out{font-size:.78rem;color:var(--lms-teal,#0f6b57);font-weight:700;
+  text-transform:none;letter-spacing:0}
+.snc-extra{display:flex;gap:1.2rem;flex-wrap:wrap;margin:0 0 1.1rem;font-size:.84rem}
+.snc-extra label{display:flex;align-items:center;gap:.4rem;color:var(--lms-muted,#5c6773)}
+.snc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:.7rem}
+.snc-card{border:1px solid var(--lms-rule,#e4e0d8);border-radius:5px;padding:.7rem .8rem;
+  background:var(--lms-surface,#fff);transition:opacity .18s ease}
+.snc-card.is-out{opacity:.42;background:transparent}
+.snc-name{font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.4rem}
+.snc-dot{width:8px;height:8px;border-radius:50%;background:#14a37f;flex:none}
+.snc-card.is-out .snc-dot{background:#c9c4bb}
+.snc-spec{font-size:.76rem;color:var(--lms-muted,#5c6773);margin:.35rem 0 0;line-height:1.5}
+.snc-why{font-size:.76rem;color:var(--lms-amber,#c8792b);margin:.4rem 0 0;line-height:1.45}
+.snc-kind{font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;
+  color:var(--lms-muted,#5c6773)}
+</style>
+
+<script>
+(function () {
+  var host = document.getElementById('snc');
+  if (!host) return;
+
+  var isID = (document.documentElement.lang || 'en').slice(0, 2) === 'id';
+  host.querySelectorAll('[data-i18n-en]').forEach(function (el) {
+    el.textContent = isID ? el.getAttribute('data-i18n-id') : el.getAttribute('data-i18n-en');
+  });
+
+  // Nominal published characteristics. Revisit is at the equator, ignoring
+  // cloud; "cost: free" means an open archive, not that the analysis is free.
+  var MISSIONS = [
+    {name: 'Sentinel-2 A/B/C', kind: 'optical', res: 10, revisit: 5, since: 2015,
+     cloud: false, rededge: true, thermal: false, free: true,
+     en: '13 bands, 3 in the red edge, 12 bit', id: '13 band, 3 di red edge, 12 bit'},
+    {name: 'Landsat 8/9 OLI', kind: 'optical', res: 30, revisit: 8, since: 1982,
+     cloud: false, rededge: false, thermal: true, free: true,
+     en: 'Thermal bands, and the archive runs back to 1982', id: 'Punya band termal, dan arsipnya sampai 1982'},
+    {name: 'Landsat 5/7 (archive)', kind: 'optical', res: 30, revisit: 16, since: 1984,
+     cloud: false, rededge: false, thermal: true, free: true,
+     en: 'The long record. Landsat 7 has the scan line gap after 2003', id: 'Rekaman panjang. Landsat 7 punya celah scan line setelah 2003'},
+    {name: 'Sentinel-1 SAR', kind: 'radar', res: 10, revisit: 12, since: 2014,
+     cloud: true, rededge: false, thermal: false, free: true,
+     en: 'C band radar. Structure and moisture, not colour', id: 'Radar pita C. Struktur dan kelembapan, bukan warna'},
+    {name: 'PALSAR-2 mosaic', kind: 'radar', res: 25, revisit: 365, since: 2007,
+     cloud: true, rededge: false, thermal: false, free: true,
+     en: 'L band, penetrates canopy. Annual mosaic only', id: 'Pita L, menembus tajuk. Hanya mozaik tahunan'},
+    {name: 'MODIS / VIIRS', kind: 'optical', res: 250, revisit: 1, since: 2000,
+     cloud: false, rededge: false, thermal: true, free: true,
+     en: 'Daily, coarse. Phenology and fire, not parcels', id: 'Harian, kasar. Fenologi dan kebakaran, bukan persil'},
+    {name: 'Planet NICFI basemap', kind: 'optical', res: 5, revisit: 30, since: 2015,
+     cloud: false, rededge: false, thermal: false, free: true,
+     en: 'Free for tropical forest work under NICFI terms', id: 'Gratis untuk kerja hutan tropis di bawah ketentuan NICFI'},
+    {name: 'Planet SkySat', kind: 'optical', res: 0.5, revisit: 1, since: 2013,
+     cloud: false, rededge: false, thermal: false, free: false,
+     en: 'Sub metre, tasked, commercial', id: 'Di bawah satu meter, dipesan, komersial'},
+    {name: 'Airborne LiDAR', kind: 'lidar', res: 1, revisit: 1825, since: 2000,
+     cloud: true, rededge: false, thermal: false, free: false,
+     en: 'Structure in three dimensions. Flown, not orbiting', id: 'Struktur tiga dimensi. Diterbangkan, bukan mengorbit'}
+  ];
+
+  var RES_STEPS = [0.5, 5, 10, 30, 250];
+  var REV_STEPS = [1, 5, 12, 30, 365];
+
+  function resLabel(v) {
+    return v < 1 ? (isID ? 'di bawah 1 m' : 'under 1 m') : v + ' m';
+  }
+  function revLabel(v) {
+    if (v === 1) return isID ? 'harian' : 'daily';
+    if (v >= 365) return isID ? 'tahunan' : 'annual';
+    return v + (isID ? ' hari' : ' days');
+  }
+
+  var els = {
+    res: document.getElementById('snc-res'),
+    rev: document.getElementById('snc-rev'),
+    cloud: document.getElementById('snc-cloud'),
+    cost: document.getElementById('snc-cost'),
+    rededge: document.getElementById('snc-rededge'),
+    thermal: document.getElementById('snc-thermal'),
+    archive: document.getElementById('snc-archive')
+  };
+
+  function paint() {
+    var maxRes = RES_STEPS[parseInt(els.res.value, 10)];
+    var maxRev = REV_STEPS[parseInt(els.rev.value, 10)];
+    var needCloud = els.cloud.value === 'yes';
+    var freeOnly = els.cost.value === 'free';
+
+    document.getElementById('snc-res-out').textContent = resLabel(maxRes);
+    document.getElementById('snc-rev-out').textContent = revLabel(maxRev);
+
+    var surviving = 0;
+
+    document.getElementById('snc-list').innerHTML = MISSIONS.map(function (m) {
+      var fails = [];
+      if (m.res > maxRes) fails.push(isID ? 'piksel ' + m.res + ' m' : m.res + ' m pixels');
+      if (m.revisit > maxRev) fails.push(isID ? 'revisit ' + revLabel(m.revisit) : revLabel(m.revisit) + ' revisit');
+      if (needCloud && !m.cloud) fails.push(isID ? 'terhalang awan' : 'blocked by cloud');
+      if (freeOnly && !m.free) fails.push(isID ? 'komersial' : 'commercial');
+      if (els.rededge.checked && !m.rededge) fails.push(isID ? 'tanpa red edge' : 'no red edge');
+      if (els.thermal.checked && !m.thermal) fails.push(isID ? 'tanpa termal' : 'no thermal');
+      if (els.archive.checked && m.since >= 2000) fails.push(isID ? 'mulai ' + m.since : 'starts ' + m.since);
+
+      if (!fails.length) surviving++;
+
+      return '<div class="snc-card' + (fails.length ? ' is-out' : '') + '">' +
+        '<div class="snc-name"><span class="snc-dot"></span>' + m.name + '</div>' +
+        '<div class="snc-kind">' + m.kind + '</div>' +
+        '<p class="snc-spec">' + resLabel(m.res) + ' · ' + revLabel(m.revisit) +
+          ' · ' + (isID ? 'sejak ' : 'since ') + m.since + '<br>' +
+          (isID ? m.id : m.en) + '</p>' +
+        (fails.length ? '<p class="snc-why">' + (isID ? 'Gugur: ' : 'Ruled out: ') +
+          fails.join(', ') + '</p>' : '') +
+      '</div>';
+    }).join('');
+
+    var v = document.getElementById('snc-verdict');
+    if (surviving === 0) {
+      v.className = 'rsx-verdict rsx-weak';
+      v.innerHTML = '<strong>' + (isID
+        ? 'Tidak ada yang bertahan.'
+        : 'Nothing survives.') + '</strong> ' + (isID
+        ? 'Ini bukan kegagalan alat pilih ini; ini bentuk pertukarannya. Satu syarat harus dilepaskan, dan pertanyaan yang berguna adalah syarat mana yang paling murah untuk dilepas. Biasanya revisit, dengan compositing, dan itu Bab 9.'
+        : 'That is not a failure of this picker; it is the shape of the trade. One requirement has to go, and the useful question is which one is cheapest to give up. Usually revisit, by compositing, which is Chapter 9.');
+    } else if (surviving === 1) {
+      v.className = 'rsx-verdict rsx-good';
+      v.innerHTML = '<strong>' + (isID ? 'Satu misi bertahan.' : 'One mission survives.') +
+        '</strong> ' + (isID
+        ? 'Rancangan dengan satu titik kegagalan. Bila arsipnya berlubang di wilayah Anda, tidak ada penggantinya, jadi periksa ketersediaannya sebelum membangun apa pun di atasnya.'
+        : 'A design with a single point of failure. If that archive has holes over your area there is no substitute, so check availability before building anything on it.');
+    } else {
+      v.className = 'rsx-verdict rsx-good';
+      v.innerHTML = '<strong>' + surviving + (isID ? ' misi bertahan.' : ' missions survive.') +
+        '</strong> ' + (isID
+        ? 'Ketika beberapa misi memenuhi syarat, gabungkan: optik untuk nilai spektral, radar untuk menembus awan, dan rupa bumi untuk konteks. Itu feature stack Bab 10 dan 11, bukan sebuah pilihan yang harus dijatuhkan.'
+        : 'When several qualify, combine them: optical for spectral values, radar to get through cloud, terrain for context. That is the feature stack of Chapters 10 and 11, not a choice you have to settle.');
+    }
+  }
+
+  Object.keys(els).forEach(function (k) {
+    els[k].addEventListener('input', paint);
+    els[k].addEventListener('change', paint);
+  });
+  paint();
+})();
+</script>
+```

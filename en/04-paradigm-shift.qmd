@@ -101,6 +101,48 @@ By Chapter 17 you will have a validated land cover classification with a confusi
 
 The next chapter opens the Code Editor and puts an image on a map.
 
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch04-paradigm",
+  "questions": [
+    {
+      "q": "Why is Earth Engine described as a change in kind rather than a faster computer?",
+      "options": [
+        "It uses more powerful processors",
+        "A faster laptop shortens the analysis step; Earth Engine deletes the download and storage steps, which is where the time actually went",
+        "It has a better user interface",
+        "It stores data in a more efficient format"
+      ],
+      "answer": 1,
+      "why": "In the desktop workflow, months went into moving bytes rather than answering questions. Removing that is a different thing from computing faster."
+    },
+    {
+      "q": "You write ten chained operations. When does any computation happen?",
+      "options": [
+        "Immediately, as each line executes",
+        "When the map needs a tile, print needs a value, or an export starts writing",
+        "When the script is saved",
+        "After the tenth operation completes"
+      ],
+      "answer": 1,
+      "why": "Lazy evaluation. The good consequence is that chaining twenty operations costs no more to set up than one. The awkward consequence is that a mistake on line 12 surfaces as a failure on line 90."
+    },
+    {
+      "q": "Your area statistic changes when you change the scale argument. What does that mean?",
+      "options": [
+        "A bug in the computation",
+        "The scale is a parameter you choose, and it is a scientific decision that must be reported alongside the figure",
+        "The imagery is inconsistent",
+        "You should always use the finest scale available"
+      ],
+      "answer": 1,
+      "why": "41,200 ha at 10 m and 39,800 ha at 100 m are both defensible statements about the same landscape. Reporting either without the scale is not."
+    }
+  ]
+}
+</script>
+
 ## Exercises {.unnumbered}
 
 1. Estimate the download volume for your own current or most recent project: number of scenes, average scene size, and the hours spent transferring and unpacking. Keep the figure. It is the baseline you are replacing.

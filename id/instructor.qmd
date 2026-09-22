@@ -16,6 +16,6 @@ Halaman ini tidak menampilkan apa pun kecuali Anda masuk sebagai pengajar. Halam
 
 Ada dua kemungkinan.
 
-**Mode akun belum dikonfigurasi.** Pertanyaan masuk sebagai email ke [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com), bukan ke tabel. Itu perilaku baku dan cara yang masuk akal untuk menjalankan buku publik. Untuk memindahkan pertanyaan ke kotak masuk ini, ikuti `lms/README-lms.md`.
+**Mode akun belum dikonfigurasi.** Pertanyaan masuk sebagai email ke [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com), bukan ke tabel. Itu perilaku baku dan cara yang masuk akal untuk menjalankan buku publik. Untuk memindahkan pertanyaan ke kotak masuk ini, ikuti `lms/README-lms.md`.
 
 **Anda belum masuk sebagai pengajar.** Gunakan tombol masuk di bilah navigasi dengan alamat pengajar. Kebijakan basis data mengenali alamat itu dan membuka kotak masuknya; setiap pembaca lain yang masuk hanya melihat pertanyaannya sendiri.

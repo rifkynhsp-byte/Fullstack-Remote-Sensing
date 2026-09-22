@@ -137,6 +137,48 @@ var filtered = collection
   .filterBounds(aoi);
 ```
 
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch06-javascript",
+  "questions": [
+    {
+      "q": "A line looks correct but throws a syntax error pointing somewhere odd. First suspect?",
+      "options": [
+        "An Earth Engine version difference",
+        "Smart quotes from a word processor, which JavaScript does not recognise",
+        "A variable name that is too long",
+        "A missing semicolon on the previous line"
+      ],
+      "answer": 1,
+      "why": "The most common problem when code is pasted from a document. Retype the quotes by hand and the error disappears."
+    },
+    {
+      "q": "Why does `if (collection.size() > 0)` not behave as expected?",
+      "options": [
+        "size() returns a string",
+        "size() returns a server object, which a client side JavaScript if statement cannot test directly",
+        "The collection must be filtered first",
+        "The > operator is unsupported"
+      ],
+      "answer": 1,
+      "why": "The fix is usually not getInfo() but restructuring so the test stays server side with ee.Algorithms.If."
+    },
+    {
+      "q": "Your mapped function fails with an unhelpful message. Most common cause?",
+      "options": [
+        "Wrong parameter name",
+        "A missing return statement",
+        "The function is too long",
+        "The collection is empty"
+      ],
+      "answer": 1,
+      "why": "Without a return, .map() receives undefined for every image. The error message does not say so, which is why encountering it once is worth the exercise."
+    }
+  ]
+}
+</script>
+
 ## Exercises {.unnumbered}
 
 1. Write a dictionary of visualisation parameters for a false colour composite using Sentinel-2 bands B8, B4 and B3, with a stretch you would defend over vegetation.

@@ -20,6 +20,47 @@ bagian demi bagian; lihat prakata untuk urutannya.
 5. **Dari tinggi tajuk ke biomassa ke karbon, dan asumsi alometrik di antaranya**
 6. **Perambatan ketidakpastian, dan mengapa angka karbon tanpa galat bukan hasil**
 
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch20-regression",
+  "questions": [
+    {
+      "q": "Kapan sebuah kategori menjadi keluaran yang salah, dan kuantitas menjadi yang benar?",
+      "options": [
+        "Setiap kali kelasnya lebih dari tiga",
+        "Ketika keputusannya bergantung pada seberapa banyak, bukan pada termasuk kelas apa, seperti pada biomassa atau tinggi tajuk",
+        "Setiap kali data latihnya jarang",
+        "Ketika citranya lebih kasar dari 30 m"
+      ],
+      "answer": 1,
+      "why": "Perkiraan karbon tidak bisa dirakit dari label kelas. Mengklasifikasikan sebuah piksel sebagai hutan justru membuang informasi yang dibutuhkan laporannya, yaitu berapa banyak hutannya."
+    },
+    {
+      "q": "Sebuah random forest diminta memprediksi tinggi tajuk di lokasi yang lebih tinggi daripada apa pun dalam data latihnya. Apa yang dilakukannya?",
+      "options": [
+        "Mengekstrapolasi trennya ke atas",
+        "Mengembalikan nilai tertinggi yang pernah dilihatnya saat pelatihan, karena ia hanya bisa merata ratakan label yang dimilikinya",
+        "Mengembalikan galat",
+        "Mengembalikan nol"
+      ],
+      "answer": 1,
+      "why": "Ensemble berbasis pohon sama sekali tidak bisa berekstrapolasi di luar rentang latihnya. Di atas hutan yang tinggi ini menghasilkan pengurangan sistematis yang tampak seperti peta yang masuk akal, dan karena itulah data latih harus mencakup rentang yang hendak Anda prediksi."
+    },
+    {
+      "q": "Kenapa angka karbon tanpa rentang galat bukan sebuah hasil?",
+      "options": [
+        "Karena jurnal mensyaratkan rentang galat",
+        "Karena angkanya dipakai dalam sebuah keputusan, dan ketidakpastian yang menumpuk melalui model tinggi, persamaan alometrik, dan fraksi karbon bisa lebih besar daripada selisih yang diklaim",
+        "Karena rentang galat membuat perkiraannya lebih akurat",
+        "Karena persamaan alometrik selalu salah"
+      ],
+      "answer": 1,
+      "why": "Setiap langkah dalam rantainya, dari tinggi ke biomassa ke karbon, membawa ketidakpastiannya sendiri, dan semuanya berlipat. Perkiraan titik tunggal menyembunyikan apakah selisih yang dilaporkan antara dua tahun lebih besar daripada galat di salah satunya."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.

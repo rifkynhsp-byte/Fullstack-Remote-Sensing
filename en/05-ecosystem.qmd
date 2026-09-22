@@ -74,6 +74,48 @@ Your Assets tab is personal storage, roughly 250 gigabytes on a free account. Up
 
 Give assets descriptive identifiers, because `projects/your-project/assets/mangrove_training_2023_v2` will still make sense in eighteen months and `asset1` will not. And expect uploads to be slow relative to everything else on the platform, since this is the one direction in which you are still moving data.
 
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch05-ecosystem",
+  "questions": [
+    {
+      "q": "You email a colleague your script and they get an undefined variable error on line one. What happened?",
+      "options": [
+        "They have a different Earth Engine version",
+        "The Imports block holding map-drawn geometries did not travel with the pasted code",
+        "The script is too long for email",
+        "They lack access to the dataset"
+      ],
+      "answer": 1,
+      "why": "Geometries drawn on the map live in the Imports block above your code. Share by Get Link, or define geometries in code as this book does."
+    },
+    {
+      "q": "Why print the size of a collection after every filter chain?",
+      "options": [
+        "To monitor quota usage",
+        "An empty collection raises no error where it becomes empty, only a confusing one twenty lines later",
+        "It speeds up the computation",
+        "It caches the result server side"
+      ],
+      "answer": 1,
+      "why": "A direct consequence of lazy evaluation. Printing forces evaluation on your schedule instead of on the error's schedule."
+    },
+    {
+      "q": "A classification looks wrong in one area. What is the fastest first diagnostic?",
+      "options": [
+        "Increase the number of trees",
+        "Click the misclassified pixel with the Inspector and read every predictor value",
+        "Switch classifier",
+        "Add more training data there"
+      ],
+      "answer": 1,
+      "why": "Nine times in ten the cause is immediately visible: a masked band, a value on the wrong scale, or surviving cloud. Changing the model before looking at the data is guessing."
+    }
+  ]
+}
+</script>
+
 ## Exercises {.unnumbered}
 
 1. Run the script, then use the Inspector to find the elevation of the highest point within your own country's borders. Compare it to the published figure and account for any difference.

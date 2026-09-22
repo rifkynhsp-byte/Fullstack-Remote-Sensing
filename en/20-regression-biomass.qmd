@@ -24,6 +24,47 @@ written part by part; check the roadmap in the preface for the current order.
 
 Your AI model comparison notes and the carbon farming explorer methodology.
 
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch20-regression",
+  "questions": [
+    {
+      "q": "When is a category the wrong output, and a quantity the right one?",
+      "options": [
+        "Whenever more than three classes are involved",
+        "When the decision depends on how much there is, not on which class it belongs to, as with biomass or canopy height",
+        "Whenever the training data are sparse",
+        "When the imagery is coarser than 30 m"
+      ],
+      "answer": 1,
+      "why": "A carbon estimate cannot be assembled from class labels. Classifying a pixel as forest discards exactly the information, how much forest, that the report needs."
+    },
+    {
+      "q": "A random forest is asked to predict canopy height at a site taller than anything in its training data. What does it do?",
+      "options": [
+        "Extrapolates the trend upward",
+        "Returns the highest value it saw in training, because it can only average the labels it has",
+        "Returns an error",
+        "Returns zero"
+      ],
+      "answer": 1,
+      "why": "Tree ensembles cannot extrapolate beyond their training range at all. Over tall forest this produces a systematic underestimate that looks like a plausible map, which is why the training data have to span the range you intend to predict."
+    },
+    {
+      "q": "Why is a carbon figure without an error bar not a result?",
+      "options": [
+        "Because journals require error bars",
+        "Because the number is used in a decision, and uncertainty accumulated through the height model, the allometric equation and the carbon fraction can be larger than the differences being claimed",
+        "Because error bars make the estimate more accurate",
+        "Because the allometric equation is always wrong"
+      ],
+      "answer": 1,
+      "why": "Each step in the chain, height to biomass to carbon, carries its own uncertainty, and they compound. A point estimate hides whether the reported difference between two years is larger than the error in either."
+    }
+  ]
+}
+</script>
+
 ## Exercises {.unnumbered}
 
 To be written alongside the chapter.

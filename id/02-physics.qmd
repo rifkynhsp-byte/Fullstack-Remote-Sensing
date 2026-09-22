@@ -55,6 +55,111 @@ Tanaman yang tertekan sering kehilangan struktur sel sebelum kehilangan klorofil
 Dan daun yang sudah mati tetapi strukturnya masih utuh, atau lapisan seresah kering, tetap dapat menghasilkan respons inframerah dekat yang cukup besar. NDVI di atas lahan yang baru dibuka dengan sisa serasah tidak akan turun sejauh yang diduga intuisi, dan ini sumber negatif palsu yang terdokumentasi dalam deteksi deforestasi.
 :::
 
+![Tiga tanda tangan spektral yang diminta latihan untuk digambar dari ingatan, dengan posisi band Sentinel-2 ditumpangkan. Abu abu menandai fitur serapan uap air; perhatikan Sentinel-2 tidak menempatkan band pengamatan darat di dalamnya. Kurvanya adalah nilai representatif dari pustaka, bukan pengukuran satu lokasi.](../images/spectral-signatures.png){#fig-signatures}
+
+Dua hal dalam gambar itu layak diperhatikan lama lama. Lompatan inframerah dekat kira kira lima belas kali lipat dari lembah merah, dan itulah sebabnya setiap indeks vegetasi dibangun dari pasangan band tersebut. Lalu posisi bandnya tidak berjarak sama: band mengumpul di tempat atmosfer meneruskan cahaya, dan menyisakan celah di tempat uap air menyerapnya.
+
+Penjelajah di bawah ini memungkinkan Anda menguji klaim itu, bukan sekadar menerimanya. Pilih dua kelas dan lihat apakah sebuah indeks benar benar memisahkan keduanya.
+
+{{< include ../interactive/spectral-explorer.qmd >}}
+
+Coba mangrove lawan hutan lebat lain memakai NDVI. Kedua batangnya hampir bertumpuk, dan itulah seluruh alasan Bab 10, 11, dan 14 ada. Setelah itu coba CMRI.
+
+## Klaim yang sama, dalam kode
+
+Penjelajah di atas adalah sebuah grafik, dan grafik bisa digambar untuk mengatakan apa saja. Yang menyusul di bawah adalah aritmetikanya, dijalankan ketika halaman ini dibangun. Ubah kodenya, bangun ulang, dan angkanya berubah mengikutinya; tidak ada yang ditulis dengan tangan di sini.
+
+```{python}
+#| label: fig-spectra-live
+#| fig-cap: "Reflektansi empat kelas di sepanjang band Sentinel-2. Arahkan kursor ke sebuah titik untuk nilai persisnya, klik entri legenda untuk menyembunyikan kelas itu. Nilai terbitan yang representatif, bukan pengukuran satu lokasi."
+import plotly.graph_objects as go
+import booklib as bk
+
+fig = go.Figure()
+for name in ["Healthy mangrove", "Other dense forest", "Open water", "Bare soil"]:
+    fig.add_scatter(
+        x=list(bk.BANDS.values()),
+        y=bk.reflectance(name),
+        mode="lines+markers",
+        name=bk.label(name, "id"),
+        hovertemplate="%{y:.3f} pada %{x} nm<extra>" + bk.label(name, "id") + "</extra>",
+    )
+
+fig.update_xaxes(title="Panjang gelombang (nm)", type="log",
+                 tickvals=list(bk.BANDS.values()),
+                 ticktext=[f"{b}<br>{w}" for b, w in bk.BANDS.items()])
+fig.update_yaxes(title="Reflektansi permukaan", rangemode="tozero")
+bk.show(fig, height=400)
+```
+
+Mangrove dan hutan lebat lain adalah dua kurva yang menentukan. Keduanya hampir bertumpuk di mana pun kecuali di inframerah gelombang pendek, tempat substrat yang lebih basah di bawah mangrove menarik reflektansinya ke bawah. Celah tunggal itulah yang dieksploitasi oleh setiap indeks khusus mangrove.
+
+Sekarang tanyakan apa yang dilakukan setiap indeks terhadap celah itu. Tabel berikut diurutkan berdasarkan seberapa jauh indeks memisahkan kedua kelas, dan hanya sifat itulah yang menentukan apakah indeksnya layak dihitung.
+
+```{python}
+#| label: tbl-separability-live
+import pandas as pd
+import booklib as bk
+
+A, B = "Healthy mangrove", "Other dense forest"
+
+rows = []
+for name, spec in bk.INDICES.items():
+    a, b = bk.index_value(name, A), bk.index_value(name, B)
+    rows.append({
+        "Indeks": name,
+        "Rumus": spec["formula"],
+        bk.label(A, "id"): a,
+        bk.label(B, "id"): b,
+        "Selisih": abs(a - b),
+    })
+
+df = pd.DataFrame(rows).sort_values("Selisih", ascending=False)
+bk.table(df, caption=(
+    "Nilai indeks untuk dua kelas yang paling sulit dipisahkan pada citra "
+    "pesisir tropis. NDVI berada di dasar tabel ini, dan NDVI adalah indeks "
+    "yang hampir selalu dipakai pertama kali di semua tutorial."
+))
+```
+
+NDVI menempatkan kedua kelas ini terpisah sekitar lima belas per seribu, yang masih di dalam derau sebuah composite nyata. Di antara indeks yang terbatas, MNDWI enam kali lebih baik dan CMRI tiga kali lebih baik, keduanya karena membaca inframerah gelombang pendek tempat substratnya berbeda. MVI lebih besar lagi tetapi tidak terbatas, sehingga selisihnya tidak berada pada skala yang sama dan tidak bisa dibandingkan langsung dengan yang lain.
+
+Tidak ada dari itu yang mengatakan MNDWI adalah indeks mangrove terbaik. Yang dikatakannya: NDVI adalah alat yang salah untuk pembedaan yang satu ini, inframerah gelombang pendek adalah tempat informasinya berada, dan cara mengetahuinya adalah menghitung selisihnya, bukan menatap peta lalu menyipitkan mata.
+
+::: {.callout-note}
+## Sampai mana argumen ini berlaku
+Selisih antara dua spektrum representatif adalah uji penyaring, bukan analisis separabilitas. Dengan data latih nyata Anda akan menghitung jarak Jeffries-Matusita, atau cukup menjalankan classifier lalu membaca confusion matrix-nya, dan itu Bab 17. Kegunaan aritmetika di atas adalah menentukan apa yang masuk ke dalam stack sebelum Anda menghabiskan sepekan mengumpulkan label.
+:::
+
+### Jalankan sendiri
+
+Sel di bawah berjalan di peramban Anda, bukan di server. Tekan **Jalankan**, lalu ubah sebuah angka dan jalankan lagi. Jalan pertama mengunduh runtime Python sekitar sepuluh megabita, dan setiap jalan setelahnya seketika.
+
+::: {.py-live}
+```python
+# Dua kelas, delapan band Sentinel-2, reflektansi representatif.
+mangrove = {"B2": .030, "B3": .055, "B4": .030, "B8": .310, "B11": .115}
+hutan    = {"B2": .028, "B3": .052, "B4": .029, "B8": .330, "B11": .135}
+
+def nd(a, b):
+    return (a - b) / (a + b)
+
+def ndvi(r):  return nd(r["B8"], r["B4"])
+def ndwi(r):  return nd(r["B3"], r["B8"])
+def cmri(r):  return ndvi(r) - ndwi(r)
+def ndmi(r):  return nd(r["B8"], r["B11"])
+
+for nama, f in [("NDVI", ndvi), ("NDWI", ndwi), ("CMRI", cmri), ("NDMI", ndmi)]:
+    a, b = f(mangrove), f(hutan)
+    print(f"{nama:5s}  mangrove {a:+.3f}   hutan {b:+.3f}   selisih {abs(a - b):.3f}")
+
+# Coba ini: naikkan nilai SWIR1 mangrove menjadi .135, sama dengan hutan,
+# lalu jalankan lagi. Perhatikan indeks mana yang berhenti bekerja, dan
+# tanyakan kenapa justru band itu yang akan berubah bila substratnya lebih kering.
+```
+:::
+
+
 ## Empat resolusi
 
 Kemampuan sensor dijelaskan pada empat sumbu yang saling bebas, dan setiap satelit adalah kompromi di antaranya karena fisika memaksa adanya pertukaran.

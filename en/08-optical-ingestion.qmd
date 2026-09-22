@@ -46,6 +46,9 @@ An NDVI computed on Level-1C and an NDVI computed on Level-2A over the same fore
 
 ## The filter chain
 
+![A global archive collapses to one scene through four filters. Every filter is lazy: no pixel is fetched until something forces evaluation. Counts are representative for one tile over a wet tropical coast, so the shape is the point rather than the exact numbers.](../images/filter-funnel.png){#fig-funnel}
+
+
 The full script for this chapter loads the Sentinel-2 archive, narrows it to one delta and one year, and displays the clearest available scene.
 
 {{< include _snippets/ch08_optical_search.qmd >}}
@@ -94,6 +97,59 @@ var scaled = image.select('SR_B.*').multiply(0.0000275).add(-0.2);
 ```
 
 Normalised indices such as NDVI are immune to a pure scale factor, since it cancels in the ratio. They are **not** immune to an additive offset, and they are not immune to mixing scaled and unscaled bands in the same expression. Apply the conversion once, immediately after loading, and work in physical units from there.
+
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch08-optical",
+  "questions": [
+    {
+      "q": "Why does this book insist on the _SR_ collections rather than Level-1C?",
+      "options": [
+        "They are higher resolution",
+        "Level-2A is atmospherically corrected, so values are comparable across dates and locations",
+        "Level-1C is deprecated",
+        "They have more bands"
+      ],
+      "answer": 1,
+      "why": "An NDVI time series that switches between processing levels shows a step change that looks exactly like a real ecological event."
+    },
+    {
+      "q": "filterDate('2023-01-01', '2023-12-31') over a full calendar year. What is wrong?",
+      "options": [
+        "Nothing",
+        "The end date is exclusive, so 31 December is omitted; use 2024-01-01",
+        "The dates need timestamps",
+        "The order should be reversed"
+      ],
+      "answer": 1,
+      "why": "A small off by one that quietly drops a day, and at year boundaries in a multi year loop it drops one day per year."
+    },
+    {
+      "q": "A scene reports CLOUDY_PIXEL_PERCENTAGE of 40. Is it usable?",
+      "options": [
+        "No, anything above 20 should be discarded",
+        "Possibly: the figure describes a 110 km scene, so the cloud may sit entirely outside your ten kilometre study area",
+        "Only for visualisation",
+        "Only if you apply per pixel masking as well"
+      ],
+      "answer": 1,
+      "why": "Scene level cloud is a blunt instrument. It is fine for picking one image to look at and the wrong tool for building a composite."
+    },
+    {
+      "q": "What does an additive offset, as used in Landsat Collection 2, do to a normalised index that a scale factor does not?",
+      "options": [
+        "Nothing, both cancel",
+        "A pure scale factor cancels in the ratio; an additive offset does not, so it must be applied before computing the index",
+        "It changes the band names",
+        "It only affects the visualisation"
+      ],
+      "answer": 1,
+      "why": "This is why the conversion goes immediately after loading. Apply it once and work in physical units from there."
+    }
+  ]
+}
+</script>
 
 ## Exercises {.unnumbered}
 

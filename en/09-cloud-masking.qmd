@@ -42,6 +42,10 @@ It is fast, and it is what most older tutorials show. Its weaknesses are real: 6
 The QA60 band was deprecated and stopped being populated for scenes processed after early 2022. A script using it on recent data will run without error and mask nothing, because every bit reads as zero. The composite will look plausible and be full of cloud. If you inherit a script that uses QA60, check the acquisition dates before trusting the output.
 :::
 
+![Six synthetic acquisitions over the same ground, each with cloud somewhere different. No single scene is usable. The median of what survives masking has no gaps, and the observation count map shows where confidence is lowest.](../images/compositing.png){#fig-compositing}
+
+Look at the bottom right panel. Clear observations per pixel run from 2 to 6. A pixel built from two observations is not wrong, but it carries far less confidence than its neighbour built from six, and that difference is invisible in the composite itself.
+
 ## The full workflow
 
 {{< include _snippets/ch09_annual_composite.qmd >}}
@@ -83,6 +87,106 @@ An annual median composite is a statistical construction. No satellite ever reco
 var observationCount = processed.select('B8').count().rename('n_clear');
 ```
 :::
+
+## How many scenes does a clear pixel need?
+
+The argument for compositing is usually made qualitatively: it is cloudy, so stack more images. The quantitative version is more useful, because it tells you when to stop and when to give up on optical data altogether.
+
+Treat each acquisition as an independent coin flip with probability $p$ of that pixel being cloudy. The chance that at least one of $n$ scenes sees it clear is $1 - p^{n}$. That expression, plotted below, is the whole case for compositing.
+
+```{python}
+#| label: fig-clear-probability
+#| fig-cap: "Probability that a pixel is seen clear at least once, against the number of acquisitions in the window. Hover for exact values. The dashed line is the point where one pixel in twenty is still missing after the whole window."
+import numpy as np
+import plotly.graph_objects as go
+import booklib as bk
+
+scenes = np.arange(1, 61)
+fig = go.Figure()
+
+for cloud in [0.5, 0.7, 0.85, 0.95]:
+    fig.add_scatter(
+        x=scenes,
+        y=[bk.clear_probability(cloud, n) for n in scenes],
+        mode="lines",
+        name=f"{cloud:.0%} cloudy",
+        hovertemplate="%{y:.1%} clear after %{x} scenes<extra>"
+                      + f"{cloud:.0%} cloudy</extra>",
+    )
+
+fig.add_hline(y=0.95, line_dash="dash", line_color=bk.MUTED,
+              annotation_text="95%", annotation_position="bottom right")
+fig.update_xaxes(title="Acquisitions in the compositing window")
+fig.update_yaxes(title="P(at least one clear view)", tickformat=".0%", range=[0, 1.02])
+bk.show(fig, height=380)
+```
+
+Read the 95 percent line. At fifty percent cloud, five scenes are enough, which is a fortnight of Sentinel-2. At eighty five percent cloud you need about nineteen, which is roughly a quarter. At ninety five percent, you need nearly sixty, which is more acquisitions than a single Sentinel-2 orbit delivers in a year over much of the equatorial belt.
+
+```{python}
+#| label: tbl-clear-scenes
+import pandas as pd
+import booklib as bk
+
+rows = []
+for cloud in [0.3, 0.5, 0.7, 0.85, 0.9, 0.95]:
+    need = next(n for n in range(1, 400) if bk.clear_probability(cloud, n) >= 0.95)
+    rows.append({
+        "Cloud probability": f"{cloud:.0%}",
+        "Scenes for 95% coverage": need,
+        "Sentinel-2 days at 5 day revisit": need * 5,
+        "Clear after one year (73 scenes)": bk.clear_probability(cloud, 73),
+    })
+
+bk.table(pd.DataFrame(rows), caption=(
+    "Independence is assumed throughout, which makes every figure here "
+    "optimistic. Cloud is seasonal and spatially organised, so a monsoon "
+    "month behaves far worse than the arithmetic suggests."
+))
+```
+
+That last column is the one to take seriously, and to distrust. It says a full year clears even a 95 percent cloudy pixel with near certainty. Real composites over Papua and Kalimantan do not behave that way, and the reason is in the assumption rather than in the arithmetic: cloud is not an independent coin flip. It arrives in wet seasons that last months and sits over the same ridges every afternoon. A pixel under a persistent orographic cloud is not cloudy 95 percent of the time at random; it is cloudy almost every afternoon the satellite passes.
+
+::: {.callout-important}
+## The assumption is the lesson
+When your composite has holes and this arithmetic says it should not, the arithmetic is not wrong. Independence was. That is the point at which radar stops being an advanced topic and becomes the only option, which is Chapter 10.
+:::
+
+### The same arithmetic as a map
+
+A curve says 95 percent of pixels are covered. It does not say where the other five percent are, and that is the question a reviewer asks. Each square below is a pixel.
+
+{{< include ../interactive/composite-simulator.qmd >}}
+
+
+### Run it yourself
+
+::: {.py-live}
+```python
+def clear_probability(cloud, n):
+    """Chance of at least one clear view in n scenes, if cloud were random."""
+    return 1 - cloud ** n
+
+def scenes_needed(cloud, target=0.95):
+    n = 1
+    while clear_probability(cloud, n) < target and n < 1000:
+        n += 1
+    return n
+
+for cloud in [0.3, 0.6, 0.8, 0.9]:
+    n = scenes_needed(cloud)
+    print(f"{cloud:.0%} cloudy -> {n:3d} scenes for 95% coverage"
+          f"  ({n * 5:4d} days at Sentinel-2 revisit)")
+
+# Your own site: put in the cloud fraction your metadata query reports
+# and the length of your window in days.
+cloud, window_days = 0.82, 365
+scenes = window_days / 5
+print(f"\n{window_days} days, {cloud:.0%} cloudy, {scenes:.0f} scenes"
+      f" -> {clear_probability(cloud, scenes):.1%} of pixels seen clear")
+```
+:::
+
 
 ## When compositing is not enough
 

@@ -25,6 +25,47 @@ this chapter is still being written; the section plan shows what is coming.
 
 {{< include _snippets/ch19_satellite_embeddings.qmd >}}
 
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch19-embeddings",
+  "questions": [
+    {
+      "q": "Satellite embeddings let a usable classifier be trained from a few dozen labels instead of a few thousand. What makes that possible?",
+      "options": [
+        "The embeddings contain more spectral bands than Sentinel-2",
+        "The representation was already learned from vast unlabelled imagery, so the labels only have to locate a boundary in a space that already separates land cover",
+        "The classifier is a neural network rather than a random forest",
+        "Embeddings are computed at a finer resolution"
+      ],
+      "answer": 1,
+      "why": "This is the whole argument for foundation models. Hand built stacks make you engineer the features that separate classes; a learned representation arrives with that separation already present, and the labels only have to say which side of it you care about."
+    },
+    {
+      "q": "Why do embeddings need no cloud masking or index calculation of your own?",
+      "options": [
+        "Because clouds do not affect the embedding bands",
+        "Because that processing already happened upstream, inside the pipeline that produced the annual product",
+        "Because the embeddings are radar derived",
+        "Because Earth Engine masks them automatically at read time"
+      ],
+      "answer": 1,
+      "why": "Convenience with a cost: the decisions you would have made about masking and compositing were made for you, to somebody else's defaults, and you cannot inspect or change them."
+    },
+    {
+      "q": "Which limitation follows directly from the product being annual?",
+      "options": [
+        "It cannot be used for classification",
+        "It cannot answer a question about a single storm, harvest or clearing event",
+        "It cannot be exported",
+        "It cannot be combined with other data"
+      ],
+      "answer": 1,
+      "why": "Annual granularity puts an entire class of question out of reach. A single event needs a time series, which is Chapter 21, and this is precisely why the older approach is still taught here rather than replaced."
+    }
+  ]
+}
+</script>
+
 ## Source material
 
 Your Export.classifier.toAsset workflow built on GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL, and session 6 of Akselerasi Konservasi.

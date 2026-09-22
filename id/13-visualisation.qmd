@@ -2,24 +2,212 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan beranjak dari peregangan baku ke kartografi yang disengaja: kombinasi warna semu yang menampakkan struktur ekologis, dan palet yang tetap terbaca saat dicetak hitam putih.
+Anda akan beranjak dari peregangan baku ke kartografi yang disengaja: kombinasi warna semu yang menampakkan struktur ekologis, batas peregangan yang dipilih dari histogram alih alih dari coba coba, dan palet yang tetap terbaca ketika dicetak hitam putih atau dibaca penelaah dengan buta warna.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
+## Langkah terakhir, dan langkah yang menentukan apakah ada yang bertindak
+
+Bab 1 berpendapat bahwa peta yang tidak dipakai siapa pun sudah gagal. Di bab inilah hal itu diputuskan.
+
+Klasifikasi dengan akurasi 91 persen, ditampilkan dengan peregangan baku dan palet pelangi tanpa legenda, akan kalah berdebat melawan peta yang lebih buruk yang bisa dibaca orang. Itu bukan tuduhan terhadap pengambil keputusan. Itu yang terjadi ketika orang yang memahami datanya tidak menyelesaikan pekerjaannya.
+
+## Anatomi kamus visualisasi
+
+Setiap layer yang Anda gambar diatur satu kamus kecil, dan setiap kuncinya adalah sebuah keputusan.
+
+```javascript
+var vis = {
+  bands: ['B4', 'B3', 'B2'],   // band mana mengisi merah, hijau, biru, berurutan
+  min: 0,                      // nilai yang dipetakan menjadi hitam
+  max: 0.3,                    // nilai yang dipetakan menjadi terang penuh
+  gamma: 1.4,                  // pengangkat midtone, di atas 1 mencerahkan bayangan
+  palette: [...]               // hanya untuk band tunggal, menggantikan pemetaan RGB
+};
+```
+
+`bands` peka terhadap urutan, dan dari sinilah sebagian besar kejutan berasal. Band pertama mengisi kanal merah, kedua hijau, ketiga biru, apa pun band itu secara fisik. Menukar dua entri menghasilkan peta yang terlihat sama sekali berbeda dari data yang identik.
+
+`min` dan `max` adalah peregangannya, dan memilihnya lewat coba coba adalah metode paling lambat yang tersedia. Histogram memberi tahu Anda langsung, dan bagian berikutnya membahasnya.
+
+`gamma` mengangkat midtone tanpa membuat sorotan terbakar. Nilai sekitar 1,4 sangat membantu di pesisir tropis, tempat bahan yang menarik, yaitu lumpur basah dan tajuk gelap, semuanya duduk di bagian bawah rentang.
+
+## Tiga komposit yang layak diketahui
+
+**Warna sejati**, `['B4', 'B3', 'B2']`. Band merah ke merah, hijau ke hijau, biru ke biru. Yang akan dilihat penumpang pesawat.
+
+Pakai untuk orientasi dan untuk validasi bersama orang non spesialis, karena ia tidak memerlukan penjelasan. Kelemahannya justru pada kasus yang dipedulikan buku ini: di atas delta tropis yang basah, semuanya gelap dan kontrasnya rendah, dan mangrove, air, serta bayangan sama sama terbaca sebagai nada gelap yang mirip.
+
+**Inframerah warna semu**, `['B8', 'B4', 'B3']`. Inframerah dekat ke merah, merah ke hijau, hijau ke biru.
+
+Vegetasi tampil merah terang, karena inframerah dekat kini mengisi kanal merah dan vegetasi sehat sangat terang di inframerah dekat. Air menjadi nyaris hitam. Tanah terbuka menjadi sian sampai abu abu.
+
+Ini komposit tunggal paling berguna dalam pekerjaan vegetasi dan layak dijadikan pilihan baku Anda. Mangrove rapat terbaca merah tua pekat; tegakan terdegradasi atau jarang terbaca merah muda; bedanya terlihat sekilas dan nyaris tak terlihat pada warna sejati.
+
+**Komposit inframerah gelombang pendek**, `['B12', 'B8', 'B4']` atau `['B11', 'B8', 'B4']`.
+
+Inframerah gelombang pendek merespons kelembapan, sehingga kombinasi ini memisahkan basah dari kering dengan kejelasan yang tidak biasa. Bekas kebakaran tampil merah menyala, lahan basah berbeda tegas dari lahan kering, dan cekaman kelembapan vegetasi terlihat sebelum tampak di tempat lain. Untuk pemetaan kebakaran hutan ini standarnya.
+
+| Komposit | Band | Vegetasi | Air | Paling cocok untuk |
+|---|---|---|---|---|
+| Warna sejati | B4 B3 B2 | hijau gelap | biru gelap | Orientasi, validasi bersama non spesialis |
+| Inframerah warna semu | B8 B4 B3 | merah terang | hitam | Vigor dan luasan vegetasi |
+| SWIR | B12 B8 B4 | hijau | biru gelap | Kelembapan, bekas terbakar, lahan basah |
+| Pertanian | B11 B8 B2 | hijau terang | gelap | Kondisi dan fase pertumbuhan tanaman |
+
+: Kombinasi band Sentinel-2 yang baku {.striped}
+
+## Pilih peregangan dari histogram
+
+Menebak `min` dan `max` membuang waktu dan menghasilkan peta yang tidak konsisten antar bab.
+
+Buat histogram bandnya, lihat di mana sebagian besar sebarannya berada, lalu atur peregangannya untuk mengapit bagian itu. Konvensi yang lazim adalah persentil ke-2 dan ke-98, yang memangkas ekor ekstremnya dan memakai seluruh rentang tampilan untuk nilai yang memang terjadi.
+
+```javascript
+var stats = image.select('B8').reduceRegion({
+  reducer: ee.Reducer.percentile([2, 98]),
+  geometry: aoi,
+  scale: 100,
+  maxPixels: 1e9
+});
+print('Batas peregangan:', stats);
+```
+
+Dua menit, dan peta yang dihasilkan memakai seluruh rentang dinamisnya, bukan sebagian kecil yang ditebak.
+
+::: {.callout-important}
+## Integritas ilmiah: peregangan bukan hasil
+Dua peta dari data yang sama dengan peregangan berbeda bisa menopang kesimpulan yang berlawanan tentang apakah sebuah hutan sedang terdegradasi. Kalau Anda menampilkan pasangan sebelum dan sesudah, **pakai parameter peregangan yang identik pada keduanya**, dan sebutkan itu di keterangan gambar.
+
+Mengubah peregangan di antara dua panel sebuah perbandingan, paling ringan, adalah kecerobohan. Penelaah yang menyadarinya akan mendiskon seluruh isi gambar itu, dan ia benar melakukannya.
 :::
 
-## Rencana bagian
+## Palet
 
-1. **Anatomi kamus visualisasi**: bands, min, max, gamma, palette
-2. **Warna sejati dan batasnya di atas permukaan gelap dan basah**
-3. **Inframerah warna semu**: mengapa vegetasi menjadi merah dan mengapa itu membantu
-4. **Komposit inframerah gelombang pendek untuk lahan basah dan bekas terbakar**
-5. **Memilih batas peregangan dari histogram, bukan dari coba coba**
-6. **Rancangan palet, legenda, dan urutan layer untuk pembaca awam**
+Untuk band tunggal, `palette` menggantikan pemetaan RGB dengan tangga warna yang disebar merata antara `min` dan `max`. Ada tiga jenis, dan memakai jenis yang keliru menyesatkan.
+
+**Sekuensial** untuk besaran dengan urutan alami rendah ke tinggi: elevasi, biomassa, kepadatan. Terang ke gelap dalam satu keluarga warna. Mata membaca lebih gelap sebagai lebih banyak tanpa perlu diberi tahu.
+
+**Divergen** untuk besaran dengan titik tengah bermakna: perubahan, selisih, anomali. Dua warna bertemu di pusat yang netral. Yang menentukan, titik tengahnya harus jatuh pada nilai yang bermakna, biasanya nol. Palet divergen yang warna netralnya mendarat pada nilai sembarang menyiratkan adanya ambang batas yang sebenarnya tidak ada.
+
+**Kategoris** untuk kelas tanpa urutan: tutupan lahan. Warna yang jelas berbeda dengan tingkat terang serupa, dipilih supaya tidak ada kelas yang tanpa sengaja terlihat lebih penting daripada yang lain.
+
+![Palet terbaca ketika tingkat terangnya naik secara mantap. Baris tengah menunjukkan tampilannya dalam skala abu abu; baris bawah menunjukkan kurva tingkat terangnya. Pelangi berbalik arah tiga kali dan runtuh menjadi ambigu ketika dicetak hitam putih.](../images/palette-comparison.png){#fig-palette}
+
+::: {.callout-warning}
+## Kesalahan umum: palet pelangi
+Pelangi, atau jet, masih menjadi palet paling banyak dipakai di penginderaan jauh dan ia pilihan yang buruk untuk data kontinu.
+
+Langkah perseptualnya tidak rata: transisi kuning ke hijau terlihat seperti lompatan besar, transisi biru ke sian terlihat kecil, padahal data di baliknya berubah sebanyak yang sama. Pembaca melihat struktur yang tidak ada dan melewatkan struktur yang ada.
+
+@fig-palette menunjukkan keduanya sekaligus. Baris skala abu abu adalah bukti yang paling telak: pelangi runtuh menjadi pola yang tidak bisa diurutkan, sementara viridis dan magma tetap terbaca sebagai gradien.
+
+Pakai viridis, magma, atau tangga sekuensial ColorBrewer. Semuanya seragam secara perseptual, aman dalam skala abu abu, aman bagi pembaca dengan defisiensi penglihatan warna, dan tidak berbiaya apa pun untuk diadopsi.
+:::
+
+## Urutan layer dan disiplin panel Layers
+
+`Map.addLayer()` menerima lima argumen dan dua yang terakhir konsisten kurang dimanfaatkan.
+
+```javascript
+Map.addLayer(image, vis, 'Warna semu', false, 0.7);
+//                        nama          tampil  opasitas
+```
+
+Mengisi `false` pada `shown` mendaftarkan layer di kontrol Layers tanpa menggambarnya. Dengan begitu Anda bisa menumpuk selusin layer diagnostik lalu berpindah pindah tanpa peta yang berantakan.
+
+Opasitas sekitar 0,7 di atas basemap satelit adalah cara tercepat memeriksa apakah klasifikasi sejajar dengan objek yang terlihat. Galat penyejajaran yang tidak terlihat pada layer opak menjadi jelas begitu permukaan tanahnya menembus.
+
+Urutan juga penting: layer yang ditambahkan terakhir digambar di atas. Taruh klasifikasi di atas composite, dan composite di atas basemap.
+
+## Membuat legenda
+
+Peta kategoris tanpa legenda adalah hiasan. Earth Engine tidak punya legenda otomatis, jadi Anda membangunnya dengan pustaka `ui`. Bab 23 membahasnya dengan benar sebagai bagian pengembangan aplikasi, tetapi versi minimalnya layak dimiliki sekarang.
+
+```javascript
+var legend = ui.Panel({style: {position: 'bottom-left', padding: '8px'}});
+legend.add(ui.Label('Tutupan lahan', {fontWeight: 'bold'}));
+
+var names = ['Mangrove', 'Hutan lain', 'Air', 'Lahan terbuka', 'Terbangun'];
+var colours = ['#075e11', '#358221', '#1A5BAB', '#FFDB5C', '#ED022A'];
+
+names.forEach(function (name, i) {
+  legend.add(ui.Panel({
+    widgets: [
+      ui.Label('', {backgroundColor: colours[i], padding: '9px', margin: '3px'}),
+      ui.Label(name, {margin: '4px 6px'})
+    ],
+    layout: ui.Panel.Layout.Flow('horizontal')
+  }));
+});
+
+Map.add(legend);
+```
+
+## Merancang untuk orang yang akan membacanya
+
+Satu pemeriksaan terakhir, dan justru yang paling sering dilewati.
+
+**Apakah ia bertahan kalau dicetak hitam putih?** Banyak laporan masih dicetak begitu. Palet seragam perseptual bertahan; pelangi tidak.
+
+**Apakah terbaca pada ukuran yang benar benar akan tampil?** Peta yang dirancang pada layar penuh lalu dicetak selebar 8 cm di laporan kehilangan setiap pembedaan halusnya. Rancang pada ukuran pengirimannya.
+
+**Apakah pilihan warnanya membawa pesan yang tidak Anda maksudkan?** Merah terbaca sebagai bahaya, hijau sebagai baik. Peta tutupan lahan yang memakai merah untuk mangrove dan hijau untuk lahan terbuka akan disalahbaca semua orang yang tidak berhenti untuk memeriksa legendanya, dan sebagian besar orang tidak berhenti.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch13-visualisation",
+  "questions": [
+    {
+      "q": "Pada komposit inframerah warna semu, mengapa vegetasi sehat tampil merah terang?",
+      "options": [
+        "Klorofil memantulkan merah dengan kuat",
+        "Band inframerah dekat ditempatkan pada kanal tampilan merah, dan vegetasi sangat terang di inframerah dekat",
+        "Band merahnya diperkuat gamma",
+        "Itu artefak proses render"
+      ],
+      "answer": 1,
+      "why": "Tidak ada yang berubah secara fisik. Urutan band di kamus visualisasi menentukan pengukuran mana mengisi kanal tampilan mana, dan itulah sebabnya menukar dua entri menghasilkan peta yang terlihat sama sekali berbeda dari data identik."
+    },
+    {
+      "q": "Anda menampilkan composite 2016 dan 2023 berdampingan untuk menunjukkan degradasi. Apa yang wajib dipenuhi?",
+      "options": [
+        "Masing masing sebaiknya memakai peregangan optimalnya sendiri agar jelas",
+        "Keduanya wajib memakai parameter peregangan yang identik, dan itu disebutkan di keterangan gambar",
+        "Citra yang lebih baru sebaiknya memakai peregangan lebih lebar",
+        "Peregangan tidak memengaruhi perbandingan visual"
+      ],
+      "answer": 1,
+      "why": "Peregangan berbeda pada kedua panel bisa memproduksi atau menyembunyikan selisih. Penelaah yang menyadarinya akan mendiskon seluruh gambar itu, dan ia benar."
+    },
+    {
+      "q": "Apa masalah utama palet pelangi untuk data kontinu?",
+      "options": [
+        "Warnanya terlalu banyak",
+        "Langkah perseptualnya tidak rata, sehingga pembaca melihat struktur yang tidak ada di data dan melewatkan struktur yang ada",
+        "Ia lambat dirender",
+        "Ia tidak didukung Earth Engine"
+      ],
+      "answer": 1,
+      "why": "Transisi kuning ke hijau terlihat seperti lompatan besar dan biru ke sian terlihat kecil, untuk perubahan data yang sama. Ia juga runtuh dalam skala abu abu dan bagi pembaca dengan defisiensi penglihatan warna merah hijau."
+    },
+    {
+      "q": "Apa cara tercepat memilih min dan max untuk peregangan?",
+      "options": [
+        "Coba coba sampai terlihat pas",
+        "Hitung persentil ke-2 dan ke-98 band itu di area studi",
+        "Selalu pakai 0 dan 3000",
+        "Pakai rentang tipe data bandnya"
+      ],
+      "answer": 1,
+      "why": "Persentil memangkas ekor ekstrem dan membelanjakan rentang tampilan pada nilai yang memang terjadi. Dua menit, dan petanya memakai seluruh rentang dinamisnya."
+    }
+  ]
+}
+</script>
 
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Tampilkan composite yang sama dalam warna sejati, inframerah warna semu, dan inframerah gelombang pendek. Mana yang membuat batas mangrove paling jelas, dan mengapa?
+2. Hitung persentil ke-2 dan ke-98 untuk B8 di area Anda lalu bandingkan peregangan itu dengan tebakan Anda sebelumnya.
+3. Ambil klasifikasi yang Anda buat di Bab 16 lalu tampilkan dengan pelangi, kemudian dengan viridis. Ubah keduanya ke skala abu abu. Mana yang bertahan?
+4. Buat legenda untuk peta tutupan lahan Anda lalu tunjukkan kepada orang di luar bidang ini. Tanyakan menurut mereka peta itu mengatakan apa. Jawaban mereka adalah hasil Anda yang sebenarnya.

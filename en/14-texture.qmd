@@ -2,28 +2,178 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will add pattern to spectrum: grey level co occurrence matrix features that let a classifier tell a uniform plantation from a structurally complex natural forest that reflects almost identically.
+You will add pattern to spectrum. Grey level co-occurrence matrix features let a classifier separate a planted monoculture from a structurally complex natural stand when the two reflect almost identically, which is the confusion no amount of spectral engineering can fix.
 :::
 
-::: {.callout-note}
-## In progress
-The section plan below is settled. Prose and annotated listings are being
-written part by part; check the roadmap in the preface for the current order.
+## Two forests, one signature
+
+An oil palm plantation and a natural mangrove stand can have identical mean reflectance in every band. Both are dense broadleaf canopy, both photosynthesise vigorously, both hold similar leaf water. Chapter 12's indices, which are all functions of per pixel reflectance, cannot separate them because there is nothing in the per pixel reflectance to separate.
+
+What differs is **arrangement**. Palm is planted on a regular grid with uniform crown size and uniform spacing. Natural mangrove has crowns of many sizes, irregular gaps, tidal creeks cutting through it and no repeating geometry at all.
+
+A human interpreter sees that difference instantly, and does so without measuring a single pixel value. Texture analysis is the attempt to give a classifier the same information.
+
+## What GLCM measures
+
+The grey level co-occurrence matrix, introduced by Haralick in 1973 and still the standard, works on pairs rather than on individual pixels.
+
+For a given neighbourhood, it counts how often a pixel of value $i$ sits adjacent to a pixel of value $j$, building a matrix of those co-occurrence counts. Statistics computed from that matrix describe the local arrangement.
+
+The intuition is worth holding onto. A smooth uniform canopy produces co-occurrences clustered near the matrix diagonal, because neighbouring pixels have similar values. A broken heterogeneous canopy spreads them out, because a bright sunlit crown frequently sits next to a dark shadowed gap.
+
+## The four measures worth keeping
+
+`glcmTexture()` returns eighteen bands per input band. They are heavily redundant; several are near duplicates. Four carry most of the independent information.
+
+| Measure | Question it answers | High values mean |
+|---|---|---|
+| **Contrast** | How different are neighbouring pixels? | Broken canopy with gaps, high local variation |
+| **Entropy** | How disordered is the arrangement? | Natural regeneration, no repeating pattern |
+| **ASM** | How uniform is it? (inverse of entropy) | Smooth, homogeneous canopy |
+| **Correlation** | How predictable is a pixel from its neighbour? | Periodic structure, such as planting rows |
+
+**Entropy** is usually the single most discriminating band for the plantation versus natural question, because order is precisely what planting imposes and precisely what natural regeneration lacks.
+
+**Correlation** is the one people overlook and it is the most direct test for a plantation, because a planted grid is genuinely periodic in a way nothing natural is.
+
+## The preparation nobody documents
+
+`glcmTexture()` has two hard requirements and neither produces a useful error when violated.
+
+::: {.callout-warning}
+## Common failure: passing float input
+GLCM requires **integer** input. Pass a float band and you get nonsense rather than an exception. Since Chapter 9 rescaled reflectance to floats between 0 and 1, the band must be rescaled and cast before use.
 :::
 
-## Planned sections
+::: {.callout-warning}
+## Common failure: the wrong number of grey levels
+GLCM builds an $N \times N$ matrix where $N$ is the number of distinct values.
 
-1. **The limits of spectral only classification**: two forests, one signature
-2. **The grey level co occurrence matrix and what it measures**
-3. **The core texture metrics**: contrast, entropy, angular second moment, correlation
-4. **Preparing bands for glcmTexture**: quantisation, integer casting and why float input fails
-5. **Window size as an ecological choice**: matching the kernel to crown diameter
-6. **Which texture bands to keep, and the dimensionality cost of keeping all of them**
+Cast 0 to 1 float reflectance straight to integer and you get **two** levels. The matrix is 2 by 2 and carries no information.
 
-## Source material
+Multiply by 10000 first and you get thousands of levels, a matrix with millions of cells, and a computation that exhausts memory.
 
-Session 5 of Akselerasi Konservasi dengan GeoAI and the GLCM section of your mangrove feature stack.
+Quantise to 0 to 255. That is enough levels to capture structure, small enough to compute, and it is what the original formulation assumed.
+:::
+
+Run it on **one band**, not the whole stack. Eighteen output bands per input means ten inputs give 180 texture bands, which will exhaust memory and add mostly redundant information, since texture in adjacent spectral bands is highly correlated.
+
+Near infrared is the usual choice for vegetation, because it has the greatest contrast between sunlit crown and shadowed gap, so canopy structure is most visible there. For urban work a visible band often works better, because shadow between buildings carries the structure.
+
+![Two synthetic canopies with deliberately matched mean reflectance. Only the arrangement differs, and GLCM entropy separates them: 4.95 for the planted grid against 8.25 for the natural stand.](../images/glcm-texture.png){#fig-texture}
+
+The means in @fig-texture are matched on purpose. Every spectral index computed on those two images returns the same answer. Entropy nearly doubles.
+
+## Window size is an ecological decision
+
+The `size` parameter is a radius in pixels, so the analysis window is $(2 \times size + 1)$ square. At Sentinel-2's 10 metres:
+
+| `size` | Window | Ground | Suits |
+|---|---|---|---|
+| 1 | 3 × 3 | 30 m | Smaller than one large crown. Measures noise more than structure. |
+| 3 | 7 × 7 | 70 m | Spans several crowns. Good default for canopy type. |
+| 7 | 15 × 15 | 150 m | Spans a stand. Good for land cover type, blurs boundaries between them. |
+
+The rule: the window must be **large enough to contain several instances of the pattern** you want to detect, and **small enough not to straddle a boundary** between two cover types.
+
+Match it to crown diameter rather than to a default. Mangrove crowns run roughly 5 to 15 metres, so a 70 metre window spans five to fourteen crowns, which is enough to characterise their arrangement without averaging across a boundary.
+
+## The full workflow
+
+{{< include _snippets/ch14_glcm_texture.qmd >}}
+
+## Test before you trust
+
+Do not add texture bands on faith. They are expensive, and in some landscapes they contribute nothing.
+
+The test takes two minutes. Sample the texture bands at your training points from Chapter 15, then plot two of them against each other coloured by class. If the two classes that confuse each other separate along entropy, the bands have earned their place. If they overlap completely, you have added four bands of computation and no information, and you should drop them.
+
+This is the same discipline as the histogram test in Chapter 12, applied to a different feature family. The general principle: every predictor should be able to justify itself before it enters the stack, and after it enters, Chapter 16's feature importance chart should confirm it is still contributing.
+
+::: {.callout-tip}
+## From the field
+Zoom to a boundary between plantation and natural forest. In true colour it may be nearly invisible. In entropy it should be obvious.
+
+If it is not, one of two things is true. Either your window size is wrong for the crown size, which you fix. Or the two stands are genuinely more similar than you assumed, which is itself a finding worth knowing before you build a classifier on the assumption that they differ.
+:::
+
+## The relationship to object based analysis
+
+Chapter 18 reaches a similar place by a different route.
+
+Texture measures variation within a moving window of fixed size and shape. Object based analysis segments the image into coherent regions first, then measures variation within each region, which adapts to the actual shape of things on the ground.
+
+The object based version is more principled: a standard deviation computed within a real stand means more than one computed within an arbitrary 70 metre square that may straddle two stands.
+
+Texture is cheaper, simpler, and works as an ordinary band in an ordinary pixel based workflow. Start here. Move to Chapter 18 when the fixed window becomes the limitation, which you will recognise when texture works in the interior of stands and fails at their edges.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch14-texture",
+  "questions": [
+    {
+      "q": "Why can no spectral index separate an oil palm plantation from a natural mangrove stand?",
+      "options": [
+        "The imagery resolution is too coarse",
+        "Indices are functions of per pixel reflectance, and both are dense broadleaf canopy with nearly identical reflectance",
+        "Palm and mangrove have the same chlorophyll content",
+        "Cloud masking removes the difference"
+      ],
+      "answer": 1,
+      "why": "The information that separates them is arrangement, not composition, and arrangement does not exist within a single pixel. That is precisely the gap texture fills."
+    },
+    {
+      "q": "You pass a float reflectance band directly to glcmTexture. What happens?",
+      "options": [
+        "It throws a type error",
+        "It returns nonsense without an exception",
+        "It automatically casts to integer",
+        "It runs but very slowly"
+      ],
+      "answer": 1,
+      "why": "Silent failure again. GLCM requires integer input and does not tell you when it does not get it, which is why the quantisation step belongs in every texture workflow."
+    },
+    {
+      "q": "Why quantise to 255 grey levels rather than casting the scaled reflectance directly?",
+      "options": [
+        "255 is the maximum Earth Engine supports",
+        "Two levels carries no information and thousands produces a matrix with millions of cells that exhausts memory",
+        "It makes the output easier to visualise",
+        "It matches the Sentinel-2 radiometric depth"
+      ],
+      "answer": 1,
+      "why": "GLCM builds an N by N matrix. Both extremes fail, in opposite ways. 255 is the compromise the original Haralick formulation assumed."
+    },
+    {
+      "q": "Which texture measure most directly tests for a planted grid?",
+      "options": [
+        "Contrast, because plantations have uniform brightness",
+        "Correlation, because a planting grid is genuinely periodic in a way nothing natural is",
+        "ASM, because plantations are homogeneous",
+        "Entropy, because plantations are ordered"
+      ],
+      "answer": 1,
+      "why": "Entropy also works and is the usual first choice. Correlation is the more direct test, because it measures predictability from one pixel to the next, which is exactly what periodic planting creates."
+    },
+    {
+      "q": "Your texture bands separate classes well in stand interiors and poorly at their edges. What does that suggest?",
+      "options": [
+        "The window size is too small",
+        "The fixed window is straddling boundaries, which is the limitation object based analysis addresses",
+        "The wrong band was used as input",
+        "Quantisation was too coarse"
+      ],
+      "answer": 1,
+      "why": "A moving window of fixed shape cannot adapt to the shape of things on the ground. Chapter 18 segments first, then measures within real regions, which is the principled version of the same idea."
+    }
+  ]
+}
+</script>
 
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Run at `size` 1, 3 and 7 over the same plantation boundary. Find the size at which the boundary is clearest and relate it to crown diameter.
+2. Skip the integer cast and run on the float band. Describe how the failure presents itself.
+3. Quantise to 32 levels instead of 255. What is gained and what is lost?
+4. Run GLCM on NDVI rather than B8. Does the structural signal improve, and can you say why?
+5. Sample your texture bands at training points and plot entropy against contrast, coloured by class. Decide, on that evidence, whether to keep them.
