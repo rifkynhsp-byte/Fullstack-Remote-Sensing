@@ -60,6 +60,80 @@ Target yang sama rata per kelas juga tidak otomatis benar. Ukuran sampel sebaikn
 
 : Target sampel mengikuti tingkat kesulitan, bukan luas {.striped}
 
+### Berapa banyak titik, dihitung dan bukan dikira kira
+
+"Sebanyak yang Anda mampu" adalah jawaban yang biasa dan itu bukan jawaban. Rumus Olofsson memberi jawaban yang bisa dipertahankan: pilih presisi yang Anda butuhkan pada akurasi keseluruhan, dan rumus itu mengembalikan ukuran sampel yang memberikannya.
+
+$$n = \left(\frac{\sum_i W_i S_i}{SE}\right)^2 \qquad S_i = \sqrt{U_i(1 - U_i)}$$
+
+$W_i$ adalah proporsi peta yang ditutupi kelas $i$, $U_i$ adalah akurasi pengguna yang Anda harapkan darinya, dan $SE$ adalah galat standar yang bersedia Anda laporkan. Kelas yang Anda perkirakan paling buruk menyumbang paling besar, dan itu cara rumusnya memberi tahu sesuatu yang benar tentang ke mana tenaga Anda seharusnya pergi.
+
+```{python}
+#| label: tbl-sample-size
+import pandas as pd
+import booklib as bk
+
+kelas    = ["Air", "Hutan lain", "Mangrove", "Lahan terbuka", "Restorasi"]
+bobot    = [0.40, 0.25, 0.20, 0.12, 0.03]     # bagian dari peta
+harapan  = [0.90, 0.80, 0.75, 0.70, 0.65]     # akurasi pengguna yang diharapkan
+
+rows = []
+for se in [0.02, 0.015, 0.01, 0.005]:
+    n = bk.sample_size(se, harapan, bobot)
+    rows.append({
+        "Target SE": f"±{se:.1%}",
+        "Total titik": n,
+        "Bagian proporsional kelas 3%": round(n * 0.03),
+        "Hari lapangan pada 25 titik/hari": round(n / 25),
+    })
+
+bk.table(pd.DataFrame(rows), caption=(
+    "Presisi dibeli dengan harga kuadratik. Memotong galat standar menjadi "
+    "setengah melipatempatkan kerja lapangan, dan itulah perhitungan yang "
+    "harus dilakukan sebelum menjanjikan sebuah angka kepada siapa pun."
+))
+```
+
+Dua hal keluar dari tabel itu, dan keduanya mengubah cara sebuah proyek direncanakan.
+
+Presisi bersifat kuadratik. Beralih dari plus minus dua persen ke plus minus satu persen memerlukan empat kali titik, bukan dua kali. Ketika pemberi dana meminta angka yang lebih rapat di akhir proyek, aritmetika inilah yang mengatakan berapa harganya.
+
+Dan alokasi proporsional membuat kelas yang Anda pedulikan kelaparan. Pada galat standar satu persen, kelas restorasi tiga persen mendapat sekitar 42 titik bila dialokasikan menurut luas. Empat puluh dua titik tidak bisa menopang klaim akurasi pengguna untuk kelas itu; selang kepercayaannya akan selebar dua puluh poin. Karena itu rekomendasi Olofsson sendiri adalah menetapkan batas bawah, biasanya 50 sampai 100 titik per kelas, lalu mengambil sisa titiknya dari kelas yang mudah.
+
+::: {.callout-important}
+## Kelas yang jarang justru intinya
+Sebuah proyek restorasi dinilai dari luas yang direstorasi, dan itu kelas terkecil dan terjarang di peta. Sampling proporsional memberi kelas itu bukti paling sedikit dan rentang galat paling lebar, yang berarti satu angka yang menjadi alasan proyek itu ada justru angka yang tidak ditopang oleh desain samplingnya. Tetapkan batas bawahnya lebih dulu, baru alokasikan sisanya.
+:::
+
+::: {.py-live}
+```python
+import math
+
+def ukuran_sampel(target_se, akurasi_harapan, bobot):
+    """n Olofsson untuk target galat standar akurasi keseluruhan."""
+    s = [math.sqrt(u * (1 - u)) for u in akurasi_harapan]
+    return math.ceil((sum(w * si for w, si in zip(bobot, s)) / target_se) ** 2)
+
+kelas   = ["Air", "Hutan lain", "Mangrove", "Lahan terbuka", "Restorasi"]
+bobot   = [0.40, 0.25, 0.20, 0.12, 0.03]
+harapan = [0.90, 0.80, 0.75, 0.70, 0.65]
+
+n = ukuran_sampel(0.01, harapan, bobot)
+print(f"total titik untuk SE ±1%: {n}\n")
+
+batas = 75      # titik minimum per kelas, apa pun luasnya
+print(f"{'kelas':16s} {'luas':>6s} {'proporsional':>13s} {'dengan batas':>13s}")
+for nama, w in zip(kelas, bobot):
+    print(f"{nama:16s} {w:5.0%} {round(n * w):13d} {max(round(n * w), batas):13d}")
+
+# Coba ini: atur akurasi harapan Restorasi menjadi 0.5, seburuk buruknya
+# sebuah kelas secara jujur, lalu jalankan lagi. Kelas yang Anda perkirakan
+# akan salah menentukan total ukuran sampel, dan itu rumusnya sedang
+# menganjurkan kerja rintisan sebelum kampanye utama.
+```
+:::
+
+
 ## Autokorelasi spasial, penggelembung akurasi yang diam diam
 
 Dua sampel berjarak sepuluh meter, untuk keperluan praktis, adalah satu sampel yang diukur dua kali. Keduanya berbagi pencahayaan, atmosfer, tajuk, dan sering kali pohon yang sama.

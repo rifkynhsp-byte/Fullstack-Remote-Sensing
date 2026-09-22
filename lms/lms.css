@@ -607,3 +607,335 @@ body.quarto-dark {
 
 /* Keep the floating button clear of the footer on short pages. */
 main { padding-bottom: 3rem; }
+
+/* --------------------------------------------------------------------------
+   Chapter footer
+   --------------------------------------------------------------------------
+   Completion, the ask card and the reader count, in that order, in fixed
+   slots. Two of the three arrive asynchronously, so the order is owned by
+   the markup rather than by whichever promise settles first.
+   -------------------------------------------------------------------------- */
+
+.lms-chapter-foot {
+  margin: 3rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   Ask card
+   -------------------------------------------------------------------------- */
+
+.lms-ask-card {
+  border: 1px solid var(--lms-rule);
+  border-left: 3px solid var(--lms-bright);
+  border-radius: 6px;
+  background: var(--lms-sand);
+  padding: 1.15rem 1.3rem 1.25rem;
+}
+
+.lms-ask-card-title {
+  font-family: var(--lms-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  border: none;
+  padding: 0;
+}
+
+.lms-ask-card-body {
+  font-family: var(--lms-sans);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--lms-muted);
+  margin: 0 0 1rem;
+}
+
+.lms-ask-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.lms-ask-card-direct {
+  font-family: var(--lms-sans);
+  font-size: 0.82rem;
+  color: var(--lms-muted);
+}
+
+.lms-ask-card-direct a { color: var(--lms-teal); }
+
+/* --------------------------------------------------------------------------
+   Reader counter
+   --------------------------------------------------------------------------
+   Deliberately quiet. It is a sign of life at the bottom of a page, not a
+   metric anybody is being asked to act on.
+   -------------------------------------------------------------------------- */
+
+.lms-visitors {
+  font-family: var(--lms-sans);
+  font-size: 0.78rem;
+  color: var(--lms-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--lms-rule);
+}
+
+.lms-visitors strong { color: var(--lms-ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.lms-vis-sep { opacity: 0.5; }
+
+.lms-vis-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lms-bright);
+  box-shadow: 0 0 0 3px rgba(20, 163, 127, 0.18);
+  flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   Runnable Python cells
+   --------------------------------------------------------------------------
+   The code block keeps Quarto's own appearance; everything here is the strip
+   of controls below it and the output pane below that. A reader who never
+   presses Run should barely notice the difference.
+   -------------------------------------------------------------------------- */
+
+.py-live {
+  margin: 1.6rem 0 2rem;
+  border: 1px solid var(--lms-rule);
+  border-left: 3px solid var(--lms-bright);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--lms-surface);
+}
+
+.py-live > div.sourceCode,
+.py-live > pre.sourceCode { margin: 0; border: none; border-radius: 0; }
+
+.py-live .pyc-code {
+  display: block;
+  outline: none;
+}
+
+.py-live .pyc-code:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(20, 163, 127, 0.45);
+}
+
+.pyc-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid var(--lms-rule);
+  background: var(--lms-sand);
+  font-family: var(--lms-sans);
+}
+
+.pyc-run {
+  font-family: var(--lms-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--lms-teal);
+  border-radius: 4px;
+  background: var(--lms-teal);
+  color: #fff;
+  cursor: pointer;
+}
+
+.pyc-run:hover { background: var(--lms-bright); border-color: var(--lms-bright); }
+.pyc-run[disabled] { opacity: 0.6; cursor: progress; }
+.pyc-run.is-busy .pyc-run-glyph { animation: pyc-pulse 1s ease-in-out infinite; }
+
+@keyframes pyc-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pyc-run.is-busy .pyc-run-glyph { animation: none; }
+}
+
+.pyc-reset {
+  font-family: var(--lms-sans);
+  font-size: 0.78rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--lms-rule);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--lms-muted);
+  cursor: pointer;
+}
+
+.pyc-status {
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--lms-muted);
+}
+
+.pyc-out {
+  padding: 0.9rem 1rem 1rem;
+  border-top: 1px dashed var(--lms-rule);
+}
+
+.pyc-out-error { background: rgba(164, 55, 42, 0.06); }
+
+.pyc-pre {
+  font-family: SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--lms-ink);
+}
+
+.pyc-out-error .pyc-pre { color: var(--lms-red); }
+
+.pyc-note {
+  font-family: var(--lms-sans);
+  font-size: 0.76rem;
+  color: var(--lms-muted);
+  margin: 0.4rem 0 0;
+}
+
+.pyc-fig {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.6rem 0 0;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive widgets: shared chrome
+   --------------------------------------------------------------------------
+   Every widget in interactive/ is a self contained HTML block, and each one
+   used to carry its own copy of this frame. That worked until a chapter
+   included the second widget without the first and inherited none of it.
+   The frame lives here; a widget's own file styles only what is specific to
+   it.
+   -------------------------------------------------------------------------- */
+
+.rs-widget {
+  border: 1px solid var(--lms-rule);
+  border-left: 3px solid var(--lms-bright);
+  border-radius: 6px;
+  background: var(--lms-sand);
+  padding: 1.2rem 1.3rem 1.4rem;
+  margin: 2rem 0;
+  font-family: var(--lms-sans);
+}
+
+.rsx-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rsx-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lms-teal);
+}
+
+.rsx-title { font-size: 1rem; font-weight: 600; }
+
+.rsx-lead {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--lms-muted);
+  margin: 0 0 1rem;
+}
+
+.rsx-controls {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.rsx-field { display: flex; flex-direction: column; gap: 0.25rem; flex: 1 1 150px; }
+
+.rsx-field > span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lms-muted);
+}
+
+.rsx-field select,
+.rsx-field input {
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 5px;
+  border: 1px solid var(--lms-rule);
+  background: var(--lms-surface);
+  color: inherit;
+}
+
+.rsx-verdict {
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 5px;
+  font-size: 0.87rem;
+  line-height: 1.5;
+}
+
+.rsx-good { background: rgba(20, 163, 127, 0.12); border-left: 3px solid var(--lms-bright); }
+.rsx-weak { background: rgba(200, 121, 43, 0.14); border-left: 3px solid var(--lms-amber); }
+
+/* Tables produced by the executed Python chunks. pandas' own HTML looks like
+   output from a different document; this makes it look like the book's. */
+
+.book-table-wrap { margin: 1.2rem 0 1.6rem; overflow-x: auto; }
+
+table.book-table {
+  border-collapse: collapse;
+  font-family: var(--lms-sans);
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+table.book-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--lms-muted);
+  border-bottom: 1px solid var(--lms-rule);
+  padding: 0.45rem 0.7rem 0.45rem 0;
+  white-space: nowrap;
+}
+
+table.book-table td {
+  padding: 0.4rem 0.7rem 0.4rem 0;
+  border-bottom: 1px solid rgba(228, 224, 216, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+table.book-table tr:last-child td { border-bottom: none; }
+
+.book-table-note {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--lms-muted);
+  margin: 0.5rem 0 0;
+}

@@ -22,6 +22,47 @@ bagian demi bagian; lihat prakata untuk urutannya.
 7. **Arsitektur di luar Earth Engine**: Cloud Storage, API eksternal, inferensi tanpa server
 8. **Blue carbon dan pasar karbon sukarela**: titik temu peta dan metodologi
 
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch23-apps",
+  "questions": [
+    {
+      "q": "Apa pertimbangan rancangan utama ketika sebuah Earth Engine App akan dioperasikan oleh aparat kabupaten, bukan oleh Anda?",
+      "options": [
+        "Menampakkan setiap parameter supaya tidak ada yang disembunyikan",
+        "Nilai bawaan yang masuk akal, pagar pembatas, dan ketidakpastian yang ditampilkan dengan jujur, sehingga alatnya tidak bisa didorong ke jawaban yang salah",
+        "Membuat antarmukanya menyerupai code editor",
+        "Menghilangkan petanya untuk mengurangi kebingungan"
+      ],
+      "answer": 1,
+      "why": "Alat yang membiarkan orang bukan spesialis memilih scale, ambang, dan rentang tanggal akan dipakai dengan pilihan yang salah. Nilai bawaan yang bisa dipertahankan, batas yang mencegah kenonsensan, dan pernyataan keyakinan yang terlihat itulah yang membuat sebuah app bisa dipakai oleh orang yang tidak akan membaca bagian metode."
+    },
+    {
+      "q": "MRV menuntut lebih dari sebuah peta. Apa tuntutan tambahannya?",
+      "options": [
+        "Resolusi spasial yang lebih tinggi",
+        "Prosedur yang terdokumentasi dan dapat diulang dengan akurasi yang dinyatakan, sehingga metode yang sama menghasilkan angka yang sebanding tahun depan dan pihak ketiga bisa memeriksanya",
+        "Lisensi citra komersial",
+        "Penerbitan tahunan di jurnal"
+      ],
+      "answer": 1,
+      "why": "Monitoring, reporting, dan verification sama sama soal jejak audit dan soal pengukuran. Angka yang tidak bisa direproduksi atau diperiksa siapa pun tidak punya bobot kelembagaan, sebaik apa pun peta yang mendasarinya."
+    },
+    {
+      "q": "Kapan sebuah alur kerja sebaiknya keluar dari Earth Engine ke Vertex AI atau layanan serupa?",
+      "options": [
+        "Segera setelah analisisnya melibatkan machine learning",
+        "Ketika persoalannya benar benar memerlukan arsitektur jaringan saraf khusus yang tidak bisa dinyatakan oleh classifier platform ini",
+        "Ketika citranya melebihi satu gigabita",
+        "Setiap kali sebuah app dibutuhkan"
+      ],
+      "answer": 1,
+      "why": "Earth Engine adalah lingkungan penyiapan data dan machine learning klasik, dan ia sangat baik untuk itu. Perpindahannya dibenarkan oleh arsitektur modelnya, bukan oleh munculnya kata machine learning."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.

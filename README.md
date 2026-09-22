@@ -209,10 +209,113 @@ one file serves both editions. Include one with:
 {{< include ../interactive/spectral-explorer.qmd >}}
 ```
 
-`spectral-explorer` lets a reader pick two land cover classes and an index,
-then shows whether that index actually separates them. Chapter 2 uses it to
-let readers discover for themselves that NDVI cannot tell mangrove from other
-dense forest, which is the argument the next eight chapters rest on.
+| Widget | Used in | What a reader does with it |
+|---|---|---|
+| `spectral-explorer` | Chapter 2 | Picks two land cover classes and an index, and sees whether that index separates them at all |
+| `sensor-chooser` | Chapter 3 | Sets pixel size, revisit, cloud penetration and budget, and watches missions get ruled out until none are left |
+| `composite-simulator` | Chapter 9 | Adds scenes to a cloud composite and sees where the holes are, with independent cloud against clustered cloud |
+| `confusion-lab` | Chapter 17 | Types into a confusion matrix and watches overall accuracy and per class accuracy move apart |
+
+Each one is a single self contained HTML block with no dependencies: no
+framework, no CDN, no build step. The shared frame, the `.rs-widget` box, the
+control row and the verdict panel, lives in `lms/lms.css`, so a widget's own
+`<style>` block holds only what is specific to it. That split exists because
+the second widget was written by copying the first and a chapter that
+included the second without the first inherited none of its styling.
+
+Bilingual text goes in `data-i18n-en` and `data-i18n-id` attributes, which the
+widget's own script swaps on load. Strings generated in JavaScript switch on
+`isID`. Keep the English in the markup as the fallback, so a widget with a
+missing translation degrades to English rather than to an empty element.
+
+`tools/check_project.py` fails the build if a chapter includes a widget that
+does not exist, and reports, without failing, any widget included in one
+language and not the other.
+
+### Executed Python in the chapters
+
+Six chapters compute their own figures and tables when the book renders, with
+the jupyter engine declared by `jupyter: python3` in both `_quarto.yml` files:
+
+| Chapter | What it computes |
+|---|---|
+| 2, physics | Reflectance curves, and the index separability table behind the chapter's central claim |
+| 9, cloud masking | Clear pixel probability against scene count, and the scenes needed for 95 percent coverage |
+| 12, band math | Every bounded index against every class pair, as a heatmap and a ranked table |
+| 15, sampling | Olofsson sample sizes, and what proportional allocation does to a rare class |
+| 17, accuracy | Overall accuracy, kappa, and per class producer's and user's accuracy |
+| 21, time series | A harmonic fit on a series with a disturbance in it, and its residuals |
+
+The point is not decoration. A number that is computed on the page cannot
+drift away from the prose beside it, and three numbers in the chapters were
+wrong before their arithmetic was put on the page: one rounding error, one
+figure caption describing a different matrix, and one claim that skipped the
+index that actually performed best.
+
+Shared data and machinery live in **`booklib.py`** at the repository root,
+copied into each language project by the build script alongside the other
+shared assets. A chunk in a chapter should be short enough that a reader
+reads it rather than scrolling past it, so anything longer than about fifteen
+lines belongs in the library.
+
+Two rules that are not negotiable, because breaking either makes the book
+unbuildable by anybody but its author:
+
+**Nothing touches the network at render time.** Every value is published,
+synthetic or computed. A chapter that needed Earth Engine credentials to
+render would break for the first person to fork this repository.
+
+**Plotly figures go through `booklib.show()`.** Quarto's own Plotly path loads
+a 2019 build of plotly.js through RequireJS. `show()` uses `to_html` instead,
+which pins a current build and lets the chart be configured: no editing
+toolbar, no screenshot button, responsive width. Tables go through
+`booklib.table()` for the same kind of reason, so they inherit the book's CSS
+rather than pandas' defaults.
+
+Install the render dependencies with `pip install -r requirements.txt`. In CI
+they are installed in the `build` job only, and `_freeze/` is cached across
+runs, so a commit that touches only prose re-executes nothing.
+
+One side effect worth knowing about: pages that execute Python carry Quarto's
+jupyter HTML dependencies, which include RequireJS from cdnjs. It is
+harmless, and it is why those twelve pages make one more third party request
+than the rest.
+
+### Runnable Python in the reader's browser
+
+Twelve cells in the book have a **Run** button. They execute in the reader's
+own tab through [Pyodide](https://pyodide.org), CPython compiled to
+WebAssembly. There is no server, no account, no quota and no abuse surface,
+and the reader can edit the code before running it.
+
+Write one as a fenced div with an ordinary, non executable code block inside:
+
+````markdown
+::: {.py-live}
+```python
+print("this runs in the reader's browser")
+```
+:::
+````
+
+Note the fence is ```` ```python ````, not ```` ```{python} ````. The first is
+a highlighted listing that `lms/pyodide-cell.js` turns into an editor; the
+second executes at build time. A chapter often wants both: the executed
+version makes the argument, the runnable version lets the reader push on it.
+
+Rules that come from how it actually behaves:
+
+- Keep the cell self contained. `booklib` does not exist in the browser.
+- Prefer the standard library. `numpy`, `pandas` and `matplotlib` are
+  available but each is a download the reader waits through; the packages
+  fetched on first run are listed in `lms/config.js`.
+- End with a comment suggesting what to change. A cell nobody edits is a
+  listing with an extra button on it.
+- `matplotlib` figures are captured and shown as images automatically.
+
+Nothing downloads until a reader presses Run. If the CDN is unreachable or a
+package fails to load, the cell says so once and pure Python keeps working;
+with JavaScript off, the reader sees a normal highlighted code block.
 
 ### Adding images
 
@@ -307,7 +410,7 @@ It runs in two modes and switches automatically based on `lms/config.js`.
 | Setup | None | About twenty minutes |
 | Sign in | A name, stored in the browser | Magic link to the reader's email |
 | Progress and notes | That browser only | Follows them across devices |
-| Questions reach you | Pre filled email to rifkynauvalhsp@gmail.com, or a Formspree endpoint | A table you read at `/en/instructor.html` |
+| Questions reach you | Pre filled email to rifky.nhsp@gmail.com, or a Formspree endpoint | A table you read at `/en/instructor.html` |
 | Cost | Nothing | Nothing, Supabase free tier |
 
 Full setup is in **`lms/README-lms.md`**. The short version: create a Supabase project, run `lms/supabase-schema.sql`, paste the project URL and anon key into `lms/config.js`. The anon key is meant to be public; row level security is what protects the data.
@@ -317,12 +420,20 @@ Full setup is in **`lms/README-lms.md`**. The short version: create a Supabase p
 ```
 lms/config.js            the only file you edit
 lms/lms.js               engine: storage adapter, quizzes, progress, notes, questions
-lms/lms.css              styling, light and dark
+lms/lms.css              styling, light and dark, plus the shared widget frame
+lms/visitors.js          reader counter
+lms/pyodide-cell.js      Run buttons on .py-live code blocks
 lms/supabase-schema.sql  tables and row level security for account mode
 lms/README-lms.md        full setup guide
 en/dashboard.qmd         reader progress dashboard
 en/instructor.qmd        question inbox, instructor only
 ```
+
+Anything added to `lms/` has to be listed in three places: the `<script>` tags
+in both `_quarto.yml` files, and the copy line in `tools/build_site.sh`.
+Forget the third and it works locally and 404s on the published site, so
+`tools/check_project.py` fails the build if a script is loaded but not
+copied.
 
 ### Adding a knowledge check
 
@@ -349,7 +460,56 @@ A raw HTML block anywhere in a chapter. No shortcode, no filter, no build step.
 
 `answer` is a zero based index. `why` shows after answering whether the reader was right or wrong, because that is the moment an explanation lands hardest. Three or four options: two is a coin flip, five is padding. Put the check after the section it tests, not at the end of the chapter.
 
-Chapters that already have one: EN 1, 2, 3, 9 to 18 and 22; ID 1, 2, 3.
+Every numbered chapter in both editions now has one, 48 blocks and 182
+questions in total. The appendices, the index, the dashboard and the
+instructor page deliberately do not: a knowledge check on a glossary is
+theatre.
+
+`tools/check_project.py` parses every block and fails the build on invalid
+JSON, a missing `id`, a duplicate `id` within a chapter, fewer than two
+options, a missing `why`, or an `answer` index outside the options list. That
+last one is the reason the check exists: it renders perfectly and then fails
+silently in the reader's browser, and nobody reports it, they just stop
+trusting the quizzes.
+
+### The reader counter
+
+A static site cannot count its own readers, so `lms/visitors.js` asks
+[counterapi.dev](https://counterapi.dev), a free service that holds integers
+and needs no account, for two numbers: total across the book and views on the
+current page. They appear quietly at the foot of each chapter and on the
+landing page.
+
+Two things to be honest about, both stated in `lms/config.js`:
+
+- It counts browsers, not people. One reader on a phone and a laptop is two,
+  and a reader who clears site data is new again.
+- It is somebody else's free service. If it disappears, or a reader blocks
+  it, the badge hides itself and nothing else changes.
+
+It counts one visit per browser per twelve hours, so reloading a chapter
+while working through a script is one reader rather than eleven. No
+identifier, referrer payload or analytics beacon goes with the request: what
+the counter learns is that somebody, somewhere, opened a page.
+
+Change `visitors.namespace` in `lms/config.js` if you fork this book,
+otherwise your readers and mine land in the same bucket. Set
+`visitors.provider` to `'none'`, or `features.visitors` to `false`, to switch
+the badge off.
+
+### Where questions go
+
+`instructorEmail` in `lms/config.js`, currently `rifky.nhsp@gmail.com`, and
+three routes are tried in order of how good the experience is: the Supabase
+table in account mode, a Formspree endpoint if one is configured, and
+otherwise a pre filled `mailto:` carrying the chapter title and URL.
+
+Readers meet the invitation in three places: the floating button on every
+page, a card at the end of every chapter, where a reader has just finished
+and knows what they did not understand, and the landing page. Changing the
+address means changing `lms/config.js`; the chapter card, the landing page
+button and the instructor page all read from it or are checked against it by
+the pre-flight checks.
 
 ### If the platform breaks
 

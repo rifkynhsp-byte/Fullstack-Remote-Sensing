@@ -23,7 +23,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-SHARED=(theme.scss theme-dark.scss styles.css references.bib)
+# booklib.py is imported by the executed Python chunks in the chapters. It
+# travels with the other shared assets for the same reason they do: one copy
+# at the root is the source of truth, and both editions compute from it.
+SHARED=(theme.scss theme-dark.scss styles.css references.bib booklib.py)
 
 echo "==> Generating code listings"
 # Must run before Quarto starts. Book projects resolve include directives
@@ -65,7 +68,7 @@ cp landing/index.html docs/index.html
 cp -r landing/assets docs/assets
 
 # Both books reference "../lms/", so one shared copy serves both editions.
-cp lms/lms.js lms/lms.css lms/config.js docs/lms/
+cp lms/lms.js lms/lms.css lms/config.js lms/visitors.js lms/pyodide-cell.js docs/lms/
 
 # GitHub Pages runs Jekyll by default, which ignores any directory whose name
 # begins with an underscore. Quarto emits several. This file disables Jekyll.

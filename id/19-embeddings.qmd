@@ -28,3 +28,44 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch19-embeddings",
+  "questions": [
+    {
+      "q": "Satellite embedding memungkinkan classifier yang bisa dipakai dilatih dari beberapa lusin label, bukan beberapa ribu. Apa yang membuatnya mungkin?",
+      "options": [
+        "Embedding memuat lebih banyak band spektral daripada Sentinel-2",
+        "Representasinya sudah dipelajari dari citra tak berlabel dalam jumlah sangat besar, sehingga labelnya hanya perlu menemukan batas di ruang yang sudah memisahkan tutupan lahan",
+        "Classifier-nya jaringan saraf, bukan random forest",
+        "Embedding dihitung pada resolusi yang lebih halus"
+      ],
+      "answer": 1,
+      "why": "Inilah seluruh argumen model fondasi. Stack yang dibangun tangan memaksa Anda merekayasa fitur yang memisahkan kelas; representasi yang dipelajari datang dengan pemisahan itu sudah ada, dan labelnya hanya perlu menyatakan sisi mana yang Anda pedulikan."
+    },
+    {
+      "q": "Kenapa embedding tidak memerlukan cloud masking atau perhitungan indeks dari Anda sendiri?",
+      "options": [
+        "Karena awan tidak memengaruhi band embedding",
+        "Karena pemrosesan itu sudah terjadi di hulu, di dalam pipeline yang menghasilkan produk tahunan itu",
+        "Karena embedding diturunkan dari radar",
+        "Karena Earth Engine me-mask-nya otomatis saat dibaca"
+      ],
+      "answer": 1,
+      "why": "Kemudahan dengan ongkos: keputusan yang seharusnya Anda ambil tentang masking dan compositing sudah diambil untuk Anda, menurut bawaan orang lain, dan Anda tidak bisa memeriksa atau mengubahnya."
+    },
+    {
+      "q": "Keterbatasan mana yang langsung mengikuti dari sifat produknya yang tahunan?",
+      "options": [
+        "Ia tidak bisa dipakai untuk klasifikasi",
+        "Ia tidak bisa menjawab pertanyaan tentang satu badai, satu panen, atau satu peristiwa pembukaan lahan",
+        "Ia tidak bisa diekspor",
+        "Ia tidak bisa digabungkan dengan data lain"
+      ],
+      "answer": 1,
+      "why": "Granularitas tahunan menempatkan satu kelas pertanyaan di luar jangkauan. Peristiwa tunggal memerlukan time series, dan itu Bab 21, dan justru karena itulah pendekatan yang lebih lama tetap diajarkan di sini alih alih diganti."
+    }
+  ]
+}
+</script>

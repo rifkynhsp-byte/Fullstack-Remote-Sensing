@@ -80,6 +80,119 @@ Compute an index on unscaled integer reflectance without casting and the divisio
 Scaling to physical reflectance once, immediately after cloud masking, makes everything float and avoids this entirely. Verify with the Inspector rather than by eye: click a forest pixel and confirm NDVI reads something like 0.83, not 0 or 1.
 :::
 
+## Which index separates which pair
+
+An index is not good or bad in general. It is good or bad at a particular distinction, over a particular landscape, and the only way to know is to compute it. The grid below does that for every index in this chapter against every pair of classes in a tropical coastal scene.
+
+```{python}
+#| label: fig-index-grid
+#| fig-cap: "Separation each index achieves between each pair of classes, from the representative spectra in Chapter 2. Darker is better separated. Hover any cell for the exact gap. MVI is excluded because it is unbounded and would dominate the scale without being comparable. CMRI is a difference of two normalised differences, so it spans twice the range of the rest and reads darker partly for that reason; compare it with the others by rank rather than by shade."
+import itertools
+import numpy as np
+import plotly.graph_objects as go
+import booklib as bk
+
+classes = ["Healthy mangrove", "Other dense forest", "Oil palm",
+           "Open water", "Turbid water", "Tidal mudflat", "Bare soil"]
+indices = [k for k in bk.INDICES if k != "MVI"]        # bounded indices only
+
+pairs = list(itertools.combinations(classes, 2))
+grid = np.array([[bk.separability(i, a, b) for a, b in pairs] for i in indices])
+
+fig = go.Figure(go.Heatmap(
+    z=grid,
+    x=[f"{a.split()[0]} / {b.split()[0]}" for a, b in pairs],
+    y=indices,
+    colorscale=[[0, "#ffffff"], [0.25, "#cfe9df"], [0.6, bk.BRIGHT], [1, bk.TEAL]],
+    colorbar=dict(title="Gap"),
+    hovertemplate="%{y} separates %{x} by %{z:.3f}<extra></extra>",
+))
+fig.update_xaxes(tickangle=-55, tickfont=dict(size=9))
+bk.show(fig, height=430)
+```
+
+The two columns to look at are the pale ones. Mangrove against other dense forest, and open water against turbid water, are pale across almost every index, which is the honest summary of what band math can and cannot do: it separates materials that differ in the bands you have, and two dense broadleaf canopies barely differ in any of them.
+
+```{python}
+#| label: tbl-index-best
+import itertools
+import pandas as pd
+import booklib as bk
+
+classes = ["Healthy mangrove", "Other dense forest", "Oil palm",
+           "Open water", "Turbid water", "Tidal mudflat", "Bare soil"]
+
+rows = []
+for a, b in itertools.combinations(classes, 2):
+    scored = sorted(((bk.separability(i, a, b), i) for i in bk.INDICES
+                     if i != "MVI"), reverse=True)
+    best, runner = scored[0], scored[1]
+    rows.append({
+        "Pair": f"{a} / {b}",
+        "Best index": best[1],
+        "Gap": best[0],
+        "Runner up": runner[1],
+        "Verdict": "band math is enough" if best[0] > 0.15
+                   else "needs more than band math",
+    })
+
+df = pd.DataFrame(rows).sort_values("Gap")
+bk.table(df, caption=(
+    "Sorted worst first. Everything above the point where the verdict "
+    "changes is a pair you will not classify reliably from optical indices "
+    "alone, whatever the map looks like."
+))
+```
+
+Read the top of that table as a work plan. The pairs listed there are the ones that need radar, terrain or texture added to the stack, which is Chapters 10, 11 and 14, and no amount of index engineering will substitute. The pairs at the bottom are solved, and spending time on them is spending time on the part that already works.
+
+::: {.callout-note}
+## What 0.15 means, and what it does not
+The threshold in that last column is a rule of thumb, not a statistic. It comes from the observation that a gap smaller than about 0.15 in a bounded index tends to be inside the scene to scene variation of a real composite, so a classifier trained on one year does not transfer to the next. Treat it as the point at which to stop tuning indices and start adding sensors, and replace it with a Jeffries-Matusita distance on your own training data as soon as you have any.
+:::
+
+::: {.py-live}
+```python
+# Every bounded index in this chapter, over one pair of classes you pick.
+spectra = {
+    "mangrove":  {"B3": .055, "B4": .030, "B8": .310, "B11": .115},
+    "forest":    {"B3": .052, "B4": .029, "B8": .330, "B11": .135},
+    "oil palm":  {"B3": .060, "B4": .035, "B8": .345, "B11": .155},
+    "mudflat":   {"B3": .100, "B4": .130, "B8": .195, "B11": .230},
+    "water":     {"B3": .040, "B4": .025, "B8": .008, "B11": .004},
+}
+
+def nd(a, b): return (a - b) / (a + b)
+
+indices = {
+    "NDVI":  lambda r: nd(r["B8"], r["B4"]),
+    "NDWI":  lambda r: nd(r["B3"], r["B8"]),
+    "MNDWI": lambda r: nd(r["B3"], r["B11"]),
+    "NDMI":  lambda r: nd(r["B8"], r["B11"]),
+    "CMRI":  lambda r: nd(r["B8"], r["B4"]) - nd(r["B3"], r["B8"]),
+}
+
+A, B = "mangrove", "forest"          # change these two
+print(f"{A} against {B}\n")
+
+scored = sorted(
+    ((abs(f(spectra[A]) - f(spectra[B])), name) for name, f in indices.items()),
+    reverse=True,
+)
+for gap, name in scored:
+    bar = "#" * int(gap * 60)
+    print(f"{name:6s} {gap:.3f}  {bar}")
+
+print(f"\nbest: {scored[0][1]}"
+      f"   {'usable' if scored[0][0] > 0.15 else 'not enough on its own'}")
+
+# Try this: set A to "water" and B to "mudflat" for a pair band math solves
+# easily, then back to mangrove and forest for one it does not. Then invent
+# your own index: add a line to the dictionary above and see where it lands.
+```
+:::
+
+
 ## Judge an index by its histogram, not its map
 
 A map of an index looks informative whatever it contains, because the human eye finds structure in any continuous surface.

@@ -1,5 +1,5 @@
 ```{=html}
-<div class="rs-explorer" id="rs-explorer">
+<div class="rs-widget rs-explorer" id="rs-explorer">
   <div class="rsx-head">
     <span class="rsx-tag" data-i18n-en="Interactive" data-i18n-id="Interaktif">Interactive</span>
     <span class="rsx-title" data-i18n-en="Spectral signature and index explorer"
@@ -34,20 +34,8 @@
 </div>
 
 <style>
-.rs-explorer{border:1px solid var(--lms-rule,#e4e0d8);border-left:3px solid var(--lms-bright,#14a37f);
-  border-radius:6px;background:var(--lms-sand,#faf8f4);padding:1.2rem 1.3rem 1.4rem;margin:2rem 0;
-  font-family:"Source Sans 3",system-ui,sans-serif}
-.rsx-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.5rem}
-.rsx-tag{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--lms-teal,#0f6b57)}
-.rsx-title{font-size:1rem;font-weight:600}
-.rsx-lead{font-size:.88rem;line-height:1.55;color:var(--lms-muted,#5c6773);margin:0 0 1rem}
-.rsx-controls{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:1rem}
-.rsx-field{display:flex;flex-direction:column;gap:.25rem;flex:1 1 150px}
-.rsx-field span{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--lms-muted,#5c6773)}
-.rsx-field select{font-family:inherit;font-size:.88rem;padding:.45rem .55rem;border-radius:5px;
-  border:1px solid var(--lms-rule,#e4e0d8);background:#fff;color:inherit}
+/* The widget frame, the control row and the verdict box live in lms/lms.css,
+   shared with every other widget. What follows is specific to this one. */
 #rsx-chart{width:100%;height:auto;background:#fff;border-radius:5px;
   border:1px solid var(--lms-rule,#e4e0d8)}
 .rsx-result{margin-top:1rem}
@@ -58,9 +46,6 @@
 .rsx-bar-fill{position:absolute;top:0;bottom:0;transition:all .25s ease}
 .rsx-bar-zero{position:absolute;top:0;bottom:0;width:1px;background:#c9c4bb}
 .rsx-bar-value{width:56px;font-variant-numeric:tabular-nums;font-weight:600}
-.rsx-verdict{margin-top:.9rem;padding:.7rem .9rem;border-radius:5px;font-size:.87rem;line-height:1.5}
-.rsx-good{background:rgba(20,163,127,.12);border-left:3px solid #14a37f}
-.rsx-weak{background:rgba(200,121,43,.14);border-left:3px solid #c8792b}
 </style>
 
 <script>

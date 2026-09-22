@@ -55,3 +55,44 @@ Ia tidak akan menjadikan Anda ilmuwan penginderaan jauh dalam satu akhir pekan. 
 Ia tidak membahas arsitektur deep learning secara mendalam. Earth Engine adalah lingkungan penyiapan data dan pembelajaran mesin klasik; ketika sebuah masalah benar benar memerlukan jaringan saraf khusus, Bab 23 membahas serah terima ke Vertex AI atau SageMaker alih alih berpura pura platform ini sanggup.
 
 Ia tidak memberi Anda data lapangan. Setiap klasifikasi di buku ini divalidasi terhadap data lapangan yang dikumpulkan seseorang dengan perahu, berjalan kaki, di lumpur. Pekerjaan itu tidak punya jalan pintas, dan alat apa pun yang mengklaim sebaliknya sedang berjualan.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch00-orientation",
+  "questions": [
+    {
+      "q": "Bagian I sama sekali tidak memuat kode. Apa alasan yang dinyatakan?",
+      "options": [
+        "Supaya bukunya lebih ringkas",
+        "Karena menelusuri galat sebuah klasifikasi bergantung pada pemahaman instrumennya, bukan pada API-nya",
+        "Karena kodenya diletakkan di lampiran",
+        "Karena sintaks Earth Engine terlalu sering berubah untuk dicetak"
+      ],
+      "answer": 1,
+      "why": "Ketika classifier mengacaukan mangrove dengan kelapa sawit, tidak ada classifier yang lebih baik yang memperbaikinya. Yang memperbaikinya adalah pengetahuan bahwa keduanya tajuk berdaun lebar yang rapat, dan bahwa tekstur, elevasi, serta struktur radar yang memisahkannya, dan penalaran itu tidak tersedia bagi orang yang hanya belajar API."
+    },
+    {
+      "q": "Buku ini memperlakukan cloud masking sebagai prasyarat, bukan penghalusan tingkat lanjut. Kenapa?",
+      "options": [
+        "Karena cloud masking murah secara komputasi",
+        "Karena contoh yang dikerjakan berada di tempat yang sering tidak punya satu pun citra bersih dalam setahun",
+        "Karena Earth Engine mensyaratkannya sebelum reducer mana pun berjalan",
+        "Karena penelaah memintanya"
+      ],
+      "answer": 1,
+      "why": "Materi yang dibangun di sekitar wilayah demonstrasi yang langitnya bisa diandalkan bersih boleh menunda soal awan. Di Indonesia ekuatorial, cekungan Kongo, dan sebagian besar Amazon, Anda sering tidak bisa menemukan citra bersih sama sekali, sehingga kasus tropis menjadi kasus bawaan di sini."
+    },
+    {
+      "q": "Mana yang secara tegas dinyatakan tidak akan dilakukan buku ini?",
+      "options": [
+        "Membahas penilaian akurasi",
+        "Membahas radar",
+        "Memberi Anda data lapangan, atau pengganti kegiatan mengumpulkannya",
+        "Membahas machine learning"
+      ],
+      "answer": 2,
+      "why": "Setiap klasifikasi dalam buku ini divalidasi terhadap ground truth yang dikumpulkan seseorang dengan perahu, berjalan kaki, di dalam lumpur. Pekerjaan itu tidak punya jalan pintas, dan alat apa pun yang mengaku sebaliknya sedang menjual sesuatu."
+    }
+  ]
+}
+</script>

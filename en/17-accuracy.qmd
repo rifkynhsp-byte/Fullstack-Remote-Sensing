@@ -27,9 +27,85 @@ The diagonal is agreement. Everything off the diagonal is error, and the off dia
 
 : A confusion matrix worth reading, not just scoring {.striped}
 
-The overall accuracy here is 89 percent, which sounds respectable and tells you almost nothing. What the table actually says is that mangrove and other forest are confusing each other in both directions, 23 one way and 18 the other, while water is essentially solved. Every improvement worth making lives in that one class pair.
+The overall accuracy here is 90 percent, which sounds respectable and tells you almost nothing. What the table actually says is that mangrove and other forest are confusing each other in both directions, 23 one way and 18 the other, while water is essentially solved. Every improvement worth making lives in that one class pair.
 
-![The same matrix read two ways. Producer accuracy runs along the rows, user accuracy down the columns, and the overall figure of 85 percent conceals that mangrove and other forest are confusing each other in both directions.](../images/confusion-matrix.png){#fig-confusion}
+![A five class example, read two ways. Producer accuracy runs along the rows, user accuracy down the columns, and the overall figure of 85 percent conceals that mangrove and other forest are confusing each other in both directions.](../images/confusion-matrix.png){#fig-confusion}
+
+### The same matrix, scored by code
+
+Nothing in accuracy assessment should be arithmetic you did in your head. The cell below scores the matrix above when this page is built, so the numbers in the prose and the numbers in the table cannot drift apart.
+
+```{python}
+#| label: tbl-accuracy-live
+import pandas as pd
+import booklib as bk
+
+classes = ["Mangrove", "Other forest", "Water"]
+
+# Rows are reference (what the point actually is), columns are the map.
+matrix = [
+    [142,  23,   5],
+    [ 18, 176,   2],
+    [  3,   1, 148],
+]
+
+stats = bk.confusion_stats(matrix)
+
+print(f"Validation points   {stats['n']}")
+print(f"Overall accuracy    {stats['overall_accuracy']:.1%}")
+print(f"Kappa               {stats['kappa']:.3f}")
+
+bk.table(pd.DataFrame({
+    "Class": classes,
+    "Producer's accuracy": stats["producers_accuracy"],
+    "User's accuracy": stats["users_accuracy"],
+    "F1": stats["f1"],
+}), caption=(
+    "Producer's accuracy runs along the rows and answers: of the mangrove "
+    "that is really there, how much did the map find? User's accuracy runs "
+    "down the columns and answers: of what the map calls mangrove, how much "
+    "really is? They are different questions and a map can be good at one "
+    "and bad at the other."
+))
+```
+
+Overall accuracy is 90 percent. Mangrove's producer accuracy is 84 percent, six points below the headline, and that gap is the whole reason a single number is not a result: sixteen percent of the mangrove that exists is missing from this map, and the overall figure hides it behind water, which is easy.
+
+Kappa comes out at 0.85, which sounds like independent corroboration of the 90 percent and is not. The next section explains why.
+
+::: {.py-live}
+```python
+# Edit the matrix. Rows are reference, columns are the map.
+classes = ["Mangrove", "Other forest", "Water"]
+matrix = [
+    [142,  23,   5],
+    [ 18, 176,   2],
+    [  3,   1, 148],
+]
+
+n = sum(sum(row) for row in matrix)
+correct = sum(matrix[i][i] for i in range(len(matrix)))
+row_totals = [sum(r) for r in matrix]
+col_totals = [sum(matrix[i][j] for i in range(len(matrix))) for j in range(len(matrix))]
+
+oa = correct / n
+expected = sum(row_totals[i] * col_totals[i] for i in range(len(matrix))) / (n * n)
+kappa = (oa - expected) / (1 - expected)
+
+print(f"n = {n}   overall accuracy = {oa:.1%}   kappa = {kappa:.3f}\n")
+print(f"{'class':14s} {'producer':>9s} {'user':>7s}")
+for i, name in enumerate(classes):
+    pa = matrix[i][i] / row_totals[i] if row_totals[i] else float("nan")
+    ua = matrix[i][i] / col_totals[i] if col_totals[i] else float("nan")
+    print(f"{name:14s} {pa:8.1%} {ua:7.1%}")
+
+# Try this: move 20 points from mangrove-classified-as-other-forest
+# (row 0, column 1) onto the diagonal at row 0, column 0. Overall accuracy
+# rises by about four points; mangrove's producer accuracy rises by twelve.
+# That difference is the argument for reporting per class.
+```
+:::
+
 
 ## Three numbers, three different questions
 
@@ -47,6 +123,13 @@ For a deforestation alert system, **omission** is worse. A missed clearing is a 
 
 State which direction matters for your use, then optimise and report accordingly. A single accuracy figure hides exactly this.
 :::
+
+## Move the numbers and watch what moves
+
+The presets below are four situations from real work. The second one is the one to sit with: a map that reports 96 percent overall accuracy while finding the class the project exists to measure one time in five.
+
+{{< include ../interactive/confusion-lab.qmd >}}
+
 
 ## Kappa, and why to be careful with it
 

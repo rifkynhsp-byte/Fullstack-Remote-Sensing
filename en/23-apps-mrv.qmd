@@ -26,6 +26,47 @@ written part by part; check the roadmap in the preface for the current order.
 
 The ui.Panel legend builders in your code collection, the Indraja Buana app, the Thryve WhatsApp bot design and the thermal monitoring blueprint.
 
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch23-apps",
+  "questions": [
+    {
+      "q": "What is the main design consideration when an Earth Engine App will be operated by a district officer rather than by you?",
+      "options": [
+        "Exposing every parameter so nothing is hidden",
+        "Sensible defaults, guard rails, and uncertainty shown honestly, so the tool cannot be driven into a wrong answer",
+        "Making the interface look like the code editor",
+        "Removing the map to reduce confusion"
+      ],
+      "answer": 1,
+      "why": "A tool that lets a non specialist choose a scale, a threshold and a date range will be used with the wrong ones. Defaults that are defensible, limits that prevent nonsense, and a visible statement of confidence are what make an app usable by someone who is not going to read the methods."
+    },
+    {
+      "q": "MRV requires more than a map. What is the additional requirement?",
+      "options": [
+        "Higher spatial resolution",
+        "A documented, repeatable procedure with stated accuracy, so the same method produces a comparable number next year and a third party can check it",
+        "A commercial imagery licence",
+        "Annual publication in a journal"
+      ],
+      "answer": 1,
+      "why": "Monitoring, reporting and verification is about the audit trail as much as the measurement. A number nobody can reproduce or check has no institutional weight, however good the underlying map is."
+    },
+    {
+      "q": "When should a workflow move off Earth Engine to Vertex AI or a similar service?",
+      "options": [
+        "As soon as the analysis involves machine learning",
+        "When the problem genuinely needs a custom neural network architecture that the platform's classifiers cannot express",
+        "When the imagery exceeds one gigabyte",
+        "Whenever an app is required"
+      ],
+      "answer": 1,
+      "why": "Earth Engine is a data preparation and classical machine learning environment, and it is very good at that. The hand off is justified by the model architecture, not by the presence of the words machine learning."
+    }
+  ]
+}
+</script>
+
 ## Exercises {.unnumbered}
 
 To be written alongside the chapter.

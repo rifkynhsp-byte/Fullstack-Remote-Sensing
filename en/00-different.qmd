@@ -55,3 +55,44 @@ It will not make you a remote sensing scientist in a weekend. The physics in Par
 It will not cover deep learning architectures in depth. Earth Engine is a data preparation and classical machine learning environment; when a problem genuinely needs a custom neural network, Chapter 23 covers the hand off to Vertex AI or SageMaker rather than pretending the platform can do it.
 
 It will not give you field data. Every classification in this book is validated against ground truth that someone collected by boat, on foot, in mud. That work has no shortcut, and any tool that claims otherwise is selling something.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch00-orientation",
+  "questions": [
+    {
+      "q": "Part I contains no code at all. What is the stated reason?",
+      "options": [
+        "To keep the book shorter",
+        "Because debugging a classification depends on knowing the instrument, not the API",
+        "Because the code is in the appendices instead",
+        "Because Earth Engine syntax changes too often to print"
+      ],
+      "answer": 1,
+      "why": "When a classifier confuses mangrove with oil palm, no better classifier fixes it. Knowing that both are dense broadleaf canopy, and that texture, elevation and radar structure are what separate them, is what fixes it, and that reasoning is unavailable to someone who learned only the API."
+    },
+    {
+      "q": "The book treats cloud masking as a prerequisite rather than an advanced refinement. Why?",
+      "options": [
+        "Because cloud masking is computationally cheap",
+        "Because the worked examples are over places where a clear scene often does not exist in a given year",
+        "Because Earth Engine requires it before any reducer will run",
+        "Because reviewers ask for it"
+      ],
+      "answer": 1,
+      "why": "Material built around a reliably clear demonstration area can leave cloud until later. Across equatorial Indonesia, the Congo basin and much of the Amazon you frequently cannot find a clear scene at all, so the tropical case is the default case here."
+    },
+    {
+      "q": "Which of these does the book explicitly say it will not do?",
+      "options": [
+        "Cover accuracy assessment",
+        "Cover radar",
+        "Give you field data, or a substitute for collecting it",
+        "Cover machine learning"
+      ],
+      "answer": 2,
+      "why": "Every classification in the book is validated against ground truth somebody collected by boat, on foot, in mud. That work has no shortcut, and any tool claiming otherwise is selling something."
+    }
+  ]
+}
+</script>

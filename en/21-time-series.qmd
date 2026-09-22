@@ -21,9 +21,185 @@ written part by part; check the roadmap in the preface for the current order.
 6. **Breakpoint approaches**: the logic behind LandTrendr, CCDC and BFAST
 7. **Turning a change map into an alert**: minimum mapping unit, persistence rules and false positive control
 
+## Harmonic regression, in fifteen lines
+
+The chapter's prose is still being written. The mechanism at its centre is not, and it is small enough to show in full, so here it is ahead of the narrative.
+
+A cloud screened optical time series over the tropics arrives as an irregular scatter of observations with a strong annual cycle in it. The problem this creates is that any two dates you happen to compare differ for two reasons at once: the season moved, and possibly the land changed. Separating those is the whole task.
+
+Harmonic regression does it by fitting the season explicitly. Regress NDVI on an intercept, a linear trend, and one or more sine and cosine pairs at the annual frequency. The fitted curve is phenology. What is left over, the residual, is everything phenology does not explain, and that is where change lives.
+
+```{python}
+#| label: fig-harmonic-fit
+#| fig-cap: "Four years of synthetic NDVI, cloud gaps included, with a two term harmonic fit. The model was fitted only to observations before the dashed line, so what happens after it is prediction rather than description. Drag to zoom; double click to reset."
+import numpy as np
+import plotly.graph_objects as go
+import booklib as bk
+
+EVENT = 2.3      # a clearing event, in years from the start of the series
+t, ndvi = bk.synthetic_ndvi(n_years=4, disturbance_at=EVENT, seed=7)
+
+# Fit on the period before the event only. A model fitted across a
+# disturbance absorbs the disturbance into its own trend term and then
+# reports no anomaly, which is the most common way this analysis fails.
+before = t < EVENT
+coef, predict = bk.harmonic_fit(t[before], ndvi[before], order=2)
+
+smooth = np.linspace(t.min(), t.max(), 400)
+
+fig = go.Figure()
+fig.add_scatter(x=t, y=ndvi, mode="markers", name="Observations",
+                marker=dict(size=7, color=bk.BRIGHT),
+                hovertemplate="NDVI %{y:.3f} at year %{x:.2f}<extra></extra>")
+fig.add_scatter(x=smooth, y=predict(smooth), mode="lines",
+                name="Harmonic fit, pre event",
+                line=dict(color=bk.AMBER, width=2.5),
+                hovertemplate="expected %{y:.3f}<extra></extra>")
+fig.add_vline(x=EVENT, line_dash="dash", line_color=bk.RED,
+              annotation_text="clearing", annotation_position="top left")
+fig.update_xaxes(title="Years from start of series")
+fig.update_yaxes(title="NDVI")
+bk.show(fig, height=400)
+```
+
+The fit tracks the seasonal rise and fall closely and then, after the dashed line, keeps predicting the vegetation that is no longer there. That divergence is the detection.
+
+Now plot what the model could not explain. This is the step that turns a chart a human reads into a rule a machine can apply.
+
+```{python}
+#| label: fig-harmonic-residuals
+#| fig-cap: "Residuals from the same fit. Before the event they scatter around zero with a standard deviation of about 0.02 NDVI. After it they sit far below zero and stay there, which is what distinguishes a change from a bad observation."
+residual = ndvi - predict(t)
+sd = float(residual[before].std())
+
+fig = go.Figure()
+fig.add_scatter(x=t, y=residual, mode="markers+lines", name="Residual",
+                marker=dict(size=6, color=bk.TEAL), line=dict(width=1, color="#c9c4bb"),
+                hovertemplate="residual %{y:+.3f} at year %{x:.2f}<extra></extra>")
+for k, dash in [(2, "dot"), (3, "dash")]:
+    fig.add_hline(y=-k * sd, line_dash=dash, line_color=bk.MUTED,
+                  annotation_text=f"-{k} sd", annotation_position="right")
+fig.add_hline(y=0, line_color="#c9c4bb")
+fig.add_vline(x=EVENT, line_dash="dash", line_color=bk.RED)
+fig.update_xaxes(title="Years from start of series")
+fig.update_yaxes(title="Observed minus expected NDVI")
+bk.show(fig, height=360)
+
+print(f"residual sd before the event   {sd:.4f}")
+print(f"mean residual after the event  {residual[~before].mean():+.3f}"
+      f"  ({abs(residual[~before].mean()) / sd:.0f} standard deviations)")
+```
+
+The mean residual after the event is about fifteen standard deviations below zero. That is not a threshold anyone needs to tune; it is a signal that stands clear of the noise by an order of magnitude, which is what a well specified seasonal model buys you.
+
+Three cautions before this becomes an alert, and each one is a section in the prose to come.
+
+A single anomalous observation is not change. Cloud shadow, a missed cirrus, a sensor artefact: all produce one bad point. Requiring persistence, typically three consecutive observations beyond the threshold, removes almost all of them and costs a few weeks of latency.
+
+The threshold belongs to the pixel, not to the landscape. A pixel with noisy history needs a wider band than a stable one, which is why the standard deviation above is computed from the pixel's own residuals rather than fixed globally.
+
+And a drop is not a cause. Harvest, fire, flooding, illegal clearing and a dry season all push NDVI down. The time series says when and how much; it does not say what happened, and a report that skips that distinction is not defensible.
+
+::: {.py-live}
+```python
+# A harmonic fit with nothing but the standard library, so the mechanism is
+# visible. Three unknowns: mean level, and one sine and cosine pair.
+import math
+
+# Twelve monthly NDVI observations over one year.
+months = list(range(12))
+ndvi = [0.62, 0.64, 0.71, 0.78, 0.82, 0.84,
+        0.83, 0.79, 0.74, 0.69, 0.65, 0.62]
+
+def design(m):
+    x = m / 12.0
+    return [1.0, math.sin(2 * math.pi * x), math.cos(2 * math.pi * x)]
+
+# Normal equations, solved by Gaussian elimination. Three by three, by hand.
+A = [[sum(design(m)[i] * design(m)[j] for m in months) for j in range(3)]
+     + [sum(design(m)[i] * ndvi[m] for m in months)] for i in range(3)]
+
+for i in range(3):
+    A[i] = [v / A[i][i] for v in A[i]]
+    for k in range(3):
+        if k != i:
+            A[k] = [a - A[k][i] * b for a, b in zip(A[k], A[i])]
+
+c = [A[i][3] for i in range(3)]
+amplitude = math.hypot(c[1], c[2])
+
+print(f"mean NDVI        {c[0]:.3f}")
+print(f"seasonal amplitude {amplitude:.3f}   (peak to trough {2 * amplitude:.3f})\n")
+
+for m in months:
+    fit = sum(ci * di for ci, di in zip(c, design(m)))
+    r = ndvi[m] - fit
+    flag = "  <-- check this one" if abs(r) > 0.03 else ""
+    print(f"month {m + 1:2d}  observed {ndvi[m]:.2f}  expected {fit:.3f}  residual {r:+.3f}{flag}")
+
+# Try this: drop month 9 to 0.45, as a clearing would, and run again. The
+# residual for that month goes far outside the others, and the fit itself
+# barely moves, because one point among twelve cannot pull it. That
+# asymmetry is what makes residuals a usable detector.
+```
+:::
+
+
 ## Source material
 
 The harmonic trend block in your code collection, session 4 of Akselerasi Konservasi, and the land cover change dashboards.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch21-harmonic",
+  "questions": [
+    {
+      "q": "Why fit the harmonic model only to observations before a suspected disturbance?",
+      "options": [
+        "To save computation",
+        "Because a model fitted across the disturbance absorbs it into its own coefficients and then reports no anomaly",
+        "Because observations after a disturbance are less accurate",
+        "Because Earth Engine cannot fit across a gap"
+      ],
+      "answer": 1,
+      "why": "This is the most common way the analysis fails silently. Least squares will happily bend the trend term to accommodate a step change, after which the residuals look unremarkable and the event disappears."
+    },
+    {
+      "q": "After the seasonal model is fitted, where does the change signal live?",
+      "options": [
+        "In the fitted curve",
+        "In the residuals, which are what seasonality cannot explain",
+        "In the amplitude of the sine term",
+        "In the intercept"
+      ],
+      "answer": 1,
+      "why": "Fitting phenology explicitly is what makes the rest interpretable. The curve is the season; the residual is everything else, and that is the only part a change detector should look at."
+    },
+    {
+      "q": "Three consecutive observations beyond the threshold are required before an alert is raised. What does that requirement buy, and what does it cost?",
+      "options": [
+        "Higher accuracy, at no cost",
+        "It removes single bad observations such as cloud shadow, at the cost of a few weeks of latency",
+        "It reduces computation, at the cost of accuracy",
+        "It removes seasonality, at the cost of sensitivity"
+      ],
+      "answer": 1,
+      "why": "Cloud shadow, missed cirrus and sensor artefacts each produce one anomalous point. Persistence removes almost all of them, and the price is that you learn about real change a little later."
+    },
+    {
+      "q": "A pixel's NDVI drops sharply and stays down. What can the time series actually tell you?",
+      "options": [
+        "That illegal clearing occurred",
+        "When the drop happened and how large it was, but not what caused it",
+        "That the forest was harvested",
+        "Nothing, without radar"
+      ],
+      "answer": 1,
+      "why": "Harvest, fire, flooding, clearing and a dry season all push NDVI down. Timing and magnitude come from the data; attribution needs other evidence, and a report that skips that distinction is not defensible."
+    }
+  ]
+}
+</script>
 
 ## Exercises {.unnumbered}
 

@@ -19,9 +19,95 @@ Klasifikasikan titik validasi yang disisihkan, lalu tabulasikan prediksi terhada
 
 Diagonalnya adalah kesepakatan. Semua yang di luar diagonal adalah galat, dan sel di luar diagonal itulah bagian yang paling sering dilewati orang, padahal justru bagian yang memberi tahu apa yang harus diperbaiki.
 
-![Matriks yang sama dibaca dua cara. Akurasi produsen mengalir sepanjang baris, akurasi pengguna menurun sepanjang kolom, dan angka keseluruhan 85 persen menyembunyikan bahwa mangrove dan hutan lain saling mengacaukan di kedua arah.](../images/confusion-matrix.png){#fig-confusion}
+|  | Prediksi mangrove | Prediksi hutan lain | Prediksi air |
+|---|---|---|---|
+| **Aktual mangrove** | 142 | 23 | 5 |
+| **Aktual hutan lain** | 18 | 176 | 2 |
+| **Aktual air** | 3 | 1 | 148 |
 
-Akurasi keseluruhan pada @fig-confusion adalah 85 persen, yang terdengar terhormat dan nyaris tidak memberi tahu apa apa. Yang sebenarnya dinyatakan tabel itu adalah mangrove dan hutan lain saling mengacaukan di kedua arah, 23 ke satu arah dan 18 ke arah lain, sementara air praktis sudah selesai. Setiap perbaikan yang layak dikerjakan berada di dalam satu pasangan kelas itu.
+: Confusion matrix yang layak dibaca, bukan hanya dinilai {.striped}
+
+Akurasi keseluruhan tabel itu 90 persen, yang terdengar terhormat dan nyaris tidak memberi tahu apa apa. Yang sebenarnya dinyatakan tabel itu adalah mangrove dan hutan lain saling mengacaukan di kedua arah, 23 ke satu arah dan 18 ke arah lain, sementara air praktis sudah selesai. Setiap perbaikan yang layak dikerjakan berada di dalam satu pasangan kelas itu.
+
+Pola yang sama muncul lagi pada contoh lima kelas di @fig-confusion, tempat dua kelas tambahan menurunkan angka keseluruhan tanpa mengubah tempat kekeliruan sebenarnya berada.
+
+![Contoh lima kelas, dibaca dua cara. Akurasi produsen mengalir sepanjang baris, akurasi pengguna menurun sepanjang kolom, dan angka keseluruhan 85 persen menyembunyikan bahwa mangrove dan hutan lain saling mengacaukan di kedua arah.](../images/confusion-matrix.png){#fig-confusion}
+
+### Matriks yang sama, dihitung oleh kode
+
+Tidak ada bagian dari penilaian akurasi yang layak dikerjakan dengan kira kira di kepala. Sel di bawah menghitung matriks di atas ketika halaman ini dibangun, sehingga angka di prosa dan angka di tabel tidak mungkin berpisah jalan.
+
+```{python}
+#| label: tbl-accuracy-live
+import pandas as pd
+import booklib as bk
+
+kelas = ["Mangrove", "Hutan lain", "Air"]
+
+# Baris adalah referensi (kelas sebenarnya titik itu), kolom adalah peta.
+matriks = [
+    [142,  23,   5],
+    [ 18, 176,   2],
+    [  3,   1, 148],
+]
+
+stats = bk.confusion_stats(matriks)
+
+print(f"Titik validasi      {stats['n']}")
+print(f"Akurasi keseluruhan {stats['overall_accuracy']:.1%}")
+print(f"Kappa               {stats['kappa']:.3f}")
+
+bk.table(pd.DataFrame({
+    "Kelas": kelas,
+    "Akurasi produsen": stats["producers_accuracy"],
+    "Akurasi pengguna": stats["users_accuracy"],
+    "F1": stats["f1"],
+}), caption=(
+    "Akurasi produsen mengalir sepanjang baris dan menjawab: dari mangrove "
+    "yang benar benar ada, berapa yang ditemukan peta? Akurasi pengguna "
+    "menurun sepanjang kolom dan menjawab: dari yang disebut peta sebagai "
+    "mangrove, berapa yang benar benar mangrove? Keduanya pertanyaan berbeda, "
+    "dan sebuah peta bisa baik pada satu dan buruk pada yang lain."
+))
+```
+
+Akurasi keseluruhannya 90 persen. Akurasi produsen mangrove 84 persen, enam poin di bawah angka utama, dan jarak itulah seluruh alasan satu angka bukan sebuah hasil: enam belas persen mangrove yang ada hilang dari peta ini, dan angka keseluruhan menyembunyikannya di balik air, yang mudah.
+
+Kappa keluar 0,85, yang terdengar seperti pembenaran mandiri atas angka 90 persen itu, padahal bukan. Bagian berikutnya menjelaskan kenapa.
+
+::: {.py-live}
+```python
+# Ubah matriksnya. Baris adalah referensi, kolom adalah peta.
+kelas = ["Mangrove", "Hutan lain", "Air"]
+matriks = [
+    [142,  23,   5],
+    [ 18, 176,   2],
+    [  3,   1, 148],
+]
+
+n = sum(sum(baris) for baris in matriks)
+benar = sum(matriks[i][i] for i in range(len(matriks)))
+total_baris = [sum(r) for r in matriks]
+total_kolom = [sum(matriks[i][j] for i in range(len(matriks))) for j in range(len(matriks))]
+
+oa = benar / n
+harapan = sum(total_baris[i] * total_kolom[i] for i in range(len(matriks))) / (n * n)
+kappa = (oa - harapan) / (1 - harapan)
+
+print(f"n = {n}   akurasi keseluruhan = {oa:.1%}   kappa = {kappa:.3f}\n")
+print(f"{'kelas':14s} {'produsen':>9s} {'pengguna':>9s}")
+for i, nama in enumerate(kelas):
+    pa = matriks[i][i] / total_baris[i] if total_baris[i] else float("nan")
+    ua = matriks[i][i] / total_kolom[i] if total_kolom[i] else float("nan")
+    print(f"{nama:14s} {pa:8.1%} {ua:9.1%}")
+
+# Coba ini: pindahkan 20 titik dari mangrove-diklasifikasi-hutan-lain
+# (baris 0, kolom 1) ke diagonal di baris 0, kolom 0. Akurasi keseluruhan
+# naik sekitar empat poin; akurasi produsen mangrove naik dua belas poin.
+# Selisih itulah argumen untuk melaporkan angka per kelas.
+```
+:::
+
 
 ## Tiga angka, tiga pertanyaan yang berbeda
 
@@ -39,6 +125,13 @@ Untuk sistem peringatan deforestasi, **omisi** lebih buruk. Pembukaan lahan yang
 
 Nyatakan arah mana yang penting untuk pemakaian Anda, lalu optimalkan dan laporkan sesuai itu. Satu angka akurasi tunggal justru menyembunyikan persis hal ini.
 :::
+
+## Geser angkanya dan lihat apa yang bergerak
+
+Praatur di bawah adalah empat situasi dari pekerjaan nyata. Yang kedua patut direnungkan: peta yang melaporkan akurasi keseluruhan 96 persen sementara menemukan kelas yang menjadi alasan proyek itu ada hanya satu dari lima kali.
+
+{{< include ../interactive/confusion-lab.qmd >}}
+
 
 ## Kappa, dan mengapa perlu hati hati dengannya
 

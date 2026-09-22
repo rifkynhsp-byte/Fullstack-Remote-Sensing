@@ -17,4 +17,4 @@ Bila Anda sudah masuk lewat tautan email, data tersimpan pada akun Anda dan ikut
 
 Gunakan tombol **Ajukan pertanyaan** di sudut halaman mana pun. Pertanyaan Anda terkirim beserta bab yang sedang dibaca, jadi tidak perlu menjelaskan posisi Anda.
 
-Pertanyaan diteruskan ke Rifky Nauval Hendrawan di [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com). Sertakan pesan galat bila ada, dan tautan skrip Anda dari **Get Link** di Code Editor bila masalahnya ada di kode. Dua hal itu mengubah pertanyaan yang biasanya butuh bolak balik seminggu menjadi satu kali balasan.
+Pertanyaan diteruskan ke Rifky Nauval Hendrawan di [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com). Sertakan pesan galat bila ada, dan tautan skrip Anda dari **Get Link** di Code Editor bila masalahnya ada di kode. Dua hal itu mengubah pertanyaan yang biasanya butuh bolak balik seminggu menjadi satu kali balasan.

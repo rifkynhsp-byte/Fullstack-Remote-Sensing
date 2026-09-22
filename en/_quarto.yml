@@ -141,6 +141,8 @@ format:
     include-after-body:
       - text: |
           <script src="../lms/config.js"></script>
+          <script src="../lms/visitors.js"></script>
+          <script src="../lms/pyodide-cell.js"></script>
           <script src="../lms/lms.js"></script>
 
 
@@ -177,6 +179,19 @@ format:
 #    highlight-style: github
 # ---------------------------------------------------------------------------
 
+# The Python chunks in Chapters 2, 9, 12, 15, 17 and 21 are executed when the
+# book is rendered, so what a reader sees is the output of the code printed
+# above it rather than a transcript of output from somewhere else. The kernel
+# is plain CPython with the packages in requirements.txt; nothing here talks
+# to Earth Engine, because a build that needs credentials is a build that
+# breaks for everybody who does not have them.
+jupyter: python3
+
 execute:
   echo: true
   freeze: auto
+
+  # A chunk that fails stops the render rather than publishing a chapter with
+  # a hole in it. Worth the strictness: a wrong number in a teaching book is
+  # worse than a failed build.
+  error: false

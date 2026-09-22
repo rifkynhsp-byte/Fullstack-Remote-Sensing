@@ -86,6 +86,107 @@ var observationCount = processed.select('B8').count().rename('n_clear');
 ```
 :::
 
+## Berapa banyak scene yang dibutuhkan satu piksel bersih?
+
+Argumen untuk compositing biasanya disampaikan secara kualitatif: langitnya berawan, jadi tumpuk lebih banyak citra. Versi kuantitatifnya lebih berguna, karena ia memberi tahu kapan harus berhenti dan kapan harus menyerah pada data optik sama sekali.
+
+Anggap setiap perekaman sebagai lambungan koin bebas dengan peluang $p$ bahwa piksel itu berawan. Peluang bahwa setidaknya satu dari $n$ scene melihatnya bersih adalah $1 - p^{n}$. Bentuk itu, digambarkan di bawah, adalah seluruh alasan compositing.
+
+```{python}
+#| label: fig-clear-probability
+#| fig-cap: "Peluang sebuah piksel terlihat bersih setidaknya sekali, terhadap jumlah perekaman dalam jendela waktu. Arahkan kursor untuk nilai persisnya. Garis putus putus adalah titik di mana satu dari dua puluh piksel masih hilang setelah seluruh jendela."
+import numpy as np
+import plotly.graph_objects as go
+import booklib as bk
+
+scenes = np.arange(1, 61)
+fig = go.Figure()
+
+for cloud in [0.5, 0.7, 0.85, 0.95]:
+    fig.add_scatter(
+        x=scenes,
+        y=[bk.clear_probability(cloud, n) for n in scenes],
+        mode="lines",
+        name=f"{cloud:.0%} berawan",
+        hovertemplate="%{y:.1%} bersih setelah %{x} scene<extra>"
+                      + f"{cloud:.0%} berawan</extra>",
+    )
+
+fig.add_hline(y=0.95, line_dash="dash", line_color=bk.MUTED,
+              annotation_text="95%", annotation_position="bottom right")
+fig.update_xaxes(title="Jumlah perekaman dalam jendela compositing")
+fig.update_yaxes(title="P(setidaknya satu tampakan bersih)", tickformat=".0%", range=[0, 1.02])
+bk.show(fig, height=380)
+```
+
+Baca garis 95 persen. Pada awan lima puluh persen, lima scene sudah cukup, dan itu dua pekan Sentinel-2. Pada awan delapan puluh lima persen Anda perlu sekitar sembilan belas, kira kira satu triwulan. Pada sembilan puluh lima persen, Anda perlu hampir enam puluh, lebih banyak daripada yang diberikan satu orbit Sentinel-2 dalam setahun di sebagian besar sabuk ekuator.
+
+```{python}
+#| label: tbl-clear-scenes
+import pandas as pd
+import booklib as bk
+
+rows = []
+for cloud in [0.3, 0.5, 0.7, 0.85, 0.9, 0.95]:
+    need = next(n for n in range(1, 400) if bk.clear_probability(cloud, n) >= 0.95)
+    rows.append({
+        "Peluang berawan": f"{cloud:.0%}",
+        "Scene untuk cakupan 95%": need,
+        "Hari Sentinel-2 pada revisit 5 hari": need * 5,
+        "Bersih setelah satu tahun (73 scene)": bk.clear_probability(cloud, 73),
+    })
+
+bk.table(pd.DataFrame(rows), caption=(
+    "Kebebasan antar perekaman diasumsikan di seluruh tabel ini, dan itu "
+    "membuat setiap angkanya terlalu optimistis. Awan bersifat musiman dan "
+    "terorganisasi secara spasial, sehingga satu bulan musim hujan berperilaku "
+    "jauh lebih buruk daripada yang disarankan aritmetikanya."
+))
+```
+
+Kolom terakhir itulah yang perlu ditanggapi serius, dan sekaligus dicurigai. Ia mengatakan satu tahun penuh membersihkan bahkan piksel 95 persen berawan dengan hampir pasti. Composite nyata di atas Papua dan Kalimantan tidak berperilaku begitu, dan alasannya ada pada asumsinya, bukan pada aritmetikanya: awan bukan lambungan koin yang bebas. Ia datang dalam musim hujan yang berlangsung berbulan bulan dan bertahan di punggungan yang sama setiap sore. Piksel di bawah awan orografis yang menetap tidak berawan 95 persen waktu secara acak; ia berawan hampir setiap sore ketika satelit lewat.
+
+::: {.callout-important}
+## Asumsinya adalah pelajarannya
+Ketika composite Anda berlubang padahal aritmetika ini mengatakan seharusnya tidak, aritmetikanya tidak salah. Asumsi kebebasannya yang salah. Di titik itulah radar berhenti menjadi topik lanjutan dan menjadi satu satunya pilihan, dan itu Bab 10.
+:::
+
+### Aritmetika yang sama sebagai peta
+
+Sebuah kurva mengatakan 95 persen piksel tercakup. Ia tidak mengatakan di mana lima persen sisanya, dan itulah pertanyaan yang diajukan penelaah. Setiap kotak di bawah adalah satu piksel.
+
+{{< include ../interactive/composite-simulator.qmd >}}
+
+
+### Jalankan sendiri
+
+::: {.py-live}
+```python
+def peluang_bersih(awan, n):
+    """Peluang setidaknya satu tampakan bersih dalam n scene, bila awan acak."""
+    return 1 - awan ** n
+
+def scene_dibutuhkan(awan, target=0.95):
+    n = 1
+    while peluang_bersih(awan, n) < target and n < 1000:
+        n += 1
+    return n
+
+for awan in [0.3, 0.6, 0.8, 0.9]:
+    n = scene_dibutuhkan(awan)
+    print(f"{awan:.0%} berawan -> {n:3d} scene untuk cakupan 95%"
+          f"  ({n * 5:4d} hari pada revisit Sentinel-2)")
+
+# Lokasi Anda sendiri: masukkan fraksi awan yang dilaporkan kueri metadata
+# Anda dan panjang jendela waktunya dalam hari.
+awan, jendela_hari = 0.82, 365
+scene = jendela_hari / 5
+print(f"\n{jendela_hari} hari, {awan:.0%} berawan, {scene:.0f} scene"
+      f" -> {peluang_bersih(awan, scene):.1%} piksel terlihat bersih")
+```
+:::
+
+
 ## Ketika compositing tidak cukup
 
 Di tempat yang paling berawan, misalnya lembah pegunungan yang tertutup awan kronis atau sebagian pesisir ekuatorial pada tahun terbasah, bahkan satu tahun penuh data optik masih menyisakan lubang. Ada dua tanggapan.

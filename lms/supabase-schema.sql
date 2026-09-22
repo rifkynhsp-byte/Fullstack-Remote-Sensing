@@ -106,15 +106,15 @@ create policy "own questions read" on public.lms_questions
 drop policy if exists "instructor reads all questions" on public.lms_questions;
 create policy "instructor reads all questions" on public.lms_questions
   for select using (
-    auth.jwt() ->> 'email' = 'rifkynauvalhsp@gmail.com'
+    auth.jwt() ->> 'email' = 'rifky.nhsp@gmail.com'
   );
 
 drop policy if exists "instructor answers questions" on public.lms_questions;
 create policy "instructor answers questions" on public.lms_questions
   for update using (
-    auth.jwt() ->> 'email' = 'rifkynauvalhsp@gmail.com'
+    auth.jwt() ->> 'email' = 'rifky.nhsp@gmail.com'
   ) with check (
-    auth.jwt() ->> 'email' = 'rifkynauvalhsp@gmail.com'
+    auth.jwt() ->> 'email' = 'rifky.nhsp@gmail.com'
   );
 
 

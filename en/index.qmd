@@ -62,7 +62,7 @@ Your reading position, chapter completion, knowledge check scores and private no
 
 Knowledge checks appear at the end of several chapters. They are one question at a time with an explanation after each answer, right or wrong, because the moment just after answering is when an explanation lands hardest.
 
-The **Ask a question** button sits in the corner of every page. It carries the chapter you are reading with it, so you never have to explain where you are. Questions reach me at [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com), and I would rather have a badly worded question than a reader stuck for a week.
+The **Ask a question** button sits in the corner of every page. It carries the chapter you are reading with it, so you never have to explain where you are. Questions reach me at [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com), and I would rather have a badly worded question than a reader stuck for a week.
 
 ## Conventions
 
@@ -92,6 +92,6 @@ The foundational scripts in Part II descend from the EE101 teaching series by No
 
 ## Contact
 
-Rifky Nauval Hendrawan &middot; [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com)
+Rifky Nauval Hendrawan &middot; [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com)
 
 Corrections, disagreements and questions are all welcome. If you find an error, saying so is a contribution.

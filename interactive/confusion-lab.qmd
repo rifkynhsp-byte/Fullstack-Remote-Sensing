@@ -1,0 +1,311 @@
+```{=html}
+<!--
+  interactive/confusion-lab.qmd
+  =============================
+  An editable confusion matrix that scores itself.
+
+  Why a widget rather than a table: the lesson of Chapter 17 is that overall
+  accuracy moves for reasons that have nothing to do with the classifier, and
+  that per class accuracy is where the information is. Reading that is one
+  thing; moving twenty points from an off diagonal cell onto the diagonal and
+  watching which numbers move is another.
+
+  Presets are the arguments of the chapter, each one a matrix a reader can
+  land on and recognise from their own work.
+
+  No dependencies. Bilingual through data-i18n attributes, like every widget
+  in interactive/.
+-->
+<div class="rs-widget" id="cfx">
+  <div class="rsx-head">
+    <span class="rsx-tag" data-i18n-en="Interactive" data-i18n-id="Interaktif">Interactive</span>
+    <span class="rsx-title" data-i18n-en="Confusion matrix laboratory"
+          data-i18n-id="Laboratorium confusion matrix">Confusion matrix laboratory</span>
+  </div>
+
+  <p class="rsx-lead"
+     data-i18n-en="Type into any cell. Rows are the reference class, columns are what the map said, so the diagonal is agreement. Everything below recomputes as you type. The presets are the four situations this chapter is about."
+     data-i18n-id="Ketik di sel mana pun. Baris adalah kelas referensi, kolom adalah yang dikatakan peta, jadi diagonalnya adalah kesepakatan. Semua di bawah dihitung ulang sambil Anda mengetik. Praatur di bawah adalah empat situasi yang dibahas bab ini.">
+    Type into any cell.
+  </p>
+
+  <div class="cfx-presets" id="cfx-presets"></div>
+
+  <div class="cfx-grid-wrap">
+    <table class="cfx-grid" id="cfx-grid"></table>
+  </div>
+
+  <div class="cfx-stats" id="cfx-stats"></div>
+  <div class="cfx-per" id="cfx-per"></div>
+  <div class="rsx-verdict" id="cfx-verdict"></div>
+</div>
+
+<style>
+.cfx-presets{display:flex;gap:.5rem;flex-wrap:wrap;margin:0 0 1rem}
+.cfx-preset{font-family:var(--lms-sans,system-ui);font-size:.78rem;font-weight:600;
+  padding:.35rem .7rem;border:1px solid var(--lms-rule,#e4e0d8);border-radius:999px;
+  background:transparent;color:var(--lms-muted,#5c6773);cursor:pointer}
+.cfx-preset:hover{border-color:var(--lms-bright,#14a37f);color:var(--lms-teal,#0f6b57)}
+.cfx-preset.is-on{background:var(--lms-teal,#0f6b57);border-color:var(--lms-teal,#0f6b57);color:#fff}
+
+.cfx-grid-wrap{overflow-x:auto}
+.cfx-grid{border-collapse:collapse;font-family:var(--lms-sans,system-ui);font-size:.84rem}
+.cfx-grid th{font-weight:700;color:var(--lms-muted,#5c6773);font-size:.74rem;
+  text-transform:uppercase;letter-spacing:.05em;padding:.4rem .5rem;text-align:center;
+  white-space:nowrap}
+.cfx-grid th.cfx-row-head{text-align:right}
+.cfx-grid td{padding:2px}
+.cfx-cell{width:66px;font-family:inherit;font-size:.86rem;text-align:center;padding:.4rem .2rem;
+  border:1px solid var(--lms-rule,#e4e0d8);border-radius:4px;background:var(--lms-surface,#fff);
+  color:inherit;font-variant-numeric:tabular-nums}
+.cfx-cell:focus{outline:2px solid var(--lms-bright,#14a37f);outline-offset:-1px}
+.cfx-cell.is-diag{background:rgba(20,163,127,.12);font-weight:700}
+.cfx-total{font-variant-numeric:tabular-nums;font-size:.8rem;color:var(--lms-muted,#5c6773);
+  padding:0 .5rem;white-space:nowrap}
+
+.cfx-stats{display:flex;gap:1.6rem;flex-wrap:wrap;margin:1.2rem 0 .6rem;
+  padding:.8rem 0;border-top:1px solid var(--lms-rule,#e4e0d8);
+  border-bottom:1px solid var(--lms-rule,#e4e0d8)}
+.cfx-stat{display:flex;flex-direction:column}
+.cfx-stat-n{font-family:var(--lms-sans,system-ui);font-size:1.5rem;font-weight:700;
+  line-height:1.1;font-variant-numeric:tabular-nums}
+.cfx-stat-l{font-family:var(--lms-sans,system-ui);font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--lms-muted,#5c6773);font-weight:700}
+
+.cfx-per{font-family:var(--lms-sans,system-ui);font-size:.84rem}
+.cfx-per-row{display:flex;align-items:center;gap:.6rem;margin:.3rem 0}
+.cfx-per-name{width:110px;text-align:right;color:var(--lms-muted,#5c6773);font-size:.8rem}
+.cfx-per-bars{flex:1;display:flex;flex-direction:column;gap:2px}
+.cfx-per-bar{height:11px;border-radius:2px;background:var(--lms-rule,#e4e0d8);position:relative}
+.cfx-per-bar span{position:absolute;left:0;top:0;bottom:0;border-radius:2px}
+.cfx-per-vals{width:120px;font-size:.78rem;font-variant-numeric:tabular-nums;
+  color:var(--lms-muted,#5c6773)}
+.cfx-legend{font-size:.74rem;color:var(--lms-muted,#5c6773);margin:.6rem 0 0}
+.cfx-swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 .25rem 0 .7rem}
+</style>
+
+<script>
+(function () {
+  var host = document.getElementById('cfx');
+  if (!host) return;
+
+  var isID = (document.documentElement.lang || 'en').slice(0, 2) === 'id';
+  host.querySelectorAll('[data-i18n-en]').forEach(function (el) {
+    el.textContent = isID ? el.getAttribute('data-i18n-id') : el.getAttribute('data-i18n-en');
+  });
+
+  var T = isID ? {
+    ref: 'Referensi', map: 'Peta', total: 'total',
+    oa: 'Akurasi keseluruhan', kappa: 'Kappa', n: 'Titik validasi',
+    prod: 'produsen', user: 'pengguna',
+    reset: 'Atur ulang'
+  } : {
+    ref: 'Reference', map: 'Map', total: 'total',
+    oa: 'Overall accuracy', kappa: 'Kappa', n: 'Validation points',
+    prod: 'producer', user: 'user',
+    reset: 'Reset'
+  };
+
+  // Each preset is one of the chapter's arguments, as a matrix.
+  var PRESETS = [
+    {
+      en: 'The worked example', id: 'Contoh yang dikerjakan',
+      classes: {en: ['Mangrove', 'Other forest', 'Water'],
+                id: ['Mangrove', 'Hutan lain', 'Air']},
+      m: [[142, 23, 5], [18, 176, 2], [3, 1, 148]],
+      noteEN: 'Ninety percent overall, and mangrove producer accuracy six points below it. The headline number is carried by water.',
+      noteID: 'Sembilan puluh persen keseluruhan, dan akurasi produsen mangrove enam poin di bawahnya. Angka utamanya ditopang oleh air.'
+    },
+    {
+      en: 'Rare class, ignored', id: 'Kelas jarang, diabaikan',
+      classes: {en: ['Restoration', 'Mangrove', 'Water'],
+                id: ['Restorasi', 'Mangrove', 'Air']},
+      m: [[4, 14, 2], [3, 240, 5], [1, 4, 520]],
+      noteEN: 'Ninety six percent overall, while the class the project exists to measure is found one time in five. This is the failure a single number cannot show.',
+      noteID: 'Sembilan puluh enam persen keseluruhan, sementara kelas yang menjadi alasan proyek itu ada hanya ditemukan satu dari lima kali. Inilah kegagalan yang tidak bisa ditunjukkan satu angka.'
+    },
+    {
+      en: 'Balanced but mediocre', id: 'Seimbang tetapi sedang',
+      classes: {en: ['Mangrove', 'Other forest', 'Water'],
+                id: ['Mangrove', 'Hutan lain', 'Air']},
+      m: [[120, 45, 5], [50, 115, 5], [8, 7, 155]],
+      noteEN: 'Seventy seven percent, evenly bad. Honest, unimpressive, and far more useful than the previous preset, because the error is where you can see it.',
+      noteID: 'Tujuh puluh tujuh persen, buruk secara merata. Jujur, tidak mengesankan, dan jauh lebih berguna daripada praatur sebelumnya, karena galatnya berada di tempat yang bisa Anda lihat.'
+    },
+    {
+      en: 'One class eats the map', id: 'Satu kelas menelan peta',
+      classes: {en: ['Mangrove', 'Other forest', 'Water'],
+                id: ['Mangrove', 'Hutan lain', 'Air']},
+      m: [[60, 105, 5], [20, 198, 2], [2, 26, 132]],
+      noteEN: 'The classifier learned to predict the majority class. Mangrove producer accuracy falls to 35 percent while other forest still reports 90, and overall accuracy stays in the seventies throughout.',
+      noteID: 'Classifier-nya belajar memprediksi kelas mayoritas. Akurasi produsen mangrove jatuh ke 35 persen sementara hutan lain masih melaporkan 90, dan akurasi keseluruhannya tetap di kisaran tujuh puluhan.'
+    }
+  ];
+
+  var state = JSON.parse(JSON.stringify(PRESETS[0].m));
+  var classes = PRESETS[0].classes[isID ? 'id' : 'en'].slice();
+  var active = 0;
+
+  var presetBar = document.getElementById('cfx-presets');
+  PRESETS.forEach(function (p, i) {
+    var b = document.createElement('button');
+    b.className = 'cfx-preset' + (i === 0 ? ' is-on' : '');
+    b.type = 'button';
+    b.textContent = isID ? p.id : p.en;
+    b.addEventListener('click', function () {
+      active = i;
+      state = JSON.parse(JSON.stringify(p.m));
+      classes = p.classes[isID ? 'id' : 'en'].slice();
+      presetBar.querySelectorAll('.cfx-preset').forEach(function (n, j) {
+        n.classList.toggle('is-on', i === j);
+      });
+      buildGrid();
+      paint();
+    });
+    presetBar.appendChild(b);
+  });
+
+  var grid = document.getElementById('cfx-grid');
+
+  function buildGrid() {
+    grid.innerHTML = '';
+    var n = classes.length;
+
+    var head = grid.insertRow();
+    head.insertCell().outerHTML = '<th></th>';
+    classes.forEach(function (c) {
+      head.insertCell().outerHTML = '<th>' + T.map + ': ' + c + '</th>';
+    });
+    head.insertCell().outerHTML = '<th></th>';
+
+    for (var i = 0; i < n; i++) {
+      var row = grid.insertRow();
+      row.insertCell().outerHTML = '<th class="cfx-row-head">' + T.ref + ': ' + classes[i] + '</th>';
+      for (var j = 0; j < n; j++) {
+        var td = row.insertCell();
+        var input = document.createElement('input');
+        input.className = 'cfx-cell' + (i === j ? ' is-diag' : '');
+        input.type = 'number';
+        input.min = '0';
+        input.step = '1';
+        input.value = state[i][j];
+        input.setAttribute('aria-label', T.ref + ' ' + classes[i] + ', ' + T.map + ' ' + classes[j]);
+        (function (ii, jj, el) {
+          el.addEventListener('input', function () {
+            var v = parseInt(el.value, 10);
+            state[ii][jj] = isNaN(v) || v < 0 ? 0 : v;
+            paint();
+          });
+        })(i, j, input);
+        td.appendChild(input);
+      }
+      var tot = row.insertCell();
+      tot.className = 'cfx-total';
+      tot.setAttribute('data-row-total', String(i));
+    }
+  }
+
+  function stats() {
+    var n = classes.length, total = 0, correct = 0;
+    var rows = [], cols = [];
+    for (var i = 0; i < n; i++) { rows[i] = 0; cols[i] = 0; }
+    for (i = 0; i < n; i++) {
+      for (var j = 0; j < n; j++) {
+        total += state[i][j];
+        rows[i] += state[i][j];
+        cols[j] += state[i][j];
+        if (i === j) correct += state[i][j];
+      }
+    }
+    var oa = total ? correct / total : 0;
+    var expected = 0;
+    for (i = 0; i < n; i++) expected += (rows[i] * cols[i]);
+    expected = total ? expected / (total * total) : 0;
+    var kappa = expected === 1 ? NaN : (oa - expected) / (1 - expected);
+
+    var pa = [], ua = [];
+    for (i = 0; i < n; i++) {
+      pa[i] = rows[i] ? state[i][i] / rows[i] : NaN;
+      ua[i] = cols[i] ? state[i][i] / cols[i] : NaN;
+    }
+    return {total: total, oa: oa, kappa: kappa, pa: pa, ua: ua, rows: rows, cols: cols};
+  }
+
+  function pct(v) { return isNaN(v) ? '–' : (v * 100).toFixed(1) + '%'; }
+
+  function paint() {
+    var s = stats();
+
+    grid.querySelectorAll('[data-row-total]').forEach(function (cell) {
+      var i = parseInt(cell.getAttribute('data-row-total'), 10);
+      cell.textContent = s.rows[i] + ' ' + T.total;
+    });
+
+    document.getElementById('cfx-stats').innerHTML =
+      stat(pct(s.oa), T.oa) +
+      stat(isNaN(s.kappa) ? '–' : s.kappa.toFixed(3), T.kappa) +
+      stat(String(s.total), T.n);
+
+    var per = classes.map(function (c, i) {
+      return '<div class="cfx-per-row">' +
+        '<span class="cfx-per-name">' + c + '</span>' +
+        '<span class="cfx-per-bars">' +
+          bar(s.pa[i], '#14a37f') +
+          bar(s.ua[i], '#c8792b') +
+        '</span>' +
+        '<span class="cfx-per-vals">' + pct(s.pa[i]) + ' / ' + pct(s.ua[i]) + '</span>' +
+      '</div>';
+    }).join('');
+
+    document.getElementById('cfx-per').innerHTML = per +
+      '<p class="cfx-legend">' +
+        '<span class="cfx-swatch" style="background:#14a37f"></span>' + T.prod +
+        '<span class="cfx-swatch" style="background:#c8792b"></span>' + T.user +
+      '</p>';
+
+    // The verdict names the worst producer accuracy, because that is the
+    // number a reader's own reviewer will find first.
+    var worst = 0;
+    for (var i = 1; i < classes.length; i++) {
+      if (!isNaN(s.pa[i]) && (isNaN(s.pa[worst]) || s.pa[i] < s.pa[worst])) worst = i;
+    }
+    var gap = s.oa - s.pa[worst];
+    var v = document.getElementById('cfx-verdict');
+    var note = isID ? PRESETS[active].noteID : PRESETS[active].noteEN;
+
+    var headline;
+    if (isNaN(s.pa[worst])) {
+      headline = isID ? 'Matriks ini belum bisa dinilai.' : 'This matrix cannot be scored yet.';
+    } else if (gap > 0.15) {
+      headline = isID
+        ? 'Akurasi keseluruhan melebihi kelas terburuk (' + classes[worst] + ') sebesar ' +
+          (gap * 100).toFixed(0) + ' poin. Satu angka menyembunyikan sebuah kegagalan di sini.'
+        : 'Overall accuracy exceeds the worst class (' + classes[worst] + ') by ' +
+          (gap * 100).toFixed(0) + ' points. One number is hiding a failure here.';
+    } else {
+      headline = isID
+        ? 'Angka keseluruhan mewakili setiap kelas dengan cukup adil; selisih terbesarnya ' +
+          (gap * 100).toFixed(0) + ' poin.'
+        : 'The overall figure represents every class fairly well; the largest gap is ' +
+          (gap * 100).toFixed(0) + ' points.';
+    }
+
+    v.className = 'rsx-verdict ' + (gap > 0.15 || isNaN(s.pa[worst]) ? 'rsx-weak' : 'rsx-good');
+    v.innerHTML = '<strong>' + headline + '</strong> ' + note;
+  }
+
+  function stat(value, label) {
+    return '<span class="cfx-stat"><span class="cfx-stat-n">' + value +
+           '</span><span class="cfx-stat-l">' + label + '</span></span>';
+  }
+
+  function bar(v, colour) {
+    var w = isNaN(v) ? 0 : Math.max(0, Math.min(1, v)) * 100;
+    return '<span class="cfx-per-bar"><span style="width:' + w + '%;background:' + colour + '"></span></span>';
+  }
+
+  buildGrid();
+  paint();
+})();
+</script>
+```

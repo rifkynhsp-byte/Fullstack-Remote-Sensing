@@ -17,6 +17,7 @@ en/theme-dark.scss
 en/styles.css
 en/references.bib
 en/favicon.svg
+en/booklib.py
 en/images/
 en/interactive/
 id/theme.scss
@@ -24,6 +25,7 @@ id/theme-dark.scss
 id/styles.css
 id/references.bib
 id/favicon.svg
+id/booklib.py
 id/images/
 id/interactive/
 

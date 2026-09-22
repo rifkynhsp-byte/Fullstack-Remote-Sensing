@@ -65,6 +65,101 @@ The explorer below lets you test the claim rather than take it. Pick two classes
 
 Try mangrove against other dense forest on NDVI. The two bars land almost on top of each other, which is the entire reason Chapters 10, 11 and 14 exist. Then try CMRI.
 
+## The same claim, in code
+
+The explorer above is a chart, and a chart can be drawn to say anything. What follows is the arithmetic, executed when this page was built. Change the code, rebuild, and the numbers change with it; nothing here is typed in by hand.
+
+```{python}
+#| label: fig-spectra-live
+#| fig-cap: "Reflectance of four classes across the Sentinel-2 bands. Hover a point for the exact value, click a legend entry to hide that class. Representative published values, not a measurement of one place."
+import plotly.graph_objects as go
+import booklib as bk
+
+fig = go.Figure()
+for name in ["Healthy mangrove", "Other dense forest", "Open water", "Bare soil"]:
+    fig.add_scatter(
+        x=list(bk.BANDS.values()),
+        y=bk.reflectance(name),
+        mode="lines+markers",
+        name=name,
+        hovertemplate="%{y:.3f} at %{x} nm<extra>" + name + "</extra>",
+    )
+
+fig.update_xaxes(title="Wavelength (nm)", type="log",
+                 tickvals=list(bk.BANDS.values()),
+                 ticktext=[f"{b}<br>{w}" for b, w in bk.BANDS.items()])
+fig.update_yaxes(title="Surface reflectance", rangemode="tozero")
+bk.show(fig, height=400)
+```
+
+Mangrove and other dense forest are the two curves that matter. They sit almost on top of each other everywhere except the shortwave infrared, where the wetter substrate under mangrove pulls its reflectance down. That single gap is what every mangrove specific index is built to exploit.
+
+Now ask what each index does with that gap. The table is sorted by how far apart the index puts the two classes, which is the only property that decides whether it is worth computing.
+
+```{python}
+#| label: tbl-separability-live
+import pandas as pd
+import booklib as bk
+
+A, B = "Healthy mangrove", "Other dense forest"
+
+rows = []
+for name, spec in bk.INDICES.items():
+    a, b = bk.index_value(name, A), bk.index_value(name, B)
+    rows.append({
+        "Index": name,
+        "Formula": spec["formula"],
+        A: a,
+        B: b,
+        "Gap": abs(a - b),
+    })
+
+df = pd.DataFrame(rows).sort_values("Gap", ascending=False)
+bk.table(df, caption=(
+    "Index values for the two hardest classes to separate in a tropical "
+    "coastal scene. NDVI is at the bottom of this table and is the index "
+    "almost every tutorial reaches for first."
+))
+```
+
+NDVI puts these two classes about fifteen thousandths apart, which is well inside the noise of a real composite. Of the bounded indices, MNDWI does six times better and CMRI three times better, both by reading the shortwave infrared where the substrate differs. MVI is larger again but unbounded, so its gap is not on the same scale as the others and cannot be compared with them directly.
+
+None of that says MNDWI is the best mangrove index. It says NDVI is the wrong tool for this particular distinction, that the shortwave infrared is where the information is, and that the way to find out is to compute the gap rather than to look at a map and squint.
+
+::: {.callout-note}
+## Where this argument ends
+A gap between two representative spectra is a screening test, not a separability analysis. With real training data you would compute a Jeffries-Matusita distance or simply run the classifier and read the confusion matrix, which is Chapter 17. What the arithmetic above is good for is deciding what goes in the stack before you spend a week collecting labels.
+:::
+
+### Run it yourself
+
+The cell below runs in your browser, not on a server. Press **Run**, then change a number and run it again. The first run downloads a Python runtime, about ten megabytes, and every run after that is instant.
+
+::: {.py-live}
+```python
+# Two classes, eight Sentinel-2 bands, representative reflectance.
+mangrove = {"B2": .030, "B3": .055, "B4": .030, "B8": .310, "B11": .115}
+forest   = {"B2": .028, "B3": .052, "B4": .029, "B8": .330, "B11": .135}
+
+def nd(a, b):
+    return (a - b) / (a + b)
+
+def ndvi(r):  return nd(r["B8"], r["B4"])
+def ndwi(r):  return nd(r["B3"], r["B8"])
+def cmri(r):  return ndvi(r) - ndwi(r)
+def ndmi(r):  return nd(r["B8"], r["B11"])
+
+for name, f in [("NDVI", ndvi), ("NDWI", ndwi), ("CMRI", cmri), ("NDMI", ndmi)]:
+    a, b = f(mangrove), f(forest)
+    print(f"{name:5s}  mangrove {a:+.3f}   forest {b:+.3f}   gap {abs(a - b):.3f}")
+
+# Try this: raise the mangrove SWIR1 value to .135, the same as forest,
+# and run again. Watch which indices stop working, and ask why that is
+# the band a drier substrate would change.
+```
+:::
+
+
 ## The four resolutions
 
 Sensor capability is described along four independent axes, and every satellite is a compromise among them because the physics forces a trade.

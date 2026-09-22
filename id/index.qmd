@@ -62,7 +62,7 @@ Posisi bacaan, penyelesaian bab, skor uji pemahaman dan catatan pribadi Anda sem
 
 Uji pemahaman muncul di akhir beberapa bab. Satu pertanyaan sekali tampil, dengan penjelasan setelah setiap jawaban, benar maupun salah, karena saat tepat setelah menjawab adalah saat penjelasan paling melekat.
 
-Tombol **Ajukan pertanyaan** ada di sudut setiap halaman. Tombol itu membawa serta bab yang sedang Anda baca, jadi Anda tidak perlu menjelaskan posisi Anda. Pertanyaan sampai kepada saya di [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com), dan saya lebih memilih menerima pertanyaan yang kalimatnya berantakan daripada membiarkan pembaca tersangkut seminggu.
+Tombol **Ajukan pertanyaan** ada di sudut setiap halaman. Tombol itu membawa serta bab yang sedang Anda baca, jadi Anda tidak perlu menjelaskan posisi Anda. Pertanyaan sampai kepada saya di [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com), dan saya lebih memilih menerima pertanyaan yang kalimatnya berantakan daripada membiarkan pembaca tersangkut seminggu.
 
 ## Konvensi
 
@@ -92,6 +92,6 @@ Skrip dasar di Bagian II berasal dari seri pengajaran EE101 oleh Noel Gorelick, 
 
 ## Kontak
 
-Rifky Nauval Hendrawan &middot; [rifkynauvalhsp@gmail.com](mailto:rifkynauvalhsp@gmail.com)
+Rifky Nauval Hendrawan &middot; [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com)
 
 Koreksi, sanggahan dan pertanyaan sama sama disambut. Bila Anda menemukan kesalahan, menyampaikannya adalah sebuah kontribusi.

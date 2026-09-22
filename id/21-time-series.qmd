@@ -21,6 +21,184 @@ bagian demi bagian; lihat prakata untuk urutannya.
 6. **Pendekatan titik patah**: logika di balik LandTrendr, CCDC dan BFAST
 7. **Mengubah peta perubahan menjadi peringatan**: unit minimum, aturan persistensi
 
+## Regresi harmonik, dalam lima belas baris
+
+Prosa bab ini masih ditulis. Mekanisme di pusatnya tidak, dan mekanismenya cukup kecil untuk ditampilkan utuh, jadi inilah ia mendahului narasinya.
+
+Time series optik yang sudah disaring awan di daerah tropis datang sebagai sebaran pengamatan tak beraturan dengan siklus tahunan yang kuat di dalamnya. Persoalan yang timbul: dua tanggal mana pun yang Anda bandingkan berbeda karena dua alasan sekaligus, musimnya bergerak dan mungkin lahannya berubah. Memisahkan keduanya adalah seluruh pekerjaannya.
+
+Regresi harmonik melakukannya dengan memodelkan musim secara eksplisit. Regresikan NDVI pada sebuah intersep, sebuah tren linear, dan satu atau lebih pasangan sinus dan kosinus pada frekuensi tahunan. Kurva yang terpasang adalah fenologi. Yang tersisa, residualnya, adalah segala yang tidak dijelaskan fenologi, dan di situlah perubahan tinggal.
+
+```{python}
+#| label: fig-harmonic-fit
+#| fig-cap: "Empat tahun NDVI sintetis, lengkap dengan celah awan, dengan pemodelan harmonik dua suku. Model hanya dipasang pada pengamatan sebelum garis putus putus, sehingga apa yang terjadi setelahnya adalah prediksi, bukan deskripsi. Tarik untuk memperbesar; klik ganda untuk mengembalikan."
+import numpy as np
+import plotly.graph_objects as go
+import booklib as bk
+
+KEJADIAN = 2.3      # pembukaan lahan, dalam tahun dari awal seri
+t, ndvi = bk.synthetic_ndvi(n_years=4, disturbance_at=KEJADIAN, seed=7)
+
+# Dipasang hanya pada periode sebelum kejadian. Model yang dipasang melintasi
+# sebuah gangguan akan menyerap gangguan itu ke dalam suku trennya sendiri
+# lalu melaporkan tidak ada anomali, dan itu cara paling umum analisis ini gagal.
+sebelum = t < KEJADIAN
+coef, prediksi = bk.harmonic_fit(t[sebelum], ndvi[sebelum], order=2)
+
+halus = np.linspace(t.min(), t.max(), 400)
+
+fig = go.Figure()
+fig.add_scatter(x=t, y=ndvi, mode="markers", name="Pengamatan",
+                marker=dict(size=7, color=bk.BRIGHT),
+                hovertemplate="NDVI %{y:.3f} pada tahun %{x:.2f}<extra></extra>")
+fig.add_scatter(x=halus, y=prediksi(halus), mode="lines",
+                name="Pemodelan harmonik, prakejadian",
+                line=dict(color=bk.AMBER, width=2.5),
+                hovertemplate="perkiraan %{y:.3f}<extra></extra>")
+fig.add_vline(x=KEJADIAN, line_dash="dash", line_color=bk.RED,
+              annotation_text="pembukaan", annotation_position="top left")
+fig.update_xaxes(title="Tahun dari awal seri")
+fig.update_yaxes(title="NDVI")
+bk.show(fig, height=400)
+```
+
+Model itu mengikuti naik turunnya musim dengan rapat, lalu setelah garis putus putus, terus memprediksi vegetasi yang sudah tidak ada. Perpisahan itulah deteksinya.
+
+Sekarang gambarkan apa yang tidak bisa dijelaskan model. Ini langkah yang mengubah grafik untuk dibaca manusia menjadi aturan yang bisa dijalankan mesin.
+
+```{python}
+#| label: fig-harmonic-residuals
+#| fig-cap: "Residual dari pemodelan yang sama. Sebelum kejadian, residualnya tersebar di sekitar nol dengan simpangan baku sekitar 0,02 NDVI. Setelahnya, residualnya duduk jauh di bawah nol dan bertahan di sana, dan itulah yang membedakan sebuah perubahan dari satu pengamatan buruk."
+residual = ndvi - prediksi(t)
+sd = float(residual[sebelum].std())
+
+fig = go.Figure()
+fig.add_scatter(x=t, y=residual, mode="markers+lines", name="Residual",
+                marker=dict(size=6, color=bk.TEAL), line=dict(width=1, color="#c9c4bb"),
+                hovertemplate="residual %{y:+.3f} pada tahun %{x:.2f}<extra></extra>")
+for k, dash in [(2, "dot"), (3, "dash")]:
+    fig.add_hline(y=-k * sd, line_dash=dash, line_color=bk.MUTED,
+                  annotation_text=f"-{k} sd", annotation_position="right")
+fig.add_hline(y=0, line_color="#c9c4bb")
+fig.add_vline(x=KEJADIAN, line_dash="dash", line_color=bk.RED)
+fig.update_xaxes(title="Tahun dari awal seri")
+fig.update_yaxes(title="NDVI teramati dikurangi perkiraan")
+bk.show(fig, height=360)
+
+print(f"simpangan baku residual sebelum kejadian  {sd:.4f}")
+print(f"rata rata residual setelah kejadian       {residual[~sebelum].mean():+.3f}"
+      f"  ({abs(residual[~sebelum].mean()) / sd:.0f} simpangan baku)")
+```
+
+Rata rata residual setelah kejadian berada sekitar lima belas simpangan baku di bawah nol. Itu bukan ambang yang perlu disetel siapa pun; itu sinyal yang berdiri jauh di atas deraunya, dan itulah yang dibeli oleh model musiman yang dirumuskan dengan benar.
+
+Tiga kehati hatian sebelum ini menjadi sebuah peringatan dini, dan masing masing akan menjadi satu bagian dalam prosa yang akan datang.
+
+Satu pengamatan anomali bukan perubahan. Bayangan awan, sirus yang terlewat, artefak sensor: semuanya menghasilkan satu titik buruk. Menuntut kegigihan, biasanya tiga pengamatan berurutan melewati ambang, menghapus hampir semuanya dengan harga keterlambatan beberapa pekan.
+
+Ambangnya milik piksel itu, bukan milik bentang lahan. Piksel dengan riwayat berderau perlu pita lebih lebar daripada piksel yang stabil, dan karena itulah simpangan baku di atas dihitung dari residual piksel itu sendiri, bukan ditetapkan secara global.
+
+Dan penurunan bukan sebuah sebab. Panen, kebakaran, banjir, pembukaan ilegal, dan musim kemarau semuanya menekan NDVI ke bawah. Time series mengatakan kapan dan seberapa besar; ia tidak mengatakan apa yang terjadi, dan laporan yang melewati pembedaan itu tidak bisa dipertahankan.
+
+::: {.py-live}
+```python
+# Pemodelan harmonik tanpa apa pun selain pustaka standar, supaya
+# mekanismenya terlihat. Tiga nilai tak diketahui: aras rata rata, serta
+# satu pasang sinus dan kosinus.
+import math
+
+# Dua belas pengamatan NDVI bulanan selama satu tahun.
+bulan = list(range(12))
+ndvi = [0.62, 0.64, 0.71, 0.78, 0.82, 0.84,
+        0.83, 0.79, 0.74, 0.69, 0.65, 0.62]
+
+def desain(m):
+    x = m / 12.0
+    return [1.0, math.sin(2 * math.pi * x), math.cos(2 * math.pi * x)]
+
+# Persamaan normal, diselesaikan dengan eliminasi Gauss. Tiga kali tiga, manual.
+A = [[sum(desain(m)[i] * desain(m)[j] for m in bulan) for j in range(3)]
+     + [sum(desain(m)[i] * ndvi[m] for m in bulan)] for i in range(3)]
+
+for i in range(3):
+    A[i] = [v / A[i][i] for v in A[i]]
+    for k in range(3):
+        if k != i:
+            A[k] = [a - A[k][i] * b for a, b in zip(A[k], A[i])]
+
+c = [A[i][3] for i in range(3)]
+amplitudo = math.hypot(c[1], c[2])
+
+print(f"NDVI rata rata      {c[0]:.3f}")
+print(f"amplitudo musiman   {amplitudo:.3f}   (puncak ke palung {2 * amplitudo:.3f})\n")
+
+for m in bulan:
+    fit = sum(ci * di for ci, di in zip(c, desain(m)))
+    r = ndvi[m] - fit
+    tanda = "  <-- periksa yang ini" if abs(r) > 0.03 else ""
+    print(f"bulan {m + 1:2d}  teramati {ndvi[m]:.2f}  perkiraan {fit:.3f}  residual {r:+.3f}{tanda}")
+
+# Coba ini: turunkan bulan 9 menjadi 0.45, seperti yang akan dilakukan
+# pembukaan lahan, lalu jalankan lagi. Residual bulan itu keluar jauh dari
+# yang lain, sementara pemodelannya sendiri hampir tidak bergeser, karena
+# satu titik di antara dua belas tidak bisa menariknya. Ketidaksetangkupan
+# itulah yang membuat residual menjadi pendeteksi yang bisa dipakai.
+```
+:::
+
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch21-harmonic",
+  "questions": [
+    {
+      "q": "Kenapa model harmonik hanya dipasang pada pengamatan sebelum gangguan yang dicurigai?",
+      "options": [
+        "Untuk menghemat komputasi",
+        "Karena model yang dipasang melintasi gangguan menyerapnya ke dalam koefisiennya sendiri lalu melaporkan tidak ada anomali",
+        "Karena pengamatan setelah gangguan kurang akurat",
+        "Karena Earth Engine tidak bisa memasang model melintasi celah"
+      ],
+      "answer": 1,
+      "why": "Inilah cara paling umum analisis ini gagal tanpa suara. Kuadrat terkecil dengan senang hati membengkokkan suku trennya untuk mengakomodasi perubahan bertingkat, dan setelah itu residualnya tampak biasa saja dan peristiwanya hilang."
+    },
+    {
+      "q": "Setelah model musiman dipasang, di mana sinyal perubahan tinggal?",
+      "options": [
+        "Di kurva yang terpasang",
+        "Di residualnya, yaitu apa yang tidak bisa dijelaskan oleh musim",
+        "Di amplitudo suku sinusnya",
+        "Di intersepnya"
+      ],
+      "answer": 1,
+      "why": "Memodelkan fenologi secara eksplisit itulah yang membuat sisanya bisa ditafsirkan. Kurvanya adalah musim; residualnya adalah segala yang lain, dan hanya bagian itu yang seharusnya dilihat sebuah pendeteksi perubahan."
+    },
+    {
+      "q": "Tiga pengamatan berurutan melewati ambang disyaratkan sebelum sebuah peringatan dinaikkan. Apa yang dibeli syarat itu, dan apa harganya?",
+      "options": [
+        "Akurasi lebih tinggi, tanpa ongkos",
+        "Ia menghapus pengamatan buruk tunggal seperti bayangan awan, dengan harga keterlambatan beberapa pekan",
+        "Ia mengurangi komputasi, dengan harga akurasi",
+        "Ia menghapus musiman, dengan harga kepekaan"
+      ],
+      "answer": 1,
+      "why": "Bayangan awan, sirus yang terlewat, dan artefak sensor masing masing menghasilkan satu titik anomali. Kegigihan menghapus hampir semuanya, dan harganya adalah Anda mengetahui perubahan nyata sedikit lebih lambat."
+    },
+    {
+      "q": "NDVI sebuah piksel turun tajam dan bertahan di bawah. Apa yang sebenarnya bisa dikatakan time series itu?",
+      "options": [
+        "Bahwa telah terjadi pembukaan ilegal",
+        "Kapan penurunannya terjadi dan seberapa besar, tetapi bukan apa penyebabnya",
+        "Bahwa hutannya dipanen",
+        "Tidak ada, tanpa radar"
+      ],
+      "answer": 1,
+      "why": "Panen, kebakaran, banjir, pembukaan lahan, dan musim kemarau semuanya menekan NDVI ke bawah. Waktu dan besarannya datang dari data; atribusinya memerlukan bukti lain, dan laporan yang melewati pembedaan itu tidak bisa dipertahankan."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.
