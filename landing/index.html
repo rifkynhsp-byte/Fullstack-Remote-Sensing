@@ -6,6 +6,12 @@
 <title>Planetary-Scale Cloud GIS &middot; GIS Awan Skala Planet</title>
 <meta name="description" content="Google Earth Engine and GeoAI for environmental monitoring. Physics first, then code. Available in English and Bahasa Indonesia.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0f6b57">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cloud GIS">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -304,6 +310,98 @@
     box-shadow: 0 0 0 3px rgba(20,163,127,0.18);
     flex: none;
   }
+
+  /* Install to a home screen. Hidden until the browser says it is possible,
+     which is why it carries the hidden attribute in the markup. */
+
+  #lms-install[hidden] { display: none; }
+
+  #lms-install { margin-top: 1rem; }
+
+  .lms-install-btn {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.86rem;
+    font-weight: 700;
+    min-height: 44px;
+    padding: 0.5rem 1.05rem;
+    border: 1px solid var(--teal);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--teal);
+    cursor: pointer;
+  }
+
+  .lms-install-btn:hover { background: var(--teal); color: #fff; }
+
+  .lms-install-hint {
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ---- Phones ---------------------------------------------------------
+     The landing page was already fluid. What it was not was comfortable:
+     five rems of padding above the title on a 390 pixel screen pushes the
+     two reading links below the fold, which are the only two things on the
+     page a first time visitor needs. */
+
+  @media (max-width: 575px) {
+    .wrap { padding: 2.25rem 1rem 2.5rem; }
+
+    h1 { font-size: clamp(1.85rem, 8vw, 2.4rem); }
+    h1 .alt { font-size: 0.6em; margin-top: 0.35rem; }
+
+    .lede { font-size: 1.04rem; margin-top: 1.1rem; }
+    .lede + .lede { font-size: 0.96rem; }
+
+    .cards { gap: 0.8rem; margin-top: 2rem; }
+    .card { padding: 1.15rem 1.1rem 1rem; }
+    .card h2 { font-size: 1.12rem; }
+
+    /* A tap has no hover, so the lift on touch just looks like a glitch. */
+    .card:hover { transform: none; box-shadow: none; }
+
+    .facts { margin-top: 2.5rem; gap: 1rem 0.9rem; }
+    .fact .n { font-size: 1.55rem; }
+    .fact .l { font-size: 0.74rem; }
+
+    .inside, .ask { margin-top: 2.5rem; }
+    .ask { padding: 1.2rem 1.1rem; }
+    .ask-btn { display: block; text-align: center; min-height: 44px; padding: 0.7rem 1rem; }
+    .ask-small { display: block; margin: 0.7rem 0 0; }
+
+    .note { margin-top: 2.25rem; padding: 1rem 1.1rem; font-size: 0.92rem; }
+
+    footer { margin-top: 2.5rem; gap: 0.9rem; }
+  }
+
+  /* Dark mode. The books follow the reader's choice through Quarto; this
+     page had no dark mode at all, which made opening it at night from an
+     installed icon a small assault. */
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #d8dee4;
+      --muted: #8b97a3;
+      --rule: #2b3138;
+      --sand: #171b20;
+      --teal: #3ec9a2;
+      --teal-bright: #3ec9a2;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 20% -10%, rgba(62,201,162,0.10), transparent 55%),
+        radial-gradient(ellipse at 90% 10%, rgba(62,201,162,0.06), transparent 45%),
+        #12161b;
+    }
+
+    .lede { color: #c6cdd4; }
+    .card, .feature { background: #171b20; }
+    .note { color: #c6cdd4; }
+    .lms-install-btn:hover { color: #0d1114; }
+    .ask-btn { color: #0d1114; }
+  }
 </style>
 </head>
 <body>
@@ -342,6 +440,8 @@
       <span class="go">Mulai membaca &rarr;</span>
     </a>
   </div>
+
+  <div id="lms-install" hidden></div>
 
   <div class="facts">
     <div class="fact"><span class="n">6</span><span class="l">years of practice and teaching</span></div>
@@ -431,5 +531,6 @@
 <script src="lms/config.js"></script>
 <script>window.LMS_VISITORS_AUTOSTART = true;</script>
 <script src="lms/visitors.js"></script>
+<script src="lms/app.js"></script>
 </body>
 </html>

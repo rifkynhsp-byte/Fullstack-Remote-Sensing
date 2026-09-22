@@ -34,6 +34,9 @@
   <div class="cfx-grid-wrap">
     <table class="cfx-grid" id="cfx-grid"></table>
   </div>
+  <p class="cfx-axes"
+     data-i18n-en="Rows: reference. Columns: map. Scroll the grid sideways to reach every column."
+     data-i18n-id="Baris: referensi. Kolom: peta. Geser kisinya ke samping untuk mencapai semua kolom."></p>
 
   <div class="cfx-stats" id="cfx-stats"></div>
   <div class="cfx-per" id="cfx-per"></div>
@@ -81,6 +84,17 @@
 .cfx-per-vals{width:120px;font-size:.78rem;font-variant-numeric:tabular-nums;
   color:var(--lms-muted,#5c6773)}
 .cfx-legend{font-size:.74rem;color:var(--lms-muted,#5c6773);margin:.6rem 0 0}
+.cfx-axes{display:none}
+
+/* On a phone the row headings are the whole width of the screen, which
+   leaves one column of the matrix visible. The axis names move out of the
+   headings and into one line below the grid. */
+@media (max-width:575px){
+  .cfx-pre{display:none}
+  .cfx-axes{display:block;font-size:.74rem;color:var(--lms-muted,#5c6773);margin:.5rem 0 0}
+  .cfx-grid th{font-size:.7rem;padding:.3rem .35rem}
+  .cfx-grid th.cfx-row-head{max-width:5.5rem;white-space:normal;line-height:1.25}
+}
 .cfx-swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 .25rem 0 .7rem}
 </style>
 
@@ -174,13 +188,19 @@
     var head = grid.insertRow();
     head.insertCell().outerHTML = '<th></th>';
     classes.forEach(function (c) {
-      head.insertCell().outerHTML = '<th>' + T.map + ': ' + c + '</th>';
+      // The "Map:" and "Reference:" prefixes name the axes, which matters
+      // because reading the matrix the wrong way round swaps producer's and
+      // user's accuracy. On a phone they also eat the width the numbers
+      // need, so they are marked up separately and hidden by CSS there.
+      head.insertCell().outerHTML =
+        '<th><span class="cfx-pre">' + T.map + ': </span>' + c + '</th>';
     });
     head.insertCell().outerHTML = '<th></th>';
 
     for (var i = 0; i < n; i++) {
       var row = grid.insertRow();
-      row.insertCell().outerHTML = '<th class="cfx-row-head">' + T.ref + ': ' + classes[i] + '</th>';
+      row.insertCell().outerHTML = '<th class="cfx-row-head">' +
+        '<span class="cfx-pre">' + T.ref + ': </span>' + classes[i] + '</th>';
       for (var j = 0; j < n; j++) {
         var td = row.insertCell();
         var input = document.createElement('input');

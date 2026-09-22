@@ -939,3 +939,284 @@ table.book-table tr:last-child td { border-bottom: none; }
   color: var(--lms-muted);
   margin: 0.5rem 0 0;
 }
+
+/* ==========================================================================
+   Phones and touch
+   ==========================================================================
+   Three things change on a small screen, and each one came out of measuring
+   the rendered pages at 390 pixels wide rather than from a guess.
+
+   1. Anything a thumb has to hit is at least 44 pixels tall. The platform's
+      own small buttons were 36.
+   2. Any input a reader types into is at least 16 pixels of text. Below
+      that, iOS Safari zooms the whole page on focus and does not zoom back,
+      which is the single most common way a mobile form feels broken.
+   3. Rows of controls and label columns sized for a sidebar become stacks.
+   ========================================================================== */
+
+@media (max-width: 575px) {
+
+  /* --- Buttons and inputs --------------------------------------------- */
+
+  .lms-btn,
+  .lms-btn-small,
+  .cfx-preset,
+  .pyc-run,
+  .pyc-reset {
+    min-height: 44px;
+    font-size: 0.86rem;
+  }
+
+  .lms-input,
+  .lms-textarea,
+  .cfx-cell,
+  .rsx-field select,
+  .rsx-field input[type="text"],
+  .rsx-field input[type="number"] {
+    font-size: 16px;
+  }
+
+  /* --- The ask modal -------------------------------------------------- */
+  /* A dialog sized as a centred card leaves almost no room for a keyboard.
+     On a phone it becomes a sheet: full width, anchored to the bottom. */
+
+  .lms-modal {
+    max-width: none;
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 12px 12px 0 0;
+    margin: 0;
+  }
+
+  .lms-overlay { align-items: flex-end; padding: 0; }
+  .lms-modal-body { max-height: 62vh; overflow-y: auto; }
+  .lms-modal-foot { position: sticky; bottom: 0; background: var(--lms-surface); }
+
+  /* --- The floating button -------------------------------------------- */
+  /* Clear of the home indicator on a notched phone, and clear of Quarto's
+     own back-to-top control. */
+
+  .lms-fab {
+    right: 0.9rem;
+    bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    padding: 0;
+  }
+
+  /* --- Quiz ------------------------------------------------------------ */
+
+  .lms-option {
+    min-height: 44px;
+    padding: 0.7rem 0.85rem;
+    line-height: 1.45;
+  }
+
+  .lms-quiz-card { padding: 1rem; }
+
+  /* --- Chapter footer -------------------------------------------------- */
+
+  .lms-ask-card { padding: 1rem; }
+  .lms-ask-card-actions { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+  .lms-ask-card-actions .lms-btn { width: 100%; }
+  .lms-ask-card-direct { text-align: center; }
+
+  /* --- Widgets --------------------------------------------------------- */
+
+  .rs-widget { padding: 1rem 0.9rem 1.1rem; margin-left: -0.2rem; margin-right: -0.2rem; }
+  .rsx-controls { flex-direction: column; gap: 0.75rem; }
+  .rsx-field { flex: 1 1 auto; width: 100%; }
+
+  /* Sliders are 13 pixels tall by default, which is not a control you can
+     operate with a thumb. */
+  .rsx-field input[type="range"] {
+    height: 34px;
+    width: 100%;
+  }
+
+  /* Confusion lab: the grid keeps its own horizontal scroll, and everything
+     around it stacks. */
+  .cfx-cell { width: 58px; }
+  .cfx-stats { gap: 1rem; }
+  .cfx-stat-n { font-size: 1.25rem; }
+  .cfx-per-name { width: 84px; font-size: 0.74rem; }
+  .cfx-per-vals { width: 92px; font-size: 0.72rem; }
+  .cmp-stats { gap: 1rem; }
+  .cmp-stat-n { font-size: 1.2rem; }
+
+  /* Runnable cells: 16 pixel code so focusing the editor does not zoom the
+     page, and a control bar that wraps instead of overflowing. */
+  .py-live .pyc-code { font-size: 16px; }
+  .pyc-bar { flex-wrap: wrap; row-gap: 0.5rem; }
+  .pyc-pre { font-size: 0.8rem; }
+
+  /* The reader count reads as one line on a phone rather than three. */
+  .lms-visitors { font-size: 0.74rem; gap: 0.35rem; }
+}
+
+/* A horizontal scroller gives no sign that it scrolls until it is touched.
+   A fading right edge is the cheapest honest hint. */
+
+@media (max-width: 767px) {
+  .cfx-grid-wrap,
+  .book-table-wrap {
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cfx-grid-wrap::after,
+  .book-table-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 22px;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--lms-sand));
+  }
+}
+
+/* Hover styling on a touch screen sticks after a tap, so the tapped element
+   stays highlighted as though the finger were still on it. */
+
+@media (hover: none) {
+  .lms-btn:hover,
+  .lms-option:hover:not(.is-locked),
+  .cfx-preset:hover,
+  .pyc-run:hover,
+  .pyc-reset:hover { background: inherit; }
+
+  .cfx-preset.is-on { background: var(--lms-teal); color: #fff; }
+  .lms-btn-primary:hover { background: var(--lms-teal); color: #fff; }
+  .pyc-run:hover { background: var(--lms-teal); }
+}
+
+/* --------------------------------------------------------------------------
+   App bar
+   --------------------------------------------------------------------------
+   One strip at the bottom of the viewport, used by lms/app.js for the three
+   things an installed app has to be able to say: you are offline, you are
+   back, and there is a newer version of this page.
+
+   It sits above the floating question button and clears the home indicator
+   on a notched phone.
+   -------------------------------------------------------------------------- */
+
+.lms-appbar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: min(32rem, calc(100vw - 1.5rem));
+  padding: 0.7rem 0.8rem 0.7rem 1rem;
+  border-radius: 8px;
+  background: var(--lms-ink);
+  color: #fff;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+  font-family: var(--lms-sans);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+body.quarto-dark .lms-appbar { background: #262c33; }
+
+.lms-appbar-text { flex: 1; }
+
+.lms-appbar-btn {
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  min-height: 36px;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 5px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  flex: none;
+}
+
+.lms-appbar-btn:hover { background: rgba(255, 255, 255, 0.14); }
+
+.lms-appbar-close {
+  font-size: 1.1rem;
+  line-height: 1;
+  min-width: 32px;
+  min-height: 32px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  flex: none;
+}
+
+.lms-appbar-close:hover { color: #fff; }
+
+/* In a standalone window there is no browser chrome to fall back on, so the
+   bar is the only channel and gets a little more room. */
+
+@media (display-mode: standalone) {
+  .lms-appbar { bottom: calc(1.4rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width: 575px) {
+  .lms-appbar {
+    left: 0.75rem;
+    right: 0.75rem;
+    transform: none;
+    max-width: none;
+    /* Above the question button rather than under it. */
+    bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .lms-appbar-btn { min-height: 44px; }
+}
+
+/* --------------------------------------------------------------------------
+   Touch targets the framework sets, and one the widgets set
+   --------------------------------------------------------------------------
+   Quarto's search button, its copy-to-clipboard button and Plotly's mode bar
+   are all built for a mouse pointer. Measured on a phone they come out
+   between 22 and 30 pixels tall, which is under half a fingertip. These
+   rules raise the two a reader actually uses and remove the one that only
+   gets in the way.
+   -------------------------------------------------------------------------- */
+
+@media (hover: none) {
+  /* Search, in the navbar. */
+  .aa-DetachedSearchButton {
+    min-height: 40px;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+
+  /* Copy a listing. It is the fastest way to get a script into the Code
+     Editor from a phone, so it is worth hitting first time. */
+  .code-copy-button {
+    min-width: 40px;
+    min-height: 40px;
+    opacity: 0.75;
+  }
+
+  /* Checkboxes in the widgets default to 13 pixels. */
+  .snc-extra input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--lms-teal);
+  }
+
+  .snc-extra label { min-height: 44px; }
+}
+
+@media (max-width: 575px) {
+  /* Plotly's mode bar: eight buttons of 22 pixels, floating over the top
+     right of a chart that is already narrow. Touch panning and pinch zoom
+     work without it, so on a phone it is only ever a mis-tap. */
+  .plotly .modebar { display: none !important; }
+}

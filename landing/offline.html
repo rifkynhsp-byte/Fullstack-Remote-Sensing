@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offline &middot; Planetary-Scale Cloud GIS</title>
+<meta name="theme-color" content="#0f6b57">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<!--
+  Shown by sw.js when a page is requested with no connection and no cached
+  copy. Deliberately self contained: no fonts, no stylesheets, no scripts,
+  because every one of those would be another request that cannot succeed.
+-->
+<style>
+  :root { --teal: #0f6b57; --bright: #14a37f; --ink: #1b1f23; --muted: #5c6773; --rule: #e4e0d8; }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #12161b; color: #d8dee4; }
+    .card { border-color: #2b3138; }
+    .muted { color: #8b97a3; }
+    a.btn { background: #3ec9a2; color: #0d1114; }
+  }
+
+  .card { max-width: 30rem; border: 1px solid var(--rule); border-left: 3px solid var(--bright);
+          border-radius: 8px; padding: 1.6rem 1.5rem; }
+
+  h1 { font-size: 1.3rem; margin: 0 0 0.6rem; letter-spacing: -0.01em; }
+  p { margin: 0 0 0.9rem; }
+  .muted { color: var(--muted); font-size: 0.92rem; }
+  ul { margin: 0 0 1.2rem; padding-left: 1.2rem; font-size: 0.92rem; color: var(--muted); }
+  li { margin-bottom: 0.3rem; }
+
+  a.btn { display: inline-block; text-decoration: none; font-weight: 700; font-size: 0.9rem;
+          background: var(--teal); color: #fff; padding: 0.6rem 1.1rem; border-radius: 6px; }
+
+  .lang { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <h1>No connection</h1>
+  <p>This page has not been opened on this device before, so there is no copy
+     saved to read.</p>
+  <ul>
+    <li>Chapters you have already opened will still open.</li>
+    <li>Your progress, notes and quiz answers are stored on this device and
+        are not lost.</li>
+    <li>The runnable Python cells need one download before they work offline.</li>
+  </ul>
+  <p><a class="btn" href="./">Go to the contents</a></p>
+
+  <div class="lang">
+    <h1>Tidak ada koneksi</h1>
+    <p class="muted">Halaman ini belum pernah dibuka di perangkat ini, jadi
+       tidak ada salinan tersimpan untuk dibaca. Bab yang sudah pernah dibuka
+       tetap bisa dibaca, dan kemajuan serta catatan Anda tersimpan di
+       perangkat ini.</p>
+  </div>
+
+</div>
+</body>
+</html>

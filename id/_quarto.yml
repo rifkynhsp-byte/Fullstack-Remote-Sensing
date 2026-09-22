@@ -138,12 +138,20 @@ format:
       - text: |
           <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
           <link rel="stylesheet" href="../lms/lms.css">
+          <link rel="manifest" href="../manifest.webmanifest">
+          <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+          <meta name="theme-color" content="#0f6b57">
+          <meta name="apple-mobile-web-app-capable" content="yes">
+          <meta name="apple-mobile-web-app-status-bar-style" content="default">
+          <meta name="apple-mobile-web-app-title" content="Cloud GIS">
+          <meta name="mobile-web-app-capable" content="yes">
     include-after-body:
       - text: |
           <script src="../lms/config.js"></script>
           <script src="../lms/visitors.js"></script>
           <script src="../lms/pyodide-cell.js"></script>
           <script src="../lms/lms.js"></script>
+          <script src="../lms/app.js"></script>
 
 
 # ---------------------------------------------------------------------------
