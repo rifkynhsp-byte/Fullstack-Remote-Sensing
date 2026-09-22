@@ -2,28 +2,151 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will source global elevation data, derive slope and aspect, and use micro topography to separate intertidal wetland from upland forest before a classifier ever sees the pixels.
+You will add the cheapest accuracy gain available in this book. Elevation is free, global, already in the catalogue, and it fixes the specific failure that caps mangrove mapping: forest on a hillside being classified as forest in a tidal zone.
 :::
 
-::: {.callout-note}
-## In progress
-The section plan below is settled. Prose and annotated listings are being
-written part by part; check the roadmap in the preface for the current order.
+## The error this chapter exists to fix
+
+A mangrove classification trained on spectral data alone will, reliably, put mangrove on a hillside twenty metres above the tide line.
+
+It is not a bug in the classifier. Mangrove and upland broadleaf forest have nearly identical spectral signatures, so from reflectance alone the classifier is making a defensible call. What separates them is not what they are made of but **where they can be**: mangroves occupy the intertidal band, a few metres above sea level, and nothing else about them is as reliably distinctive.
+
+Elevation encodes that rule in a form a model can learn. Adding it is a few lines and it removes an entire class of error.
+
+## Choosing a DEM
+
+| Dataset | Resolution | Acquired | Note |
+|---|---|---|---|
+| `CGIAR/SRTM90_V4` | 90 m | 2000 | The long standing default, still fine where detail is not critical |
+| `USGS/SRTMGL1_003` | 30 m | 2000 | Same acquisition, finer product |
+| `JAXA/ALOS/AW3D30/V2_2` | 30 m | 2006 to 2011 | Better vertical accuracy across most of Asia. This book's default |
+| `COPERNICUS/DEM/GLO30` | 30 m | 2011 to 2015 | Most recent and highest quality, with some regional gaps |
+
+The age matters only if your terrain has changed. Coastlines and volcanoes change; most inland relief does not.
+
+## The trap that catches almost everyone
+
+Every global product in that table is a digital **surface** model, not a digital **terrain** model. It records the top of whatever is there: canopy, rooftops, the sea surface. Not the ground.
+
+Over a 25 metre tall mangrove stand, a surface model reports roughly 25 metres.
+
+So the intuitive rule, *mangrove sits below 10 metres elevation*, systematically excludes the tallest stands. Those are the ones with the most biomass and the most carbon, which makes this the worst possible thing to exclude from a blue carbon assessment.
+
+::: {.callout-warning}
+## Common failure: thresholding a surface model as though it were terrain
+The symptom is peculiar and easy to misread: your map finds young, short, regenerating mangrove perfectly and misses mature stands. It looks like a spectral problem with dense canopy. It is a height problem with a surface model.
 :::
 
-## Planned sections
+![Every global DEM records canopy top. The naive rule "mangrove sits below 10 m" therefore excludes the tallest stands, which are the ones holding the most biomass and carbon.](../images/dsm-vs-dtm.png){#fig-dsm}
 
-1. **Global DEM options**: SRTM, ALOS AW3D30, Copernicus GLO-30, and their vertical accuracies
-2. **Surface model versus terrain model**: why canopy height contaminates DEM derived slope in forest
-3. **Deriving slope, aspect and hillshade with ee.Terrain**
-4. **Elevation as a classification constraint**: the intertidal envelope for mangroves
-5. **Flow accumulation and drainage networks for hydrological stratification**
-6. **Topographic correction of optical imagery in steep terrain**
+@fig-dsm shows the consequence in one cross section. Mature mangrove reads 26 m and fails the threshold. Young regrowth reads 8 m and passes. The result is a map that finds young regeneration perfectly and misses mature forest.
 
-## Source material
+Three ways to handle it, in order of preference.
 
-The elevation and slope integration steps in your Thryve precision agriculture work and the carbon application dossier.
+**Do not threshold at all.** Hand elevation to the classifier as one predictor among many and let it learn the relationship, canopy offset included. This is what Chapter 10's feature stack does and it is usually the right answer, because the model can weigh elevation against spectral evidence rather than being overruled by a cutoff you chose.
+
+**Threshold generously.** If a rule is required, use 40 metres rather than 10. You are then excluding hillside forest, which is the actual goal, rather than attempting to isolate the tidal zone precisely, which a surface model cannot support.
+
+**Subtract canopy height.** The ETH Global Canopy Height product gives a 10 metre estimate that can be differenced from the surface model. Most correct in principle, most fragile in practice, because two error budgets now combine and neither is small.
+
+## Slope does more work than expected
+
+Slope turns out to be a stronger discriminator than elevation, for a reason that has nothing to do with vegetation.
+
+Tidal flats are flat by definition. They are depositional surfaces, built by sediment settling out of slow water. Terrestrial forest sits on slopes.
+
+Better still, slope is largely immune to the surface model problem. The canopy offset is roughly constant across a stand, and differentiating a surface removes a constant. A canopy sitting 25 metres above a flat mudflat is still flat.
+
+## Distance to water
+
+Elevation says how high. It does not say how connected, and mangroves are defined by tidal connection rather than by altitude alone. A flat, low patch fifty kilometres inland is a freshwater swamp, and it is not mangrove.
+
+`fastDistanceTransform` gives a distance to water surface cheaply. Build the water mask from the JRC Global Surface Water occurrence layer, or from your own composite if the year matters.
+
+Together, three conditions define an **envelope**: low, flat, and near water. That is not a classification. It is a statement about where mangrove *can* be, which the classifier then uses to decide where it *is*.
+
+## The full workflow
+
+{{< include _snippets/ch11_terrain.qmd >}}
+
+## Constraint or predictor
+
+Two ways to use the envelope, and the difference is more than stylistic.
+
+**As a mask, applied after classification.** Anything outside the envelope is set to not mangrove. Crude, effective, and it hard codes your threshold choices into the result. If the envelope is wrong anywhere, the map is wrong there and no evidence can override it.
+
+**As predictor bands in the stack.** Elevation, slope and distance to water go in alongside reflectance, and the model learns how much weight to give each. If the spectral evidence for mangrove is overwhelming at 45 metres, the model can still say mangrove, and it will be right in the rare cases where it does.
+
+Prefer the second. Use the first only when you have a specific, defensible reason, and record it in the methods.
+
+::: {.callout-tip}
+## From the field
+Print the elevation minimum, maximum and mean over your area of interest before doing anything else. If the minimum over a coastal study area comes back at 40 metres, your boundary does not actually reach the coast, and every conclusion after that point is about the wrong place. This has happened to more projects than anyone admits.
+:::
+
+## Topographic correction, and when to bother
+
+In steep terrain, slopes facing the sun are brighter than slopes facing away, and the same forest gets two different reflectance signatures depending on which way the hill faces. Topographic correction, usually a C correction or the SCS+C method, normalises for that using slope and aspect.
+
+Over a delta it is unnecessary and adds noise. Over mountainous terrain with slopes beyond about 15 degrees it becomes essential, because otherwise the classifier learns aspect rather than land cover.
+
+The honest test is empirical: map aspect, map your classification, and look for classes that track the compass. If your classification changes systematically between north facing and south facing slopes, you have an illumination artefact rather than an ecological pattern.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch11-terrain",
+  "questions": [
+    {
+      "q": "Your mangrove map finds young regenerating stands perfectly and misses mature ones. What is the likely cause?",
+      "options": [
+        "Dense canopy saturates NDVI",
+        "You thresholded a digital surface model as though it were a terrain model, so tall stands report canopy height and fail the elevation cutoff",
+        "Cloud masking removed the mature stands",
+        "The training data lacked mature examples"
+      ],
+      "answer": 1,
+      "why": "A surface model over a 25 m stand reports about 25 m. A 10 m elevation cutoff therefore excludes exactly the highest biomass stands, which is the worst possible thing to lose from a carbon assessment."
+    },
+    {
+      "q": "Why is slope less affected by the surface model problem than elevation?",
+      "options": [
+        "Slope is computed at a coarser resolution",
+        "The canopy offset is roughly constant across a stand, and differentiating a surface removes a constant",
+        "Slope is derived from a different dataset",
+        "Slope is measured in degrees rather than metres"
+      ],
+      "answer": 1,
+      "why": "A canopy sitting 25 m above a flat mudflat is still flat. This is why slope often outperforms elevation as a discriminator despite carrying less obvious information."
+    },
+    {
+      "q": "Why add distance to water when you already have elevation?",
+      "options": [
+        "It improves the visualisation",
+        "Mangroves are defined by tidal connection, so a low flat patch fifty kilometres inland is a freshwater swamp rather than mangrove",
+        "Elevation is unreliable near coastlines",
+        "It compensates for cloud cover"
+      ],
+      "answer": 1,
+      "why": "Low and flat is necessary and not sufficient. Connection to tidal water is the defining condition, and distance to water is the cheapest proxy for it."
+    },
+    {
+      "q": "Should the intertidal envelope be applied as a mask or added as predictor bands?",
+      "options": [
+        "As a mask, since it guarantees no mangrove outside the tidal zone",
+        "As predictor bands, so the model can weigh elevation against spectral evidence rather than being overruled by a chosen threshold",
+        "Either, they give identical results",
+        "As a mask for training and predictors for prediction"
+      ],
+      "answer": 1,
+      "why": "A mask hard codes your threshold into the output, so wherever the envelope is wrong the map is wrong and no evidence can override it. Predictors let strong evidence win in the rare cases where it should."
+    }
+  ]
+}
+</script>
 
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Use the Inspector on a tall mangrove stand. Compare the reported elevation to the ground height you expect. That gap is the canopy offset.
+2. Tighten the envelope to below 10 metres and map what it excludes. Are those areas really not mangrove?
+3. Replace elevation with the canopy subtracted estimate and compare. Has the subtraction added more noise than it removed?
+4. Map aspect over a hilly part of your study area alongside your classification. Do any classes track the compass?

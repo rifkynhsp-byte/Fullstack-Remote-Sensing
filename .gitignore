@@ -17,11 +17,15 @@ en/theme-dark.scss
 en/styles.css
 en/references.bib
 en/favicon.svg
+en/images/
+en/interactive/
 id/theme.scss
 id/theme-dark.scss
 id/styles.css
 id/references.bib
 id/favicon.svg
+id/images/
+id/interactive/
 
 .DS_Store
 __pycache__/

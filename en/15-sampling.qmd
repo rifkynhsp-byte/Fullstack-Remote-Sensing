@@ -95,6 +95,51 @@ The two versions produce results that look identical and differ by several accur
 
 **Where the samples are.** Map them. This catches clustering in one convenient corner, a class drawn only on one side of the river, and points that fell in the sea. Thirty seconds, and it has saved a lot of afternoons.
 
+
+## Thinning is not enough: spatial block cross validation
+
+Thinning enforces a minimum distance between samples, and it treats a symptom. Tobler's first law does not stop at 60 metres.
+
+Samples drawn from the same estuary share tide state, water chemistry, species composition, sun angle and atmospheric conditions, whatever the spacing between them. A model can learn *this estuary looks like this* and score beautifully on held out points from the same estuary, then fail on the next one along the coast. Random splitting measures interpolation within a landscape and reports it as though it were prediction.
+
+That failure mode has a name, **spatial data leakage**, and it is the reason models reporting 95 percent in validation routinely deliver 60 percent when applied to a neighbouring province.
+
+::: {.callout-important}
+## Scientific integrity: which number to report
+If a model will only ever be applied to the area it was trained on, a random split is a fair description of its performance. The moment anyone might apply it elsewhere, and in practice they always do, the random split figure is an overstatement.
+
+Report both, and label them. Quoting only the random split is not wrong so much as incomplete, and a reviewer who knows this literature will ask.
+:::
+
+![Random splitting leaves every training point with a test point close by. Block splitting moves the nearest test point roughly two and a half times further away, which is the leakage being removed.](../images/block-cv.png){#fig-blockcv}
+
+The distances under each panel are computed, not illustrative. In the random split the mean distance from a training point to the nearest test point is 0.53 units; under block splitting it is 1.30.
+
+### How blocks fix it
+
+Partition the study area into geographic blocks. Assign **whole blocks** to folds, never individual points. Train on some blocks, test on the ones held out. The model is forced to generalise across space rather than interpolate within it.
+
+Block size is the parameter that matters, and it is an ecological decision rather than a statistical one.
+
+Too small, and adjacent blocks stay correlated, so you have only made the random split slightly harder. Too large, and each fold covers a different landscape entirely, so the score reflects landscape difference rather than model quality.
+
+The defensible starting point is the range over which your predictors are autocorrelated. You can estimate that from a semivariogram, or approximate it from what you know of the landscape. Over a delta, the scale at which conditions genuinely change is the sub estuary, a few kilometres.
+
+{{< include _snippets/ch15_block_cross_validation.qmd >}}
+
+### Reading the result
+
+Two numbers come out, and both matter.
+
+**The mean across folds** is your honest accuracy. Compare it to the random split figure from the same data. A gap of two to four points is normal. A gap of ten or more means the random split was measuring something other than what you thought.
+
+**The standard deviation across folds** is the number almost nobody reports and it may be the more useful one. A model scoring 0.84 plus or minus 0.02 transfers reliably. The same mean at plus or minus 0.15 works in some parts of the landscape and fails in others, which is a fact somebody should know before making a decision from the map.
+
+::: {.callout-tip}
+## From the field
+Vary the block size from 1 km to 20 km and plot accuracy against it. Accuracy falls as blocks grow, then flattens. The point where it stops falling is an empirical estimate of your data's autocorrelation range, obtained without fitting a variogram. It also tells you how far apart two study areas must be before a model trained on one says anything useful about the other.
+:::
+
 ## Independent validation is a different thing
 
 Everything above splits one dataset. That is internal validation, and it answers a narrow question: does the model generalise to points I did not train on, drawn the same way, by the same person, from the same imagery.
@@ -152,6 +197,28 @@ The gap between internal and independent accuracy is the honest number, and Chap
       ],
       "answer": 1,
       "why": "Both splits inherit the same mistake, so the confusion matrix reports excellent accuracy. Only independently collected reference data exposes it."
+    },
+    {
+      "q": "You thinned your samples to a 60 m minimum separation. Why might reported accuracy still be inflated?",
+      "options": [
+        "60 m is too small a separation for Sentinel-2",
+        "Samples from the same estuary still share tide, chemistry, species and atmosphere, so the model can learn the place rather than the class",
+        "Thinning removes too many samples to be reliable",
+        "Thinning only works for polygon based sampling"
+      ],
+      "answer": 1,
+      "why": "Thinning treats a symptom. Autocorrelation does not stop at 60 m, which is why block cross validation partitions whole regions rather than enforcing a distance."
+    },
+    {
+      "q": "Block CV gives 0.84 with a standard deviation of 0.15 across folds. What does the spread tell you?",
+      "options": [
+        "The model is unstable and needs more trees",
+        "The blocks were too small",
+        "The model works in some parts of the landscape and fails in others, which someone should know before acting on the map",
+        "The result is invalid and should be discarded"
+      ],
+      "answer": 2,
+      "why": "The mean is the headline; the spread is often more useful. A wide spread is a real finding about where the map can and cannot be trusted, not a defect to hide."
     }
   ]
 }

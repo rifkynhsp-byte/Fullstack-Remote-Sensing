@@ -42,6 +42,10 @@ It is fast, and it is what most older tutorials show. Its weaknesses are real: 6
 The QA60 band was deprecated and stopped being populated for scenes processed after early 2022. A script using it on recent data will run without error and mask nothing, because every bit reads as zero. The composite will look plausible and be full of cloud. If you inherit a script that uses QA60, check the acquisition dates before trusting the output.
 :::
 
+![Six synthetic acquisitions over the same ground, each with cloud somewhere different. No single scene is usable. The median of what survives masking has no gaps, and the observation count map shows where confidence is lowest.](../images/compositing.png){#fig-compositing}
+
+Look at the bottom right panel. Clear observations per pixel run from 2 to 6. A pixel built from two observations is not wrong, but it carries far less confidence than its neighbour built from six, and that difference is invisible in the composite itself.
+
 ## The full workflow
 
 {{< include _snippets/ch09_annual_composite.qmd >}}

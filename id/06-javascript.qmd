@@ -2,24 +2,185 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Cukup JavaScript untuk menulis skrip Earth Engine, tidak lebih. Bila Anda sudah bisa memprogram, langsung ke bagian jebakan.
+Cukup JavaScript untuk menulis skrip Earth Engine, dan tidak lebih dari itu. Kalau Anda sudah bisa memprogram, lompat saja ke @sec-js-pitfalls, yang membahas kesalahan yang khusus menggigit di lingkungan ini.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
+## Kenapa JavaScript, dan seberapa sedikit yang perlu Anda tahu
+
+Earth Engine menyediakan dua pustaka klien: JavaScript di Code Editor berbasis peramban, dan Python untuk notebook. Buku ini mengajarkan JavaScript karena ia tidak butuh instalasi, tidak butuh pengelolaan environment, dan tidak butuh urusan autentikasi. Anda membuka satu URL dan langsung bekerja. Lampiran A membahas jalur Python bagi pembaca yang harus menyatukannya dengan pipeline yang sudah ada.
+
+Kabar baiknya, bagian yang benar benar dibutuhkan memang sedikit. Skrip Earth Engine sebagian besar berisi deklarasi, pemanggilan fungsi, dan satu jenis definisi fungsi. Tidak ada kelas yang perlu ditulis, alur kendali hampir tidak ada, dan struktur data yang dipakai nyaris hanya list dan dictionary.
+
+## Variabel
+
+Variabel adalah nama yang ditempelkan pada sebuah nilai. Deklarasikan dengan `var`, dan akhiri setiap pernyataan dengan titik koma.
+
+```javascript
+var studyAreaName = 'Delta Mahakam';   // teks, dalam tanda kutip tunggal
+var targetYear = 2023;                 // angka, tanpa tanda kutip
+var cloudThreshold = 25;               // angka
+var includeRadar = true;               // boolean, tanpa tanda kutip
+```
+
+Nama boleh berisi huruf, angka, garis bawah, dan tanda dolar, dan tidak boleh diawali angka. Nama bersifat case sensitive, jadi `aoi` dan `AOI` adalah dua variabel berbeda, dan mencampurnya menghasilkan galat variabel tak terdefinisi.
+
+::: {.callout-warning}
+## Kesalahan umum: tanda kutip pintar
+Teks yang disalin dari Word, Google Docs, PDF, atau jendela chat sering membawa tanda kutip tipografis (`'` dan `'`) alih alih tanda kutip lurus (`'`). JavaScript tidak mengenalinya, dan pesan galat yang muncul menunjuk ke tempat yang keliru. Kalau sebuah baris terlihat benar tetapi tetap gagal, ketik ulang tanda kutipnya dengan tangan. Ini masalah paling umum ketika pembaca menempelkan kode dari sebuah dokumen.
 :::
 
-## Rencana bagian
+## List dan dictionary
 
-1. **Variabel, titik koma, dan tanda kutip pintar yang merusak segalanya**
-2. **Daftar dan kamus**: urutan band dan parameter visualisasi
-3. **Fungsi, dan mengapa setiap fungsi yang dipetakan harus mengembalikan sesuatu**
-4. **Komentar yang mencatat keputusan, bukan menerjemahkan kode**
-5. **print() dan batas 5.000 elemen di Console**
-6. **Jebakan khas**: nilai klien versus nilai server, getInfo(), penyisipan titik koma otomatis
+Dua wadah membawa hampir semua data terstruktur yang akan Anda tulis sendiri.
+
+**List** adalah urutan berurut di dalam kurung siku. Urutannya penting, dan lebih penting daripada dugaan pemula: urutan band menentukan band mana yang digambar sebagai merah.
+
+```javascript
+var visualisationBands = ['B4', 'B3', 'B2'];        // merah, hijau, biru
+var elevationPalette = ['blue', 'green', 'brown'];  // rendah ke tinggi
+```
+
+**Dictionary**, disebut juga object, adalah sekumpulan nilai bernama di dalam kurung kurawal. Setiap parameter visualisasi yang Anda tulis adalah dictionary.
+
+```javascript
+var visualisation = {
+  bands: ['B4', 'B3', 'B2'],
+  min: 0,
+  max: 3000,
+  gamma: 1.4
+};
+```
+
+Dua aturan sintaks menyebabkan sebagian besar galat dictionary. Pisahkan entri dengan koma, tetapi jangan pasang koma setelah entri terakhir. Dan pisahkan kunci dari nilainya dengan titik dua, bukan tanda sama dengan.
+
+## Fungsi
+
+Fungsi adalah blok yang bisa dipakai ulang: ia menerima masukan dan mengembalikan keluaran. Di Earth Engine Anda akan terus menulisnya, karena cara baku memproses koleksi adalah mendefinisikan apa yang harus terjadi pada satu citra lalu menyerahkan definisi itu ke `.map()`.
+
+```javascript
+// Fungsi bernama. Menerima satu citra, mengembalikan citra itu dengan NDVI.
+var addNdvi = function (image) {
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return image.addBands(ndvi);
+};
+
+// Pakai pada satu citra.
+var enriched = addNdvi(myImage);
+
+// Atau pada seluruh koleksi, paralel, di server.
+var enrichedCollection = myCollection.map(addNdvi);
+```
+
+Tiga aturan yang perlu mengendap. Fungsi harus melakukan `return`, kalau tidak `.map()` tidak menerima apa apa dan gagal dengan pesan yang tidak membantu. Variabel yang dideklarasikan di dalam fungsi hanya ada di dalamnya. Dan nama parameternya, `image` di atas, bersifat sembarang dan lokal; menamainya `img` atau `citra` tidak mengubah apa pun.
+
+## Komentar
+
+Komentar bukan hiasan dalam buku ini, komentar adalah bagian dari pengajaran. Ada dua bentuk.
+
+```javascript
+// Komentar satu baris. Semua setelah garis miring diabaikan.
+
+/*
+  Komentar blok, berguna untuk header yang menjelaskan apa yang dilakukan
+  sebuah skrip, untuk siapa, dan aset apa yang harus sudah ada.
+*/
+```
+
+Ada satu konvensi yang layak diikuti: simpan komentar blok untuk header bagian yang menjelaskan maksud, dan komentar satu baris untuk keputusan. Komentar yang mengulang kodenya (`// pilih band 8`) tidak menambah apa apa. Komentar yang mencatat mengapa band 8 dipilih ketimbang band 8A layak ada di sana.
+
+## Mencetak dan Console
+
+`print()` mengirim sebuah nilai ke tab Console. Ia menerima label diikuti hal yang dicetak, dan itu membuat keluaran tetap terbaca ketika sebuah skrip mencetak dua puluh kali.
+
+```javascript
+print('Jumlah citra setelah filter:', filtered.size());
+```
+
+::: {.callout-warning}
+## Kesalahan umum: mencetak terlalu banyak
+Console punya batas keras 5.000 elemen. Mencetak seluruh koleksi citra, atau koleksi fitur berisi titik data latih, akan melampauinya dan gagal. Cetak ukuran, elemen pertama, atau ringkasan teragregasi:
+
+```javascript
+print('Ukuran koleksi:', collection.size());   // aman
+print('Citra pertama:', collection.first());   // aman
+print(collection);                             // gagal pada koleksi besar
+```
+:::
+
+## Jebakan khas lingkungan ini {#sec-js-pitfalls}
+
+Empat jebakan menangkap pemrogram berpengalaman, dan semuanya berakar pada pemisahan klien dan server yang dijelaskan @sec-paradigm.
+
+**Nilai klien dan nilai server tidak bisa dicampur begitu saja.** Angka JavaScript hidup di peramban Anda. `ee.Number` hidup di server Google. Anda bisa mendorong nilai klien ke server, tetapi Anda tidak bisa menarik nilai server ke dalam pernyataan `if` JavaScript tanpa panggilan `getInfo()` yang eksplisit dan mahal.
+
+```javascript
+// Salah. size() mengembalikan objek server; JavaScript tidak bisa mengujinya.
+if (collection.size() > 0) { ... }
+
+// Benar, tetapi lambat dan membekukan peramban. Jangan pernah di dalam map().
+if (collection.size().getInfo() > 0) { ... }
+
+// Biasanya lebih baik: susun ulang agar pengujiannya terjadi di server.
+var result = ee.Algorithms.If(collection.size().gt(0), doThis, doThat);
+```
+
+**Penggabungan string melewati batas itu dengan buruk.** Menyambung string klien ke nilai server memerlukan `ee.String` dan `.cat()`, bukan operator `+`.
+
+**Penugasan ulang di dalam perulangan jarang berperilaku seperti yang Anda kira.** Kalau Anda mendapati diri menulis perulangan `for` di atas citra, berhenti dan baca Bab 7. Hampir selalu ada bentuk `.map()` yang setara, dan bentuk itu jauh lebih cepat.
+
+**Pernyataan multi baris perlu kehati hatian.** JavaScript menyisipkan titik koma secara otomatis dengan cara yang bisa memotong pernyataan yang dipecah antar baris. Saat merangkai, taruh titiknya di akhir baris sebelumnya, bukan di awal baris berikutnya.
+
+```javascript
+// Andal
+var filtered = collection
+  .filterDate('2023-01-01', '2023-12-31')
+  .filterBounds(aoi);
+```
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch06-javascript",
+  "questions": [
+    {
+      "q": "Sebuah baris terlihat benar tetapi tetap memunculkan galat sintaks, dan pesannya menunjuk ke tempat yang aneh. Apa yang pertama dicurigai?",
+      "options": [
+        "Versi JavaScript yang dipakai Earth Engine",
+        "Tanda kutip pintar dari pengolah kata, yang tidak dikenali JavaScript",
+        "Nama variabel yang terlalu panjang",
+        "Titik koma yang hilang di baris sebelumnya"
+      ],
+      "answer": 1,
+      "why": "Ini masalah paling umum ketika kode ditempel dari dokumen. Ketik ulang tanda kutipnya dengan tangan dan galatnya hilang."
+    },
+    {
+      "q": "Mengapa `if (collection.size() > 0)` tidak bekerja seperti yang diharapkan?",
+      "options": [
+        "size() mengembalikan string, bukan angka",
+        "size() mengembalikan objek server yang tidak bisa diuji langsung oleh pernyataan if JavaScript di sisi klien",
+        "Koleksi harus difilter terlebih dahulu",
+        "Operator > tidak didukung di Earth Engine"
+      ],
+      "answer": 1,
+      "why": "Ini konsekuensi langsung pemisahan klien dan server. Solusinya bukan getInfo(), melainkan menyusun ulang agar pengujiannya tetap di sisi server dengan ee.Algorithms.If."
+    },
+    {
+      "q": "Fungsi yang Anda serahkan ke .map() gagal dengan pesan yang tidak membantu. Apa yang paling sering menjadi penyebabnya?",
+      "options": [
+        "Nama parameternya salah",
+        "Fungsinya tidak memiliki pernyataan return",
+        "Fungsinya terlalu panjang",
+        "Koleksinya kosong"
+      ],
+      "answer": 1,
+      "why": "Tanpa return, .map() menerima undefined untuk setiap citra. Pesan galatnya tidak menyebutkan hal itu, sehingga sekali mengalaminya sudah cukup untuk mengingatnya seterusnya."
+    }
+  ]
+}
+</script>
 
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Tulis satu dictionary parameter visualisasi untuk komposit warna semu memakai band Sentinel-2 B8, B4, dan B3, dengan peregangan yang bisa Anda pertahankan alasannya di atas vegetasi.
+2. Tulis sebuah fungsi yang menerima citra dan mengembalikannya dengan band NDWI. Jangan melihat Bab 9 lebih dulu.
+3. Sisipkan tanda kutip pintar ke skrip yang sudah jalan, dengan sengaja, lalu baca pesan galatnya baik baik. Mengenalinya sekali menghemat satu jam di kemudian hari.
+4. Cetak ukuran sebuah koleksi, lalu cetak koleksinya sendiri, dan perhatikan bedanya di Console.

@@ -55,6 +55,16 @@ A plant under stress often loses cell structure before it loses chlorophyll. So 
 And a dead but structurally intact leaf, or a dry leaf litter layer, can still produce a moderate near infrared response. NDVI over recently cleared land with residual debris will not fall as far as intuition suggests, which is a documented source of false negatives in deforestation detection.
 :::
 
+![The three signatures the exercises ask you to draw from memory, with Sentinel-2 band positions overlaid. Shaded grey marks the water vapour absorption features; note that Sentinel-2 places no land observation band inside them. Curves are representative published values rather than a measurement of one location.](../images/spectral-signatures.png){#fig-signatures}
+
+Two things in that figure are worth staring at. The near infrared jump is roughly a factor of fifteen from the red trough, which is why every vegetation index is built on that pair. And the band positions are not evenly spaced: they cluster where the atmosphere transmits and leave gaps where water vapour absorbs.
+
+The explorer below lets you test the claim rather than take it. Pick two classes and see whether a given index actually separates them.
+
+{{< include ../interactive/spectral-explorer.qmd >}}
+
+Try mangrove against other dense forest on NDVI. The two bars land almost on top of each other, which is the entire reason Chapters 10, 11 and 14 exist. Then try CMRI.
+
 ## The four resolutions
 
 Sensor capability is described along four independent axes, and every satellite is a compromise among them because the physics forces a trade.
@@ -153,3 +163,49 @@ Everything above assumes reflected sunlight, which means an optical sensor is bl
 2. Explain in one sentence why NDVI cannot distinguish a healthy mangrove from a healthy oil palm plantation. Then name three physical properties that could.
 3. Find a Sentinel-2 spectral response curve and an atmospheric transmission curve and overlay them. Account for the position of every band.
 4. A colleague reports that their deforestation map missed a clearing that is visible in a photograph. Give two physically grounded explanations before suggesting any change to their code.
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** The three curves you should be able to draw from memory. Vegetation: low
+in blue, a small green bump, a deep red trough, then a jump by a factor of five
+or more into the near infrared plateau, then two dips in the shortwave where
+leaf water absorbs. Water: modest in blue and green, falling through red, and
+essentially zero from the near infrared onward. Bare soil: a gentle, featureless
+rise from visible through shortwave, brighter when dry.
+
+Sentinel-2's bands sit at 490, 560, 665 (blue, green, red), 705, 740, 783 (red
+edge), 842 (wide near infrared), 865 (narrow near infrared), and 1610 and 2190
+(shortwave). Each one lands in an atmospheric window.
+
+**2.** NDVI uses only red and near infrared, and healthy mangrove and healthy
+oil palm are both dense broadleaf canopy with high chlorophyll and intact
+mesophyll. Their red and near infrared behaviour is nearly identical, so the
+index has nothing to separate them with.
+
+Three physical properties that do differ: **elevation**, since mangrove occupies
+a narrow intertidal band and oil palm generally does not; **canopy texture**,
+since palm has a regular planted geometry and mangrove does not, which GLCM in
+Chapter 14 measures; and **radar structure**, since mangrove standing in water
+produces a double bounce return that a plantation on dry ground does not.
+
+**3.** Every band centre falls inside a window where atmospheric transmission is
+high. The gaps between bands are not arbitrary: they avoid the water vapour
+absorption features around 1400 and 1900 nm, where almost nothing reaches the
+sensor. Bands 1, 9 and 10 are the exception, and they are deliberately placed
+*on* absorption features, because they are used to estimate aerosol and water
+vapour for the atmospheric correction rather than to observe the ground.
+
+**4.** Two physically grounded explanations, before touching any code.
+
+First, residual structure. A clearing with standing dead vegetation or dry
+litter still has intact cell walls scattering near infrared, so NDVI does not
+fall as far as intuition expects and may not cross the detection threshold.
+
+Second, the mixed pixel. A clearing smaller than a pixel, or one that straddles
+pixel boundaries, produces a value averaged with the surrounding intact canopy.
+At 10 m a clearing under roughly 100 m² is very unlikely to be detected at all.
+
+A third possibility worth checking: the clearing may post date the imagery, or
+have been under cloud on every clear acquisition in the compositing window.
+:::

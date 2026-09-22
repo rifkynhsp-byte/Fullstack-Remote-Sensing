@@ -39,6 +39,17 @@ for LANG in en id; do
   done
   cp landing/assets/favicon.svg "$LANG/favicon.svg"
 
+  # Images are shared between editions. Copying rather than referencing with
+  # ../ keeps every path inside the Quarto project, which is the arrangement
+  # Quarto handles reliably.
+  rm -rf "$LANG/images"
+  cp -r images "$LANG/images"
+
+  # Interactive widgets, shared between editions. Each one detects the page
+  # language at runtime and labels itself accordingly.
+  rm -rf "$LANG/interactive"
+  cp -r interactive "$LANG/interactive"
+
   echo "==> Rendering $LANG"
   quarto render "$LANG"
 done

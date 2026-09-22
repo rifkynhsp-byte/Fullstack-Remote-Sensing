@@ -2,28 +2,162 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan menambahkan sumber data segala cuaca ke dalam stack: hamburan balik Sentinel-1 dan mosaik tahunan ALOS PALSAR, difilter speckle dan difusikan dengan band optik menjadi satu citra siap analisis.
+Anda akan menambahkan sensor yang sepenuhnya mengabaikan awan, memahami apa yang sebenarnya diukur radar dan mengapa ia bukan pengganti data optik, lalu memfusikan backscatter C band dan L band dengan stack optik Anda menjadi satu citra siap analisis.
 :::
+
+## Sensor yang tidak memerlukan matahari
+
+Semua isi Bab 8 dan 9 bergantung pada sinar matahari yang dipantulkan. Itu membuat sensor optik buta pada malam hari dan buta menembus awan, dan Bab 9 menghabiskan seluruh isinya untuk menyiasati keterbatasan kedua.
+
+Radar menghapus keterbatasan itu, bukan menyiasatinya. Sentinel-1 memancarkan pulsa gelombang mikronya sendiri lalu mengukur apa yang kembali. Gelombang mikro pada panjang gelombang ini menembus awan tanpa kehilangan yang berarti, sehingga perekaman Sentinel-1 di atas Delta Mahakam pada bulan Februari sama layak pakainya dengan perekaman di bulan Agustus.
+
+Kedengarannya itu sudah cukup untuk menutup bab ini. Ternyata tidak, karena radar bukan kamera antiawan. Ia mengukur hal yang berbeda.
+
+## Apa yang direspons backscatter
+
+Sensor optik mengukur **komposisi**: terbuat dari apa sebuah permukaan, melalui pigmen dan air yang menyerap pada panjang gelombang tertentu. Radar mengukur **struktur**: bagaimana permukaan itu tersusun dalam tiga dimensi.
+
+![Tiga mekanisme hamburan yang menjelaskan hampir semua yang Anda lihat pada citra radar. Air tenang memantulkan pulsa menjauh dan tampak gelap; tajuk menghamburkannya di dalam volume; batang pohon yang berdiri di air mengembalikannya menyusuri jalur datangnya.](../images/radar-scattering.png){#fig-scattering}
+
+Tiga sifat menentukan apa yang kembali, dan @fig-scattering menggambarkan ketiganya.
+
+**Kekasaran relatif terhadap panjang gelombang.** Permukaan yang halus pada skala panjang gelombang memantulkan pulsa menjauh dari sensor seperti cermin. Air tenang adalah kasus ekstremnya dan tampak nyaris hitam. Permukaan kasar menghamburkan ke segala arah, sebagian kembali, dan tampak terang.
+
+**Geometri.** Struktur tegak yang berdiri di atas permukaan mendatar menghasilkan **pantulan ganda**: pulsa mengenai air, memantul ke batang, lalu kembali menyusuri jalur datangnya. Ini sangat terang, dan merupakan ciri khas hutan tergenang, yang persis merupakan keadaan mangrove saat pasang. Tidak ada hutan daratan yang menghasilkannya.
+
+**Kelembapan.** Air menaikkan konstanta dielektrik material sehingga backscatter meningkat. Tanah basah lebih terang daripada tanah kering, dan permukaan yang sama bisa berbeda beberapa desibel antara musim hujan dan kemarau.
 
 ::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
+## Konsep: polarisasi membawa informasi yang berbeda
+Sentinel-1 memancar secara vertikal dan menerima dalam dua konfigurasi.
+
+**VV**, vertikal keluar dan vertikal kembali, terutama merespons hamburan permukaan. Baik untuk luasan air, tanah terbuka, dan genangan.
+
+**VH**, vertikal keluar dan horizontal kembali, hanya mengembalikan energi yang telah *terdepolarisasi*, dan itu menuntut hamburan berulang di dalam sebuah volume. Volume itu adalah tajuk. Karena itu VH adalah kanal struktur, dan kanal yang berkorelasi dengan biomassa.
+
+Memakai keduanya bukan pengulangan. Hamparan lumpur yang tergenang dan hutan yang tergenang terlihat mirip pada VV dan sangat berbeda pada VH.
 :::
 
-## Rencana bagian
+## Dua panjang gelombang, dua kedalaman
 
-1. **Pengindraan aktif versus pasif**: mengapa radar mengabaikan awan
-2. **Polarisasi VV dan VH, dan struktur apa yang direspons masing masing**
-3. **Menyaring Sentinel-1**: mode IW, daftar polarisasi, arah orbit
-4. **Speckle dan penghilangannya tanpa merusak tepi**
-5. **Penetrasi L band**: konversi digital number PALSAR ke gamma nought
-6. **Menyusun stack multi sensor sebagai fungsi dari tahun**
+Sentinel-1 adalah **C band**, sekitar 5,6 sentimeter. Gelombang itu berinteraksi dengan daun dan ranting kecil, jadi C band mengindera tajuk bagian atas.
+
+ALOS PALSAR adalah **L band**, sekitar 23 sentimeter. Gelombang yang lebih panjang menembus dedaunan dan berinteraksi dengan batang serta cabang besar. L band menjangkau lebih dalam, berkorelasi lebih baik dengan total biomassa di atas permukaan, dan lebih tahan jenuh pada hutan rapat.
+
+Untuk mangrove implikasinya langsung. C band melaporkan kondisi tajuk; L band melaporkan struktur dan biomassa. Bab 20 memerlukan yang kedua ketika peta diubah menjadi angka karbon.
+
+## Speckle, dan mengapa ia bukan derau dalam pengertian biasa
+
+Citra radar punya kualitas berbintik yang terlihat seperti derau sensor, dan bukan. Itu **speckle**, dan ia melekat pada pencitraan koheren.
+
+Setiap sel resolusi berisi banyak penghambur individual. Pantulan dari masing masing tiba dengan fase berbeda lalu saling berinterferensi, konstruktif di sebagian sel dan destruktif di sebagian lain. Hasilnya fluktuasi multiplikatif yang tidak bisa dihilangkan sensor sebaik apa pun, karena ia sifat fisikanya, bukan cacat instrumennya.
+
+![Speckle bersifat multiplikatif dan melekat. Focal median menekannya sambil mempertahankan batas; focal mean menekannya sekaligus mengaburkan batasnya.](../images/speckle-filter.png){#fig-speckle}
+
+Gambar itu mengukur pertukarannya, bukan sekadar menyatakannya. Baca keterangan di bawah panelnya untuk gradien tepi yang terukur.
+
+| Filter | Perilaku |
+|---|---|
+| Focal mean | Paling halus, merusak tepi. Hindari untuk apa pun yang batasnya Anda pedulikan. |
+| Focal median | Penekanan speckle baik, tepi cukup terjaga. Pilihan baku buku ini. |
+| Lee | Menyesuaikan diri dengan varians lokal, tepi lebih terjaga, komputasi lebih berat. |
+| Refined Lee | Tepi paling terjaga, jauh lebih rumit diimplementasikan di Earth Engine. |
+
+Tentukan jendelanya dalam **meter**, bukan piksel, agar filter berperilaku sama berapa pun skala yang dipakai komputasi berikutnya.
+
+::: {.callout-warning}
+## Kesalahan umum: mencampur arah orbit
+Sentinel-1 melintas pada orbit ascending dan descending, memandang medan yang sama dari sisi berlawanan. Di medan pesisir yang datar bedanya kecil. Di mana pun ada relief, bedanya besar, karena lereng yang menghadap sensor terang dan lereng yang membelakanginya gelap. Meng-composite kedua arah bersama sama menambahkan sinyal geometrik yang tidak ada urusannya dengan permukaan tanah dan sepenuhnya ditentukan oleh hari mana satelit kebetulan lewat. Saring `orbitProperties_pass` ke satu arah, dan sebutkan yang mana di bagian metode Anda.
+:::
 
 ## Alur kerja lengkap
 
+Skrip di bawah adalah yang menjadi tumpuan semua bab berikutnya. Ia ditulis sebagai `getAnalysisReadyData(year)` dan bukan sebagai skrip linear, dan satu perubahan itulah yang mengubah peta sekali jadi menjadi sistem pemantauan: Bab 21 memanggilnya dalam perulangan untuk membangun deret waktu, Bab 16 memanggilnya sekali untuk melatih classifier, dan keduanya tidak perlu tahu cara kerjanya.
+
 {{< include _snippets/ch10_multisensor_stack.qmd >}}
+
+## Konversi yang tidak pernah disebut siapa pun
+
+Satu blok dalam skrip itu layak diperhatikan, karena melewatkannya adalah hal yang lazim dan akibatnya tidak terlihat.
+
+ALOS PALSAR dikirim sebagai **digital number**, bukan backscatter fisik. Konversi resminya:
+
+$$\gamma^0_{dB} = 10 \log_{10}(DN^2) - 83{,}0$$
+
+Tanpa itu, band PALSAR berada pada skala numerik yang sepenuhnya berbeda dari band reflektansi 0 sampai 1 di sebelahnya. Random Forest mentoleransinya, karena pohon memisah pada ambang batas dan tidak peduli besaran. Support vector machine tidak, karena ia menghitung jarak, dan band dengan rentang ribuan menenggelamkan setiap band dengan rentang satu.
+
+Jadi stack yang belum dikonversi menghasilkan Random Forest yang bekerja dan SVM yang anehnya berkinerja buruk, dan itu gejala yang sulit dilacak balik ke satu konstanta yang hilang.
+
+::: {.callout-important}
+## Integritas ilmiah: sebutkan filter speckle-nya
+Filter speckle mengubah nilai piksel, dan filter berbeda mengubahnya dengan cara berbeda. Dua studi yang melaporkan biomassa mangrove berbeda untuk lokasi yang sama pernah berbeda hanya karena yang satu memakai mean 3 kali 3 dan yang lain median 50 meter. Sebutkan filternya dan ukuran jendelanya bersama skala dan metode compositing.
+:::
+
+## Kapan fusi sepadan, dan kapan tidak
+
+Menambahkan radar ke stack optik hampir selalu meningkatkan akurasi dan selalu menambah kerumitan. Pertimbangannya adalah apakah peningkatan itu menangani galat yang benar benar sedang membatasi Anda.
+
+Untuk pemetaan mangrove jelas iya. Kekeliruan yang membatasi akurasi adalah dengan hutan berdaun lebar rapat lain, dan data optik tidak bisa menyelesaikannya karena keduanya mirip secara spektral. Radar memisahkannya secara fisik: mangrove yang berdiri di air menghasilkan pantulan ganda, hutan daratan tidak.
+
+Untuk peta hutan dan bukan hutan yang kasar, biasanya tidak. Data optik sudah memisahkan kelas itu dengan bersih, dan band radar hanya menambah komputasi, beban pemeliharaan, dan satu mode kegagalan lagi demi mungkin setengah poin akurasi.
+
+Uji dari Bab 3 tetap berlaku: jalankan klasifikasi hanya dengan optik, baca confusion matrix-nya, kenali pasangan kelas mana yang gagal, lalu tambahkan satu sumber data yang menangani pasangan itu. Menambahkan semuanya sekaligus lalu mendapati akurasi naik tiga poin tidak mengajarkan apa pun tentang sebabnya.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch10-radar",
+  "questions": [
+    {
+      "q": "Mengapa tegakan mangrove saat pasang tampak sangat terang pada citra radar?",
+      "options": [
+        "Daun basah memantulkan gelombang mikro lebih kuat",
+        "Pantulan ganda: pulsa memantul dari air ke batang lalu kembali menyusuri jalur datangnya",
+        "Air laut punya konstanta dielektrik tinggi",
+        "Tajuknya lebih rapat daripada hutan daratan"
+      ],
+      "answer": 1,
+      "why": "Pantulan ganda memerlukan struktur tegak yang berdiri di atas permukaan halus mendatar. Inilah tanda tangan yang memisahkan mangrove dari hutan daratan yang identik secara spektral, dan tidak ada band optik yang bisa melihatnya."
+    },
+    {
+      "q": "Apa yang dibawa polarisasi VH yang tidak dibawa VV?",
+      "options": [
+        "Resolusi spasial lebih tinggi",
+        "Hamburan volume dari dalam tajuk, yang berkorelasi dengan biomassa",
+        "Kinerja lebih baik menembus awan",
+        "Kepekaan terhadap kelembapan tanah"
+      ],
+      "answer": 1,
+      "why": "VH hanya mengembalikan energi yang terdepolarisasi oleh hamburan berulang, dan itu terjadi di dalam sebuah volume. Volume itu adalah tajuk, dan karena itu VH menjadi kanal struktur."
+    },
+    {
+      "q": "Speckle pada citra radar paling tepat digambarkan sebagai:",
+      "options": [
+        "Derau sensor yang bisa dihilangkan perangkat keras lebih baik",
+        "Interferensi antar banyak penghambur dalam satu sel resolusi, melekat pada pencitraan koheren",
+        "Gangguan atmosfer",
+        "Artefak kompresi"
+      ],
+      "answer": 1,
+      "why": "Ia sifat fisikanya, bukan cacat. Tidak ada peningkatan sensor yang menghilangkannya, dan itulah sebabnya filtering adalah tahap pemrosesan wajib, bukan pembersihan opsional."
+    },
+    {
+      "q": "Anda melewatkan konversi digital number PALSAR ke gamma nought. Apa yang terjadi?",
+      "options": [
+        "Skrip memunculkan galat satuan",
+        "Random Forest tetap bekerja tetapi SVM berkinerja buruk, karena SVM menghitung jarak dan band yang belum dikonversi mendominasi",
+        "Semua classifier gagal dengan cara yang sama",
+        "Hanya visualisasinya yang terpengaruh"
+      ],
+      "answer": 1,
+      "why": "Pohon memisah pada ambang batas dan mengabaikan besaran; metode berbasis jarak tidak. Gejala yang berbeda beda inilah yang membuat galat ini sulit dilacak balik ke satu konstanta yang hilang."
+    }
+  ]
+}
+</script>
 
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Berpindahlah antara composite optik dan layer VH di atas tegakan mangrove saat pasang. Temukan tanda tangan pantulan gandanya.
+2. Hapus `.divide(10000)` dari fungsi cloud masking lalu jalankan ulang. Petanya nyaris tidak berubah dan setiap indeksnya salah. Jelaskan mengapa.
+3. Panggil `getAnalysisReadyData` untuk 2019 dan periksa di Console epoch PALSAR mana yang dipilih mekanisme cadangannya.
+4. Composite orbit ascending dan descending Sentinel-1 secara terpisah lalu selisihkan. Lakukan di delta yang datar, lalu di perbukitan terdekat. Di mana selisihnya besar, dan mengapa?

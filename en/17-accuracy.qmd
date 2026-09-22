@@ -29,6 +29,8 @@ The diagonal is agreement. Everything off the diagonal is error, and the off dia
 
 The overall accuracy here is 89 percent, which sounds respectable and tells you almost nothing. What the table actually says is that mangrove and other forest are confusing each other in both directions, 23 one way and 18 the other, while water is essentially solved. Every improvement worth making lives in that one class pair.
 
+![The same matrix read two ways. Producer accuracy runs along the rows, user accuracy down the columns, and the overall figure of 85 percent conceals that mangrove and other forest are confusing each other in both directions.](../images/confusion-matrix.png){#fig-confusion}
+
 ## Three numbers, three different questions
 
 **Overall accuracy** is the proportion of validation points classified correctly. It is a single number describing a multi class problem and it is dominated by whichever class covers the most area. A map that is perfect on water and useless on mangrove can report 88 percent. Quote it, and never stop there.

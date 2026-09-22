@@ -152,6 +152,48 @@ Map.addLayer(composite, visualisation, 'Composite');
 
 Filter, map, reduce, act. Chapter 9 fills that skeleton in completely.
 
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch07-server-side",
+  "questions": [
+    {
+      "q": "What is the difference between ee.Geometry and ee.Feature?",
+      "options": [
+        "Geometry is for points, Feature for polygons",
+        "Geometry is shape alone; Feature is a shape carrying properties, which is what a classifier can learn from",
+        "Feature only works client side",
+        "Geometry is stored server side, Feature in the browser"
+      ],
+      "answer": 1,
+      "why": "This is why Chapter 15 attaches a landcover property to sample points: it turns geometries into features so the classifier has labels to learn from."
+    },
+    {
+      "q": "Why does a for loop over seventy images freeze the browser when .map() does not?",
+      "options": [
+        "Loops use more memory",
+        "Each iteration runs in the browser and waits for a reply in turn, while .map() is one instruction fanned out across many machines at once",
+        ".map() reduces the resolution automatically",
+        "Earth Engine blocks for loops"
+      ],
+      "answer": 1,
+      "why": "The loop is bounded by round trip latency. The map is bounded only by how many machines are free, which is a difference in kind rather than degree."
+    },
+    {
+      "q": "You put print() inside a mapped function to debug it. What happens?",
+      "options": [
+        "The Console fills up but works",
+        "It fails, because print is a client operation and there is no client where the function runs",
+        "Only the first image prints",
+        "It works normally"
+      ],
+      "answer": 1,
+      "why": "Debugging inside a mapped function means returning diagnostic values as properties, then printing the collection afterwards."
+    }
+  ]
+}
+</script>
+
 ## Exercises {.unnumbered}
 
 1. Write a function that adds a band holding the acquisition year of each image, and map it over a collection. Hint: `image.date().get('year')` and `ee.Image.constant()`.

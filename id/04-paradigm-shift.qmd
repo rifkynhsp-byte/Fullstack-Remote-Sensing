@@ -72,6 +72,48 @@ Kejujuran tentang pertukarannya, karena pertukarannya nyata dan muncul di setiap
 
 Semua itu tidak mengubah kesimpulannya. Untuk kelas pertanyaan yang dibahas buku ini, memantau ekosistem pada wilayah luas selama periode panjang, pertukarannya sangat menguntungkan.
 
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch04-paradigm",
+  "questions": [
+    {
+      "q": "Mengapa Earth Engine disebut perubahan jenis, bukan sekadar komputer yang lebih cepat?",
+      "options": [
+        "Prosesornya lebih kuat",
+        "Laptop lebih cepat hanya memperpendek tahap analisis; Earth Engine menghapus tahap unduh dan penyimpanan, dan di situlah waktunya sebenarnya habis",
+        "Antarmukanya lebih baik",
+        "Format penyimpanan datanya lebih efisien"
+      ],
+      "answer": 1,
+      "why": "Pada alur kerja desktop, berbulan bulan habis untuk memindahkan bita, bukan untuk menjawab pertanyaan. Menghapus tahap itu berbeda dari menghitung lebih cepat."
+    },
+    {
+      "q": "Anda menulis sepuluh operasi berantai. Kapan komputasinya benar benar terjadi?",
+      "options": [
+        "Langsung, saat setiap baris dieksekusi",
+        "Saat peta memerlukan ubin, print memerlukan nilai, atau ekspor mulai menulis berkas",
+        "Saat skrip disimpan",
+        "Setelah operasi kesepuluh selesai"
+      ],
+      "answer": 1,
+      "why": "Evaluasi malas. Akibat baiknya, merangkai dua puluh operasi tidak lebih mahal disiapkan daripada satu. Akibat canggungnya, kesalahan di baris 12 muncul sebagai kegagalan di baris 90."
+    },
+    {
+      "q": "Angka luas Anda berubah ketika argumen scale diubah. Apa artinya?",
+      "options": [
+        "Ada bug dalam komputasi",
+        "Scale adalah parameter yang Anda pilih, dan itu keputusan ilmiah yang wajib dilaporkan bersama angkanya",
+        "Citranya tidak konsisten",
+        "Selalu pakai skala paling halus yang tersedia"
+      ],
+      "answer": 1,
+      "why": "41.200 ha pada 10 m dan 39.800 ha pada 100 m sama sama pernyataan yang bisa dipertahankan tentang bentang lahan yang sama. Melaporkan salah satunya tanpa skala tidak bisa."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
 1. Perkirakan volume unduhan untuk proyek Anda yang terakhir: jumlah citra, ukuran rata rata, dan jam yang habis untuk transfer dan pembongkaran. Simpan angkanya. Itu garis dasar yang sedang Anda gantikan.

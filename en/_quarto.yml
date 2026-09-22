@@ -28,6 +28,10 @@ book:
       affiliation: "Geospatial Data Science, Remote Sensing and Environmental Analytics"
   date: today
   date-format: "MMMM YYYY"
+  repo-url: https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing
+  repo-branch: main
+  repo-subdir: en
+  repo-actions: [edit, issue]
   search: true
   reader-mode: true
   page-navigation: true

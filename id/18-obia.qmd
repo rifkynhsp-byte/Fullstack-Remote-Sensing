@@ -2,29 +2,147 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan berhenti mengklasifikasikan piksel dan mulai mengklasifikasikan objek, menghilangkan derau garam merica dan menghasilkan batas yang menyerupai objek yang diwakilinya.
+Anda akan berhenti mengklasifikasikan piksel dan mulai mengklasifikasikan objek, menghilangkan derau garam merica, memperoleh prediktor yang tidak bisa dihasilkan pekerjaan berbasis piksel, lalu menyerahkan poligon vektor yang bisa dibuka perencana di SIG desktop. Anda juga akan mengetahui di mana pendekatan ini justru memperburuk keadaan.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
+## Masalah dengan piksel
+
+Piksel sepuluh meter adalah kotak yang sembarang. Tidak ada apa pun di permukaan bumi yang berbentuk kotak sepuluh meter. Batas batas yang penting, yaitu tegakan mangrove, tambak, blok perkebunan, ada pada skalanya sendiri dan dalam bentuknya sendiri, dan memaksakan grid teratur di atasnya adalah kenyamanan sensornya, bukan sifat bentang lahannya.
+
+Ada dua konsekuensi, dan keduanya alasan bab ini ada.
+
+**Derau garam merica.** Classifier berbasis piksel memutuskan setiap piksel secara terpisah, sehingga satu piksel menyimpang di tengah hutan disebut air dan tetap begitu. Petanya berbintik bintik oleh galat terisolasi yang tidak akan pernah dibuat penafsir manusia, karena manusia memakai konteks.
+
+**Batas yang tidak terpakai.** Memvektorkan klasifikasi berbasis piksel menghasilkan puluhan ribu kotak bergerigi. Tidak ada yang bisa memasukkan itu ke dalam rencana pengelolaan.
+
+::: {.callout-warning}
+## Kesalahan umum: menghaluskan alih alih menyegmentasi
+Respons yang jelas terhadap garam merica adalah filter modal, dan Bab 16 memang memakainya. Ia bekerja, dan ia alat tumpul: ia menghapus derau dan objek kecil yang nyata tanpa membedakan, karena ia memang tidak bisa membedakan keduanya. Filter tiga piksel menghapus satu piksel salah klasifikasi yang terisolasi dan satu petak mangrove asli selebar 20 meter dengan semangat yang sama. Segmentasi menangani sebabnya; penghalusan menangani gejalanya.
 :::
 
-## Rencana bagian
+## Apa yang dilakukan segmentasi
 
-1. **Mengapa klasifikasi berbasis piksel berderau dan mengapa penghalusan bukan solusinya**
-2. **Segmentasi SNIC**: ukuran, kekompakan, konektivitas, jarak benih
-3. **Meringkas nilai spektral dan tekstur per segmen**
-4. **Mengklasifikasikan segmen, bukan piksel, dan akibatnya pada akurasi**
-5. **Vektorisasi hasil dengan reduceToVectors untuk dibawa ke SIG desktop**
-6. **Unit pemetaan minimum dan kapan penghalusan dapat dipertahankan**
-7. **Kapan OBIA gagal**: batas gradasional dan habitat tepi campuran
+Segmentasi mengelompokkan piksel bertetangga yang saling mirip menjadi objek, sebelum klasifikasi apa pun terjadi. Setiap objek lalu digambarkan oleh sifat agregatnya dan diklasifikasikan sebagai satu kesatuan.
+
+Dua hal berubah karenanya.
+
+Unit analisisnya menjadi sesuatu yang menyerupai objek di permukaan. Setiap piksel di dalam satu objek memperoleh kelas yang sama, sehingga galat terisolasi menjadi mustahil menurut konstruksinya.
+
+Dan satu keluarga prediktor baru menjadi tersedia. Piksel punya nilai. Objek punya rata rata, simpangan baku, ukuran, bentuk, dan keliling. Simpangan baku di dalam objek adalah yang menarik: perkebunan seragam punya varians internal rendah, tegakan alami berstruktur rumit punya varians tinggi, dan keduanya bisa punya rata rata yang identik. Itu wawasan yang sama dengan tekstur GLCM di Bab 14, tiba lewat jalan berbeda dan sering kali lebih bersih.
+
+## SNIC, dan tiga parameternya yang sesungguhnya
+
+Simple Non Iterative Clustering menumbuhkan superpiksel keluar dari grid benih yang teratur, menugaskan setiap piksel ke benih yang paling dekat dalam jarak gabungan spektral dan spasial. Ia cepat, deterministik, dan tersedia di Earth Engine, dan itulah sebabnya ia menjadi algoritma segmentasi yang dipakai buku ini.
+
+Tiga parameter mengerjakan tugasnya, dan masing masing keputusan ekologis, bukan keputusan komputasi.
+
+**`size`** mengatur jarak antar benih dalam piksel, dan karenanya perkiraan ukuran objeknya. Pada resolusi 10 meter, size 10 menghasilkan objek berukuran sekitar 100 meter. Inilah parameter yang paling perlu dipikirkan, karena menyetelnya lebih besar daripada objek yang Anda petakan membuat objek itu lenyap di dalam objek yang lebih besar. Di atas jalur mangrove yang sempit, kecil lebih aman daripada efisien.
+
+**`compactness`** mengatur seberapa kuat algoritma mengutamakan bentuk teratur ketimbang mengikuti batas spektral. Nol membiarkan objek mengambil bentuk apa pun yang ditentukan citranya, dan itu benar ketika batasnya nyata dan tidak beraturan, seperti garis pantai. Nilai lebih tinggi menghasilkan objek yang lebih rapi dan lebih kotak, yang cocok untuk petak pertanian dan sama sekali tidak cocok untuk delta.
+
+**`connectivity`** bernilai 4 atau 8. Delapan memperbolehkan sambungan diagonal, sehingga objek bisa mengikuti objek sempit yang menyerong seperti alur pasang surut. Empat lebih ketat dan menghasilkan bentuk yang lebih kaku.
+
+::: {.callout-tip}
+## Dari lapangan
+Atur `neighborhoodSize` lebih besar daripada `size`, biasanya beberapa kali lipat. Earth Engine memproses dalam ubin, dan kalau ketetanggaannya terlalu kecil, objek terpotong di batas ubin dan Anda melihat pola grid teratur di keluaran yang sama sekali tidak ada hubungannya dengan bentang lahannya. Perbaikannya mudah dan gejalanya membingungkan.
+:::
 
 ## Alur kerja lengkap
 
 {{< include _snippets/ch18_obia_snic.qmd >}}
 
+## Di mana OBIA menang, dan di mana ia memperburuk keadaan
+
+Ini bagian yang jujur, dan bagian yang absen dari sebagian besar pembahasan, yang menyajikan segmentasi seolah peningkatan yang lurus tanpa syarat.
+
+**Ia menang telak di bentang lahan yang objeknya memang diskret.** Petak pertanian, tambak, blok perkebunan, persil perkotaan. Semua itu memang objek di permukaan, sehingga menjadikannya objek di dalam analisis menyelaraskan metodenya dengan kenyataannya. Akurasi biasanya meningkat dan mutu kartografisnya meningkat drastis.
+
+**Ia bisa kalah di bentang lahan yang batasnya gradasional.** Peralihan dari mangrove ke hutan dataran melintasi gradien elevasi memang sebuah gradien, bukan sebuah garis. Segmentasi memaksakan batas tegas di suatu tempat di dalamnya, lalu mengikat setiap piksel di dalam objek yang melintangi peralihan itu pada satu jawaban. Classifier berbasis piksel setidaknya menurun secara anggun melintasi peralihan itu, menghasilkan zona campuran yang secara jujur mewakili zona yang memang tidak pasti.
+
+Aturan praktisnya: tanyakan apakah objek yang Anda petakan punya tepi. Kalau punya, segmentasi. Kalau ia memudar, hati hati, dan periksa akurasi per kelas alih alih angka keseluruhan, karena kerugiannya akan terkonsentrasi persis di kelas peralihan yang Anda pedulikan.
+
+::: {.callout-important}
+## Integritas ilmiah: unit pemetaan minimum wajib masuk metadata
+Menyaring poligon di bawah suatu ambang adalah praktik kartografis yang baku dan ia mengubah angka luas Anda. Unit pemetaan minimum 0,5 hektar menghapus setiap jalur tepi yang lebarnya kurang dari beberapa piksel, dan di atas delta itu bisa berarti bagian besar dari luas mangrovenya.
+
+Sebutkan unit pemetaan minimumnya bersama skala dan selang kepercayaan dari Bab 17. Dua peta atas garis pantai yang sama yang melaporkan luas berbeda kadang berbeda hanya karena hal ini.
+:::
+
+## Vektor sebagai produk yang sebenarnya diserahkan
+
+Ada satu argumen praktis untuk OBIA yang sama sekali tidak berkaitan dengan akurasi.
+
+Batas objek tervektorkan menjadi poligon yang bersih. Perencana kabupaten bisa membukanya di QGIS, menyuntingnya, menempelkan atribut, menghitung luas per desa, lalu memasukkan hasilnya ke laporan. Itulah bentuk yang biasanya harus dicapai pekerjaan geospasial supaya bisa ditindaklanjuti, dan perlu diingat bahwa Bab 1 mendefinisikan seluruh tujuan latihan ini sebagai menginformasikan sebuah keputusan.
+
+Klasifikasi berbasis piksel tervektorkan menjadi kekacauan. Kalau yang diserahkan adalah shapefile yang akan dikerjakan orang lain, segmentasi sudah membuktikan kelayakannya atas dasar itu saja, bahkan di bentang lahan yang peningkatan akurasinya nol.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch18-obia",
+  "questions": [
+    {
+      "q": "Mengapa segmentasi merupakan respons yang lebih baik terhadap derau garam merica dibanding filter modal?",
+      "options": [
+        "Ia berjalan lebih cepat",
+        "Ia menangani sebabnya, bukan gejalanya, sedangkan filter menghapus objek kecil yang nyata dan derau tanpa membedakan",
+        "Filter modal sudah tidak didukung Earth Engine",
+        "Segmentasi menghasilkan akurasi keseluruhan lebih tinggi di setiap bentang lahan"
+      ],
+      "answer": 1,
+      "why": "Filter tiga piksel tidak bisa membedakan satu piksel salah klasifikasi yang terisolasi dari satu petak asli selebar 20 meter, dan menghapus keduanya. Segmentasi membuat galat terisolasi mustahil menurut konstruksinya."
+    },
+    {
+      "q": "Anda menyegmentasi garis pantai delta. Nilai compactness berapa yang tepat dan mengapa?",
+      "options": [
+        "Tinggi, karena objek yang rapi lebih mudah ditafsirkan",
+        "Nol, karena batasnya nyata dan tidak beraturan sehingga objek sebaiknya mengikutinya",
+        "Tidak berpengaruh pada garis pantai",
+        "Compactness hanya memengaruhi kecepatan pemrosesan"
+      ],
+      "answer": 1,
+      "why": "Compactness tinggi cocok untuk petak pertanian, yang memang teratur. Memaksakan keteraturan pada garis pantai berarti mengada adakan batas yang tidak dimiliki bentang lahannya."
+    },
+    {
+      "q": "Prediktor baru apa yang disediakan analisis berbasis objek dan tidak bisa dihasilkan analisis berbasis piksel?",
+      "options": [
+        "NDVI",
+        "Elevasi",
+        "Simpangan baku di dalam objek, yang memisahkan perkebunan seragam dari hutan alam berstruktur rumit dengan rata rata yang sama",
+        "Backscatter radar"
+      ],
+      "answer": 2,
+      "why": "Piksel punya nilai; objek punya sebaran. Varians internal mencapai wawasan yang sama dengan tekstur GLCM lewat jalan yang berbeda dan sering lebih bersih."
+    },
+    {
+      "q": "Dalam situasi apa OBIA bisa berkinerja LEBIH BURUK daripada klasifikasi berbasis piksel?",
+      "options": [
+        "Di atas petak pertanian",
+        "Di atas tambak",
+        "Melintasi peralihan gradasional mangrove ke hutan dataran, tempat batas tegas dipaksakan pada sebuah gradien",
+        "Di atas persil perkotaan"
+      ],
+      "answer": 2,
+      "why": "Segmentasi mengikat setiap piksel di dalam objek yang melintangi peralihan pada satu jawaban. Classifier piksel menurun secara anggun dan menghasilkan zona campuran yang jujur mewakili zona yang tidak pasti."
+    },
+    {
+      "q": "Keluaran SNIC Anda menunjukkan pola grid teratur yang tidak berkaitan dengan bentang lahannya. Apa penyebabnya?",
+      "options": [
+        "Jarak grid benihnya terlalu kecil",
+        "neighborhoodSize tidak cukup besar dibanding size, sehingga objek terpotong di batas ubin pemrosesan",
+        "Band masukannya berkorelasi",
+        "Connectivity diatur ke 8"
+      ],
+      "answer": 1,
+      "why": "Perbaikannya mudah dan gejalanya membingungkan. Atur neighborhoodSize beberapa kali lebih besar daripada size dan artefak ubinnya hilang."
+    }
+  ]
+}
+</script>
+
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Jalankan SNIC pada size 5, 10, dan 25. Temukan ukuran saat jalur mangrove yang sempit berhenti menjadi objeknya sendiri lalu terserap ke dalam air.
+2. Atur compactness ke 5 lalu bandingkan garis pantainya dengan compactness 0. Jelaskan dalam satu kalimat mengapa compactness cocok untuk lahan pertanian dan tidak untuk delta.
+3. Bandingkan akurasi objek dan piksel per kelas, bukan hanya keseluruhan. Kelas mana yang naik dan mana yang turun, dan apakah itu sesuai dengan argumen batas gradasional di atas?
+4. Naikkan unit pemetaan minimum menjadi 2 hektar lalu laporkan berapa luas mangrove yang lenyap. Angka itu wajib ada di metadata Anda.
+5. Ekspor shapefile berbasis piksel dan berbasis objek lalu buka keduanya di QGIS. Hitung jumlah poligon masing masing. Rasio itu adalah argumen praktis bab ini.

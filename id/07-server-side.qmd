@@ -2,24 +2,190 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Lima tipe objek yang menyusun setiap skrip Earth Engine, dan teknik terpenting di platform ini: memetakan fungsi ke koleksi alih alih melakukan perulangan.
+Lima tipe objek yang menyusun setiap skrip Earth Engine, dan teknik terpenting di platform ini: memetakan fungsi ke sebuah koleksi alih alih melakukan perulangan.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
+## Lima wadah
+
+Segala sesuatu di Earth Engine adalah salah satu dari lima hal. Memahami apa yang disimpan masing masing, dan metode apa yang diterimanya, mengubah sebagian besar API dari sesuatu yang dihafal menjadi sesuatu yang bisa disimpulkan.
+
+| Objek | Isinya | Analogi sehari hari |
+|---|---|---|
+| `ee.Image` | Raster dengan satu band atau lebih | Satu foto |
+| `ee.ImageCollection` | Tumpukan citra yang berurut | Album foto berseri |
+| `ee.Geometry` | Bentuk murni: titik, garis, poligon | Garis pensil di kertas kalkir |
+| `ee.Feature` | Geometri beserta atributnya | Garis itu dengan label menempel |
+| `ee.FeatureCollection` | Banyak feature | Tabel atribut berikut bentuknya |
+
+: Sistem tipe Earth Engine, lengkap {.striped}
+
+Perbedaan antara `ee.Geometry` dan `ee.Feature` layak dijeda sebentar, karena inilah sumber kebingungan yang berulang. Geometry hanya bentuk. Feature adalah bentuk yang membawa properti, dan properti itulah yang memungkinkan sebuah poligon data latih menyatakan "area ini mangrove". Ketika Bab 15 memberikan properti `landcover` pada titik sampel, yang sebenarnya terjadi adalah mengubah geometry menjadi feature supaya classifier punya sesuatu untuk dipelajari.
+
+## Band, dan kenapa namanya begitu penting
+
+`ee.Image` bukan gambar. Ia tumpukan grid numerik yang saling teregistrasi, disebut band, dan tiap band memuat pengukuran berbeda atas permukaan yang sama.
+
+Satu citra Sentinel-2 membawa tiga belas band spektral ditambah layer kualitas. Citra satu band seperti SRTM membawa satu. Keluaran klasifikasi membawa satu, biasanya bernama `classification`. Komposit yang Anda susun sendiri bisa membawa dua puluh lima: band reflektansi asli, beberapa indeks, backscatter radar, elevasi, slope, dan ukuran tekstur.
+
+Pilih band berdasarkan nama, jangan berdasarkan posisi:
+
+```javascript
+var nearInfrared = image.select('B8');            // satu band
+var visible = image.select(['B4', 'B3', 'B2']);   // tiga, dalam urutan itu
+var allSpectral = image.select('B.*');            // ekspresi reguler
+```
+
+::: {.callout-warning}
+## Kesalahan umum: nama band berubah diam diam
+Operasi mengubah nama band, dan nama barunya tidak selalu seperti dugaan.
+`normalizedDifference()` menghasilkan band bernama `nd` kecuali Anda memanggil `.rename()`.
+`reduce(ee.Reducer.median())` menambahkan akhiran `_median` pada setiap nama band, sedangkan bentuk singkat `.median()` membiarkan namanya utuh. Mencampur kedua bentuk itu dalam satu skrip menghasilkan layer yang menolak digambar, dengan galat yang menyebut band yang Anda yakin sudah dibuat. Kalau itu terjadi, jalankan `print(image.bandNames())` lebih dulu.
 :::
 
-## Rencana bagian
+## Kenapa perulangan `for` gagal di sini
 
-1. **ee.Image, ee.ImageCollection, ee.Geometry, ee.Feature, ee.FeatureCollection**
-2. **Band dan mengapa namanya berubah diam diam**
-3. **Mengapa perulangan for gagal, dan apa yang dilakukan .map() sebagai gantinya**
-4. **Aturan fungsi yang dapat dipetakan**
-5. **Reducer sepanjang waktu, ruang dan band**
-6. **Kerangka baku**: filter, map, reduce, act
+Inilah teknik inti platform ini, dan titik di mana pemrogram berpengalaman paling sering keliru.
+
+Bayangkan menambahkan NDVI ke setiap citra dalam satu tahun data Sentinel-2, katakanlah tujuh puluh citra. Naluri dari pemrograman biasa adalah perulangan.
+
+```javascript
+// Jangan lakukan ini.
+var imageList = collection.toList(collection.size());
+var results = [];
+for (var i = 0; i < 70; i++) {
+  var image = ee.Image(imageList.get(i));
+  results.push(addNdvi(image));
+}
+```
+
+Setiap iterasi perulangan itu berjalan di peramban Anda. Masing masing mengirim permintaan terpisah, menunggu balasan, baru melanjutkan. Tujuh puluh perjalanan berurutan sudah lambat, dan pada koleksi nyata berisi beberapa ribu citra peramban berhenti merespons sama sekali. Lebih buruk lagi, `collection.size()` adalah nilai server, sehingga batas perulangannya harus ditarik ke klien dengan `getInfo()`, yang memblokir semuanya sampai ia kembali.
+
+Padanan sisi servernya satu baris.
+
+```javascript
+var results = collection.map(addNdvi);
+```
+
+Baris itu menyatakan maksud yang sama sebagai satu instruksi. Perencana Google menyebarkannya ke sebanyak mungkin mesin yang dibutuhkan, dan mesin mesin itu berjalan bersamaan, bukan bergantian. Tidak ada apa pun yang kembali ke peramban Anda sampai Anda meminta hasilnya.
+
+### Aturan fungsi yang bisa dipetakan
+
+Fungsi yang diserahkan ke `.map()` berjalan di server, dan itu memberi tiga batasan.
+
+Fungsi harus menerima tepat satu argumen dan mengembalikan tepat satu objek dengan tipe yang sama dengan yang diterimanya. Citra masuk, citra keluar.
+
+Fungsi tidak boleh memakai `print()`, `Map.addLayer()`, atau `getInfo()`. Semua itu operasi klien, dan tidak ada klien di tempat fungsi itu berjalan. Ini sering mengejutkan: men-debug di dalam fungsi yang dipetakan berarti mengembalikan nilai diagnostik sebagai properti, lalu mencetak koleksinya setelah itu.
+
+Fungsi tidak boleh memakai pernyataan `if` JavaScript pada nilai server. Pakai `ee.Algorithms.If()`, atau susun ulang agar percabangannya tidak diperlukan, yang biasanya bisa dan biasanya lebih bersih.
+
+## Reducer: meringkas tumpukan
+
+`.map()` mengubah koleksi menjadi koleksi lain dengan panjang yang sama. **Reducer** meringkas banyak nilai menjadi lebih sedikit, dan ia bekerja pada sumbu mana pun yang Anda tunjuk.
+
+Sepanjang **waktu**, reducer mengubah tumpukan citra menjadi satu citra. Inilah compositing, dan Bab 9 memakainya secara intensif.
+
+```javascript
+var annual = collection.median();       // satu citra, median per piksel
+```
+
+Sepanjang **ruang**, reducer mengubah citra menjadi statistik atas sebuah wilayah.
+
+```javascript
+var meanNdvi = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: studyArea,
+  scale: 10,           // meter. Pilihan ilmiah, bukan pengaturan kecepatan.
+  maxPixels: 1e9       // naikkan batas amannya untuk wilayah luas
+});
+```
+
+Sepanjang **band**, reducer menggabungkan beberapa pengukuran pada satu lokasi, dan begitulah cara kerja voting ansambel di Bab 16.
+
+::: {.callout-important}
+## Integritas ilmiah: `scale` adalah keputusan analisis
+`reduceRegion` mewajibkan `scale`, dan angka yang Anda berikan mengubah jawabannya. Menghitung luas mangrove pada 10 meter menangkap jalur sempit di tepi yang hilang pada 100 meter. Tidak ada satu pun dari keduanya yang salah. Pilih skala yang sesuai dengan ukuran objek yang Anda laporkan, nyatakan skalanya, dan pakai secara konsisten di setiap tahun dalam deret waktu Anda. Perubahan skala antar tahun akan muncul sebagai perubahan yang seolah terjadi di lapangan.
+:::
+
+## Menyatukan semuanya
+
+Hampir setiap alur kerja dalam buku ini punya kerangka yang sama, dan mengenali kerangka itu membuat skrip baru jauh lebih mudah dibaca.
+
+```javascript
+// 1. Tentukan di mana dan kapan.
+var aoi = ee.Geometry.Point([117.58, -0.84]);
+
+// 2. Saring koleksi sampai tersisa yang relevan.
+var collection = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+  .filterBounds(aoi)
+  .filterDate('2023-01-01', '2023-12-31');
+
+// 3. Petakan fungsi per citra ke seluruh koleksi.
+var processed = collection.map(maskCloudsAndAddIndices);
+
+// 4. Ringkas tumpukannya menjadi satu citra siap analisis.
+var composite = processed.median().clip(aoi);
+
+// 5. Lakukan sesuatu dengan hasilnya: klasifikasi, grafik, atau ekspor.
+Map.addLayer(composite, visualisation, 'Komposit');
+```
+
+Filter, map, reduce, act. Bab 9 mengisi kerangka itu sampai penuh.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch07-server-side",
+  "questions": [
+    {
+      "q": "Apa perbedaan mendasar antara ee.Geometry dan ee.Feature?",
+      "options": [
+        "Geometry untuk titik, Feature untuk poligon",
+        "Geometry hanya bentuk; Feature adalah bentuk yang membawa properti, dan properti itulah yang bisa dipelajari classifier",
+        "Feature hanya bisa dipakai di sisi klien",
+        "Geometry disimpan di server, Feature di peramban"
+      ],
+      "answer": 1,
+      "why": "Inilah sebabnya Bab 15 memberi properti landcover pada titik sampel: langkah itu mengubah geometry menjadi feature agar classifier punya label untuk dipelajari."
+    },
+    {
+      "q": "Kenapa perulangan for di atas tujuh puluh citra membekukan peramban, sementara .map() tidak?",
+      "options": [
+        "Perulangan for memakai lebih banyak memori",
+        "Setiap iterasi berjalan di peramban dan menunggu balasan satu per satu, sedangkan .map() adalah satu instruksi yang disebar ke banyak mesin sekaligus",
+        ".map() otomatis memperkecil resolusinya",
+        "Earth Engine memblokir perulangan for"
+      ],
+      "answer": 1,
+      "why": "Perulangan dibatasi latensi bolak balik jaringan. .map() hanya dibatasi berapa banyak mesin yang tersedia, dan itu perbedaan yang sifatnya bukan sekadar derajat."
+    },
+    {
+      "q": "Anda ingin men-debug fungsi yang sedang dipetakan dan menaruh print() di dalamnya. Apa yang terjadi?",
+      "options": [
+        "Console akan penuh tetapi tetap berfungsi",
+        "Gagal, karena print adalah operasi klien dan tidak ada klien di tempat fungsi itu berjalan",
+        "Hanya citra pertama yang tercetak",
+        "Berfungsi normal"
+      ],
+      "answer": 1,
+      "why": "Cara men-debug di dalam fungsi yang dipetakan adalah mengembalikan nilai diagnostik sebagai properti, lalu mencetak koleksinya setelah pemetaan selesai."
+    },
+    {
+      "q": "Luas mangrove yang dihitung pada scale 10 meter berbeda dari yang dihitung pada 100 meter. Mana yang benar?",
+      "options": [
+        "Yang 10 meter, karena lebih rinci",
+        "Yang 100 meter, karena lebih stabil",
+        "Keduanya, dan skalanya wajib disebutkan bersama angkanya",
+        "Tidak ada, perhitungannya harus diulang"
+      ],
+      "answer": 2,
+      "why": "Skala adalah parameter yang Anda pilih, dan ia bagian dari hasilnya. Melaporkan luas tanpa menyebut skala membuat angkanya tidak bisa dipakai orang lain."
+    }
+  ]
+}
+</script>
 
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Tulis fungsi yang menambahkan band berisi tahun perekaman setiap citra, lalu petakan ke sebuah koleksi. Petunjuk: `image.date().get('year')` dan `ee.Image.constant()`.
+2. Ambil perulangan di atas dan tulis ulang dengan `.map()`. Ukur keduanya kalau Anda cukup sabar, dan catat di titik mana perulangan berhenti sekadar lambat dan mulai tidak bisa dipakai.
+3. Hitung elevasi rata rata area studi Anda pada 30 meter dan pada 300 meter. Jelaskan selisihnya dalam satu kalimat.
+4. Tulis fungsi yang dipetakan tanpa pernyataan `return`, dengan sengaja, lalu baca galatnya. Galat itu tidak jelas, dan sekali mengenalinya sudah sepadan dengan latihan ini.

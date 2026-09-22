@@ -2,24 +2,149 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan mengambil data elevasi global, menurunkan lereng dan aspek, serta memakai mikrotopografi untuk memisahkan lahan basah pasang surut dari hutan dataran sebelum klasifikator melihat pikselnya.
+Anda akan menambahkan peningkatan akurasi termurah yang tersedia di buku ini. Elevasi itu gratis, global, sudah ada di katalog, dan ia memperbaiki kegagalan spesifik yang selama ini membatasi pemetaan mangrove: hutan di lereng bukit yang terklasifikasi sebagai hutan di zona pasang surut.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
+## Galat yang menjadi alasan bab ini ada
+
+Klasifikasi mangrove yang dilatih hanya dengan data spektral akan, dengan sangat konsisten, menempatkan mangrove di lereng bukit dua puluh meter di atas garis pasang.
+
+Itu bukan bug pada classifier-nya. Mangrove dan hutan berdaun lebar dataran punya tanda tangan spektral yang nyaris identik, jadi dari reflektansi saja classifier sedang mengambil keputusan yang bisa dipertanggungjawabkan. Yang memisahkan keduanya bukan terbuat dari apa mereka, melainkan **di mana mereka bisa berada**: mangrove menempati sabuk pasang surut, beberapa meter di atas muka laut, dan tidak ada ciri lain yang sekonsisten itu.
+
+Elevasi mengodekan aturan tersebut dalam bentuk yang bisa dipelajari model. Menambahkannya cuma beberapa baris dan ia menghapus satu kelas galat sekaligus.
+
+## Memilih DEM
+
+| Dataset | Resolusi | Perekaman | Catatan |
+|---|---|---|---|
+| `CGIAR/SRTM90_V4` | 90 m | 2000 | Pilihan lama, masih memadai bila kerincian tidak kritis |
+| `USGS/SRTMGL1_003` | 30 m | 2000 | Perekaman sama, produk lebih halus |
+| `JAXA/ALOS/AW3D30/V2_2` | 30 m | 2006 sampai 2011 | Akurasi vertikal lebih baik di sebagian besar Asia. Pilihan baku buku ini |
+| `COPERNICUS/DEM/GLO30` | 30 m | 2011 sampai 2015 | Paling mutakhir dan bermutu tinggi, dengan beberapa celah liputan |
+
+Usianya baru penting kalau topografi Anda berubah. Garis pantai dan gunung api berubah; sebagian besar relief pedalaman tidak.
+
+## Jebakan yang menjerat hampir semua orang
+
+Setiap produk global dalam tabel itu adalah digital **surface** model, bukan digital **terrain** model. Ia merekam puncak dari apa pun yang ada di sana: tajuk, atap, permukaan laut. Bukan permukaan tanahnya.
+
+Di atas tegakan mangrove setinggi 25 meter, surface model melaporkan sekitar 25 meter.
+
+![Setiap DEM global merekam puncak tajuk. Aturan naif "mangrove ada di bawah 10 meter" karena itu justru mengecualikan tegakan paling tinggi, yang merupakan tegakan dengan biomassa dan karbon terbesar.](../images/dsm-vs-dtm.png){#fig-dsm}
+
+@fig-dsm menunjukkan akibatnya dalam satu penampang. Tegakan mangrove dewasa terbaca 26 meter dan gugur oleh ambang batas. Tegakan muda hasil regenerasi terbaca 8 meter dan lolos. Hasil akhirnya adalah peta yang menemukan regenerasi muda dengan sempurna dan melewatkan hutan dewasa, dan itu hal terburuk yang bisa hilang dari penilaian blue carbon.
+
+::: {.callout-warning}
+## Kesalahan umum: memberi ambang batas pada surface model seolah ia terrain model
+Gejalanya aneh dan mudah salah dibaca: peta Anda menemukan mangrove muda yang pendek dengan sempurna dan melewatkan tegakan dewasa. Terlihat seperti masalah spektral pada tajuk rapat. Sebenarnya masalah ketinggian pada surface model.
 :::
 
-## Rencana bagian
+Ada tiga cara menanganinya, berurut dari yang paling disukai.
 
-1. **Pilihan DEM global**: SRTM, ALOS AW3D30, Copernicus GLO-30
-2. **Model permukaan versus model medan**: kontaminasi tinggi tajuk
-3. **Menurunkan lereng, aspek dan hillshade dengan ee.Terrain**
-4. **Elevasi sebagai kendala klasifikasi**: sabuk pasang surut mangrove
-5. **Akumulasi aliran dan jaringan drainase**
-6. **Koreksi topografi pada medan curam**
+**Jangan beri ambang batas sama sekali.** Serahkan elevasi ke classifier sebagai satu prediktor di antara prediktor lain dan biarkan ia mempelajari hubungannya, termasuk offset tajuknya. Inilah yang dilakukan feature stack Bab 10 dan biasanya inilah jawaban yang benar, karena model bisa menimbang elevasi terhadap bukti spektral alih alih dikalahkan oleh angka batas yang Anda pilih sendiri.
+
+**Beri ambang batas yang longgar.** Kalau memang perlu aturan, pakai 40 meter, bukan 10. Yang Anda kecualikan lalu adalah hutan lereng, dan itu memang tujuannya, alih alih berusaha mengisolasi zona pasang surut secara presisi, yang tidak bisa ditopang surface model.
+
+**Kurangkan tinggi tajuk.** Produk ETH Global Canopy Height memberi estimasi 10 meter yang bisa diselisihkan dari surface model. Paling benar secara prinsip, paling rapuh dalam praktik, karena dua anggaran galat kini bergabung dan tidak ada yang kecil.
+
+## Slope bekerja lebih keras dari dugaan
+
+Slope ternyata pemisah yang lebih kuat daripada elevasi, dan alasannya sama sekali tidak berkaitan dengan vegetasi.
+
+Hamparan pasang surut itu datar menurut definisinya. Ia permukaan pengendapan, dibentuk sedimen yang mengendap dari air yang bergerak lambat. Hutan daratan berada di lereng.
+
+Lebih baik lagi, slope sebagian besar kebal terhadap masalah surface model. Offset tajuk kira kira konstan di sepanjang satu tegakan, dan menurunkan sebuah permukaan menghilangkan konstanta. Tajuk yang duduk 25 meter di atas hamparan lumpur yang datar tetap datar.
+
+## Jarak ke air
+
+Elevasi menyatakan seberapa tinggi. Ia tidak menyatakan seberapa terhubung, dan mangrove didefinisikan oleh keterhubungan pasang surut, bukan oleh ketinggian semata. Petak rendah dan datar lima puluh kilometer ke pedalaman adalah rawa air tawar, dan itu bukan mangrove.
+
+`fastDistanceTransform` memberi permukaan jarak ke air dengan murah. Bangun mask airnya dari layer occurrence JRC Global Surface Water, atau dari composite Anda sendiri kalau tahunnya penting.
+
+Ketiga syarat itu bersama sama mendefinisikan sebuah **envelope**: rendah, datar, dan dekat air. Itu bukan klasifikasi. Itu pernyataan tentang di mana mangrove *bisa* berada, yang kemudian dipakai classifier untuk memutuskan di mana mangrove *memang* berada.
+
+## Alur kerja lengkap
+
+{{< include _snippets/ch11_terrain.qmd >}}
+
+## Kendala atau prediktor
+
+Ada dua cara memakai envelope itu, dan bedanya lebih dari sekadar gaya.
+
+**Sebagai mask, diterapkan setelah klasifikasi.** Apa pun di luar envelope diubah menjadi bukan mangrove. Kasar, efektif, dan ia mengunci pilihan ambang batas Anda ke dalam hasil akhirnya. Kalau envelope-nya keliru di suatu tempat, petanya keliru di situ dan tidak ada bukti apa pun yang bisa membatalkannya.
+
+**Sebagai band prediktor di dalam stack.** Elevasi, slope, dan jarak ke air masuk berdampingan dengan reflektansi, lalu model mempelajari berapa besar bobot yang pantas untuk masing masing. Kalau bukti spektral untuk mangrove sangat kuat pada 45 meter, model masih bisa mengatakan mangrove, dan pada kasus langka semacam itu ia akan benar.
+
+Pilih yang kedua. Pakai yang pertama hanya kalau Anda punya alasan spesifik yang bisa dipertahankan, dan catat alasannya di bagian metode.
+
+::: {.callout-tip}
+## Dari lapangan
+Cetak nilai minimum, maksimum, dan rata rata elevasi di area studi Anda sebelum mengerjakan apa pun. Kalau minimum di area pesisir kembali sebesar 40 meter, batas wilayah Anda sebenarnya tidak menyentuh pantai, dan setiap kesimpulan setelah titik itu berbicara tentang tempat yang keliru. Ini pernah terjadi pada lebih banyak proyek daripada yang mau diakui orang.
+:::
+
+## Koreksi topografi, dan kapan perlu repot
+
+Di medan curam, lereng yang menghadap matahari lebih terang daripada lereng yang membelakanginya, dan hutan yang sama memperoleh dua tanda tangan reflektansi berbeda tergantung arah bukitnya. Koreksi topografi, biasanya koreksi C atau metode SCS+C, menormalkan hal itu memakai slope dan aspect.
+
+Di atas delta koreksi itu tidak perlu dan justru menambah derau. Di medan pegunungan dengan lereng melampaui sekitar 15 derajat ia menjadi wajib, karena tanpanya classifier mempelajari arah lereng, bukan tutupan lahan.
+
+Ujinya empiris dan jujur: petakan aspect, petakan klasifikasi Anda, lalu cari kelas yang mengikuti arah mata angin. Kalau klasifikasi Anda berubah secara sistematis antara lereng utara dan lereng selatan, yang Anda punya adalah artefak pencahayaan, bukan pola ekologis.
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch11-terrain",
+  "questions": [
+    {
+      "q": "Peta mangrove Anda menemukan tegakan muda dengan sempurna dan melewatkan yang dewasa. Apa penyebab paling mungkin?",
+      "options": [
+        "Tajuk rapat membuat NDVI jenuh",
+        "Anda memberi ambang batas pada digital surface model seolah ia terrain model, sehingga tegakan tinggi melaporkan tinggi tajuk dan gugur oleh batas elevasi",
+        "Cloud masking menghapus tegakan dewasa",
+        "Data latihnya tidak memuat contoh tegakan dewasa"
+      ],
+      "answer": 1,
+      "why": "Surface model di atas tegakan 25 m melaporkan sekitar 25 m. Ambang batas 10 m karena itu justru mengecualikan tegakan berbiomassa tertinggi, dan itu hal terburuk yang bisa hilang dari penilaian karbon."
+    },
+    {
+      "q": "Mengapa slope kurang terpengaruh masalah surface model dibanding elevasi?",
+      "options": [
+        "Slope dihitung pada resolusi lebih kasar",
+        "Offset tajuk kira kira konstan di sepanjang tegakan, dan menurunkan permukaan menghilangkan konstanta",
+        "Slope berasal dari dataset berbeda",
+        "Slope diukur dalam derajat, bukan meter"
+      ],
+      "answer": 1,
+      "why": "Tajuk yang duduk 25 m di atas hamparan lumpur datar tetap datar. Itulah sebabnya slope sering mengungguli elevasi sebagai pemisah meski informasinya tampak lebih sedikit."
+    },
+    {
+      "q": "Mengapa menambahkan jarak ke air padahal sudah ada elevasi?",
+      "options": [
+        "Untuk memperbaiki visualisasinya",
+        "Mangrove didefinisikan oleh keterhubungan pasang surut, jadi petak rendah dan datar lima puluh kilometer ke pedalaman adalah rawa air tawar, bukan mangrove",
+        "Elevasi tidak andal di dekat garis pantai",
+        "Untuk mengompensasi tutupan awan"
+      ],
+      "answer": 1,
+      "why": "Rendah dan datar itu perlu tetapi tidak cukup. Keterhubungan dengan air pasang adalah syarat yang mendefinisikan, dan jarak ke air adalah proksi termurahnya."
+    },
+    {
+      "q": "Envelope pasang surut sebaiknya dipakai sebagai mask atau sebagai band prediktor?",
+      "options": [
+        "Sebagai mask, karena itu menjamin tidak ada mangrove di luar zona pasang surut",
+        "Sebagai band prediktor, agar model bisa menimbang elevasi terhadap bukti spektral alih alih dikalahkan ambang batas pilihan Anda",
+        "Keduanya sama saja hasilnya",
+        "Mask untuk pelatihan, prediktor untuk prediksi"
+      ],
+      "answer": 1,
+      "why": "Mask mengunci ambang batas Anda ke dalam keluaran, sehingga di mana pun envelope-nya keliru petanya ikut keliru dan tidak ada bukti yang bisa membatalkannya."
+    }
+  ]
+}
+</script>
 
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Pakai Inspector pada tegakan mangrove yang tinggi. Bandingkan elevasi yang dilaporkan dengan tinggi tanah yang Anda perkirakan. Selisih itu adalah offset tajuknya.
+2. Ketatkan envelope menjadi di bawah 10 meter lalu petakan apa yang dikecualikannya. Apakah area itu benar benar bukan mangrove?
+3. Ganti elevasi dengan estimasi hasil pengurangan tajuk lalu bandingkan. Apakah pengurangannya menambah derau lebih banyak daripada yang dihilangkannya?
+4. Petakan aspect di bagian berbukit area studi Anda berdampingan dengan klasifikasinya. Adakah kelas yang mengikuti arah mata angin?

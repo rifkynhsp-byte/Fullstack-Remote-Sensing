@@ -2,28 +2,164 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will build the standard index library from first principles, understand when each one fails, and write your own with ee.Image.expression.
+You will build the standard index library from first principles rather than copying formulas, learn where each one stops working, and write your own with `ee.Image.expression`. An index you cannot explain is an index you cannot debug.
 :::
+
+## One expression, most of the field
+
+Nearly every index in remote sensing is a variation on a single form:
+
+$$\frac{A - B}{A + B}$$
+
+Two properties explain why it dominates.
+
+It is **bounded** between -1 and 1 whatever the input magnitude, so values are comparable across images, sensors and dates without further calibration.
+
+And it **cancels multiplicative effects**. If a hillside sits in partial shade, every band is scaled down by roughly the same factor. That factor appears in both numerator and denominator and divides out. A ratio is therefore far more stable across illumination conditions than any single band.
+
+What it does not cancel is an **additive** effect. Atmospheric path radiance adds to every band, unequally, and no ratio removes it. This is the concrete reason Chapter 8 insisted on surface reflectance rather than top of atmosphere: the correction has to happen before the index, because the index cannot undo it.
+
+## The vegetation indices
+
+**NDVI**, $(NIR - Red)/(NIR + Red)$, follows directly from the physics in Chapter 2. Chlorophyll absorbs red; leaf mesophyll scatters near infrared. Dense healthy canopy has a large gap between the two.
+
+Its failure mode matters more than its formula. Once leaf area index passes roughly 3, additional leaves stop increasing near infrared reflectance appreciably, and NDVI flattens near 0.8 to 0.9. This is **saturation**, and tropical forest lives permanently inside it.
+
+The practical consequence: NDVI distinguishes forest from not forest very well, and distinguishes degraded forest from intact forest hardly at all. If your question is about forest condition rather than forest extent, NDVI alone will not answer it, and no amount of better classification will rescue it.
+
+**EVI** keeps responding where NDVI has saturated. Three additions do the work: a blue term correcting residual atmospheric scattering, a soil adjustment in the denominator reducing background influence, and a gain rescaling the output. The coefficients are the standard MODIS values, empirical rather than derived. Keep them unless you have a specific reason and a citation.
+
+**SAVI** adds a soil brightness correction $L$. At $L = 0.5$ it suits intermediate cover; $L = 1$ suits sparse cover, $L = 0.25$ dense. At $L = 0$ it reduces exactly to NDVI, which is a useful check that you understand what the parameter does. It matters on the landward fringe and over young replanted stands, where bright mud between crowns inflates NDVI.
+
+![NDVI plateaus above a leaf area index of about 3 while EVI keeps climbing. Modelled with a simple canopy: red is absorbed quickly, near infrared accumulates through multiple scattering.](../images/ndvi-saturation.png){#fig-saturation}
+
+@fig-saturation is the argument in one picture. Past LAI 3, adding leaves barely moves NDVI, so intact and degraded tropical forest return nearly the same number.
+
+## The water indices, and why the older one is worse
+
+**NDWI**, $(Green - NIR)/(Green + NIR)$, inverts the NDVI logic. Water reflects modestly in green and absorbs near infrared, so open water goes strongly positive.
+
+Its failure is specific and common: concrete and metal roofing also have low near infrared relative to green, so NDWI classifies urban areas as water with depressing regularity.
+
+**MNDWI** swaps near infrared for shortwave infrared. Water absorbs shortwave even more completely, while built surfaces reflect it, so the urban confusion largely disappears.
+
+Over a delta full of aquaculture ponds, roads and settlements, MNDWI is the better default. NDWI is the historical one. Prefer MNDWI unless you need continuity with earlier work, and say which you used.
+
+## Mangrove specific construction
+
+Generic indices separate vegetation from water. Mangrove mapping needs to separate vegetation that is *standing in* water from vegetation that is not, which is a different question and needs a different construction.
+
+**CMRI**, the Combined Mangrove Recognition Index, is simply $NDVI - NDWI$. The logic is direct: mangrove is the only cover type simultaneously high in vegetation signal and adjacent to or over water. Subtracting pushes terrestrial forest up, since it has high NDVI and very negative NDWI, and pushes open water down, leaving mangrove in a distinguishable middle band.
+
+**MVI**, the Mangrove Vegetation Index, is $(NIR - Green)/(SWIR_1 - Green)$. Unlike everything above, this is not a normalised difference, so it is unbounded and produces extreme values wherever the denominator approaches zero. Guard against that explicitly. In published comparisons it separates mangrove from terrestrial vegetation more cleanly than NDVI alone.
 
 ::: {.callout-note}
-## In progress
-The section plan below is settled. Prose and annotated listings are being
-written part by part; check the roadmap in the preface for the current order.
+## Concept: why a purpose built index can beat a general one
+NDVI answers "is this photosynthesising", which every green thing answers yes to. CMRI answers "is this photosynthesising *and* wet", which is a much smaller set. Designing an index is mostly the exercise of finding a question whose answer set is close to the class you want.
+
+That said, an index is a hand designed feature, and Chapter 19 shows what happens when a foundation model designs sixty four of them for you. Understanding index construction is still worth it, because it is how you diagnose what the embedding is doing when it goes wrong.
 :::
 
-## Planned sections
+## The full workflow
 
-1. **The normalised difference form, and why ratios cancel illumination effects**
-2. **NDVI**: formula, interpretation, and the saturation problem in dense canopy
-3. **EVI and SAVI**: correcting for soil background and atmospheric residual
-4. **NDWI and MNDWI**: separating open water from wet vegetation using shortwave infrared
-5. **Mangrove specific indices**: CMRI, MVI, and their construction logic
-6. **normalizedDifference versus expression**: syntax, band renaming, and the integer division trap
+{{< include _snippets/ch12_spectral_indices.qmd >}}
 
-## Source material
+## Two traps that produce plausible wrong answers
 
-The addIndices function from your mangrove monitoring script, plus the EE101 NDVI and SAVI examples.
+::: {.callout-warning}
+## Common failure: normalizedDifference renames your band to 'nd'
+`normalizedDifference()` names its output `nd` regardless of inputs. Compute two indices without renaming and you have two bands both called `nd`; `addBands` keeps one and discards the other silently.
+
+The error surfaces far away, as a classifier that mysteriously ignores a predictor you are certain you added. Always chain `.rename()`.
+:::
+
+::: {.callout-warning}
+## Common failure: integer division truncates
+Compute an index on unscaled integer reflectance without casting and the division rounds towards zero. You get an image of zeros and ones, which renders as a plausible looking binary mask and therefore survives review.
+
+Scaling to physical reflectance once, immediately after cloud masking, makes everything float and avoids this entirely. Verify with the Inspector rather than by eye: click a forest pixel and confirm NDVI reads something like 0.83, not 0 or 1.
+:::
+
+## Judge an index by its histogram, not its map
+
+A map of an index looks informative whatever it contains, because the human eye finds structure in any continuous surface.
+
+A histogram is honest. Two peaks with a valley between them means the index separates two populations, and a classifier will find that boundary easily. One broad hump means it does not, whatever the map looks like.
+
+Chart the histogram of any candidate index over your area before adding it to a stack. It takes ten seconds and it will occasionally save you from adding four bands that contribute nothing but computation.
+
+::: {.callout-important}
+## Scientific integrity: report the formula, not just the acronym
+There are at least six published variants of "the mangrove vegetation index" and several definitions of NDWI. An acronym alone does not identify what you computed. Give the formula and the band numbers for your sensor. It costs one line and it is the difference between reproducible and not.
+:::
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch12-indices",
+  "questions": [
+    {
+      "q": "Why does the normalised difference form make values comparable across dates and illumination conditions?",
+      "options": [
+        "It removes atmospheric effects entirely",
+        "Multiplicative effects appear in both numerator and denominator and cancel",
+        "It converts radiance to reflectance",
+        "It is normalised to the image mean"
+      ],
+      "answer": 1,
+      "why": "A shading factor scales every band by roughly the same amount and divides out. Note what it does NOT cancel: additive atmospheric path radiance, which is why surface reflectance is required first."
+    },
+    {
+      "q": "NDVI over your tropical forest study area sits between 0.85 and 0.89 nearly everywhere. What does that tell you?",
+      "options": [
+        "The imagery is miscalibrated",
+        "NDVI has saturated, so it can separate forest from non forest but not intact from degraded",
+        "Cloud masking failed",
+        "The forest is exceptionally healthy"
+      ],
+      "answer": 1,
+      "why": "Past a leaf area index of about 3, more leaves do not raise near infrared much. If your question is about condition rather than extent, NDVI alone cannot answer it."
+    },
+    {
+      "q": "Why prefer MNDWI over NDWI over a delta with settlements?",
+      "options": [
+        "MNDWI has higher spatial resolution",
+        "Concrete and metal roofing have low NIR relative to green, so NDWI reads them as water; shortwave infrared separates them",
+        "NDWI is deprecated",
+        "MNDWI is bounded and NDWI is not"
+      ],
+      "answer": 1,
+      "why": "Both are normalised differences and both are bounded. The difference is which band the built environment happens to confuse."
+    },
+    {
+      "q": "Your NDVI image contains only zeros and ones. What happened?",
+      "options": [
+        "The cloud mask removed all valid data",
+        "Integer division truncated because the index was computed on unscaled integer reflectance",
+        "The band names were wrong",
+        "The composite used mosaic instead of median"
+      ],
+      "answer": 1,
+      "why": "The dangerous part is that it renders as a plausible binary mask, so it survives visual review. Scaling to float once, right after masking, prevents it."
+    },
+    {
+      "q": "You are deciding whether to add a new index to your feature stack. What is the fastest useful test?",
+      "options": [
+        "Map it and see whether it looks informative",
+        "Chart its histogram over the study area and look for two peaks rather than one broad hump",
+        "Add it and check whether overall accuracy rises",
+        "Compare it to NDVI visually"
+      ],
+      "answer": 1,
+      "why": "Any continuous surface looks informative as a map. A bimodal histogram means the index separates two populations; a single hump means it does not, whatever the map suggests."
+    }
+  ]
+}
+</script>
 
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Set $L = 0$ in SAVI and difference the result against NDVI. Confirm it is zero everywhere, then explain in one sentence why.
+2. Map NDWI and MNDWI over an urban area and find where they disagree.
+3. Compute NDVI on the unscaled integer composite. Look at the result and note how plausible a wrong answer can look.
+4. Chart CMRI and NDVI histograms over the same area. Which is bimodal, and what does that tell you about which to give the classifier?
+5. Design an index for a class you care about. State the question it answers and show its histogram is bimodal, or abandon it.

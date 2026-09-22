@@ -55,6 +55,16 @@ Tanaman yang tertekan sering kehilangan struktur sel sebelum kehilangan klorofil
 Dan daun yang sudah mati tetapi strukturnya masih utuh, atau lapisan seresah kering, tetap dapat menghasilkan respons inframerah dekat yang cukup besar. NDVI di atas lahan yang baru dibuka dengan sisa serasah tidak akan turun sejauh yang diduga intuisi, dan ini sumber negatif palsu yang terdokumentasi dalam deteksi deforestasi.
 :::
 
+![Tiga tanda tangan spektral yang diminta latihan untuk digambar dari ingatan, dengan posisi band Sentinel-2 ditumpangkan. Abu abu menandai fitur serapan uap air; perhatikan Sentinel-2 tidak menempatkan band pengamatan darat di dalamnya. Kurvanya adalah nilai representatif dari pustaka, bukan pengukuran satu lokasi.](../images/spectral-signatures.png){#fig-signatures}
+
+Dua hal dalam gambar itu layak diperhatikan lama lama. Lompatan inframerah dekat kira kira lima belas kali lipat dari lembah merah, dan itulah sebabnya setiap indeks vegetasi dibangun dari pasangan band tersebut. Lalu posisi bandnya tidak berjarak sama: band mengumpul di tempat atmosfer meneruskan cahaya, dan menyisakan celah di tempat uap air menyerapnya.
+
+Penjelajah di bawah ini memungkinkan Anda menguji klaim itu, bukan sekadar menerimanya. Pilih dua kelas dan lihat apakah sebuah indeks benar benar memisahkan keduanya.
+
+{{< include ../interactive/spectral-explorer.qmd >}}
+
+Coba mangrove lawan hutan lebat lain memakai NDVI. Kedua batangnya hampir bertumpuk, dan itulah seluruh alasan Bab 10, 11, dan 14 ada. Setelah itu coba CMRI.
+
 ## Empat resolusi
 
 Kemampuan sensor dijelaskan pada empat sumbu yang saling bebas, dan setiap satelit adalah kompromi di antaranya karena fisika memaksa adanya pertukaran.

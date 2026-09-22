@@ -162,7 +162,112 @@ Python scripts use `#|` instead of `//|`.
 6. Mirror the file in `id/`.
 7. Add it to the `chapters:` list in **both** `en/_quarto.yml` and `id/_quarto.yml`.
 
-### Callout conventions
+#
+---
+
+## Editing the book
+
+### From the web, no tooling
+
+Every page carries **Edit this page** in the right margin. It opens the `.qmd`
+in GitHub's web editor, and committing there triggers a rebuild. Three clicks
+for a typo, no clone and no Codespace.
+
+For anything larger than a sentence, press <kbd>.</kbd> on the repository page.
+That opens `github.dev`, a full VS Code in the browser with the whole repo, no
+container to start. Good for rewriting a section across several files. It
+cannot run builds, so push and let CI check it.
+
+When you want to see the result before pushing, open a Codespace and use the
+Quarto extension's preview.
+
+### Figures, maps and interactive widgets
+
+Three separate things, kept separate on purpose.
+
+| Kind | Made by | Contains satellite pixels |
+|---|---|---|
+| Diagrams in `images/` | `tools/figures/make_figures.py` | No, and captions say so |
+| Maps in `images/map-*.png` | `notebooks/produce_maps.py` | Yes, from your own Earth Engine account |
+| Widgets in `interactive/` | Hand written HTML and JS | No |
+
+Regenerate all diagrams with `python3 tools/figures/make_figures.py`. Every
+number the chapters quote from a figure, the GLCM entropy values, the nearest
+neighbour distances, the confusion matrix percentages, is computed by that
+script rather than asserted, so changing the script updates both the figure
+and the claim.
+
+Produce real maps with `notebooks/produce_maps.py`. It is the Python
+equivalent of the JavaScript in `scripts/`, so a reader can compare their own
+output against the book's.
+
+Widgets live in `interactive/` and are copied into both language projects at
+build time. Each detects the page language at runtime and labels itself, so
+one file serves both editions. Include one with:
+
+```markdown
+{{< include ../interactive/spectral-explorer.qmd >}}
+```
+
+`spectral-explorer` lets a reader pick two land cover classes and an index,
+then shows whether that index actually separates them. Chapter 2 uses it to
+let readers discover for themselves that NDVI cannot tell mangrove from other
+dense forest, which is the argument the next eight chapters rest on.
+
+### Adding images
+
+Put files in `images/` at the repository root. They are copied into both
+language projects at build time, so reference them the same way from either:
+
+```markdown
+![Annual composite over the Mahakam Delta.](../images/composite.png){#fig-composite}
+```
+
+Refer to it in prose as `@fig-composite` and Quarto numbers it and links to it.
+`images/README.md` covers sizing, formats and how to keep pages from becoming
+20 MB.
+
+### Answers to exercises
+
+Put them in a collapsed callout at the end of the chapter, so a reader has to
+choose to look:
+
+```markdown
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** ...
+:::
+```
+
+`en/02-physics.qmd` has a worked example. Write the answers as teaching rather
+than as a key: say why the wrong intuition is tempting, not just what the right
+answer is.
+
+### Open in Earth Engine buttons
+
+Each JavaScript listing can carry a button that loads the script straight into
+the Code Editor, ready to Run. One setup, then it applies to every listing
+automatically.
+
+1. Code Editor, Scripts panel, **New → Repository**. Name it something durable,
+   for example `book`.
+2. Add each file from `scripts/en/` as a script, keeping the filename without
+   the `.js` extension.
+3. Click the settings icon beside the repository, **Share**, tick
+   **Anyone can read**.
+4. Set `EE_REPO` near the top of `tools/build_snippets.py` to
+   `users/<your-account>/book` and push.
+
+The buttons appear above every JavaScript listing in both editions, labelled in
+the reader's language. Leave `EE_REPO` empty to omit them.
+
+Keeping the Earth Engine repository in step with `scripts/` is manual. The
+alternative, a reader copying and pasting, already works and costs them ten
+seconds, so do this when the scripts have settled rather than while they are
+still changing.
+
+## Callout conventions
 
 | Callout | English title | Judul Indonesia | Used for |
 |---|---|---|---|
@@ -179,10 +284,10 @@ Python scripts use `#|` instead of `//|`.
 |---|---|---|---|
 | Front matter | Preface, How this book differs | Written | Written |
 | I. Foundations, purpose and physics | 1 to 4 | Written | Written |
-| II. The platform | 5 to 7 | Written | Outlined, code included |
-| III. Analysis ready data | 8 to 11 | 8, 9 written; 10, 11 outlined with code | Outlined, code included |
-| IV. Feature engineering | 12 to 15 | 15 written; 12 to 14 outlined | Outlined, ch15 code included |
-| V. Machine learning | 16 to 18 | **Written** | Outlined, code included |
+| II. The platform | 5 to 7 | Written | **Written** |
+| III. Analysis ready data | 8 to 11 | **Written** | **Written** |
+| IV. Feature engineering | 12 to 15 | **Written** | **Written** |
+| V. Machine learning | 16 to 18 | **Written** | **Written** |
 | VI. GeoAI and impact | 19 to 23 | 22 written; 19 code complete | Outlined, code included |
 | Appendices | A to D | Written | Written |
 | Platform | dashboard, instructor inbox, quizzes | Live | Live |
@@ -244,7 +349,7 @@ A raw HTML block anywhere in a chapter. No shortcode, no filter, no build step.
 
 `answer` is a zero based index. `why` shows after answering whether the reader was right or wrong, because that is the moment an explanation lands hardest. Three or four options: two is a coin flip, five is padding. Put the check after the section it tests, not at the end of the chapter.
 
-Chapters that already have one: EN 1, 2, 3, 9, 22 and ID 1, 2, 3.
+Chapters that already have one: EN 1, 2, 3, 9 to 18 and 22; ID 1, 2, 3.
 
 ### If the platform breaks
 
