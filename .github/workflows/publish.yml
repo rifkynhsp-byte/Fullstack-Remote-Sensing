@@ -80,7 +80,7 @@ jobs:
           path: |
             en/_freeze
             id/_freeze
-          key: freeze-${{ hashFiles('booklib.py', 'en/*.qmd', 'id/*.qmd', 'requirements.txt') }}
+          key: freeze-${{ hashFiles('booklib.py', 'en/*.qmd', 'id/*.qmd', 'interactive/*.qmd', 'requirements.txt') }}
           restore-keys: |
             freeze-
 

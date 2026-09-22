@@ -528,6 +528,126 @@ def check_lms_assets() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 10. App layer
+# ---------------------------------------------------------------------------
+def check_app_layer() -> None:
+    """The manifest, the service worker and the icons they reference.
+
+    Every failure this catches is invisible in a normal build. A manifest
+    naming an icon that does not exist still renders a perfect page; it fails
+    only at the moment somebody tries to install the site, which is the one
+    moment nobody is watching a build log. A service worker that is not
+    copied to the root of the site is worse than absent: its scope cannot
+    cover both book directories, so it silently controls nothing.
+    """
+    section("App layer")
+
+    landing_dir = ROOT / "landing"
+    manifest_path = landing_dir / "manifest.webmanifest"
+    sw_path = landing_dir / "sw.js"
+    offline_path = landing_dir / "offline.html"
+
+    for path, why in [
+        (manifest_path, "a phone cannot install the site without it"),
+        (sw_path, "pages a reader has opened would not work offline"),
+        (offline_path, "the worker falls back to it when a page is not cached"),
+    ]:
+        if not path.is_file():
+            fail(f"{path.relative_to(ROOT)} is missing: {why}.")
+
+    build = (ROOT / "tools" / "build_site.sh").read_text(encoding="utf-8")
+
+    # The worker must land at the site root, not inside a language directory.
+    for name in ["manifest.webmanifest", "sw.js", "offline.html"]:
+        if f"docs/{name}" not in build:
+            fail(f"tools/build_site.sh does not copy {name} to docs/{name}. "
+                 f"A service worker only controls the directory it is served "
+                 f"from and below, and both books live one level down.")
+
+    if not manifest_path.is_file():
+        return
+
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"landing/manifest.webmanifest is not valid JSON ({exc}).")
+        return
+
+    for key in ["name", "short_name", "start_url", "icons", "display"]:
+        if not manifest.get(key):
+            fail(f"landing/manifest.webmanifest has no '{key}'.")
+
+    # Icon paths in the manifest resolve against the manifest's own location,
+    # which after the build is the site root, so they are checked against
+    # landing/.
+    sizes = set()
+    for icon in manifest.get("icons", []):
+        src = icon.get("src", "")
+        if not (landing_dir / src).is_file():
+            fail(f"landing/manifest.webmanifest lists icon '{src}', which "
+                 f"does not exist. Run: python3 tools/make_app_icons.py")
+        sizes.update((icon.get("sizes") or "").split())
+
+    # Android wants 192 and 512; anything else is a bonus.
+    for needed in ["192x192", "512x512"]:
+        if needed not in sizes:
+            fail(f"landing/manifest.webmanifest has no {needed} icon. "
+                 f"Installation prompts require both 192 and 512.")
+
+    if not any(i.get("purpose") == "maskable" for i in manifest.get("icons", [])):
+        print("  . no maskable icon: Android may crop the edges of the icon")
+
+    # Shortcut URLs are relative to the site root, so a URL into a language
+    # directory has to correspond to a chapter that will be rendered there.
+    for shortcut in manifest.get("shortcuts", []):
+        url = shortcut.get("url", "")
+        lang, _, rest = url.partition("/")
+        if lang not in LANGUAGES:
+            continue
+        source = (rest or "index.html").replace(".html", ".qmd")
+        if not (ROOT / lang / source).is_file():
+            fail(f"manifest shortcut '{shortcut.get('name')}' points at "
+                 f"{url}, but {lang}/{source} does not exist.")
+
+    # The apple-touch-icon is referenced from HTML rather than the manifest,
+    # because iOS does not read the manifest.
+    for lang in LANGUAGES:
+        config_text = (ROOT / lang / "_quarto.yml").read_text(encoding="utf-8")
+        for ref in re.findall(r'href="\.\./(assets/[\w.-]+)"', config_text):
+            if not (landing_dir / ref).is_file():
+                fail(f"{lang}/_quarto.yml references ../{ref}, which does not "
+                     f"exist in landing/.")
+        if "manifest.webmanifest" not in config_text:
+            fail(f"{lang}/_quarto.yml does not link the manifest, so chapters "
+                 f"opened directly cannot be installed.")
+        if "app.js" not in config_text:
+            fail(f"{lang}/_quarto.yml does not load lms/app.js, so chapters "
+                 f"would not register the service worker.")
+
+    landing = (landing_dir / "index.html").read_text(encoding="utf-8")
+    if "manifest.webmanifest" not in landing:
+        fail("landing/index.html does not link the manifest.")
+    if "lms/app.js" not in landing:
+        fail("landing/index.html does not load lms/app.js.")
+
+    # A worker whose precache list names a file that will not be published is
+    # not an error, because the install step tolerates a miss, but it is
+    # always a mistake.
+    if sw_path.is_file():
+        sw = sw_path.read_text(encoding="utf-8")
+        for entry in re.findall(r"^\s*'([\w./-]+)',?$", sw, re.MULTILINE):
+            if entry in ("./",):
+                continue
+            candidate = (ROOT / "lms" / entry.split("/", 1)[1]) if entry.startswith("lms/") \
+                else (landing_dir / entry)
+            if not candidate.is_file():
+                print(f"  . sw.js precaches '{entry}', which no source file "
+                      f"produces")
+
+    print(f"  manifest, worker and {len(manifest.get('icons', []))} icon(s) present")
+
+
+# ---------------------------------------------------------------------------
 def main() -> int:
     print("Pre-flight checks")
     print("=" * 60)
@@ -541,6 +661,7 @@ def main() -> int:
     check_quizzes()
     check_python_chunks()
     check_lms_assets()
+    check_app_layer()
 
     print("\n" + "=" * 60)
     if problems:

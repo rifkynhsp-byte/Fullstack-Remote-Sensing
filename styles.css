@@ -45,3 +45,79 @@
 }
 
 .ee-link:hover { background: #14a37f; color: #fff !important; }
+
+/* ==========================================================================
+   Phones
+   ==========================================================================
+   Most of the book is prose and needs nothing. What follows fixes the four
+   places where a page measured wider than the phone it was being read on,
+   or where a control was too small to hit with a thumb.
+   ========================================================================== */
+
+/* A wide markdown table used to push the whole document sideways, navbar
+   included, because a table is not a scroll container by default. Making it
+   one at narrow widths keeps the page itself the width of the screen.
+   Tables that manage their own scrolling are excluded. */
+
+@media (max-width: 767px) {
+  .quarto-document-content table:not(.cfx-grid):not(.book-table),
+  main table:not(.cfx-grid):not(.book-table) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* A caption belongs to the table, so it must not scroll away from it. */
+  main table:not(.cfx-grid):not(.book-table) > caption {
+    position: sticky;
+    left: 0;
+  }
+}
+
+/* Long code lines are wrapped rather than scrolled, which `code-overflow:
+   wrap` already does for listings. Line numbers plus deep indentation still
+   leave very little room on a phone, so the gutter shrinks. */
+
+@media (max-width: 575px) {
+  pre.sourceCode {
+    font-size: 0.78rem;
+    padding-left: 0.4rem;
+  }
+
+  pre.numberSource code > span > a:first-child::before {
+    left: -0.6em;
+  }
+
+  /* Callouts and figures should use the full width of a small screen. */
+  .callout { margin-left: 0; margin-right: 0; }
+  .chapter-goal { padding: 0.9rem 1rem 0.5rem; }
+
+  /* Two columns of anything is one column on a phone. */
+  .side-by-side { grid-template-columns: 1fr; }
+}
+
+/* Figures produced by the executed Python chunks are Plotly charts with a
+   fixed pixel height. That height is right on a laptop and too tall on a
+   phone held in portrait, where it pushes the caption off screen. */
+
+@media (max-width: 575px) {
+  .cell-output-display > div[style*="height"] {
+    height: 320px !important;
+  }
+
+  .cell-output-display .plotly-graph-div {
+    height: 320px !important;
+  }
+}
+
+/* Earth Engine badges are links, and a link a thumb has to hit needs to be
+   the size of a thumb. */
+
+@media (hover: none) {
+  .ee-link {
+    padding: 0.5rem 0.9rem;
+    margin-right: 0.4rem;
+  }
+}
