@@ -205,6 +205,12 @@ Dynamic World memberi setiap citra Sentinel-2 sembilan probabilitas kelas, sehin
 
 {{< include _snippets/ch21_dynamic_world_change.qmd >}}
 
+## Bencana yang terlihat dua kali: Palu, 2018
+
+Deteksi perubahan yang paling langsung hanya butuh dua citra dan satu pertanyaan: apa yang berbeda, dan siapa yang ada di sana? Pada 28 September 2018, gempa membuat tanah di beberapa kelurahan Palu mengalami likuefaksi, dan tsunami menerjang pantai teluk. Skrip ini berasal dari latihan Palu di GEE101 yang disusun ulang dengan data publik. Skrip memetakan keduanya, memisahkannya berdasarkan jarak dari laut, lalu menghitung bangunan dan penduduk di setiap zona.
+
+{{< include _snippets/ch21_palu_liquefaction.qmd >}}
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.

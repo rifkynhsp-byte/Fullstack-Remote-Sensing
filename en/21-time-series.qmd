@@ -151,6 +151,12 @@ Dynamic World labels every Sentinel-2 scene with nine class probabilities, which
 
 {{< include _snippets/ch21_dynamic_world_change.qmd >}}
 
+## A disaster seen twice: Palu, 2018
+
+Change detection at its most direct is two images and a question: what is different, and who was there? On 28 September 2018 an earthquake liquefied whole neighbourhoods of Palu and a tsunami struck the bay shore. This listing, from the GEE101 Palu exercise rebuilt on public data, maps both. It separates them by distance from the sea and counts the buildings and people inside each zone.
+
+{{< include _snippets/ch21_palu_liquefaction.qmd >}}
+
 ## Source material
 
 The harmonic trend block in your code collection, session 4 of Akselerasi Konservasi, and the land cover change dashboards.

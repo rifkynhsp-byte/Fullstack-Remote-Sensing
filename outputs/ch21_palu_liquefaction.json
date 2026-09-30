@@ -1,0 +1,26 @@
+[
+ {
+  "name": "ch21-palu-before",
+  "kind": "map",
+  "caption": "Petobo, south-east Palu, before the earthquake.",
+  "image": "images/real/ch21-palu-before.jpg"
+ },
+ {
+  "name": "ch21-palu-after",
+  "kind": "map",
+  "caption": "The same area weeks later. The neighbourhood slid as a single sheet of liquefied ground.",
+  "image": "images/real/ch21-palu-after.jpg"
+ },
+ {
+  "name": "ch21-palu-change",
+  "kind": "map",
+  "caption": "Ground that lost vegetation or roofs and turned bright and bare, split by distance from the bay. Petobo (the large red area around 119.91, −0.94) and Balaroa (west edge) are the liquefaction flow slides; blue along the shore is the tsunami. The small red patches in the southern farmland are harvested fields: false alarms of a simple rule.",
+  "image": "images/real/ch21-palu-change.jpg"
+ },
+ {
+  "name": "ch21-palu-exposure",
+  "kind": "table",
+  "caption": "Area of change and what stood inside it: Open Buildings v3 footprints (confidence ≥ 0.75, centroid inside) and WorldPop 2018 people. The inland figure includes the harvested-field false alarms seen on the map. This is an exposure estimate from a rule, not a damage census.",
+  "markdown": "| zone                              |   changed_ha |   buildings |   people |\n|:----------------------------------|-------------:|------------:|---------:|\n| inland (liquefaction flow slides) |          239 |         322 |    2,422 |\n| within 500 m of the bay (tsunami) |           17 |          32 |      171 |"
+ }
+]
