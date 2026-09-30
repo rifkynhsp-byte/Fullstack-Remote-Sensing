@@ -1,0 +1,60 @@
+[
+ {
+  "name": "ch34_bushfire_wollemi-webmap",
+  "kind": "html",
+  "html": "images/real/ch34_bushfire_wollemi-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch34-dryness",
+  "kind": "chart",
+  "caption": "Monthly forest NDMI (MODIS, 500 m) minus the 2014-2018 mean for the same month. Negative bars mean less water in the canopy than usual.",
+  "image": "images/real/ch34-dryness.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"date,ndmi\n2014-01,0.082361\n2014-02,0.10239\n2014-03,0.17706\n2014-04,0.22353\n2014-05,0.23517\n2014-06,0.23506\n2014-07,0.22354\n2014-08,0.21249\n2014-09,0.16158\n2014-10,0.13763\n2014-11,0.11365\n2014-12,0.14713\n2015-01,0.18575\n2015-02,0.25435\n2015-03,0.2279\n2015-04,0.26931\n2015-05,0.27466\n2015-06,0.28069\n2015-07,0.2619\n2015-08,0.22475\n2015-09,0.17869\n2015-10,0.15614\n2015-11,0.15053\n2015-12,0.14099\n2016-01,0.20635\n2016-02,0.24278\n2016-03,0.25375\n2016-04,0.24647\n2016-05,0.24396\n2016-06,0.26801\n2016-07,0.24261\n2016-08,0.23034\n2016-09,0.20006\n2016-10,0.18258\n2016-11,0.15282\n2016-12,0.18133\n2017-01,0.16979\n2017-02,0.17576\n2017-03,0.22781\n2017-04,0.26414\n2017-05,0.28981\n2017-06,0.29064\n2017-07,0.25766\n2017-08,0.22217\n2017-09,0.15705\n2017-10,0.13642\n2017-11,0.11874\n2017-12,0.12113\n2018-01,0.09773\n2018-02,0.12877\n2018-03,0.19169\n2018-04,0.19789\n2018-05,0.21541\n2018-06,0.23361\n2018-07,0.18427\n2018-08,0.1621\n2018-09,0.10899\n2018-10,0.10871\n2018-11,0.10713\n2018-12,0.134\n2019-01,0.17296\n2019-02,0.19787\n2019-03,0.23626\n2019-04,0.25452\n2019-05,0.25145\n2019-06,0.25852\n2019-07,0.235\n2019-08,0.18438\n2019-09,0.15887\n2019-10,0.11414\n2019-11,0.067961\n2019-12,-0.0017171\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_dryness(df):\n    \"\"\"Forest NDMI each month, against the same month in other years.\"\"\"\n    df = df.dropna().copy()\n    df[\"date\"] = pd.to_datetime(df[\"date\"])\n    df[\"month\"] = df[\"date\"].dt.month\n    clim = df[df[\"date\"] < \"2019-01-01\"].groupby(\"month\")[\"ndmi\"].mean()\n    df[\"anomaly\"] = df[\"ndmi\"] - df[\"month\"].map(clim)\n    fig, ax = plt.subplots(figsize=(6.8, 3.2))\n    colours = np.where(df[\"anomaly\"] < 0, \"#b35806\", \"#35978f\")\n    ax.bar(df[\"date\"], df[\"anomaly\"], width=25, color=colours)\n    ax.axvspan(pd.Timestamp(\"2019-10-26\"), pd.Timestamp(\"2020-02-10\"), color=\"#d7191c\",\n               alpha=0.12, lw=0)\n    ax.text(pd.Timestamp(\"2019-10-26\"), ax.get_ylim()[1] * 0.9, \" fires\", color=\"#d7191c\",\n            fontsize=8, va=\"top\")\n    ax.axhline(0, color=\"#616e7c\", lw=0.8)\n    ax.set_ylabel(\"NDMI minus 2014-18 mean\\nfor that month\")\n    ax.set_title(\"The forest was drier than usual for a year before it burned\", loc=\"left\")\n    return fig\n\nplot_dryness(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch34-pre",
+  "kind": "map",
+  "caption": "Pre-fire Sentinel-2 median, December 2018 to January 2019. Healthy forest is green in this band combination.",
+  "image": "images/real/ch34-pre.jpg"
+ },
+ {
+  "name": "ch34-post",
+  "kind": "map",
+  "caption": "Post-fire median, late February to March 2020. Burned forest turns red-brown: SWIR up, NIR down.",
+  "image": "images/real/ch34-post.jpg"
+ },
+ {
+  "name": "ch34-progression",
+  "kind": "map",
+  "caption": "Burn date from MODIS MCD64A1 at 500 m. Day 56 is 26 October 2019; day 100 is 9 December; day 130 is 8 January 2020.",
+  "image": "images/real/ch34-progression.jpg"
+ },
+ {
+  "name": "ch34-hotspots",
+  "kind": "chart",
+  "caption": "Daily count of 1 km MODIS active-fire pixels (FIRMS) in the study rectangle. Smoke and cloud hide some fire on some days.",
+  "image": "images/real/ch34-hotspots.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"date,hotspots\n2019-09-01,0\n2019-09-02,0\n2019-09-03,0\n2019-09-04,0\n2019-09-05,0\n2019-09-06,0\n2019-09-07,22\n2019-09-08,8\n2019-09-09,0\n2019-09-10,0\n2019-09-11,0\n2019-09-12,12\n2019-09-13,0\n2019-09-14,10\n2019-09-15,0\n2019-09-16,0\n2019-09-17,0\n2019-09-18,0\n2019-09-19,0\n2019-09-20,0\n2019-09-21,0\n2019-09-22,0\n2019-09-23,0\n2019-09-24,0\n2019-09-25,0\n2019-09-26,0\n2019-09-27,0\n2019-09-28,0\n2019-09-29,0\n2019-09-30,0\n2019-10-01,0\n2019-10-02,0\n2019-10-03,0\n2019-10-04,14\n2019-10-05,0\n2019-10-06,2\n2019-10-07,0\n2019-10-08,0\n2019-10-09,0\n2019-10-10,0\n2019-10-11,0\n2019-10-12,0\n2019-10-13,0\n2019-10-14,0\n2019-10-15,6\n2019-10-16,0\n2019-10-17,0\n2019-10-18,0\n2019-10-19,0\n2019-10-20,0\n2019-10-21,6\n2019-10-22,0\n2019-10-23,0\n2019-10-24,0\n2019-10-25,0\n2019-10-26,0\n2019-10-27,28\n2019-10-28,26\n2019-10-29,48\n2019-10-30,17\n2019-10-31,81\n2019-11-01,106\n2019-11-02,91\n2019-11-03,0\n2019-11-04,0\n2019-11-05,0\n2019-11-06,25\n2019-11-07,221\n2019-11-08,117\n2019-11-09,190\n2019-11-10,138\n2019-11-11,183\n2019-11-12,508\n2019-11-13,700\n2019-11-14,616\n2019-11-15,868\n2019-11-16,372\n2019-11-17,161\n2019-11-18,793\n2019-11-19,951\n2019-11-20,362\n2019-11-21,683\n2019-11-22,561\n2019-11-23,10\n2019-11-24,0\n2019-11-25,90\n2019-11-26,12\n2019-11-27,118\n2019-11-28,229\n2019-11-29,416\n2019-11-30,185\n2019-12-01,817\n2019-12-02,825\n2019-12-03,1475\n2019-12-04,2016\n2019-12-05,1976\n2019-12-06,1875\n2019-12-07,1540\n2019-12-08,941\n2019-12-09,1484\n2019-12-10,1552\n2019-12-11,505\n2019-12-12,456\n2019-12-13,140\n2019-12-14,1095\n2019-12-15,1392\n2019-12-16,877\n2019-12-17,1256\n2019-12-18,1631\n2019-12-19,1870\n2019-12-20,1489\n2019-12-21,1973\n2019-12-22,528\n2019-12-23,395\n2019-12-24,314\n2019-12-25,647\n2019-12-26,898\n2019-12-27,1001\n2019-12-28,1300\n2019-12-29,991\n2019-12-30,994\n2019-12-31,992\n2020-01-01,595\n2020-01-02,247\n2020-01-03,553\n2020-01-04,746\n2020-01-05,524\n2020-01-06,31\n2020-01-07,53\n2020-01-08,33\n2020-01-09,0\n2020-01-10,33\n2020-01-11,0\n2020-01-12,17\n2020-01-13,48\n2020-01-14,90\n2020-01-15,12\n2020-01-16,0\n2020-01-17,0\n2020-01-18,0\n2020-01-19,0\n2020-01-20,0\n2020-01-21,13\n2020-01-22,52\n2020-01-23,12\n2020-01-24,3\n2020-01-25,0\n2020-01-26,12\n2020-01-27,0\n2020-01-28,0\n2020-01-29,0\n2020-01-30,0\n2020-01-31,0\n2020-02-01,31\n2020-02-02,34\n2020-02-03,0\n2020-02-04,0\n2020-02-05,0\n2020-02-06,0\n2020-02-07,0\n2020-02-08,0\n2020-02-09,0\n2020-02-10,0\n2020-02-11,0\n2020-02-12,0\n2020-02-13,0\n2020-02-14,0\n2020-02-15,0\n2020-02-16,0\n2020-02-17,0\n2020-02-18,0\n2020-02-19,0\n2020-02-20,0\n2020-02-21,0\n2020-02-22,0\n2020-02-23,0\n2020-02-24,0\n2020-02-25,0\n2020-02-26,0\n2020-02-27,0\n2020-02-28,0\n2020-02-29,0\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_hotspots(df):\n    \"\"\"MODIS active-fire pixels per day across the study area.\"\"\"\n    df = df.copy()\n    df[\"date\"] = pd.to_datetime(df[\"date\"])\n    df = df.sort_values(\"date\")\n    fig, ax = plt.subplots(figsize=(6.8, 3))\n    ax.bar(df[\"date\"], df[\"hotspots\"], width=1, color=\"#d7191c\")\n    ax.set_ylabel(\"Active-fire pixels per day\")\n    ax.set_title(\"Fire activity, September 2019 to February 2020\", loc=\"left\")\n    fig.autofmt_xdate()\n    return fig\n\nplot_hotspots(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch34-severity",
+  "kind": "map",
+  "caption": "dNBR (x1000) from the two Sentinel-2 medians, classed with the Key and Benson breaks. Uncalibrated for this forest type.",
+  "image": "images/real/ch34-severity.jpg"
+ },
+ {
+  "name": "ch34-severity-area",
+  "kind": "chart",
+  "caption": "Area per severity class inside the study rectangle, at 20 m.",
+  "image": "images/real/ch34-severity-area.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"class,hectares\n0,1.6043e+05\n1,1.9479e+05\n2,7.3657e+05\n3,4.3447e+05\n4,2.4068e+05\n5,1.6852e+05\n6,72449\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_severity(df):\n    \"\"\"Hectares per dNBR severity class.\"\"\"\n    names = [c[0] for c in CLASSES]\n    colours = [c[1] for c in CLASSES]\n    df = df.copy()\n    df[\"class\"] = df[\"class\"].astype(int)\n    df = df.set_index(\"class\").reindex(range(7)).fillna(0)\n    fig, ax = plt.subplots(figsize=(6.8, 3.2))\n    ax.barh(names, df[\"hectares\"] / 1000, color=colours, edgecolor=\"#616e7c\", lw=0.4)\n    for y, v in enumerate(df[\"hectares\"] / 1000):\n        ax.text(v, y, f\" {v:,.0f}\", va=\"center\", fontsize=7)\n    ax.set_xlabel(\"Area (thousand hectares)\")\n    ax.set_title(\"Burn severity from Sentinel-2 dNBR\", loc=\"left\")\n    return fig\n\nplot_severity(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch34-agreement",
+  "kind": "table",
+  "caption": "dNBR 'low severity or worse' against the MODIS burned-area product, both on the 500 m MODIS grid. The last row is a share, not hectares.",
+  "markdown": "| measure                      |   hectares |\n|:-----------------------------|-----------:|\n| burned by both               | 626,032.31 |\n| burned by dNBR only          | 289,699.38 |\n| burned by MODIS MCD64A1 only |  87,077.20 |\n| agreement (both / either)    |       0.62 |"
+ }
+]

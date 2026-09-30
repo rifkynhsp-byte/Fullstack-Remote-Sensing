@@ -35,13 +35,13 @@
   "name": "ch31-scores",
   "kind": "table",
   "caption": "Agreement with WorldCover 2021 on the held-out block. Training time is wall-clock seconds on the author's desktop CPU (8 threads, no GPU); yours will differ.",
-  "markdown": "| model                                |   overall_agreement |   kappa |   F1_mangrove |   F1_water |   F1_other |   train_seconds_cpu |\n|:-------------------------------------|--------------------:|--------:|--------------:|-----------:|-----------:|--------------------:|\n| Random Forest, 6 bands per pixel     |               0.914 |   0.787 |         0.943 |      0.922 |      0.630 |                   3 |\n| Random Forest, + 5 x 5 mean and s.d. |               0.922 |   0.806 |         0.948 |      0.931 |      0.658 |                   8 |\n| U-Net, 64 x 64 patches               |               0.923 |   0.806 |         0.949 |      0.928 |      0.645 |                 113 |"
+  "markdown": "| model                                |   overall_agreement |   kappa |   F1_mangrove |   F1_water |   F1_other |   train_seconds_cpu |\n|:-------------------------------------|--------------------:|--------:|--------------:|-----------:|-----------:|--------------------:|\n| Random Forest, 6 bands per pixel     |               0.914 |   0.787 |         0.943 |      0.922 |      0.630 |                   4 |\n| Random Forest, + 5 x 5 mean and s.d. |               0.922 |   0.806 |         0.948 |      0.931 |      0.658 |                  11 |\n| U-Net, 64 x 64 patches               |               0.923 |   0.806 |         0.949 |      0.928 |      0.645 |                 206 |"
  },
  {
   "name": "ch31-seeds",
   "kind": "table",
   "caption": "The same U-Net trained with three seeds. The spread is the noise floor: a gap between models smaller than this is not a result.",
-  "markdown": "|   seed |   overall_agreement |   kappa |   F1_other |   train_seconds_cpu |\n|-------:|--------------------:|--------:|-----------:|--------------------:|\n|     42 |               0.923 |   0.806 |      0.645 |                 113 |\n|      7 |               0.920 |   0.793 |      0.608 |                 114 |\n|   2021 |               0.917 |   0.784 |      0.587 |                 116 |"
+  "markdown": "|   seed |   overall_agreement |   kappa |   F1_other |   train_seconds_cpu |\n|-------:|--------------------:|--------:|-----------:|--------------------:|\n|     42 |               0.923 |   0.806 |      0.645 |                 206 |\n|      7 |               0.920 |   0.793 |      0.608 |                 199 |\n|   2021 |               0.917 |   0.784 |      0.587 |                 151 |"
  },
  {
   "name": "ch31-setup",

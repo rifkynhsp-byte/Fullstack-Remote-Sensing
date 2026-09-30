@@ -1,0 +1,63 @@
+# Research Frontiers: A Thesis Topic Bank {#sec-thesisbank}
+
+::: {.chapter-goal}
+#### In this chapter
+You will find fifteen thesis-sized questions where Earth Engine gets you started but does not finish the job. Each one comes with the reason it is still open and a first experiment you can run in a week. It also says where Python has to take over.
+:::
+
+## How to use this chapter
+
+Each topic below is a starting point, not a promise of novelty. Research moves fast, so check the literature from the last two years before you commit. Where this book's own results show a problem, the chapter is cited. Those pilot numbers are often the best argument for why a topic is open. Three areas are highlighted because few people in Indonesia work on them yet: satellite embeddings, biomass, and LiDAR.
+
+## A starter you can run today
+
+GEDI measures forest structure with a spaceborne laser at scattered 25 m footprints [@dubayah2020gedi]. AlphaEarth embeddings describe every 10 m pixel with 64 learned numbers [@brown2025alphaearth]. Can the second spread the first into a wall-to-wall biomass map? The starter answers in an afternoon, and shows why testing design matters.
+
+{{< include _snippets/ch36_thesis_starter.qmd >}}
+
+The embeddings explain about a third of the variation in GEDI biomass, and the error is close to the spread of the data. That is a thesis, not a failure. The question is what is missing: time, texture, radar, or better labels.
+
+## Satellite embeddings
+
+| # | Question | Why it is open | First experiment | Python needed for |
+|---|---|---|---|---|
+| 1 | How few labels does a province-scale land cover map need with embeddings? | Chapter 19 reached 0.83 agreement with 20 points per class on one delta; nobody has shown how that holds across Indonesian landscapes | repeat the learning curve in five provinces | learning curves, uncertainty |
+| 2 | Can embeddings detect smallholder deforestation that global loss maps miss? | Chapter 26 showed global maps confuse rubber replanting with forest loss | compare year-to-year embedding distance with Hansen loss [@hansen2013gfc] on known farms | change metrics, labels |
+| 3 | Do embeddings carry information about structure, not just cover? | the starter above: R² about 0.35 for GEDI biomass | add GEDI height (RH98) and test by block | model comparison, SHAP |
+
+## Biomass and carbon
+
+| # | Question | Why it is open | First experiment | Python needed for |
+|---|---|---|---|---|
+| 4 | How much of mangrove biomass error is date and position mismatch? | Chapter 20: R² near 0 because 2020 predictors met plots with no survey dates [@murdiyarso2019swampbintuni] | re-match plots to imagery of their survey year | per-plot time matching |
+| 5 | Can biomass maps carry an honest uncertainty? | validation of global biomass products is still inconsistent [@duncanson2019validation] | quantile or conformal intervals, checked by block | the whole method |
+| 6 | Which allometry, and how wrong is the choice? | pantropical equations [@chave2014allometric] versus local ones for Indonesian mangrove and peat forest | propagate allometry choice through a map | Monte Carlo |
+
+## LiDAR
+
+| # | Question | Why it is open | First experiment | Python needed for |
+|---|---|---|---|---|
+| 7 | Can individual tree stems be placed under a closed tropical canopy from airborne LiDAR? | the author's GITD work found no below-crown stem signal; the recoverable loss is crown-to-stem association (right-place height r² 0.57 against 0.19 for a detector) | train 3D segmentation on TLS-labelled ALS | point-cloud deep learning |
+| 8 | How far can LiDAR plots be stretched with satellite height models? | global canopy height maps [@lang2023canopy; @potapov2021canopy] still disagree in tall tropical forest | compare both against local ALS | raster and point-cloud fusion |
+| 9 | How should LiDAR samples be placed for a province? | sampling designs are reviewed [@wulder2012lidar] but rarely optimised for Indonesian landscapes | simulate flight lines over embeddings | optimisation |
+
+## Hazards
+
+| # | Question | Why it is open | First experiment | Python needed for |
+|---|---|---|---|---|
+| 10 | Can a landslide model trained on one earthquake map the next? | multi-event inventories exist [@ferrario2019lombok; @xu2024caslandslide]; transfer between events is rarely tested | train on Lombok 2018, test on Palu or Cianjur | patch models, transfer |
+| 11 | How big is the exposure error from missing building footprints? | Chapter 24: two footprint layers differed a hundredfold in one district | compare footprint layers in 20 districts | spatial joins at scale |
+| 12 | Can radar coherence warn of slope failure? | coherence needs SLC phase, which Earth Engine does not hold | coherence time series before known landslides | InSAR processing |
+
+## Methods that change every result above
+
+| # | Question | Why it is open | First experiment | Python needed for |
+|---|---|---|---|---|
+| 13 | How much do published Indonesian accuracies drop under spatial validation? | random splits flatter models [@ploton2020spatial; @roberts2017cv]; Chapter 15 found folds scoring up to 0.35 below a random split | re-run ten published workflows with block CV | reproducible harness |
+| 14 | Where is a model allowed to predict? | area of applicability [@meyer2021aoa] is almost never mapped next to a result | add an applicability mask to Chapter 16's map | distance in feature space |
+| 15 | Are LST trends in the tropics real or orbital? | Chapter 30 found broad "cooling" that may come from Terra's drifting overpass | compare Terra, Aqua and Landsat trends | cross-sensor harmonisation |
+
+::: {.callout-important}
+## Before you commit to a topic
+Search Google Scholar and Scopus for the last two years with the topic's key terms. Read the three most cited and the three most recent papers. Write one paragraph on what they did not do. If you cannot write that paragraph, pick another topic. Area estimates in any thesis should follow good practice for accuracy and area [@olofsson2014good].
+:::

@@ -82,7 +82,7 @@ def initialise() -> None:
         ee.Initialize(project=os.environ.get("BOOK_EE_PROJECT"))
 
 
-_FRAMES: dict[int, pd.DataFrame] = {}
+_FRAMES: dict[int, tuple] = {}
 WEB_LAYERS: list[dict] = []     # filled by render_map, one entry per map product
 
 
@@ -92,10 +92,13 @@ def to_frame(data) -> pd.DataFrame:
     Results are cached per object, so a heavy collection used by a chart and a
     table is computed on the server once.
     """
-    if id(data) in _FRAMES:
-        return _FRAMES[id(data)].copy()
+    # Keep the object itself next to its frame: Python reuses the id() of a
+    # freed object, and a bare id key once returned another script's table.
+    hit = _FRAMES.get(id(data))
+    if hit is not None and hit[0] is data:
+        return hit[1].copy()
     df = _to_frame(data)
-    _FRAMES[id(data)] = df
+    _FRAMES[id(data)] = (data, df)
     return df.copy()
 
 
@@ -109,6 +112,10 @@ def _to_frame(data) -> pd.DataFrame:
         return pd.DataFrame([f["properties"] for f in info["features"]])
     if isinstance(data, (ee.Dictionary, ee.List, ee.ComputedObject)):
         data = data.getInfo()
+    # A collection mapped to Features can arrive typed as an ImageCollection
+    # in the Python client; judge by the result, not the wrapper.
+    if isinstance(data, dict) and "features" in data:
+        return pd.DataFrame([f.get("properties", {}) for f in data["features"]])
     if isinstance(data, dict):
         return pd.DataFrame([data])
     return pd.DataFrame(data)
@@ -387,6 +394,7 @@ def run(path: Path) -> None:
         return
     print(f"==> {path.name}")
     WEB_LAYERS.clear()
+    _FRAMES.clear()
     items = []
     for p in module.products():
         name, kind = p["name"], p["kind"]

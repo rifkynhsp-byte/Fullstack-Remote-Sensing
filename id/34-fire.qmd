@@ -1,0 +1,35 @@
+# Kebakaran Hutan dan Lahan {#sec-fire}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menjawab tiga pertanyaan yang selalu diajukan lembaga penanggulangan kebakaran dan perusahaan asuransi setelah kebakaran besar: seberapa kering bahan bakarnya, bagaimana api menyebar, dan seberapa parah terbakarnya. Setelah itu, jawabannya dicek terhadap produk kedua yang independen.
+:::
+
+## Tiga pertanyaan, tiga dataset
+
+| Pertanyaan | Data | Yang diukur |
+|---|---|---|
+| Seberapa kering bahan bakarnya? | NDMI MODIS, bulanan | kandungan air di tajuk, sebagai anomali dari kondisi normal |
+| Bagaimana api menyebar? | area terbakar MODIS (MCD64A1) dan titik api FIRMS | tanggal setiap lokasi terbakar; deteksi api harian |
+| Seberapa parah terbakarnya? | dNBR Sentinel-2 | penurunan normalised burn ratio dari sebelum ke sesudah |
+
+Ketiganya adalah komponen dasar pemantau kebakaran hutan buatan penulis untuk New South Wales. Di sini diterapkan pada salah satu kebakaran terbesar musim Black Summer 2019–20, di Wollemi dan Blue Mountains.
+
+## Contoh nyata: Wollemi dan Blue Mountains, 2019–20
+
+{{< include _snippets/ch34_bushfire_wollemi.qmd >}}
+
+::: {.callout-important}
+## Integritas ilmiah: kelas keparahan itu pinjaman, dan luas terbakar punya dua jawaban
+Kelas dNBR berasal dari protokol lapangan Key dan Benson untuk hutan di Amerika Utara. Kelas ini belum dikalibrasi untuk hutan eukaliptus, jadi baca "keparahan tinggi" sebagai "perubahan NBR yang besar", bukan dampak terukur pada pohon. Luas area terbakar juga tergantung sensornya. Peta Sentinel-2 20 m dan produk MODIS 500 m sepakat di sekitar 626 ribu ha, tetapi keduanya berbeda di 377 ribu ha lainnya. Laporkan luas yang tumpang tindih, bukan hanya satu angka.
+:::
+
+## Dari kebakaran ke gambut, lalu kembali lagi
+
+Di Indonesia, tiga pertanyaan yang sama berlaku untuk kebakaran gambut, dengan satu perbedaan: sebagian besar karbon terbakar di bawah permukaan, tempat yang tidak terlihat oleh sensor optis mana pun. Bab 37 (gambut) akan kembali membahasnya.
+
+## Latihan {.unnumbered}
+
+1. Geser jendela "sebelum" ke bulan yang sama dua tahun lebih awal. Berapa bagian sinyal dNBR yang sebenarnya akibat kekeringan, bukan api?
+2. Plot deteksi FIRMS terhadap anomali NDMI per bulan. Apakah musim kebakaran dimulai ketika tajuk mengering?
+3. Cari lokasi yang terbakar menurut Sentinel-2 tetapi tidak menurut MODIS. Apakah itu petak kecil, tepi, atau perbedaan yang nyata?

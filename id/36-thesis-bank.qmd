@@ -1,0 +1,63 @@
+# Garis Depan Riset: Bank Topik Tesis {#sec-thesisbank}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menemukan lima belas pertanyaan seukuran tesis yang bisa dimulai di Earth Engine, tetapi tidak bisa diselesaikan di sana. Setiap topik dilengkapi alasan kenapa masih terbuka dan eksperimen pertama yang bisa dijalankan dalam seminggu. Setiap topik juga menunjukkan kapan Python harus mengambil alih.
+:::
+
+## Cara memakai bab ini
+
+Setiap topik di bawah adalah titik awal, bukan jaminan kebaruan. Riset bergerak cepat, jadi periksa literatur dua tahun terakhir sebelum memutuskan. Kalau hasil buku ini sendiri menunjukkan masalah, babnya disebutkan. Angka uji coba itu sering menjadi argumen terbaik kenapa sebuah topik masih terbuka. Ada tiga bidang yang ditonjolkan karena masih sedikit yang menggarapnya di Indonesia: satellite embeddings, biomassa, dan LiDAR.
+
+## Pemula yang bisa dijalankan hari ini
+
+GEDI mengukur struktur hutan dengan laser dari antariksa pada titik titik berdiameter 25 m yang tersebar [@dubayah2020gedi]. AlphaEarth embeddings menggambarkan setiap piksel 10 m dengan 64 angka hasil pembelajaran [@brown2025alphaearth]. Bisakah yang kedua menyebarkan yang pertama menjadi peta biomassa yang menyeluruh? Skrip pemula ini menjawabnya dalam satu sore, sekaligus menunjukkan kenapa desain pengujian itu penting.
+
+{{< include _snippets/ch36_thesis_starter.qmd >}}
+
+Embeddings menjelaskan sekitar sepertiga variasi biomassa GEDI, dan galatnya mendekati sebaran datanya. Itu bahan tesis, bukan kegagalan. Pertanyaannya adalah apa yang kurang: waktu, tekstur, radar, atau label yang lebih baik.
+
+## Satellite embeddings
+
+| # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
+|---|---|---|---|---|
+| 1 | Berapa sedikit label yang dibutuhkan peta tutupan lahan tingkat provinsi dengan embeddings? | Bab 19 mencapai kecocokan 0,83 dengan 20 titik per kelas di satu delta; belum ada yang menunjukkan apakah ini bertahan di berbagai bentang lahan Indonesia | ulangi kurva belajar di lima provinsi | kurva belajar, ketidakpastian |
+| 2 | Bisakah embeddings mendeteksi deforestasi skala petani yang terlewat oleh peta global? | Bab 26 menunjukkan peta global keliru membaca peremajaan karet sebagai kehilangan hutan | bandingkan jarak embedding antar tahun dengan kehilangan Hansen [@hansen2013gfc] di kebun yang sudah diketahui | metrik perubahan, label |
+| 3 | Apakah embeddings membawa informasi struktur, bukan hanya tutupan? | skrip pemula di atas: R² sekitar 0,35 untuk biomassa GEDI | tambahkan tinggi GEDI (RH98) dan uji per blok | perbandingan model, SHAP |
+
+## Biomassa dan karbon
+
+| # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
+|---|---|---|---|---|
+| 4 | Seberapa besar galat biomassa mangrove berasal dari ketidakcocokan tanggal dan posisi? | Bab 20: R² hampir nol karena prediktor 2020 dipasangkan dengan plot tanpa tanggal survei [@murdiyarso2019swampbintuni] | cocokkan ulang plot dengan citra pada tahun surveinya | pencocokan waktu per plot |
+| 5 | Bisakah peta biomassa membawa ketidakpastian yang jujur? | validasi produk biomassa global masih belum konsisten [@duncanson2019validation] | selang kuantil atau konformal, dicek per blok | seluruh metodenya |
+| 6 | Allometri mana, dan seberapa salah kalau keliru memilih? | persamaan pantropis [@chave2014allometric] dibandingkan persamaan lokal untuk mangrove dan hutan gambut Indonesia | telusuri dampak pilihan allometri pada peta | Monte Carlo |
+
+## LiDAR
+
+| # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
+|---|---|---|---|---|
+| 7 | Bisakah letak batang pohon ditentukan di bawah tajuk tropis yang rapat dari LiDAR udara? | penelitian GITD penulis tidak menemukan sinyal batang di bawah tajuk; yang bisa diperbaiki adalah pasangan tajuk dengan batang (tinggi di posisi yang tepat r² 0,57 dibanding 0,19 dari detektor) | latih segmentasi 3D dengan ALS yang diberi label dari TLS | deep learning point cloud |
+| 8 | Seberapa jauh plot LiDAR bisa diperluas dengan model tinggi tajuk dari satelit? | peta tinggi tajuk global [@lang2023canopy; @potapov2021canopy] masih berbeda di hutan tropis yang tinggi | bandingkan keduanya dengan ALS lokal | penggabungan raster dan point cloud |
+| 9 | Bagaimana sampel LiDAR sebaiknya ditempatkan untuk satu provinsi? | desain sampling sudah diulas [@wulder2012lidar] tetapi jarang dioptimalkan untuk bentang lahan Indonesia | simulasikan jalur terbang di atas embeddings | optimasi |
+
+## Bencana
+
+| # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
+|---|---|---|---|---|
+| 10 | Bisakah model longsor yang dilatih dari satu gempa memetakan gempa berikutnya? | inventaris dari banyak kejadian sudah ada [@ferrario2019lombok; @xu2024caslandslide]; perpindahan antar kejadian jarang diuji | latih dengan Lombok 2018, uji di Palu atau Cianjur | model patch, transfer |
+| 11 | Seberapa besar galat keterpaparan akibat jejak bangunan yang hilang? | Bab 24: dua layer jejak bangunan berbeda seratus kali lipat di satu kabupaten | bandingkan layer jejak bangunan di 20 kabupaten | penggabungan spasial skala besar |
+| 12 | Bisakah koherensi radar memberi peringatan sebelum lereng runtuh? | koherensi butuh fase SLC, yang tidak ada di Earth Engine | deret waktu koherensi sebelum longsor yang sudah diketahui | pemrosesan InSAR |
+
+## Metode yang mengubah semua hasil di atas
+
+| # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
+|---|---|---|---|---|
+| 13 | Seberapa turun akurasi penelitian Indonesia yang sudah terbit kalau divalidasi secara spasial? | pembagian acak membuat model terlihat lebih baik [@ploton2020spatial; @roberts2017cv]; Bab 15 menemukan fold yang skornya sampai 0,35 di bawah pembagian acak | jalankan ulang sepuluh alur kerja yang sudah terbit dengan validasi silang blok | kerangka yang bisa diulang |
+| 14 | Di mana sebuah model boleh memprediksi? | area of applicability [@meyer2021aoa] hampir tidak pernah dipetakan di samping hasil | tambahkan masker applicability ke peta Bab 16 | jarak di ruang fitur |
+| 15 | Apakah tren LST di tropis nyata atau akibat orbit? | Bab 30 menemukan "pendinginan" luas yang mungkin berasal dari waktu lintas Terra yang bergeser | bandingkan tren Terra, Aqua, dan Landsat | harmonisasi antar sensor |
+
+::: {.callout-important}
+## Sebelum memutuskan satu topik
+Cari di Google Scholar dan Scopus untuk dua tahun terakhir dengan kata kunci topiknya. Baca tiga makalah yang paling banyak dikutip dan tiga yang paling baru. Tulis satu paragraf tentang apa yang belum mereka kerjakan. Kalau paragraf itu tidak bisa ditulis, pilih topik lain. Perkiraan luas dalam tesis apa pun sebaiknya mengikuti praktik baik untuk akurasi dan luas [@olofsson2014good].
+:::

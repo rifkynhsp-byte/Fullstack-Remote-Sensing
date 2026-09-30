@@ -98,12 +98,16 @@ book:
         - 25-mining.qmd
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
+        - 34-fire.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:
         - 28-map-production.qmd
         - 29-dataviz.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
+    - part: "Bagian IX: Garis Depan Riset"
+      chapters:
+        - 36-thesis-bank.qmd
     - dashboard.qmd
     - references.qmd
   appendices:
