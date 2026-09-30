@@ -109,6 +109,7 @@ book:
     - part: "Bagian IX: LiDAR untuk Kehutanan"
       chapters:
         - 32-lidar-trees.qmd
+        - 33-height-scaling.qmd
     - part: "Bagian X: Garis Depan Riset"
       chapters:
         - 36-thesis-bank.qmd

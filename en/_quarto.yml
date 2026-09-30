@@ -109,6 +109,7 @@ book:
     - part: "Part IX: LiDAR for Forestry"
       chapters:
         - 32-lidar-trees.qmd
+        - 33-height-scaling.qmd
     - part: "Part X: Research Frontiers"
       chapters:
         - 36-thesis-bank.qmd

@@ -1,0 +1,53 @@
+# From a LiDAR Plot to a Biomass Map {#sec-height-scaling}
+
+::: {.chapter-goal}
+#### In this chapter
+You will see what "canopy height" means at 0.5 m, 10 m and 25 m. You will test two satellite height maps against GEDI laser footprints, and trace how an error in height becomes an error in biomass. This is the path every forest carbon map takes, from one well-measured plot to a whole landscape.
+:::
+
+## Three instruments, three kinds of height
+
+A biomass map of a province is built from a chain of measurements, each one wider and less detailed than the one before:
+
+| Level | What it measures | Covers |
+|---|---|---|
+| Field plot | stem diameter, height, species (wood density) | a few hectares |
+| Airborne LiDAR (Chapter 32) | a canopy height model at 0.5 to 1 m | a few thousand hectares |
+| GEDI [@dubayah2020gedi] | laser height in 25 m footprints, hundreds of metres apart | samples across the tropics |
+| Height maps [@lang2023canopy; @potapov2021canopy] | height at every 10 or 30 m pixel, learned from GEDI and optical images | everywhere |
+
+Each step up trades precision for coverage. Errors carry upward too: a map can only be as good as the footprints it learned from, and the footprints only as good as their check against airborne LiDAR and field plots [@duncanson2019validation].
+
+## "How tall is this forest?" has five answers
+
+Start with the plot from Chapter 32. The same point cloud gives a height of 13, 22, 24, 25 or 32 m, depending on what you mean. The mean of every cell includes the gaps between crowns. The median tree top is a tree-level number. A 98th percentile over a 10 m or 25 m cell keeps the tallest crowns in each cell, which is roughly what a 10 m map and a GEDI rh98 footprint record. So when a paper compares its LiDAR "height" with GEDI, first check that both mean the same thing.
+
+## Maps against footprints
+
+The satellite part of this chapter uses a lowland landscape in Jambi, Sumatra. It has a block of protected forest surrounded by plantations and smallholdings, so heights run from 0 to over 40 m. For 2,500 good GEDI shots from 2019 and 2020, we read the height of two maps at the same spot.
+
+{{< include _snippets/ch33_height_scaling.qmd >}}
+
+## What the numbers say
+
+Both maps pull toward the middle. Over short vegetation (GEDI under 15 m) the ETH map reads about 7 m too tall. Over tall forest the GLAD map reads about 12 m too short. This is regression to the mean, and it is built into how these maps are made. A model trained to minimise average error is rewarded for staying near the typical height, and optical images stop changing once the canopy is closed and tall. The error is not random. It is a pattern, and it hits the tallest forest, which holds the most carbon.
+
+Two consequences for anyone using these maps:
+
+1. **Do not trust a map's error in one number.** An RMSE of 8.7 m over all shots hides a large positive bias in low vegetation and a negative one in tall forest. Split the error by height class, as in the table.
+2. **Calibrate locally if you can.** Even a few airborne LiDAR plots, or local GEDI shots, can correct the bias for your landscape before you turn height into biomass.
+
+## From height to biomass
+
+The pantropical equation of @chave2014allometric estimates above-ground biomass (AGB) of one tree as
+
+$$\text{AGB} = 0.0673 \times (\rho D^2 H)^{0.976}$$
+
+where $\rho$ is wood density (g/cm³), $D$ is stem diameter (cm) and $H$ is height (m). With $\rho$ and $D$ measured in the field, biomass scales almost one-to-one with height, so a 20 % height error is about a 20 % biomass error. LiDAR does not measure diameter. It has to be predicted, often from height and crown size, so the same height error enters twice and grows. The figure shows both cases. The dashed line is an illustration, not a fitted model.
+
+GEDI's own 1 km biomass grid (L4B) is made from footprints and GEDI's allometric models, not from optical images. It is coarse, but it is independent of the height maps, which makes it a fair cross-check.
+
+::: {.callout-note}
+## Where the thesis topics are
+Every step in this chapter has an open question for Indonesian forests: allometry that uses LiDAR crown size instead of diameter, bias-corrected height maps for peat swamp and plantations, and honest uncertainty from plot to province. Chapter 36 lists them as thesis topics.
+:::

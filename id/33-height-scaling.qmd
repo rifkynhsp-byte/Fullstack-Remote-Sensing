@@ -1,0 +1,53 @@
+# Dari Plot LiDAR ke Peta Biomassa {#sec-height-scaling}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan melihat apa arti "tinggi kanopi" pada ukuran 0,5 m, 10 m, dan 25 m. Anda akan menguji dua peta tinggi kanopi dari satelit terhadap jejak laser GEDI, lalu menelusuri bagaimana kesalahan tinggi berubah menjadi kesalahan biomassa. Inilah jalan yang dilalui setiap peta karbon hutan, dari satu plot yang terukur baik sampai satu bentang lahan utuh.
+:::
+
+## Tiga alat ukur, tiga jenis tinggi
+
+Peta biomassa satu provinsi disusun dari rangkaian pengukuran. Setiap tingkat lebih luas tetapi kurang rinci dari tingkat sebelumnya:
+
+| Tingkat | Yang diukur | Cakupan |
+|---|---|---|
+| Plot lapangan | diameter batang, tinggi, jenis (berat jenis kayu) | beberapa hektare |
+| LiDAR udara (Bab 32) | model tinggi kanopi 0,5 sampai 1 m | beberapa ribu hektare |
+| GEDI [@dubayah2020gedi] | tinggi dari laser, jejak 25 m, berjarak ratusan meter | sampel di seluruh tropis |
+| Peta tinggi [@lang2023canopy; @potapov2021canopy] | tinggi di setiap piksel 10 atau 30 m, dipelajari dari GEDI dan citra optik | di mana saja |
+
+Setiap naik satu tingkat, ketelitian ditukar dengan cakupan. Kesalahannya juga ikut naik: peta hanya sebaik jejak GEDI yang dipakai untuk melatihnya, dan jejak GEDI hanya sebaik pengecekannya terhadap LiDAR udara dan plot lapangan [@duncanson2019validation].
+
+## "Setinggi apa hutan ini?" punya lima jawaban
+
+Mulai dari plot di Bab 32. Point cloud yang sama bisa memberi tinggi 13, 22, 24, 25, atau 32 m, tergantung maksudnya. Rata-rata semua sel ikut menghitung celah di antara tajuk. Median puncak pohon adalah angka tingkat pohon. Persentil ke-98 dalam sel 10 m atau 25 m hanya menyimpan tajuk tertinggi di tiap sel, kira-kira sama dengan yang dicatat peta 10 m dan jejak GEDI rh98. Jadi kalau sebuah makalah membandingkan "tinggi" LiDAR-nya dengan GEDI, periksa dulu apakah keduanya berbicara tentang hal yang sama.
+
+## Peta dibandingkan dengan jejak GEDI
+
+Bagian satelit di bab ini memakai bentang lahan dataran rendah di Jambi, Sumatra. Ada satu blok hutan lindung yang dikelilingi kebun dan lahan milik warga, jadi tingginya berkisar dari 0 sampai lebih dari 40 m. Untuk 2.500 tembakan GEDI yang baik dari tahun 2019 dan 2020, tinggi dari dua peta dibaca di titik yang sama.
+
+{{< include _snippets/ch33_height_scaling.qmd >}}
+
+## Apa kata angkanya
+
+Kedua peta cenderung menarik nilai ke tengah. Di vegetasi pendek (GEDI di bawah 15 m), peta ETH terbaca sekitar 7 m terlalu tinggi. Di hutan tinggi, peta GLAD terbaca sekitar 12 m terlalu rendah. Ini gejala regresi ke rata-rata, dan memang bawaan dari cara peta ini dibuat. Model yang dilatih untuk menekan kesalahan rata-rata "diuntungkan" kalau tebakannya dekat dengan tinggi yang umum. Selain itu, citra optik hampir tidak berubah lagi begitu kanopi sudah rapat dan tinggi. Kesalahannya bukan acak. Ada polanya, dan yang paling kena justru hutan tertinggi, tempat karbon paling banyak tersimpan.
+
+Ada dua akibatnya bagi siapa pun yang memakai peta ini:
+
+1. **Jangan percaya kesalahan peta dalam satu angka.** RMSE 8,7 m untuk semua tembakan menyembunyikan bias positif yang besar di vegetasi rendah dan bias negatif di hutan tinggi. Pisahkan kesalahannya per kelas tinggi, seperti di tabel.
+2. **Kalibrasi secara lokal kalau bisa.** Beberapa plot LiDAR udara, atau tembakan GEDI setempat, sudah cukup untuk mengoreksi bias di bentang lahan Anda sebelum tinggi diubah menjadi biomassa.
+
+## Dari tinggi ke biomassa
+
+Persamaan pantropis dari @chave2014allometric menaksir biomassa di atas tanah (AGB) satu pohon sebagai
+
+$$\text{AGB} = 0.0673 \times (\rho D^2 H)^{0.976}$$
+
+dengan $\rho$ berat jenis kayu (g/cm³), $D$ diameter batang (cm), dan $H$ tinggi (m). Kalau $\rho$ dan $D$ diukur di lapangan, biomassa naik hampir sebanding dengan tinggi. Artinya, kesalahan tinggi 20 % kira-kira menjadi kesalahan biomassa 20 %. LiDAR tidak mengukur diameter. Diameter harus ditaksir, sering dari tinggi dan lebar tajuk, sehingga kesalahan tinggi yang sama masuk dua kali dan membesar. Gambar di atas memperlihatkan kedua kasus itu. Garis putus-putus hanya ilustrasi, bukan model hasil fitting.
+
+Grid biomassa 1 km milik GEDI sendiri (L4B) dibuat dari jejak laser dan model alometrik GEDI, bukan dari citra optik. Resolusinya kasar, tetapi tidak bergantung pada peta tinggi, sehingga layak dipakai sebagai pembanding.
+
+::: {.callout-note}
+## Di sinilah topik tesis berada
+Setiap langkah di bab ini masih menyisakan pertanyaan terbuka untuk hutan Indonesia: alometri yang memakai lebar tajuk dari LiDAR sebagai pengganti diameter, peta tinggi yang biasnya sudah dikoreksi untuk rawa gambut dan kebun, serta ketidakpastian yang jujur dari plot sampai provinsi. Bab 36 mendaftarnya sebagai topik tesis.
+:::
