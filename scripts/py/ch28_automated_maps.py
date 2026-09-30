@@ -68,6 +68,33 @@ def scale_bar(ax, x0, x1, y0, y1):
             ha="center")
 
 
+def graticule(ax):
+    """Grid lines at round degrees, labelled 107.60°E / 6.90°S on the frame."""
+    from matplotlib.ticker import FuncFormatter, MaxNLocator
+
+    def deg(v, axis):
+        hemi = ("E" if v >= 0 else "W") if axis == "x" else ("N" if v >= 0 else "S")
+        return f"{abs(v):.2f}°{hemi}"
+    ax.xaxis.set_major_locator(MaxNLocator(5))
+    ax.yaxis.set_major_locator(MaxNLocator(5))
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: deg(v, "x")))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: deg(v, "y")))
+    ax.grid(True, color="#333333", lw=0.3, alpha=0.6, ls="--")
+    ax.tick_params(labelsize=7)
+
+
+def north_arrow(ax, x=0.93, y=0.84, size=0.09):
+    """Half black, half white arrow with N above: readable on any background."""
+    from matplotlib.patches import Polygon
+    t, w = ax.transAxes, size * 0.35
+    ax.add_patch(Polygon([[x, y + size], [x - w, y], [x, y + size * 0.25]],
+                         transform=t, fc="black", ec="black", lw=0.8, zorder=20))
+    ax.add_patch(Polygon([[x, y + size], [x + w, y], [x, y + size * 0.25]],
+                         transform=t, fc="white", ec="black", lw=0.8, zorder=20))
+    ax.text(x, y + size + 0.015, "N", transform=t, ha="center", fontsize=11,
+            fontweight="bold", zorder=20)
+
+
 def map_page(name):
     """One finished map: layout, inset, legend, stats. Returns the figure."""
     district = gaul.filter(ee.Filter.eq("GAUL2_NAME", name))
@@ -84,13 +111,11 @@ def map_page(name):
     ax = fig.add_axes([0.08, 0.30, 0.84, 0.60])
     ax.imshow(img, extent=[x0, x1, y0, y1])
     ax.imshow(outline, extent=[x0, x1, y0, y1])
-    ax.set_xlabel("Longitude (°E)", fontsize=8)
-    ax.set_ylabel("Latitude (°)", fontsize=8)
-    ax.tick_params(labelsize=7)
-    ax.ticklabel_format(useOffset=False, style="plain")
+    ax.set_xlim(x0, x1)
+    ax.set_ylim(y0, y1)
+    graticule(ax)
     scale_bar(ax, x0, x1, y0, y1)
-    ax.annotate("N", xy=(0.95, 0.95), xytext=(0.95, 0.86), xycoords="axes fraction",
-                ha="center", fontweight="bold", arrowprops=dict(arrowstyle="-|>", color="k"))
+    north_arrow(ax, x=0.06, y=0.80)          # top left, clear of the inset
 
     # Locator inset: where is this district in West Java?
     inset = fig.add_axes([0.70, 0.705, 0.20, 0.17])

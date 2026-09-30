@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch09_annual_composite-webmap",
+  "kind": "html",
+  "html": "images/real/ch09_annual_composite-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch09-truecolour",
   "kind": "map",
   "caption": "Every clear pixel of 2023, reduced to one image by the median. No single scene of the delta looks like this.",
@@ -8,7 +15,7 @@
  {
   "name": "ch09-ndvi",
   "kind": "map",
-  "caption": "NDVI from the same composite. Mangrove and upland forest are almost the same colour here, which is the problem Chapter 12 takes on.",
+  "caption": "NDVI from the same composite: the vegetated delta is green, the sea and river plumes sit near zero. Inside the forest the colour barely changes, the saturation Chapter 12 takes on.",
   "image": "images/real/ch09-ndvi.jpg"
  },
  {

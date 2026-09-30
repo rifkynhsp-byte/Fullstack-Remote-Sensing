@@ -88,10 +88,15 @@ var maskCloudsAndAddIndices = function (image) {
   // updateMask() does not set rejected pixels to zero. It marks them as
   // having no data, which is the important difference: a zero would drag the
   // median down, whereas a masked pixel is simply skipped by the reducer.
+  //
+  // Order matters. addBands() brings each new band with its OWN mask, so the
+  // indices must be added first and the whole image masked last. An earlier
+  // version masked first: NDVI and NDWI then kept every cloudy pixel, and
+  // the annual median NDVI of mangrove came out near 0.03 instead of ~0.45.
   return image
-    .updateMask(clear)
     .addBands(ndvi)
-    .addBands(ndwi);
+    .addBands(ndwi)
+    .updateMask(clear);
 };
 
 // ---------------------------------------------------------------------------

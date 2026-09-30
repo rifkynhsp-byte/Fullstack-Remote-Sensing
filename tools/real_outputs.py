@@ -114,6 +114,46 @@ def _to_frame(data) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
+
+
+# ---------------------------------------------------------------------------
+# Cartographic furniture shared by every map: graticule, north arrow, scale
+# ---------------------------------------------------------------------------
+from matplotlib.ticker import FuncFormatter, MaxNLocator  # noqa: E402
+
+
+def _deg(v, axis):
+    hemi = ("E" if v >= 0 else "W") if axis == "x" else ("N" if v >= 0 else "S")
+    return f"{abs(v):.2f}°{hemi}"
+
+
+def graticule(ax):
+    """Latitude/longitude grid lines with degree labels on the frame."""
+    ax.xaxis.set_major_locator(MaxNLocator(5))
+    ax.yaxis.set_major_locator(MaxNLocator(5))
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "x")))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "y")))
+    ax.grid(True, color="#ffffff", lw=0.6, alpha=0.6, ls="--")
+    ax.grid(True, color="#333333", lw=0.3, alpha=0.5, ls="--")
+    ax.tick_params(labelsize=7, direction="out")
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(True)
+
+
+def north_arrow(ax, x=0.93, y=0.86, size=0.08):
+    """A filled north arrow: half black, half white, with N above."""
+    from matplotlib.patches import Polygon
+    t = ax.transAxes
+    w = size * 0.35
+    ax.add_patch(Polygon([[x, y + size], [x - w, y], [x, y + size * 0.25]], closed=True,
+                         transform=t, fc="black", ec="black", lw=0.8, zorder=20))
+    ax.add_patch(Polygon([[x, y + size], [x + w, y], [x, y + size * 0.25]], closed=True,
+                         transform=t, fc="white", ec="black", lw=0.8, zorder=20))
+    ax.text(x, y + size + 0.015, "N", transform=t, ha="center", va="bottom",
+            fontsize=10, fontweight="bold", zorder=20,
+            bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.7))
+
+
 # ---------------------------------------------------------------------------
 # Renderers
 # ---------------------------------------------------------------------------
@@ -134,12 +174,16 @@ def _scale_bar(ax, x0, x1, y0, y1):
     length = max(m * base for m in (1, 2, 5) if m * base <= target)
     deg = length / km_per_deg
     px, py = x0 + (x1 - x0) * 0.05, y0 + (y1 - y0) * 0.06
-    ax.plot([px, px + deg], [py, py], color="black", lw=4, solid_capstyle="butt")
-    ax.plot([px, px + deg], [py, py], color="white", lw=2, solid_capstyle="butt")
+    h = (y1 - y0) * 0.012
+    ax.add_patch(plt.Rectangle((px - (x1 - x0) * 0.01, py - h * 1.2), deg + (x1 - x0) * 0.02,
+                               h * 4.2, fc="white", ec="none", alpha=0.75, zorder=19))
+    for i in range(4):                    # alternating quarters, black and white
+        ax.add_patch(plt.Rectangle((px + i * deg / 4, py), deg / 4, h,
+                                   fc="black" if i % 2 == 0 else "white", ec="black",
+                                   lw=0.6, zorder=20))
     label = f"{length:g} km" if length >= 1 else f"{length * 1000:g} m"
-    ax.text(px + deg / 2, py + (y1 - y0) * 0.025, label, ha="center", va="bottom",
-            fontsize=8, color="black",
-            bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.8))
+    ax.text(px, py + h * 1.4, "0", ha="center", va="bottom", fontsize=7, zorder=20)
+    ax.text(px + deg, py + h * 1.4, label, ha="center", va="bottom", fontsize=7, zorder=20)
 
 
 def render_map(p: dict, out: Path) -> None:
@@ -172,15 +216,12 @@ def render_map(p: dict, out: Path) -> None:
 
     fig, ax = plt.subplots(figsize=(7.2, 7.2 * (y1 - y0) / (x1 - x0) + 0.9))
     ax.imshow(img, extent=[x0, x1, y0, y1], interpolation="nearest")
-    ax.set_xlabel("Longitude (°)")
-    ax.set_ylabel("Latitude (°)")
     ax.set_title(p.get("title", ""), loc="left", fontsize=10, fontweight="bold")
-    ax.tick_params(labelsize=7)
-    ax.ticklabel_format(useOffset=False, style="plain")
+    ax.set_xlim(x0, x1)
+    ax.set_ylim(y0, y1)
+    graticule(ax)
     _scale_bar(ax, x0, x1, y0, y1)
-    ax.annotate("N", xy=(0.95, 0.93), xytext=(0.95, 0.83), xycoords="axes fraction",
-                ha="center", fontsize=9, fontweight="bold",
-                arrowprops=dict(arrowstyle="-|>", color="black"))
+    north_arrow(ax)
 
     if "palette" in vis and "classes" not in p and "min" in vis:
         import re

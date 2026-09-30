@@ -150,3 +150,4 @@ def products():
 if __name__ == "__main__":
     ee.Initialize()
     print(scores.getInfo())
+COMPARE = ("ch18-before", "ch18-after")   # swipe between these on the web map

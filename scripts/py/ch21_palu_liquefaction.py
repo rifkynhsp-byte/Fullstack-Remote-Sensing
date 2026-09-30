@@ -110,3 +110,4 @@ def products():
 if __name__ == "__main__":
     ee.Initialize()
     print(exposure.getInfo())
+COMPARE = ("ch21-palu-before", "ch21-palu-after")   # swipe between these on the web map

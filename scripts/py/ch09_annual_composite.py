@@ -39,7 +39,9 @@ def mask_clouds_and_add_indices(image):
              .And(scl.neq(11)))  # not snow or ice
     ndvi = image.normalizedDifference(["B8", "B4"]).rename("NDVI")
     ndwi = image.normalizedDifference(["B3", "B8"]).rename("NDWI")
-    return image.updateMask(clear).addBands(ndvi).addBands(ndwi)
+    # Add the indices FIRST, then mask: addBands() keeps each new band's own
+    # mask, so masking first would leave NDVI and NDWI full of cloud.
+    return image.addBands(ndvi).addBands(ndwi).updateMask(clear)
 
 
 # ---------------------------------------------------------------------------
@@ -112,8 +114,9 @@ def products():
         {"kind": "map", "name": "ch09-ndvi", "image": annual_composite,
          "vis": vis_ndvi, "region": aoi, "legend": "NDVI",
          "title": "Annual NDVI",
-         "caption": "NDVI from the same composite. Mangrove and upland forest are "
-                    "almost the same colour here, which is the problem Chapter 12 takes on.",
+         "caption": "NDVI from the same composite: the vegetated delta is green, the "
+                    "sea and river plumes sit near zero. Inside the forest the colour "
+                    "barely changes, the saturation Chapter 12 takes on.",
          "source": "Sentinel-2 SR Harmonized, 2023."},
         {"kind": "map", "name": "ch09-ndwi", "image": annual_composite,
          "vis": vis_ndwi, "region": aoi, "legend": "NDWI",
