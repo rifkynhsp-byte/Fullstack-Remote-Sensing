@@ -27,7 +27,7 @@
  {
   "name": "ch18-scores",
   "kind": "table",
-  "caption": "Three rules scored by area against the inventory inside the window. Normalising the change first trades some recall for far fewer false alarms. Objects did not beat pixels here: many scars are narrower than an 8-pixel SNIC object, so they merge into their surroundings. That is the case Chapter 18 warns about.",
+  "caption": "Three rules scored by area against the inventory inside the window. Normalising the change first trades some recall for far fewer false alarms. Objects did not beat pixels here: many scars are narrower than an 8-pixel SNIC object, so they merge into their surroundings. That is the case Chapter 18 warns about. Inventory: CAS Landslide Dataset, Iburi-Tobu subset (Xu et al. 2024).",
   "markdown": "| method                         |   detected_km2 |   inventory_km2 |   precision |   recall |   f1 |\n|:-------------------------------|---------------:|----------------:|------------:|---------:|-----:|\n| pixel rule, fixed threshold    |          51.47 |           21.85 |        0.33 |     0.79 | 0.47 |\n| pixel rule, normalised         |          14.60 |           21.85 |        0.71 |     0.48 | 0.57 |\n| object rule (SNIC), normalised |          14.07 |           21.85 |        0.68 |     0.44 | 0.53 |"
  }
 ]

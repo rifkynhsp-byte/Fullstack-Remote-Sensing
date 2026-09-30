@@ -4,7 +4,8 @@
 /**
  * CHAPTER 20 | From a class to a quantity
  * ---------------------------------------------------------------------------
- * 45 field plots in West Papua, measured by CIFOR, each with above ground
+ * 45 field plots in Bintuni Bay, West Papua, from CIFOR's open SWAMP data
+ * (Murdiyarso et al. 2019, doi:10.17528/CIFOR/DATA.00108), each with above ground
  * biomass (AGB, Mg/ha): fish ponds, forest regrowing for 5 to 25 years, and
  * undisturbed mangrove. Three models try to predict AGB from space:
  *   1. a straight line on canopy height,

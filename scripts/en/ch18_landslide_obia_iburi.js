@@ -10,6 +10,9 @@
  */
 
 var window = ee.Geometry.Rectangle([141.93, 42.70, 142.05, 42.80]);   // Atsuma hills
+// Landslide inventory: CAS Landslide Dataset, Hokkaido Iburi-Tobu subset
+// (Xu et al. 2024, Scientific Data 11:12, doi:10.1038/s41597-023-02847-z),
+// prepared as polygons for the GEE101 course.
 var inventory = ee.FeatureCollection('users/rifkynauvalhsp/IburiLandslideInventory/trainingset');
 
 // ---------------------------------------------------------------------------

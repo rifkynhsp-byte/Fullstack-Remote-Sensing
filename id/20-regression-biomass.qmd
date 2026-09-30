@@ -63,7 +63,7 @@ bagian demi bagian; lihat prakata untuk urutannya.
 
 ## Uji nyata pertama: 45 plot lapangan di Papua Barat
 
-Sebelum teori, satu hasil dulu. Tim lapangan CIFOR mengukur biomassa di atas permukaan tanah pada 45 plot mangrove di sekitar Teluk Bintuni, mulai dari tambak, hutan yang tumbuh kembali selama 5 sampai 25 tahun, sampai tegakan yang belum terganggu. Skrip ini mencoba tiga cara memprediksi angka tersebut dari citra satelit, lalu menguji masing masing secara jujur dengan mengeluarkan satu plot setiap kali. Hasilnya membuat kita rendah hati, dan alasannya justru lebih berguna daripada skor yang bagus.
+Sebelum teori, satu hasil dulu. Tim lapangan CIFOR mengukur biomassa di atas permukaan tanah pada 45 plot mangrove di sekitar Teluk Bintuni, yang dipublikasikan sebagai data terbuka [@murdiyarso2019swampbintuni], mulai dari tambak, hutan yang tumbuh kembali selama 5 sampai 25 tahun, sampai tegakan yang belum terganggu. Skrip ini mencoba tiga cara memprediksi angka tersebut dari citra satelit, lalu menguji masing masing secara jujur dengan mengeluarkan satu plot setiap kali. Hasilnya membuat kita rendah hati, dan alasannya justru lebih berguna daripada skor yang bagus.
 
 {{< include _snippets/ch20_mangrove_biomass.qmd >}}
 

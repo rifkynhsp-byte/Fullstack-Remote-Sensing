@@ -145,7 +145,7 @@ def products():
     return [
         {"kind": "chart", "name": "ch20-agb-by-category", "data": loo,
          "plot": plot_agb_by_category,
-         "caption": "Field AGB of the 45 CIFOR plots by category. Regrowth climbs from "
+         "caption": "Field AGB of the CIFOR SWAMP Bintuni plots (Murdiyarso et al. 2019, doi:10.17528/CIFOR/DATA.00108) by category. Regrowth climbs from "
                     "about 27 Mg/ha at 5 years to about 112 at 25."},
         {"kind": "chart", "name": "ch20-pred-vs-obs", "data": loo,
          "plot": plot_predicted_vs_observed,
@@ -171,7 +171,7 @@ def products():
          "vis": {"min": 0, "max": 200, "palette": ["ffffcc", "78c679", "006837"]},
          "legend": "Above ground biomass (Mg/ha), mangrove only",
          "title": "Predicted mangrove AGB, sensor-stack forest",
-         "source": "Field plots: CIFOR. Predictors 2020: S2, S1, ETH canopy height, "
+         "source": "Field plots: CIFOR SWAMP Bintuni 2011 (Murdiyarso et al. 2019). Predictors 2020: S2, S1, ETH canopy height, "
                    "AW3D30. Mask: GMW 2020.",
          "caption": "The stack model trained on all plots, applied inside Global "
                     "Mangrove Watch 2020. Given the scores above, this map shows what the "

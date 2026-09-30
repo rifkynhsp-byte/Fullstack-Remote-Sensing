@@ -141,7 +141,7 @@ Klasifikasi berbasis piksel tervektorkan menjadi kekacauan. Kalau yang diserahka
 
 ## Kasus sulit: longsor akibat gempa di Iburi
 
-Pada 6 September 2018, gempa di Hokkaido memicu ribuan longsor dangkal hanya dalam beberapa detik. Ini adalah latihan longsor dari kursus GEE101 yang disusun ulang supaya setiap langkahnya bisa diperiksa. Skrip membandingkan musim yang sama dengan selisih satu tahun, menerapkan aturan per piksel dan aturan per objek, lalu menilai keduanya terhadap inventaris longsor. Ada dua pelajaran yang lebih berharga daripada petanya. Pertama, ambang tetap akan gagal kalau seluruh citra bergeser. Kedua, objek tidak otomatis lebih baik daripada piksel.
+Pada 6 September 2018, gempa di Hokkaido memicu ribuan longsor dangkal hanya dalam beberapa detik. Ini adalah latihan longsor dari kursus GEE101 yang disusun ulang supaya setiap langkahnya bisa diperiksa. Skrip membandingkan musim yang sama dengan selisih satu tahun, menerapkan aturan per piksel dan aturan per objek, lalu menilai keduanya terhadap inventaris longsor dari CAS Landslide Dataset [@xu2024caslandslide]. Ada dua pelajaran yang lebih berharga daripada petanya. Pertama, ambang tetap akan gagal kalau seluruh citra bergeser. Kedua, objek tidak otomatis lebih baik daripada piksel.
 
 {{< include _snippets/ch18_landslide_obia_iburi.qmd >}}
 

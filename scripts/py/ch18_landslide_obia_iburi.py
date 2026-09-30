@@ -117,7 +117,7 @@ detections_map = (post.visualize(bands=["B4", "B3", "B2"], min=0, max=0.25)
 
 
 def products():
-    src = "Sentinel-2 L1C (Copernicus), AW3D30 v4.1. Inventory: GEE101 asset. GEE."
+    src = "Sentinel-2 L1C, AW3D30 v4.1. Inventory: CAS Landslide Dataset (Xu et al. 2024). GEE."
     rgb = {"bands": ["B4", "B3", "B2"], "min": 0, "max": 0.25}
     return [
         {"kind": "map", "name": "ch18-before", "image": pre, "vis": rgb, "region": window,
