@@ -1,0 +1,32 @@
+# Forestry, Plantations and the EUDR {#sec-eudr}
+
+::: {.chapter-goal}
+#### In this chapter
+You will screen supplier plots against the EU Deforestation Regulation cut-off date. More importantly, you will learn why the first result of any such screen is a list of places to look, not a list of guilty farms.
+:::
+
+## The question the law asks
+
+From 2025 the EU Deforestation Regulation (EUDR) requires traders of rubber, palm oil, cocoa, coffee, soy, cattle and wood to show that each plot was not deforested after 31 December 2020. Remote sensing answers two parts of that question:
+
+1. Was the plot forest on the cut-off date? The EU's own reference map is the JRC Global Forest Cover 2020.
+2. Was forest lost there afterwards? Hansen Global Forest Change maps tree cover loss every year.
+
+A plot fails the screen when forest that existed at the cut-off was lost after it. That last clause matters. Loss on land that was already plantation or farmland in 2020 is not deforestation under the regulation.
+
+## A working example: a smallholder landscape in Jambi
+
+This is the screening logic of the author's traceability work for rubber and palm oil buyers. It runs here on public data only. Real supplier plots are client data, so a 1 km grid stands in for them.
+
+{{< include _snippets/ch26_eudr_check.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: a global map is not a verdict on a farm
+More than half of the grid fails the screen. Most of it is not new deforestation. Jambi is a landscape of old rubber gardens that look like forest from orbit. A global map made for the whole world cannot always tell them apart from natural forest. When a farmer replants old rubber, the loss map records it. A buyer who rejects every flagged plot punishes exactly the smallholders the regulation says it wants to protect. Use the screen to decide where to look. Then look: at very high resolution imagery, at planting records, and at the plot on the ground.
+:::
+
+## Exercises {.unnumbered}
+
+1. Set the tolerance from 0.5 ha to 0. How many plots change status? Is the extra loss real, or pixels on the plot edge?
+2. Replace Hansen with the JRC Tropical Moist Forest dataset. Which plots change status, and which dataset would you defend to an auditor?
+3. Pick three failed plots and look at them in the Sentinel-2 archive for 2019 and 2024. Which ones are forest conversion and which are replanting?

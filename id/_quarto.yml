@@ -94,6 +94,7 @@ book:
       chapters:
         - 24-flood.qmd
         - 25-mining.qmd
+        - 26-forestry-eudr.qmd
     - dashboard.qmd
     - references.qmd
   appendices:

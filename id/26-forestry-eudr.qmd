@@ -1,0 +1,32 @@
+# Kehutanan, Perkebunan, dan EUDR {#sec-eudr}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menyaring plot pemasok terhadap tanggal batas Regulasi Deforestasi Uni Eropa. Yang lebih penting, Anda akan memahami kenapa hasil pertama dari penyaringan seperti ini adalah daftar tempat yang perlu dicek, bukan daftar kebun yang bersalah.
+:::
+
+## Pertanyaan yang diajukan oleh aturan
+
+Mulai 2025, Regulasi Deforestasi Uni Eropa (EUDR) mewajibkan pedagang karet, sawit, kakao, kopi, kedelai, sapi, dan kayu membuktikan bahwa setiap plot tidak mengalami deforestasi setelah 31 Desember 2020. Penginderaan jauh menjawab dua bagian dari pertanyaan itu:
+
+1. Apakah plot itu hutan pada tanggal batas? Peta rujukan resmi Uni Eropa adalah JRC Global Forest Cover 2020.
+2. Apakah hutan di sana hilang setelahnya? Hansen Global Forest Change memetakan kehilangan tutupan pohon setiap tahun.
+
+Plot gagal disaring kalau hutan yang ada pada tanggal batas hilang setelah tanggal itu. Kalimat terakhir ini penting. Kehilangan tutupan di lahan yang pada 2020 sudah berupa kebun atau ladang bukan deforestasi menurut regulasi.
+
+## Contoh nyata: bentang lahan petani kecil di Jambi
+
+Ini adalah logika penyaringan dari pekerjaan penulis dalam penelusuran rantai pasok untuk pembeli karet dan sawit. Di sini hanya dijalankan dengan data publik. Plot pemasok yang sebenarnya adalah data klien, jadi diganti dengan grid 1 km.
+
+{{< include _snippets/ch26_eudr_check.qmd >}}
+
+::: {.callout-important}
+## Integritas ilmiah: peta global bukan vonis untuk satu kebun
+Lebih dari separuh grid gagal disaring. Sebagian besar bukan deforestasi baru. Jambi adalah bentang kebun karet tua yang dari satelit terlihat seperti hutan. Peta global yang dibuat untuk seluruh dunia tidak selalu bisa membedakannya dari hutan alam. Ketika petani meremajakan karet tuanya, peta kehilangan tutupan akan mencatatnya. Pembeli yang menolak semua plot yang tertandai justru menghukum petani kecil yang katanya ingin dilindungi oleh regulasi ini. Gunakan penyaringan untuk memutuskan di mana harus mengecek. Lalu benar benar cek: lewat citra resolusi sangat tinggi, catatan tanam, dan kondisi plot di lapangan.
+:::
+
+## Latihan {.unnumbered}
+
+1. Ubah toleransi dari 0,5 ha menjadi 0. Berapa plot yang berubah status? Apakah tambahan kehilangan itu nyata, atau hanya piksel di tepi plot?
+2. Ganti Hansen dengan dataset JRC Tropical Moist Forest. Plot mana yang berubah status, dan dataset mana yang akan Anda pertahankan di depan auditor?
+3. Pilih tiga plot yang gagal dan periksa di arsip Sentinel-2 tahun 2019 dan 2024. Mana yang konversi hutan dan mana yang peremajaan kebun?

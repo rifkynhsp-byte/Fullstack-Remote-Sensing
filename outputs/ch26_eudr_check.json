@@ -1,0 +1,21 @@
+[
+ {
+  "name": "ch26-eudr-map",
+  "kind": "map",
+  "caption": "Each 1 km cell stands in for a supplier plot. Black pixels are tree cover loss after 2020.",
+  "image": "images/real/ch26-eudr-map.jpg"
+ },
+ {
+  "name": "ch26-loss-years",
+  "kind": "chart",
+  "caption": "Tree cover loss per year across the whole area. Red bars fall after the EUDR cut-off.",
+  "image": "images/real/ch26-loss-years.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"loss_ha,year\n226.05,2001\n567.09,2002\n285.92,2003\n1579.9,2004\n1365.9,2005\n2714.7,2006\n5183.9,2007\n2872.2,2008\n3142.8,2009\n1139.6,2011\n3346.8,2012\n1254.5,2013\n2242.1,2014\n1673.9,2015\n3574.2,2016\n2703.7,2017\n2343.2,2018\n2847.7,2019\n1914.3,2020\n3311.3,2021\n2916.1,2022\n3526.5,2023\n4479.9,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_loss_by_year(df):\n    \"\"\"Loss per year; everything right of the line counts against a plot.\"\"\"\n    df = df.sort_values(\"year\")\n    colours = [\"#d7191c\" if y >= 2021 else \"#9aa5b1\" for y in df[\"year\"]]\n    fig, ax = plt.subplots(figsize=(7.5, 3.2))\n    ax.bar(df[\"year\"].astype(int), df[\"loss_ha\"], color=colours)\n    ax.axvline(2020.5, color=\"black\", lw=1, ls=\"--\")\n    ax.text(2020.6, ax.get_ylim()[1] * 0.92, \"EUDR cut-off\\n31 Dec 2020\", fontsize=7)\n    ax.set_ylabel(\"Tree cover loss (ha)\")\n    ax.set_title(\"Loss per year in the screening area (Hansen v1.12)\", loc=\"left\")\n    return fig\n\nplot_loss_by_year(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch26-status",
+  "kind": "table",
+  "caption": "Plots per screening status. More than half fail, and that is the real lesson: in Jambi's smallholder rubber landscape the 2020 forest map counts old rubber agroforest as forest, and replanting then reads as deforestation. A failed screen is a reason to look closer (imagery, farmer records, planting dates), not a verdict.",
+  "markdown": "| status                             |   plots |   forest2020_ha |   loss_after_2020_ha |\n|:-----------------------------------|--------:|----------------:|---------------------:|\n| deforestation after cut-off        |     697 |           22109 |                 6761 |\n| forest standing: check degradation |      40 |            1212 |                    5 |\n| no forest at cut-off               |     453 |             438 |                   17 |"
+ }
+]
