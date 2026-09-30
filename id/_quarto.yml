@@ -100,6 +100,7 @@ book:
         - 27-agriculture.qmd
         - 34-fire.qmd
         - 37-peat.qmd
+        - 35-urban-energy.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:
         - 28-map-production.qmd

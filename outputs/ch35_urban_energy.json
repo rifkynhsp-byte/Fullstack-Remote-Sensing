@@ -1,0 +1,46 @@
+[
+ {
+  "name": "ch35_urban_energy-webmap",
+  "kind": "html",
+  "html": "images/real/ch35_urban_energy-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch35-lst-map",
+  "kind": "map",
+  "caption": "Median daytime land surface temperature (about 10:00 local time) over the 2023 dry season. This is the temperature of surfaces, not of the air people breathe; the two differ most at midday.",
+  "image": "images/real/ch35-lst-map.jpg"
+ },
+ {
+  "name": "ch35-lst-table",
+  "kind": "table",
+  "caption": "Surface temperature by Dynamic World land cover (2023 mode). p10 and p90 show the spread inside each class.",
+  "markdown": "| land_cover         |   pixels |   mean_C |   p10_C |   p90_C |\n|:-------------------|---------:|---------:|--------:|--------:|\n| water              |   271899 |     32.4 |    29.9 |    37.4 |\n| flooded vegetation |    35720 |     35.5 |    32.3 |    39.3 |\n| trees              |    58086 |     38.1 |    32.8 |    42.4 |\n| crops              |    88753 |     39.9 |    35.8 |    44.1 |\n| grass              |     7676 |     41.3 |    38.3 |    44.8 |\n| built              |   533427 |     43.1 |    40.2 |    45.7 |\n| shrub and scrub    |    34157 |     43.2 |    40.4 |    45.6 |\n| bare               |     4044 |     43.6 |    38.9 |    48.6 |"
+ },
+ {
+  "name": "ch35-lst-chart",
+  "kind": "chart",
+  "caption": "The same comparison for a random sample of about 4,500 pixels: boxes for the middle half, dots for individual pixels.",
+  "image": "images/real/ch35-lst-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"cls,lst\n6,44.116\n0,38.678\n6,41.356\n6,42.082\n0,38.92\n0,29.857\n1,32.214\n4,42.145\n4,42.684\n0,30.121\n0,30.644\n6,41.894\n6,42.94\n0,29.845\n5,49.403\n6,45.867\n0,30.131\n6,44.146\n1,40.344\n5,39.73\n7,44.731\n4,39.971\n6,42.425\n1,35.854\n6,42.347\n0,30.273\n6,41.135\n0,30.032\n6,43.586\n0,33.504\n4,37.369\n6,45.685\n6,44.064\n6,43.854\n6,45.454\n6,40.542\n6,44.372\n6,40.518\n6,40.94\n0,30.444\n0,38.011\n6,41.853\n0,30.423\n6,39.847\n0,30.268\n6,39.204\n4,41.973\n6,45.192\n4,44.032\n6,45.167\n6,38.445\n0,30.04\n6,39.792\n6,41.176\n6,39.342\n0,33.123\n0,30.011\n3,36.118\n0,30.271\n0,30.623\n4,43.589\n6,44.293\n6,41.081\n0,30.032\n1,36.805\n6,42.875\n6,40.293\n7,45.172\n6,41.903\n0,30.086\n3,33.041\n6,39.756\n6,45.575\n1,39.013\n3,41.904\n0,29.857\n0,37.157\n4,38.061\n6,39.435\n0,38.114\n6,39.659\n4,37.898\n1,44.131\n6,43.541\n6,38.953\n0,30.189\n6,45.914\n6,43.266\n6,40.93\n6,44.478\n6,42.803\n6,39.394\n4,42.215\n4,38.083\n3,42.053\n0,37.726\n0,39.137\n0,29.97\n6,43.512\n4,44.822\n6,39.341\n6,42.473\n6,43.131\n6,40.556\n6,44.765\n1,40.192\n0,30.597\n6,42.181\n6,46.261\n6,42.885\n6,43.958\n6,40.024\n6,41.427\n6,41.515\n6,41.405\n4,42.872\n0,30.235\n0,34.045\n0,33.407\n4,43.181\n6,44.066\n6,42.171\n4,34.111\n6,46.524\n6,41.139\n6,41.956\n0,35.637\n6,45.062\n6,42.311\n6,46.042\n5,39.481\n4,41.446\n6,43.986\n0,32.638\n6,41.009\n6,42.21\n0,33.448\n0,36.87\n6,42.665\n6,42.808\n6,43.75\n6,54.066\n0,40.212\n0,33.894\n0,30.321\n3,33.093\n6,42.133\n4,39.624\n4,37.953\n0,31.609\n5,42.646\n6,46.987\n6,40.137\n4,37.044\n0,33.964\n6,39.139\n0,35.629\n0,39.536\n6,43.521\n6,43.808\n0,37.252\n6,41.238\n6,46.023\n6,39.182\n6,37.868\n0,30.093\n1,33.641\n1,41.133\n6,40.951\n0,32.482\n6,43.68\n6,47.836\n6,38.808\n1,37.035\n4,43.853\n5,43.253\n4,37.451\n0,37.697\n0,29.774\n6,37.44\n4,37.927\n4,39.79\n0,30.235\n6,43.829\n6,44.338\n4,41.945\n3,34.202\n5,45.143\n6,42.497\n6,44.709\n0,29.811\n0,30.252\n6,39.879\n6,44.671\n1,38.872\n0,38.254\n4,42.05\n1,38.838\n4,43.849\n0,32.276\n0,40.006\n0,31.691\n5,39.765\n1,41.132\n6,41.443\n0,38.344\n6,45.917\n5,45.292\n6,42.232\n6,41.233\n4,35.906\n6,41.007\n0,30.081\n6,40.963\n0,31.864\n0,29.979\n6,51.97\n0,30.556\n4,37.16\n5,41.918\n0,30.244\n0,31.339\n6,40.959\n0,34.928\n4,39.339\n5,43.666\n6,42.318\n0,39.455\n6,46.479\n6,39.559\n0,30.102\n6,44.574\n6,43.022\n0,33.18\n5,43.76\n0,37.498\n6,44.736\n0,34.769\n6,41.709\n6,42.219\n3,34.684\n6,42.872\n0,30.109\n0,35.432\n6,38.758\n0,30.15\n6,45.674\n3,32.019\n6,42.776\n5,43.772\n0,30.076\n6,45.374\n0,33.997\n6,39.279\n0,30.17\n6,36.757\n6,39.088\n6,44.91\n4,44.064\n6,45.305\n6,39.91\n6,44.57\n4,37.422\n6,42.465\n2,41.262\n6,42.697\n6,39.513\n6,41.672\n6,45.425\n6,44.334\n0,30.03\n6,45.579\n6,41.467\n6,43.029\n7,49.855\n6,44.939\n6,45.322\n4,41.938\n0,33.127\n0,32.211\n1,32.845\n5,43.726\n6,42.085\n0,30.073\n0,30.15\n6,41.942\n1,40.139\n6,45.917\n1,35.232\n6,46.281\n3,32.611\n6,43.321\n0,30.905\n0,30.509\n6,42.414\n4,36.596\n6,41.756\n4,40.055\n6,43.369\n6,48.445\n6,45.955\n6,46.674\n0,32.908\n6,42.108\n6,44.242\n6,45.876\n0,32.163\n0,30.505\n0,30.406\n1,43.177\n1,33.204\n6,42.656\n1,39.04\n1,37.779\n0,30.367\n6,41.239\n0,30.1\n0,30.546\n6,42.519\n6,41.195\n0,37.194\n6,41.005\n6,43.114\n6,45.582\n6,43.536\n0,30.134\n1,39.918\n3,36.393\n0,31.182\n6,43.94\n6,41.609\n6,41.282\n6,41.46\n6,41.761\n4,43.383\n6,45.495\n0,36.167\n6,45.274\n0,32.539\n6,42.514\n6,43.989\n6,41.552\n3,32.37\n0,30.488\n0,32.602\n6,40.359\n3,34.309\n0,35.639\n0,29.948\n0,41.979\n6,46.684\n4,43.343\n4,36.355\n6,43.456\n5,41.925\n0,32.038\n0,30.638\n4,37.474\n6,42.663\n0,32.472\n6,43.101\n6,44.167\n1,41.116\n6,45.49\n4,38.093\n6,38.546\n6,44.873\n6,40.315\n4,39.542\n6,42.267\n6,37.363\n0,30.268\n0,30.464\n6,42.007\n6,44.839\n4,39.283\n0,30.645\n0,30.107\n0,29.95\n0,30.069\n7,40.928\n6,44.529\n6,46.18\n3,33.986\n6,44.037\n6,47.713\n0,30.625\n6,40.513\n6,41.004\n6,43.189\n4,36.172\n0,33.537\n6,46.859\n6,42.412\n0,35.063\n0,30.083\n1,41.122\n0,34.029\n6,44.177\n6,44.758\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_lst_by_class(df):\n    df = df.assign(land_cover=df[\"cls\"].astype(int).map(DW_NAMES))\n    keep = df[\"land_cover\"].value_counts()\n    keep = keep[keep > 50].index\n    order = (df[df.land_cover.isin(keep)].groupby(\"land_cover\")[\"lst\"].median()\n             .sort_values().index.tolist())\n    fig, ax = plt.subplots(figsize=(7, 3.6))\n    ax.boxplot([df.loc[df.land_cover == c, \"lst\"] for c in order], vert=False,\n               tick_labels=order, showfliers=False, widths=0.55,\n               medianprops={\"color\": \"#c0392b\", \"lw\": 2})\n    rng = np.random.default_rng(0)\n    for i, c in enumerate(order, 1):\n        v = df.loc[df.land_cover == c, \"lst\"].sample(min(150, (df.land_cover == c).sum()),\n                                                     random_state=0)\n        ax.scatter(v, i + rng.uniform(-0.2, 0.2, len(v)), s=3, color=\"#6b7680\", alpha=0.35)\n    ax.set_xlabel(\"Land surface temperature, dry season 2023 (°C)\")\n    ax.set_title(\"Built-up land and dry scrub run hottest; water and trees stay coolest\", loc=\"left\",\n                 fontsize=10)\n    return fig\n\nplot_lst_by_class(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch35-mcda-map",
+  "kind": "map",
+  "caption": "Weighted overlay: sunshine 0.4, flat ground 0.3, near built-up land 0.3. Blank land is excluded (forest, water, built-up, protected, slopes over 15°). The straight-edged blocks come from the 9 km ERA5-Land cells; a finer solar resource layer would remove them. A screen for where to look, not a site decision.",
+  "image": "images/real/ch35-mcda-map.jpg"
+ },
+ {
+  "name": "ch35-mcda-table",
+  "kind": "table",
+  "caption": "Classes are ranks of the allowed land, so 'best' always means the top 10 %. The score column shows where each class starts.",
+  "markdown": "| class                         |   score_from |   area_km2 |\n|:------------------------------|-------------:|-----------:|\n| low: bottom half              |         0.18 |        948 |\n| fair: 50th to 75th percentile |         0.83 |        488 |\n| good: 75th to 90th            |         0.91 |        291 |\n| best: top 10 %                |         0.95 |        173 |"
+ },
+ {
+  "name": "ch35-sensitivity",
+  "kind": "table",
+  "caption": "The top 10 % of allowed land under five sets of weights, compared with the base set. Overlap is intersection over union: 1 means the same land, 0 means none in common.",
+  "markdown": "| weights (sun / flat / access)   |   overlap_with_base |\n|:--------------------------------|--------------------:|\n| base 0.4 / 0.3 / 0.3            |                1.00 |\n| sun first 0.6 / 0.2 / 0.2       |                0.67 |\n| flat first 0.2 / 0.6 / 0.2      |                0.69 |\n| access first 0.2 / 0.2 / 0.6    |                0.69 |\n| equal 1/3 each                  |                0.89 |"
+ }
+]

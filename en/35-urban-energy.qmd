@@ -1,0 +1,43 @@
+# Cities and Energy: Urban Heat and Solar Siting {#sec-urban-energy}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map surface heat across Surabaya and link it to what covers the ground. Then you will build a multi-criteria screen for solar farms on Sumbawa and test how much the answer changes when someone else chooses the weights.
+:::
+
+## Two questions a planner asks
+
+City and energy planners bring questions that sound simple. "Where is the city hottest?" "Where could a solar farm go?" Both can be answered from open satellite data in an afternoon. Both are also easy to answer badly: the first by confusing surface temperature with air temperature, the second by presenting one set of weights as if it were the truth.
+
+## Urban heat: surfaces, not air
+
+Landsat's thermal band measures how hot surfaces are, around 10:00 local time. Roofs, roads and bare ground heat up fast in the sun; water and tree canopy stay cooler. This is the surface urban heat island. It is not the air temperature a person feels, which varies much less. Surface heat is still useful, because it shows which surfaces store and give off heat, and those are the ones planners can change: roof materials, shade trees, open water.
+
+## Solar siting as a screen
+
+A multi-criteria screen (MCDA, or weighted overlay) has four steps:
+
+1. **Exclude** land that cannot be used: forest, water, built-up land, protected areas, steep slopes.
+2. **Score** each criterion from 0 (worst) to 1 (best). Here: sunshine (ERA5-Land radiation), flatness (slope, 1 at 0° falling to 0 at 10°) and access (distance to built-up land, a stand-in for roads, grid and demand; 1 at 0 km falling to 0 at 20 km).
+3. **Weight and add**: sunshine 0.4, flatness 0.3, access 0.3.
+4. **Rank** the allowed land and look first at the top 10 %.
+
+This follows the logic of the author's solar siting tool, rebuilt with public layers only. A real site study adds grid substations, land status, flood risk and a site visit. The screen only tells you where to look first.
+
+{{< include _snippets/ch35_urban_energy.qmd >}}
+
+## What the numbers say
+
+**Heat.** Across Surabaya, built-up land and dry scrub average 43 °C at the surface in the dry season. Trees average 38 °C and open water 32 °C. The spread inside each class is wide, several degrees between the 10th and 90th percentile, so a single class average hides a lot. The chart shows that spread. Flooded vegetation (fish ponds and mangrove edges) sits between trees and water.
+
+**Solar.** The weight test is the main lesson. Change the weights from the base set to "sunshine first", "flatness first" or "access first", and the top 10 % of land overlaps the base by only 0.67 to 0.69 (intersection over union). About a third of the "best" land changes with a choice that is a judgement, not a measurement. Equal weights stay close to the base (0.89), because the base weights are close to equal.
+
+So report an MCDA with its weights, show the result under at least two other sets, and point to the land that stays in the top class under all of them. That land is the robust answer.
+
+::: {.callout-tip}
+## An honest MCDA
+- Write down who chose the weights and why.
+- Show at least two alternative weight sets and the overlap between them.
+- Mark the coarse layers. Here the sunshine layer is 9 km, which shows as blocks on the map.
+- Call the result a screen, and name what a site study still has to check.
+:::

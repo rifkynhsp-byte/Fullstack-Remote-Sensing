@@ -1,0 +1,43 @@
+# Kota dan Energi: Panas Perkotaan dan Lokasi Tenaga Surya {#sec-urban-energy}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memetakan panas permukaan di Surabaya dan mengaitkannya dengan tutupan lahannya. Setelah itu Anda akan menyusun penapisan multikriteria untuk lokasi pembangkit listrik tenaga surya di Sumbawa, lalu menguji seberapa besar jawabannya berubah kalau orang lain yang menentukan bobotnya.
+:::
+
+## Dua pertanyaan dari perencana
+
+Perencana kota dan energi sering datang dengan pertanyaan yang kedengarannya sederhana. "Bagian kota mana yang paling panas?" "Di mana PLTS bisa dibangun?" Keduanya bisa dijawab dari data satelit terbuka dalam satu sore. Keduanya juga gampang dijawab dengan keliru: yang pertama karena suhu permukaan disamakan dengan suhu udara, yang kedua karena satu set bobot disajikan seolah-olah kebenaran.
+
+## Panas perkotaan: permukaan, bukan udara
+
+Kanal termal Landsat mengukur panasnya permukaan, sekitar pukul 10.00 waktu setempat. Atap, jalan, dan tanah terbuka cepat panas terkena matahari, sementara air dan tajuk pohon tetap lebih sejuk. Inilah pulau panas perkotaan permukaan (surface urban heat island). Ini bukan suhu udara yang dirasakan orang, yang perbedaannya jauh lebih kecil. Meski begitu, panas permukaan tetap berguna karena menunjukkan permukaan mana yang menyimpan dan melepas panas. Justru permukaan itulah yang bisa diubah perencana: bahan atap, pohon peneduh, dan badan air.
+
+## Penapisan lokasi PLTS
+
+Penapisan multikriteria (MCDA, atau weighted overlay) punya empat langkah:
+
+1. **Keluarkan** lahan yang tidak bisa dipakai: hutan, air, lahan terbangun, kawasan lindung, lereng curam.
+2. **Beri skor** setiap kriteria dari 0 (terburuk) sampai 1 (terbaik). Di sini: penyinaran matahari (radiasi ERA5-Land), kedataran (lereng; 1 pada 0°, turun sampai 0 pada 10°), dan akses (jarak ke lahan terbangun, sebagai pengganti jalan, jaringan listrik, dan permintaan; 1 pada 0 km, turun sampai 0 pada 20 km).
+3. **Bobot lalu jumlahkan**: matahari 0,4, kedataran 0,3, akses 0,3.
+4. **Urutkan** lahan yang diizinkan, lalu lihat dulu 10 % teratas.
+
+Logikanya mengikuti alat penentuan lokasi PLTS milik penulis, dibangun ulang hanya dengan data publik. Studi lokasi sungguhan masih menambahkan gardu induk, status lahan, risiko banjir, dan kunjungan lapangan. Penapisan ini hanya memberi tahu di mana sebaiknya mulai mencari.
+
+{{< include _snippets/ch35_urban_energy.qmd >}}
+
+## Apa kata angkanya
+
+**Panas.** Di Surabaya, lahan terbangun dan semak kering rata-rata bersuhu permukaan 43 °C pada musim kemarau. Pepohonan rata-rata 38 °C dan perairan terbuka 32 °C. Sebaran di dalam tiap kelas lebar, beberapa derajat antara persentil ke-10 dan ke-90, jadi rata-rata satu kelas menyembunyikan banyak hal. Grafik memperlihatkan sebaran itu. Vegetasi tergenang (tambak dan tepi mangrove) berada di antara pepohonan dan air.
+
+**Tenaga surya.** Pelajaran utamanya ada pada uji bobot. Kalau bobot diganti dari set dasar menjadi "matahari dulu", "kedataran dulu", atau "akses dulu", 10 % lahan teratas hanya tumpang-tindih 0,67 sampai 0,69 dengan set dasar (irisan dibagi gabungan). Kira-kira sepertiga lahan "terbaik" berubah hanya karena satu pilihan yang sifatnya pertimbangan, bukan pengukuran. Bobot yang sama rata tetap dekat dengan set dasar (0,89), karena bobot dasarnya memang hampir sama rata.
+
+Jadi, laporkan MCDA bersama bobotnya, tunjukkan hasilnya dengan paling sedikit dua set bobot lain, dan tunjuk lahan yang tetap masuk kelas teratas di semua set. Lahan itulah jawaban yang kokoh.
+
+::: {.callout-tip}
+## MCDA yang jujur
+- Tuliskan siapa yang menentukan bobot dan alasannya.
+- Tunjukkan paling sedikit dua set bobot alternatif dan tumpang-tindihnya.
+- Tandai lapisan yang kasar. Di sini data penyinaran beresolusi 9 km, terlihat sebagai blok-blok di peta.
+- Sebut hasilnya sebagai penapisan, dan sebutkan apa saja yang masih harus diperiksa dalam studi lokasi.
+:::
