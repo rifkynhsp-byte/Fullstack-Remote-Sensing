@@ -91,7 +91,7 @@ Untuk band tunggal, `palette` menggantikan pemetaan RGB dengan tangga warna yang
 
 **Kategoris** untuk kelas tanpa urutan: tutupan lahan. Warna yang jelas berbeda dengan tingkat terang serupa, dipilih supaya tidak ada kelas yang tanpa sengaja terlihat lebih penting daripada yang lain.
 
-![Palet terbaca ketika tingkat terangnya naik secara mantap. Baris tengah menunjukkan tampilannya dalam skala abu abu; baris bawah menunjukkan kurva tingkat terangnya. Pelangi berbalik arah tiga kali dan runtuh menjadi ambigu ketika dicetak hitam putih.](../images/palette-comparison.png){#fig-palette}
+![Palet terbaca ketika tingkat terangnya naik secara mantap. Baris tengah menunjukkan tampilannya dalam skala abu abu; baris bawah menunjukkan kurva tingkat terangnya. Pelangi berbalik arah tiga kali dan runtuh menjadi ambigu ketika dicetak hitam putih.](images/palette-comparison.png){#fig-palette}
 
 ::: {.callout-warning}
 ## Kesalahan umum: palet pelangi

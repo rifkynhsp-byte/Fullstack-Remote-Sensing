@@ -31,7 +31,7 @@ Akurasi keseluruhan tabel itu 90 persen, yang terdengar terhormat dan nyaris tid
 
 Pola yang sama muncul lagi pada contoh lima kelas di @fig-confusion, tempat dua kelas tambahan menurunkan angka keseluruhan tanpa mengubah tempat kekeliruan sebenarnya berada.
 
-![Contoh lima kelas, dibaca dua cara. Akurasi produsen mengalir sepanjang baris, akurasi pengguna menurun sepanjang kolom, dan angka keseluruhan 85 persen menyembunyikan bahwa mangrove dan hutan lain saling mengacaukan di kedua arah.](../images/confusion-matrix.png){#fig-confusion}
+![Contoh lima kelas, dibaca dua cara. Akurasi produsen mengalir sepanjang baris, akurasi pengguna menurun sepanjang kolom, dan angka keseluruhan 85 persen menyembunyikan bahwa mangrove dan hutan lain saling mengacaukan di kedua arah.](images/confusion-matrix.png){#fig-confusion}
 
 ### Matriks yang sama, dihitung oleh kode
 

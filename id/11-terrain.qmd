@@ -30,7 +30,7 @@ Setiap produk global dalam tabel itu adalah digital **surface** model, bukan dig
 
 Di atas tegakan mangrove setinggi 25 meter, surface model melaporkan sekitar 25 meter.
 
-![Setiap DEM global merekam puncak tajuk. Aturan naif "mangrove ada di bawah 10 meter" karena itu justru mengecualikan tegakan paling tinggi, yang merupakan tegakan dengan biomassa dan karbon terbesar.](../images/dsm-vs-dtm.png){#fig-dsm}
+![Setiap DEM global merekam puncak tajuk. Aturan naif "mangrove ada di bawah 10 meter" karena itu justru mengecualikan tegakan paling tinggi, yang merupakan tegakan dengan biomassa dan karbon terbesar.](images/dsm-vs-dtm.png){#fig-dsm}
 
 @fig-dsm menunjukkan akibatnya dalam satu penampang. Tegakan mangrove dewasa terbaca 26 meter dan gugur oleh ambang batas. Tegakan muda hasil regenerasi terbaca 8 meter dan lolos. Hasil akhirnya adalah peta yang menemukan regenerasi muda dengan sempurna dan melewatkan hutan dewasa, dan itu hal terburuk yang bisa hilang dari penilaian blue carbon.
 

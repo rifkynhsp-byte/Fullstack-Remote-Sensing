@@ -17,6 +17,10 @@
 project:
   type: book
   output-dir: _book
+  # Interactive dashboards are referenced from raw HTML iframes, which Quarto
+  # does not follow, so publish them explicitly.
+  resources:
+    - images/real/*.html
 
 lang: en
 

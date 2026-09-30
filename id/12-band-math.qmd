@@ -25,7 +25,7 @@ Yang tidak diniadakannya adalah efek **penjumlahan**. Radiansi jalur atmosfer me
 
 Mode kegagalannya lebih penting daripada rumusnya. Begitu indeks luas daun melewati sekitar 3, daun tambahan berhenti menaikkan reflektansi inframerah dekat secara berarti, dan NDVI mendatar di sekitar 0,8 sampai 0,9. Inilah **kejenuhan**, dan hutan tropis hidup permanen di dalamnya.
 
-![NDVI mendatar di atas indeks luas daun sekitar 3 sementara EVI terus naik. Dimodelkan dengan tajuk sederhana: merah diserap dengan cepat, inframerah dekat menumpuk lewat hamburan berulang.](../images/ndvi-saturation.png){#fig-saturation}
+![NDVI mendatar di atas indeks luas daun sekitar 3 sementara EVI terus naik. Dimodelkan dengan tajuk sederhana: merah diserap dengan cepat, inframerah dekat menumpuk lewat hamburan berulang.](images/ndvi-saturation.png){#fig-saturation}
 
 @fig-saturation adalah argumennya dalam satu gambar. Konsekuensi praktisnya: NDVI membedakan hutan dari bukan hutan dengan sangat baik, dan membedakan hutan terdegradasi dari hutan utuh nyaris tidak sama sekali. Kalau pertanyaan Anda tentang kondisi hutan dan bukan luas hutan, NDVI saja tidak akan menjawabnya, dan klasifikasi sebaik apa pun tidak akan menyelamatkannya.
 

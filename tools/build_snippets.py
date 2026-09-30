@@ -184,9 +184,9 @@ def outputs_block(stem: str, lang_code: str) -> str:
             parts += [f"*{lab['failed']}* ({item['name']})", ""]
             continue
         if item["kind"] in ("map", "chart", "animation"):
-            parts += [f"![{caption}](../{item['image']}){{.lightbox fig-alt=\"{caption}\"}}", ""]
+            parts += [f"![{caption}]({item['image']}){{.lightbox fig-alt=\"{caption}\"}}", ""]
         elif item["kind"] == "html":
-            parts += [f'<iframe src="../{item["html"]}" width="100%" '
+            parts += [f'<iframe src="{item["html"]}" width="100%" '
                       f'height="{item.get("height", 520)}" style="border:0" '
                       f'loading="lazy" title="{item["name"]}"></iframe>', "",
                       f"*{caption}*", ""]

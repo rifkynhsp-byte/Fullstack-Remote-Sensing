@@ -13,7 +13,7 @@ Kalau metode Anda mensyaratkan citra cerah, metode Anda tidak bekerja di sini. J
 
 Wawasannya sederhana: awan bergerak. Piksel yang tertutup pada 3 Maret bisa jadi cerah pada 18 Maret, dan piksel yang tertutup pada 18 Maret bisa jadi cerah pada tanggal 3. Ambil setiap perekaman dalam setahun, hapus piksel yang terkontaminasi dari masing masing, lalu ambil median dari yang tersisa di setiap lokasi. Keluarannya tidak berlubang meskipun tidak ada satu pun masukan yang bebas lubang, dan setiap titik disusun dari tanggal mana pun yang kebetulan cerah di titik itu.
 
-![Enam perekaman sintetis atas permukaan yang sama, masing masing dengan awan di tempat berbeda. Tidak ada satu pun yang layak pakai. Median dari yang lolos masking tidak berlubang, dan peta jumlah observasi menunjukkan di mana keyakinannya paling rendah.](../images/compositing.png){#fig-compositing}
+![Enam perekaman sintetis atas permukaan yang sama, masing masing dengan awan di tempat berbeda. Tidak ada satu pun yang layak pakai. Median dari yang lolos masking tidak berlubang, dan peta jumlah observasi menunjukkan di mana keyakinannya paling rendah.](images/compositing.png){#fig-compositing}
 
 @fig-compositing adalah seluruh argumen bab ini dalam satu tampilan. Perhatikan panel kanan bawah: jumlah observasi bersih per piksel berkisar 2 sampai 6. Piksel yang hanya punya dua observasi bukan piksel yang salah, tetapi ia piksel yang keyakinannya jauh lebih rendah daripada tetangganya yang punya enam.
 

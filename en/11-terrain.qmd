@@ -37,7 +37,7 @@ So the intuitive rule, *mangrove sits below 10 metres elevation*, systematically
 The symptom is peculiar and easy to misread: your map finds young, short, regenerating mangrove perfectly and misses mature stands. It looks like a spectral problem with dense canopy. It is a height problem with a surface model.
 :::
 
-![Every global DEM records canopy top. The naive rule "mangrove sits below 10 m" therefore excludes the tallest stands, which are the ones holding the most biomass and carbon.](../images/dsm-vs-dtm.png){#fig-dsm}
+![Every global DEM records canopy top. The naive rule "mangrove sits below 10 m" therefore excludes the tallest stands, which are the ones holding the most biomass and carbon.](images/dsm-vs-dtm.png){#fig-dsm}
 
 @fig-dsm shows the consequence in one cross section. Mature mangrove reads 26 m and fails the threshold. Young regrowth reads 8 m and passes. The result is a map that finds young regeneration perfectly and misses mature forest.
 

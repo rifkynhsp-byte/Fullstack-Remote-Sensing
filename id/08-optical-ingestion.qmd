@@ -46,7 +46,7 @@ NDVI yang dihitung pada Level-1C dan NDVI yang dihitung pada Level-2A di atas hu
 
 ## Rantai filter
 
-![Arsip global menyusut menjadi satu citra melalui empat filter. Setiap filter bersifat lazy: tidak ada satu piksel pun yang diambil sampai ada yang memaksa evaluasi.](../images/filter-funnel.png){#fig-funnel}
+![Arsip global menyusut menjadi satu citra melalui empat filter. Setiap filter bersifat lazy: tidak ada satu piksel pun yang diambil sampai ada yang memaksa evaluasi.](images/filter-funnel.png){#fig-funnel}
 
 @fig-funnel menunjukkan bentuk yang berlaku hampir di setiap alur kerja optik: koleksi, `filterDate`, `filterBounds`, filter metadata, `sort`, lalu `first`. Angkanya representatif untuk satu tile di pesisir tropis basah selama satu tahun, dan yang penting adalah bentuknya, bukan angka persisnya.
 

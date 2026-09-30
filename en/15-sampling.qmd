@@ -185,7 +185,7 @@ If a model will only ever be applied to the area it was trained on, a random spl
 Report both, and label them. Quoting only the random split is not wrong so much as incomplete, and a reviewer who knows this literature will ask.
 :::
 
-![Random splitting leaves every training point with a test point close by. Block splitting moves the nearest test point roughly two and a half times further away, which is the leakage being removed.](../images/block-cv.png){#fig-blockcv}
+![Random splitting leaves every training point with a test point close by. Block splitting moves the nearest test point roughly two and a half times further away, which is the leakage being removed.](images/block-cv.png){#fig-blockcv}
 
 The distances under each panel are computed, not illustrative. In the random split the mean distance from a training point to the nearest test point is 0.53 units; under block splitting it is 1.30.
 

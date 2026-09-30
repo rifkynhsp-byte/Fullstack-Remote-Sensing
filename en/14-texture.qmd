@@ -60,7 +60,7 @@ Run it on **one band**, not the whole stack. Eighteen output bands per input mea
 
 Near infrared is the usual choice for vegetation, because it has the greatest contrast between sunlit crown and shadowed gap, so canopy structure is most visible there. For urban work a visible band often works better, because shadow between buildings carries the structure.
 
-![Two synthetic canopies with deliberately matched mean reflectance. Only the arrangement differs, and GLCM entropy separates them: 4.95 for the planted grid against 8.25 for the natural stand.](../images/glcm-texture.png){#fig-texture}
+![Two synthetic canopies with deliberately matched mean reflectance. Only the arrangement differs, and GLCM entropy separates them: 4.95 for the planted grid against 8.25 for the natural stand.](images/glcm-texture.png){#fig-texture}
 
 The means in @fig-texture are matched on purpose. Every spectral index computed on those two images returns the same answer. Entropy nearly doubles.
 

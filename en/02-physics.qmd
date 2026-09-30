@@ -55,7 +55,7 @@ A plant under stress often loses cell structure before it loses chlorophyll. So 
 And a dead but structurally intact leaf, or a dry leaf litter layer, can still produce a moderate near infrared response. NDVI over recently cleared land with residual debris will not fall as far as intuition suggests, which is a documented source of false negatives in deforestation detection.
 :::
 
-![The three signatures the exercises ask you to draw from memory, with Sentinel-2 band positions overlaid. Shaded grey marks the water vapour absorption features; note that Sentinel-2 places no land observation band inside them. Curves are representative published values rather than a measurement of one location.](../images/spectral-signatures.png){#fig-signatures}
+![The three signatures the exercises ask you to draw from memory, with Sentinel-2 band positions overlaid. Shaded grey marks the water vapour absorption features; note that Sentinel-2 places no land observation band inside them. Curves are representative published values rather than a measurement of one location.](images/spectral-signatures.png){#fig-signatures}
 
 Two things in that figure are worth staring at. The near infrared jump is roughly a factor of fifteen from the red trough, which is why every vegetation index is built on that pair. And the band positions are not evenly spaced: they cluster where the atmosphere transmits and leave gaps where water vapour absorbs.
 

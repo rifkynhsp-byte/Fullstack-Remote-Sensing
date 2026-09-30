@@ -29,7 +29,7 @@ The diagonal is agreement. Everything off the diagonal is error, and the off dia
 
 The overall accuracy here is 90 percent, which sounds respectable and tells you almost nothing. What the table actually says is that mangrove and other forest are confusing each other in both directions, 23 one way and 18 the other, while water is essentially solved. Every improvement worth making lives in that one class pair.
 
-![A five class example, read two ways. Producer accuracy runs along the rows, user accuracy down the columns, and the overall figure of 85 percent conceals that mangrove and other forest are confusing each other in both directions.](../images/confusion-matrix.png){#fig-confusion}
+![A five class example, read two ways. Producer accuracy runs along the rows, user accuracy down the columns, and the overall figure of 85 percent conceals that mangrove and other forest are confusing each other in both directions.](images/confusion-matrix.png){#fig-confusion}
 
 ### The same matrix, scored by code
 

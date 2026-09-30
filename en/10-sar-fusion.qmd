@@ -15,7 +15,7 @@ That sounds like it should end the chapter. It does not, because radar is not a 
 
 ## What backscatter actually responds to
 
-![Three scattering mechanisms account for most of what you see in a radar image. Calm water reflects the pulse away and reads dark; canopy scatters it within a volume; trunks standing in water return it along its incoming path.](../images/radar-scattering.png){#fig-scattering}
+![Three scattering mechanisms account for most of what you see in a radar image. Calm water reflects the pulse away and reads dark; canopy scatters it within a volume; trunks standing in water return it along its incoming path.](images/radar-scattering.png){#fig-scattering}
 
 
 Optical sensors measure **composition**: what a surface is made of, through the pigments and water that absorb at particular wavelengths. Radar measures **structure**: how a surface is arranged in three dimensions.
@@ -71,7 +71,7 @@ Sentinel-1 passes over on ascending and descending orbits, viewing the same terr
 Compositing both directions together adds a geometric signal that has nothing to do with the ground and everything to do with which day the satellite happened to pass. Filter on `orbitProperties_pass` to a single direction, and say which one in your methods.
 :::
 
-![Speckle is multiplicative and inherent, not sensor noise. A focal median suppresses it while keeping the boundary; a focal mean suppresses it and smears the boundary with it.](../images/speckle-filter.png){#fig-speckle}
+![Speckle is multiplicative and inherent, not sensor noise. A focal median suppresses it while keeping the boundary; a focal mean suppresses it and smears the boundary with it.](images/speckle-filter.png){#fig-speckle}
 
 The figure quantifies the trade rather than asserting it. Read the caption under the panels for the measured edge gradient.
 

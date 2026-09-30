@@ -46,7 +46,7 @@ An NDVI computed on Level-1C and an NDVI computed on Level-2A over the same fore
 
 ## The filter chain
 
-![A global archive collapses to one scene through four filters. Every filter is lazy: no pixel is fetched until something forces evaluation. Counts are representative for one tile over a wet tropical coast, so the shape is the point rather than the exact numbers.](../images/filter-funnel.png){#fig-funnel}
+![A global archive collapses to one scene through four filters. Every filter is lazy: no pixel is fetched until something forces evaluation. Counts are representative for one tile over a wet tropical coast, so the shape is the point rather than the exact numbers.](images/filter-funnel.png){#fig-funnel}
 
 
 The full script for this chapter loads the Sentinel-2 archive, narrows it to one delta and one year, and displays the clearest available scene.

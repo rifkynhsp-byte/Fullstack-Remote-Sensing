@@ -17,7 +17,7 @@ Kedengarannya itu sudah cukup untuk menutup bab ini. Ternyata tidak, karena rada
 
 Sensor optik mengukur **komposisi**: terbuat dari apa sebuah permukaan, melalui pigmen dan air yang menyerap pada panjang gelombang tertentu. Radar mengukur **struktur**: bagaimana permukaan itu tersusun dalam tiga dimensi.
 
-![Tiga mekanisme hamburan yang menjelaskan hampir semua yang Anda lihat pada citra radar. Air tenang memantulkan pulsa menjauh dan tampak gelap; tajuk menghamburkannya di dalam volume; batang pohon yang berdiri di air mengembalikannya menyusuri jalur datangnya.](../images/radar-scattering.png){#fig-scattering}
+![Tiga mekanisme hamburan yang menjelaskan hampir semua yang Anda lihat pada citra radar. Air tenang memantulkan pulsa menjauh dan tampak gelap; tajuk menghamburkannya di dalam volume; batang pohon yang berdiri di air mengembalikannya menyusuri jalur datangnya.](images/radar-scattering.png){#fig-scattering}
 
 Tiga sifat menentukan apa yang kembali, dan @fig-scattering menggambarkan ketiganya.
 
@@ -52,7 +52,7 @@ Citra radar punya kualitas berbintik yang terlihat seperti derau sensor, dan buk
 
 Setiap sel resolusi berisi banyak penghambur individual. Pantulan dari masing masing tiba dengan fase berbeda lalu saling berinterferensi, konstruktif di sebagian sel dan destruktif di sebagian lain. Hasilnya fluktuasi multiplikatif yang tidak bisa dihilangkan sensor sebaik apa pun, karena ia sifat fisikanya, bukan cacat instrumennya.
 
-![Speckle bersifat multiplikatif dan melekat. Focal median menekannya sambil mempertahankan batas; focal mean menekannya sekaligus mengaburkan batasnya.](../images/speckle-filter.png){#fig-speckle}
+![Speckle bersifat multiplikatif dan melekat. Focal median menekannya sambil mempertahankan batas; focal mean menekannya sekaligus mengaburkan batasnya.](images/speckle-filter.png){#fig-speckle}
 
 Gambar itu mengukur pertukarannya, bukan sekadar menyatakannya. Baca keterangan di bawah panelnya untuk gradien tepi yang terukur.
 

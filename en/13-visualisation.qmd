@@ -91,7 +91,7 @@ For a single band, `palette` replaces the RGB mapping with a colour ramp spread 
 
 **Categorical** for classes with no ordering: land cover. Distinct hues of similar lightness, chosen so no class looks more important than another by accident.
 
-![A palette is readable when its lightness rises steadily. The middle row shows each one in greyscale; the bottom row shows the lightness curve. Rainbow reverses direction three times and collapses into ambiguity when printed in black and white.](../images/palette-comparison.png){#fig-palette}
+![A palette is readable when its lightness rises steadily. The middle row shows each one in greyscale; the bottom row shows the lightness curve. Rainbow reverses direction three times and collapses into ambiguity when printed in black and white.](images/palette-comparison.png){#fig-palette}
 
 ::: {.callout-warning}
 ## Common failure: the rainbow palette

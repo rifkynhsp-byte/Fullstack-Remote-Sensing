@@ -182,7 +182,7 @@ Laporkan keduanya, dan beri label yang jelas. Menyebut hanya angka pembagian aca
 
 Bagi area studi menjadi blok blok geografis. Tetapkan **blok utuh** ke setiap fold, jangan pernah titik per titik. Latih pada sebagian blok, uji pada blok yang disisihkan. Model lalu terpaksa menggeneralisasi melintasi ruang, bukan menginterpolasi di dalamnya.
 
-![Pembagian acak menyisakan titik uji yang selalu dekat dari setiap titik latih. Pembagian blok memindahkan titik uji terdekat kira kira dua setengah kali lebih jauh, dan selisih itulah kebocoran yang sedang dihilangkan.](../images/block-cv.png){#fig-blockcv}
+![Pembagian acak menyisakan titik uji yang selalu dekat dari setiap titik latih. Pembagian blok memindahkan titik uji terdekat kira kira dua setengah kali lebih jauh, dan selisih itulah kebocoran yang sedang dihilangkan.](images/block-cv.png){#fig-blockcv}
 
 Jarak di bawah setiap panel pada @fig-blockcv dihitung, bukan sekadar ilustrasi. Pada pembagian acak, jarak rata rata dari titik latih ke titik uji terdekat adalah 0,53 satuan; pada pembagian blok ia menjadi 1,30.
 

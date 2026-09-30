@@ -31,7 +31,7 @@ The practical consequence: NDVI distinguishes forest from not forest very well, 
 
 **SAVI** adds a soil brightness correction $L$. At $L = 0.5$ it suits intermediate cover; $L = 1$ suits sparse cover, $L = 0.25$ dense. At $L = 0$ it reduces exactly to NDVI, which is a useful check that you understand what the parameter does. It matters on the landward fringe and over young replanted stands, where bright mud between crowns inflates NDVI.
 
-![NDVI plateaus above a leaf area index of about 3 while EVI keeps climbing. Modelled with a simple canopy: red is absorbed quickly, near infrared accumulates through multiple scattering.](../images/ndvi-saturation.png){#fig-saturation}
+![NDVI plateaus above a leaf area index of about 3 while EVI keeps climbing. Modelled with a simple canopy: red is absorbed quickly, near infrared accumulates through multiple scattering.](images/ndvi-saturation.png){#fig-saturation}
 
 @fig-saturation is the argument in one picture. Past LAI 3, adding leaves barely moves NDVI, so intact and degraded tropical forest return nearly the same number.
 

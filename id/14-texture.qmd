@@ -36,7 +36,7 @@ Intuisinya layak dipegang. Tajuk halus dan seragam menghasilkan ko-okurensi yang
 
 **Correlation** adalah yang paling sering diabaikan orang dan justru uji paling langsung untuk perkebunan, karena grid tanam benar benar periodik dengan cara yang tidak dimiliki apa pun yang alami.
 
-![Dua tajuk sintetis dengan reflektansi rata rata yang sengaja disamakan. Hanya susunannya yang berbeda, dan GLCM entropy memisahkan keduanya: 4,95 untuk grid tanam berbanding 8,25 untuk tegakan alami.](../images/glcm-texture.png){#fig-texture}
+![Dua tajuk sintetis dengan reflektansi rata rata yang sengaja disamakan. Hanya susunannya yang berbeda, dan GLCM entropy memisahkan keduanya: 4,95 untuk grid tanam berbanding 8,25 untuk tegakan alami.](images/glcm-texture.png){#fig-texture}
 
 Rata rata pada @fig-texture disamakan dengan sengaja. Setiap indeks spektral yang dihitung pada kedua citra itu mengembalikan jawaban yang sama. Entropy-nya nyaris berlipat dua.
 
