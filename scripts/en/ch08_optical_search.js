@@ -104,6 +104,20 @@ Map.centerObject(aoi, 10);
 Map.addLayer(image, trueColour, 'Sentinel-2 true colour, Mahakam');
 
 // ---------------------------------------------------------------------------
+// Every scene of the year, before the cloud filter
+// ---------------------------------------------------------------------------
+// The filter above threw most of the year away. Plot what it saw: one point
+// per scene, cloud cover against date, with the 15 percent cut marked in
+// your head. Over the tropics most points sit high, and that is the argument
+// for Chapter 9.
+var allScenes = s2.filterDate('2023-01-01', '2023-12-31').filterBounds(aoi);
+print(ui.Chart.feature.byFeature(allScenes, 'system:time_start',
+    'CLOUDY_PIXEL_PERCENTAGE')
+  .setChartType('ScatterChart')
+  .setOptions({title: 'Scene cloud cover through 2023, Mahakam',
+               vAxis: {title: 'Cloud (%)'}, pointSize: 3}));
+
+// ---------------------------------------------------------------------------
 // Exercise
 // ---------------------------------------------------------------------------
 // 1. Raise the cloud threshold from 15 to 60 and rerun. How many more scenes

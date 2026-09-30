@@ -212,6 +212,21 @@ print(ui.Chart.image.histogram({
 }).setOptions({title: 'CMRI distribution, look for two peaks'}));
 
 // ---------------------------------------------------------------------------
+// Which index separates what? A table of means over land and water
+// ---------------------------------------------------------------------------
+var water = ee.Image('JRC/GSW1_4/GlobalSurfaceWater').select('occurrence').gt(80);
+var landVeg = ndvi.gt(0.6);
+var summarise = function (mask, label) {
+  var stats = indices.select(['NDVI', 'EVI', 'SAVI', 'NDWI', 'MNDWI', 'CMRI'])
+    .updateMask(mask).reduceRegion({reducer: ee.Reducer.mean(), geometry: aoi,
+      scale: 60, maxPixels: 1e9, bestEffort: true});
+  return ee.Feature(null, stats).set('surface', label);
+};
+print('Mean index value by surface', ee.FeatureCollection([
+  summarise(landVeg, 'dense vegetation (NDVI > 0.6)'),
+  summarise(water, 'permanent water (JRC > 80 %)')]));
+
+// ---------------------------------------------------------------------------
 // Exercise
 // ---------------------------------------------------------------------------
 // 1. Set L = 0 in SAVI and difference the result against NDVI. Confirm it is

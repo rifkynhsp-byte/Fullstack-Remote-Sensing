@@ -1,0 +1,21 @@
+[
+ {
+  "name": "ch08-clearest-scene",
+  "kind": "map",
+  "caption": "The single least cloudy scene the filter found. Even this one carries cloud: in the tropics, the best scene is rarely a clear one.",
+  "image": "images/real/ch08-clearest-scene.jpg"
+ },
+ {
+  "name": "ch08-scene-cloud",
+  "kind": "chart",
+  "caption": "Every 2023 scene over the point, cloud cover against date. Grey scenes are the ones a 15 % filter throws away.",
+  "image": "images/real/ch08-scene-cloud.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"cloud_pct,date,tile\n90.781,2023-01-02,50MNE\n99.999,2023-01-07,50MNE\n100,2023-01-12,50MNE\n60.714,2023-01-17,50MNE\n57.409,2023-01-22,50MNE\n100,2023-01-27,50MNE\n92.496,2023-02-01,50MNE\n100,2023-02-06,50MNE\n99.564,2023-02-11,50MNE\n100,2023-02-16,50MNE\n81.214,2023-02-21,50MNE\n85.503,2023-02-26,50MNE\n69.072,2023-03-03,50MNE\n71.785,2023-03-08,50MNE\n92.405,2023-03-13,50MNE\n98.65,2023-03-18,50MNE\n99.302,2023-03-23,50MNE\n99.75,2023-03-28,50MNE\n100,2023-04-02,50MNE\n100,2023-04-07,50MNE\n41.516,2023-04-12,50MNE\n89.044,2023-04-22,50MNE\n60.593,2023-04-27,50MNE\n99.783,2023-05-02,50MNE\n84.529,2023-05-07,50MNE\n57.009,2023-05-12,50MNE\n99.955,2023-05-17,50MNE\n49.565,2023-05-22,50MNE\n32.777,2023-05-27,50MNE\n100,2023-06-01,50MNE\n13.801,2023-06-06,50MNE\n65.215,2023-06-11,50MNE\n82.991,2023-06-16,50MNE\n87.273,2023-06-21,50MNE\n29.263,2023-06-26,50MNE\n71.738,2023-07-01,50MNE\n85.981,2023-07-06,50MNE\n99.919,2023-07-11,50MNE\n100,2023-07-16,50MNE\n99.985,2023-07-21,50MNE\n80.512,2023-07-26,50MNE\n30.951,2023-07-31,50MNE\n67.382,2023-08-05,50MNE\n57.541,2023-08-10,50MNE\n86.65,2023-08-15,50MNE\n42.892,2023-08-20,50MNE\n75.771,2023-08-25,50MNE\n35.836,2023-08-30,50MNE\n24.008,2023-09-04,50MNE\n97.831,2023-09-09,50MNE\n74.198,2023-09-14,50MNE\n93.455,2023-09-19,50MNE\n24.764,2023-09-24,50MNE\n36.865,2023-09-29,50MNE\n30.316,2023-10-04,50MNE\n36.783,2023-10-09,50MNE\n92.47,2023-10-14,50MNE\n88.802,2023-10-19,50MNE\n97.559,2023-10-24,50MNE\n28.817,2023-10-29,50MNE\n74.558,2023-11-03,50MNE\n55.939,2023-11-08,50MNE\n91.192,2023-11-13,50MNE\n99.629,2023-11-18,50MNE\n62.977,2023-11-23,50MNE\n57.958,2023-11-28,50MNE\n63.287,2023-12-03,50MNE\n88.976,2023-12-08,50MNE\n94.599,2023-12-13,50MNE\n99.983,2023-12-18,50MNE\n82.178,2023-12-23,50MNE\n49.765,2023-12-28,50MNE\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_scene_cloud(df):\n    \"\"\"One dot per scene. Move the threshold and count what survives.\"\"\"\n    threshold = 15\n    df = df.assign(date=pd.to_datetime(df[\"date\"])).sort_values(\"date\")\n    keep = df[\"cloud_pct\"] < threshold\n    fig, ax = plt.subplots(figsize=(7.5, 3.2))\n    ax.scatter(df.loc[~keep, \"date\"], df.loc[~keep, \"cloud_pct\"], s=12,\n               color=\"#9aa5b1\", label=\"rejected\")\n    ax.scatter(df.loc[keep, \"date\"], df.loc[keep, \"cloud_pct\"], s=18,\n               color=\"#2166ac\", label=f\"kept ({keep.sum()} of {len(df)})\")\n    ax.axhline(threshold, color=\"#b2182b\", lw=1, ls=\"--\")\n    ax.set_ylabel(\"Scene cloud cover (%)\")\n    ax.set_title(\"Mahakam 2023: most of the year fails a 15 % filter\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8)\n    fig.autofmt_xdate()\n    return fig\n\nplot_scene_cloud(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch08-selected",
+  "kind": "table",
+  "caption": "What the filter kept, and the scene it chose.",
+  "markdown": "|   cloud_pct | date       | scene_id                               |   scenes_in_year |   scenes_passing_filter |\n|------------:|:-----------|:---------------------------------------|-----------------:|------------------------:|\n|        13.8 | 2023-06-06 | 20230606T021539_20230606T022738_T50MNE |               72 |                       1 |"
+ }
+]

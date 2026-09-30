@@ -1,0 +1,33 @@
+[
+ {
+  "name": "ch12-ndvi",
+  "kind": "map",
+  "caption": "NDVI. Inside the vegetated delta almost everything is dark green: the index has saturated and cannot tell one dense canopy from another.",
+  "image": "images/real/ch12-ndvi.jpg"
+ },
+ {
+  "name": "ch12-mndwi",
+  "kind": "map",
+  "caption": "MNDWI uses SWIR instead of NIR, so wet vegetation stays on the dry side and open water, ponds and channels stand out cleanly.",
+  "image": "images/real/ch12-mndwi.jpg"
+ },
+ {
+  "name": "ch12-cmri",
+  "kind": "map",
+  "caption": "CMRI stretches the contrast between water and vegetation, which is what makes a single threshold usable in the histogram below.",
+  "image": "images/real/ch12-cmri.jpg"
+ },
+ {
+  "name": "ch12-cmri-hist",
+  "kind": "chart",
+  "caption": "CMRI histogram over the study area. The valley between the two peaks is where a threshold belongs.",
+  "image": "images/real/ch12-cmri-hist.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"cmri,pixels\n-0.5,16234\n-0.45,18234\n-0.4,20197\n-0.35,19560\n-0.3,15682\n-0.25,13861\n-0.2,8166.1\n-0.15,2546.8\n-0.1,1014\n-0.05,1072.7\n0,1112.1\n0.05,1102.4\n0.1,1195.7\n0.15,1281.1\n0.2,1376.1\n0.25,1382.6\n0.3,1402.3\n0.35,1490.7\n0.4,1483.5\n0.45,1415.7\n0.5,1484.1\n0.55,1428.6\n0.6,1550.6\n0.65,1544.8\n0.7,1467.2\n0.75,1467.4\n0.8,1464.9\n0.85,1484.3\n0.9,1415.6\n0.95,1411.5\n1,1381.6\n1.05,1489.9\n1.1,1525.5\n1.15,1586.3\n1.2,1849.9\n1.25,2460.2\n1.3,3647\n1.35,4591.4\n1.4,4755.3\n1.45,4443.7\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_cmri_histogram(df):\n    \"\"\"Look for two peaks: water on the left, vegetation on the right.\"\"\"\n    df = df.sort_values(\"cmri\")\n    fig, ax = plt.subplots(figsize=(7, 3.2))\n    width = df[\"cmri\"].diff().median()\n    threshold = 0.0            # the valley between the peaks; try moving it\n    colours = [\"#0047AB\" if v < threshold else \"#14a37f\" for v in df[\"cmri\"]]\n    ax.bar(df[\"cmri\"], df[\"pixels\"], width=width, align=\"edge\", color=colours)\n    ax.axvline(threshold, color=\"#b2182b\", lw=1, ls=\"--\")\n    ax.text(threshold, ax.get_ylim()[1] * 0.95, f\"  threshold {threshold}\",\n            color=\"#b2182b\", fontsize=8, va=\"top\")\n    ax.set_xlabel(\"CMRI = NDVI − NDWI\")\n    ax.set_ylabel(\"Pixels (100 m sample)\")\n    ax.set_title(\"CMRI across the delta: two peaks, one threshold\", loc=\"left\")\n    return fig\n\nplot_cmri_histogram(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch12-index-means",
+  "kind": "table",
+  "caption": "Mean index values over dense vegetation and permanent water.",
+  "markdown": "| surface                       |   NDVI |   EVI |   SAVI |   NDWI |   MNDWI |   CMRI |\n|:------------------------------|-------:|------:|-------:|-------:|--------:|-------:|\n| dense vegetation (NDVI > 0.6) |   0.75 |  0.56 |   0.48 |  -0.65 |   -0.30 |   1.40 |\n| permanent water (JRC > 80 %)  |  -0.26 | -0.07 |  -0.06 |   0.38 |    0.47 |  -0.64 |"
+ }
+]

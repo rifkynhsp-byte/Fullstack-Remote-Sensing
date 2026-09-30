@@ -177,14 +177,16 @@ function getAnalysisReadyData(year, aoi) {
   //
   //     gamma0_dB = 10 * log10(DN^2) - 83.0
   //
-  // written here in the linear form Earth Engine composes most cleanly.
+  // Note the order: log10 of DN squared, times ten, minus 83. An earlier
+  // version of this script raised 10 to the power of (log10(DN^2) - 83),
+  // which is DN^2 times 10^-83: every pixel came out as zero and nothing
+  // complained. Chart a band before you trust it.
   // Skipping this step is a real and common error: raw DN values are on a
   // completely different scale from the 0 to 1 reflectance bands beside them,
   // and a distance based classifier such as SVM will be dominated by whichever
   // band has the largest numeric range.
   var palsarDN = palsarImage.select(['HH', 'HV']).clip(aoi);
-  var palsarGamma0 = ee.Image(10)
-    .pow(palsarDN.pow(2).log10().subtract(83.0))
+  var palsarGamma0 = palsarDN.pow(2).log10().multiply(10).subtract(83.0)
     .rename('PALSAR_HH', 'PALSAR_HV');
 
   // --- 4. Terrain -----------------------------------------------------------
@@ -193,7 +195,11 @@ function getAnalysisReadyData(year, aoi) {
   // occupy the intertidal band, a few metres above sea level. Upland forest
   // that is spectrally identical is not. Elevation encodes that rule in a
   // form the classifier can learn.
-  var dem = ee.Image('JAXA/ALOS/AW3D30/V2_2').select('AVE_DSM').clip(aoi);
+  // AW3D30 v4.1 is a tiled collection (V2_2 is deprecated): mosaic, then
+  // restore the native projection so slope is computed on the right grid.
+  var aw3d = ee.ImageCollection('JAXA/ALOS/AW3D30/V4_1');
+  var dem = aw3d.select('DSM').filterBounds(aoi).mosaic()
+    .setDefaultProjection(aw3d.first().projection()).clip(aoi);
   var slope = ee.Terrain.slope(dem);
 
   // --- 5. Texture -----------------------------------------------------------
@@ -246,8 +252,30 @@ Map.addLayer(image2023, {bands: ['B4', 'B3', 'B2'], min: 0, max: 0.3},
   'S2 composite 2023');
 Map.addLayer(image2023, {bands: ['S1_VH'], min: -25, max: -5},
   'Sentinel-1 VH', false);
-Map.addLayer(image2023, {bands: ['AVE_DSM'], min: 0, max: 50,
+Map.addLayer(image2023, {bands: ['DSM'], min: 0, max: 50,
   palette: ['#2b83ba', '#ffffbf', '#d7191c']}, 'Elevation', false);
+
+// ---------------------------------------------------------------------------
+// Why fuse at all? Put optical and radar side by side
+// ---------------------------------------------------------------------------
+// Radar in false colour (VV, VH, VV/VH) shows structure the optical image
+// cannot: bright volume scattering over canopy, dark smooth water.
+var s1FalseColour = image2023.select('S1_VV').addBands(image2023.select('S1_VH'))
+  .addBands(image2023.select('S1_VV').subtract(image2023.select('S1_VH')));
+Map.addLayer(s1FalseColour, {min: [-20, -26, 2], max: [0, -8, 12]},
+  'Sentinel-1 VV, VH, VV-VH', false);
+
+// Sample land pixels and compare what each sensor says. Where NDVI has
+// flattened out near its ceiling, radar is still changing: that spread is
+// the information fusion adds.
+var land = ee.Image('MERIT/Hydro/v1_0_1').select('hnd').mask();
+var pairs = image2023.select(['NDVI', 'S1_VH', 'PALSAR_HV']).updateMask(land)
+  .sample({region: aoi, scale: 30, numPixels: 6000, seed: 7, geometries: false});
+print(ui.Chart.feature.byFeature(pairs, 'NDVI', ['S1_VH'])
+  .setChartType('ScatterChart')
+  .setOptions({title: 'Optical saturates, radar keeps going',
+               hAxis: {title: 'NDVI'}, vAxis: {title: 'Sentinel-1 VH (dB)'},
+               pointSize: 2}));
 
 // ---------------------------------------------------------------------------
 // Exercise
