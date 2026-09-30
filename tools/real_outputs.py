@@ -148,6 +148,7 @@ def render_map(p: dict, out: Path) -> None:
     ax.set_ylabel("Latitude (°)")
     ax.set_title(p.get("title", ""), loc="left", fontsize=10, fontweight="bold")
     ax.tick_params(labelsize=7)
+    ax.ticklabel_format(useOffset=False, style="plain")
     _scale_bar(ax, x0, x1, y0, y1)
     ax.annotate("N", xy=(0.95, 0.93), xytext=(0.95, 0.83), xycoords="axes fraction",
                 ha="center", fontsize=9, fontweight="bold",

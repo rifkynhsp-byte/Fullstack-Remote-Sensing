@@ -131,27 +131,35 @@ var texture = glcm.select(
 // Do not add texture bands on faith. Test whether they separate the classes
 // you are confusing, using the training data from Chapter 15.
 //
-// Uncomment once trainingPoints exists. If the two classes overlap completely
-// on entropy, the texture bands are costing computation and contributing
-// nothing, and should be dropped.
-//
-// var separability = texture.sampleRegions({
-//   collection: trainingPoints,
-//   properties: ['landcover'],
-//   scale: 10,
-//   tileScale: 4
-// });
-//
-// print(ui.Chart.feature.groups({
-//   features: separability,
-//   xProperty: 'tex_entropy',
-//   yProperty: 'tex_contrast',
-//   seriesProperty: 'landcover'
-// }).setChartType('ScatterChart').setOptions({
-//   title: 'Do texture features separate the classes that confuse?',
-//   hAxis: {title: 'Entropy'},
-//   vAxis: {title: 'Contrast'}
-// }));
+// No training points yet? The block below takes labelled points from ESA
+// WorldCover 2021 (it has a mangrove class). Swap in your own Chapter 15
+// points when you have them. If two classes overlap completely on entropy,
+// the texture bands cost computation and add nothing: drop them.
+var trainingPoints = (typeof trainingPoints !== 'undefined') ? trainingPoints :
+  ee.ImageCollection('ESA/WorldCover/v200').first().select('Map')
+    .remap([95, 10, 80, 20, 30, 40, 60, 50], [0, 1, 2, 3, 3, 3, 3, 4])
+    .rename('landcover').toInt().clip(aoi)
+    .stratifiedSample({numPoints: 0, classBand: 'landcover', region: aoi, scale: 10,
+      seed: 42, classValues: [0, 1, 2, 3, 4], classPoints: [200, 200, 100, 100, 100],
+      geometries: true, tileScale: 4});
+
+var separability = texture.sampleRegions({
+  collection: trainingPoints,
+  properties: ['landcover'],
+  scale: 10,
+  tileScale: 4
+});
+
+print(ui.Chart.feature.groups({
+  features: separability,
+  xProperty: 'tex_entropy',
+  yProperty: 'tex_contrast',
+  seriesProperty: 'landcover'
+}).setChartType('ScatterChart').setOptions({
+  title: 'Do texture features separate the classes that confuse?',
+  hAxis: {title: 'Entropy'},
+  vAxis: {title: 'Contrast'}
+}));
 
 // ===========================================================================
 // DISPLAY

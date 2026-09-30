@@ -141,7 +141,8 @@ def products():
          "caption": "Validation accuracy per model and for the vote (agreement with "
                     "WorldCover 2021 on held-out points). The raw SVM calls everything "
                     "one class (kappa 0): its distances are dominated by bands measured "
-                    "in thousands. Standardising the bands is the fix Chapter 10 describes."},
+                    "in thousands. Standardising the bands helps; the trees still win, "
+                    "because the SVM gamma was never tuned for 24 bands."},
     ]
 
 

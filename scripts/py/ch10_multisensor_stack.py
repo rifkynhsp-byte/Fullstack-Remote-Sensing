@@ -59,13 +59,12 @@ def get_analysis_ready_data(year, aoi):
           .select(["VV", "VH"]))
     s1_filtered = speckle_filter(s1.median().clip(aoi).rename(["S1_VV", "S1_VH"]))
 
-    # 3. L-band radar, with the same fallback to the latest earlier epoch
-    palsar_col = ee.ImageCollection("JAXA/ALOS/PALSAR/YEARLY/SAR_EPOCH")
-    palsar = ee.Image(palsar_col.filter(ee.Filter.calendarRange(year, year, "year")).first())
-    palsar = ee.Image(ee.Algorithms.If(
-        palsar, palsar,
-        palsar_col.filter(ee.Filter.lte("system:time_start", start.millis()))
-        .sort("system:time_start", False).first()))
+    # 3. L-band radar. Check coverage, not existence: the 2023 epoch covers
+    #    about a quarter of the delta, so lay the chosen year over the one
+    #    before and let gaps fall back to the previous epoch.
+    palsar = (ee.ImageCollection("JAXA/ALOS/PALSAR/YEARLY/SAR_EPOCH").filterBounds(aoi)
+              .filter(ee.Filter.calendarRange(year - 1, year, "year"))
+              .sort("system:time_start").mosaic())
     dn = palsar.select(["HH", "HV"]).clip(aoi)
     # gamma0 in dB = 10 * log10(DN^2) - 83. Chart it before trusting it.
     gamma0 = dn.pow(2).log10().multiply(10).subtract(83.0).rename(["PALSAR_HH", "PALSAR_HV"])

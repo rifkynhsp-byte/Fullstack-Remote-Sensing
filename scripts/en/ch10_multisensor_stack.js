@@ -159,18 +159,19 @@ function getAnalysisReadyData(year, aoi) {
   // below falls back to the most recent earlier epoch rather than failing, so
   // the function stays callable across a whole time series. This is defensive
   // coding, and it is the difference between a script and a system.
-  var palsarCollection = ee.ImageCollection('JAXA/ALOS/PALSAR/YEARLY/SAR_EPOCH');
-  var palsarImage = ee.Image(
-    palsarCollection.filter(ee.Filter.calendarRange(year, year, 'year')).first());
-
-  palsarImage = ee.Image(ee.Algorithms.If(
-    palsarImage,
-    palsarImage,
-    ee.Image(palsarCollection
-      .filter(ee.Filter.lte('system:time_start', startDate.millis()))
-      .sort('system:time_start', false)
-      .first())
-  ));
+  // Check what a layer COVERS, not just that it exists. The 2023 PALSAR
+  // yearly mosaic covers only about a quarter of the Mahakam Delta; 2022
+  // covers all of it. An earlier version took .first() of the year, and
+  // sampleRegions then silently dropped three quarters of the training
+  // points, because a point with any masked band is discarded.
+  // Here the chosen year is laid over the year before, so gaps fall back to
+  // the previous epoch instead of to nothing.
+  var palsarCollection = ee.ImageCollection('JAXA/ALOS/PALSAR/YEARLY/SAR_EPOCH')
+    .filterBounds(aoi);
+  var palsarImage = palsarCollection
+    .filter(ee.Filter.calendarRange(year - 1, year, 'year'))
+    .sort('system:time_start')          // later year last, so it wins the mosaic
+    .mosaic();
 
   // PALSAR ships digital numbers, not physical backscatter. The published
   // conversion to gamma nought in decibels is:

@@ -139,6 +139,12 @@ A pixel based classification vectorises into a mess. If the deliverable is a sha
 }
 </script>
 
+## A hard case: earthquake landslides at Iburi
+
+On 6 September 2018 an earthquake in Hokkaido set off thousands of shallow landslides in a few seconds. This is the landslide exercise from the GEE101 course, rebuilt so you can check each step. It compares the same season a year apart, applies a pixel rule and an object rule, and scores both against a mapped inventory. Two things in the results are worth more than the maps. First, a fixed threshold fails when the whole scene has shifted. Second, objects are not automatically better than pixels.
+
+{{< include _snippets/ch18_landslide_obia_iburi.qmd >}}
+
 ## Exercises {.unnumbered}
 
 1. Run SNIC at size 5, 10 and 25. Find the size at which a narrow mangrove fringe stops being its own object and gets absorbed into the water.

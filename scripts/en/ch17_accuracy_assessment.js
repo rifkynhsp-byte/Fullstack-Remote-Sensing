@@ -112,19 +112,23 @@ print('Other forest misread as mangrove:', array.get([1, 0]));
 // This section scores the map against reference data collected by a different
 // process: field plots. The number it returns is almost always lower, and it
 // is the honest one.
-var fieldValidated = classified.sampleRegions({
-  collection: fieldPlots,
-  properties: ['landcover'],
-  scale: SCALE,
-  tileScale: 4
-});
+if (typeof fieldPlots !== 'undefined') {
+  var fieldValidated = classified.sampleRegions({
+    collection: fieldPlots,
+    properties: ['landcover'],
+    scale: SCALE,
+    tileScale: 4
+  });
 
-var fieldMatrix = fieldValidated.errorMatrix('landcover', 'classification');
+  var fieldMatrix = fieldValidated.errorMatrix('landcover', 'classification');
 
-print('--- Independent field validation ---');
-print('Field plots used:', fieldValidated.size());
-print('Field confusion matrix:', fieldMatrix);
-print('Field overall accuracy:', fieldMatrix.accuracy());
+  print('--- Independent field validation ---');
+  print('Field plots used:', fieldValidated.size());
+  print('Field confusion matrix:', fieldMatrix);
+  print('Field overall accuracy:', fieldMatrix.accuracy());
+} else {
+  print('No fieldPlots imported: independent validation skipped.');
+}
 
 // Report both numbers side by side and let the gap speak. A five point gap is
 // normal. A twenty point gap means your training data does not represent the
@@ -143,65 +147,66 @@ print('Field overall accuracy:', fieldMatrix.accuracy());
 // composes most directly.
 
 // (a) Map area per class, in hectares.
+// Area is summed at 30 m to stay inside the Code Editor's interactive limits;
+// Exercise 4 asks you to repeat it at 10 m with an export.
+var AREA_SCALE = 30;
 var areaImage = ee.Image.pixelArea().divide(10000).addBands(classified);
-
 var mapAreas = areaImage.reduceRegion({
-  reducer: ee.Reducer.sum().group({
-    groupField: 1,
-    groupName: 'class'
-  }),
+  reducer: ee.Reducer.sum().group({groupField: 1, groupName: 'class'}),
   geometry: aoi,
-  scale: SCALE,
+  scale: AREA_SCALE,
   maxPixels: 1e13,
   tileScale: 4
 });
 
-print('Mapped area by class, hectares:', mapAreas);
+// Keyed by class number, so a class missing from the map cannot shift the rest.
+var areaByClass = ee.Dictionary(ee.List(mapAreas.get('groups')).iterate(
+  function (g, acc) {
+    g = ee.Dictionary(g);
+    return ee.Dictionary(acc).set(ee.Number(g.get('class')).format('%d'), g.get('sum'));
+  }, ee.Dictionary({})));
+var totalArea = ee.Number(areaByClass.values().reduce(ee.Reducer.sum()));
+print('Mapped area by class, hectares:', areaByClass);
 
-// (b) Proportion of total area occupied by each mapped class. These are the
-//     stratum weights in the estimator.
-var totalArea = ee.Number(ee.Dictionary(
-  ee.List(mapAreas.get('groups')).iterate(function (item, acc) {
-    return ee.Dictionary(acc).set('t',
-      ee.Number(ee.Dictionary(acc).get('t')).add(ee.Dictionary(item).get('sum')));
-  }, ee.Dictionary({t: 0}))
-).get('t'));
-
-print('Total area, hectares:', totalArea);
-
-// (c) The adjusted estimate. For each class, the confusion matrix gives the
-//     probability that a pixel mapped as class i is really class j. Weighting
-//     those probabilities by the stratum areas gives an unbiased estimate of
-//     the true area, and the variance of that estimate gives the error bar.
-//
-//     The full derivation is in Olofsson et al. 2014, and it is worth reading
-//     once. The practical point for this book: a mangrove extent reported as
-//     "41,200 hectares" is incomplete, and "41,200 hectares, 95 percent
-//     confidence interval 39,600 to 42,800, computed at 10 m" is a result.
+// (b) Adjust. Earth Engine's matrix has rows = REFERENCE, columns = MAP.
+// For map class i, W_i is its share of mapped area and n_i its COLUMN total.
+//   adjusted proportion of reference class j:  p_j = sum_i W_i * n_ji / n_i
+//   standard error:  SE(p_j) = sqrt( sum_i W_i^2 * q (1 - q) / (n_i - 1) ),
+//   with q = n_ji / n_i   (Olofsson et al. 2014, equations 9 and 10).
+// An earlier version divided by ROW totals while weighting by MAP area,
+// which mixes the two directions and gives areas that look plausible and
+// are wrong. Keep the directions straight.
 var confusionArray = matrix.array();
 var nClasses = CLASS_NAMES.length;
 
 var adjusted = ee.List.sequence(0, nClasses - 1).map(function (j) {
   j = ee.Number(j);
-  // Sum over mapped classes i of (weight_i * proportion of i that is really j)
-  var contributions = ee.List.sequence(0, nClasses - 1).map(function (i) {
+  var terms = ee.List.sequence(0, nClasses - 1).map(function (i) {
     i = ee.Number(i);
-    var rowTotal = ee.Number(confusionArray.slice(0, i, i.add(1)).reduce(
-      ee.Reducer.sum(), [1]).get([0, 0]));
-    var cell = ee.Number(confusionArray.get([i, j]));
-    var conditional = ee.Algorithms.If(rowTotal.gt(0), cell.divide(rowTotal), 0);
-    var weight = ee.Number(ee.Dictionary(
-      ee.List(mapAreas.get('groups')).get(i)).get('sum')).divide(totalArea);
-    return weight.multiply(ee.Number(conditional));
+    var colTotal = ee.Number(confusionArray.slice(1, i, i.add(1))
+      .reduce(ee.Reducer.sum(), [0]).get([0, 0]));
+    var q = ee.Number(ee.Algorithms.If(colTotal.gt(0),
+      ee.Number(confusionArray.get([j, i])).divide(colTotal), 0));
+    var w = ee.Number(areaByClass.get(i.format('%d'), 0)).divide(totalArea);
+    var variance = ee.Number(ee.Algorithms.If(colTotal.gt(1),
+      w.pow(2).multiply(q).multiply(ee.Number(1).subtract(q))
+        .divide(colTotal.subtract(1)), 0));
+    return ee.List([w.multiply(q), variance]);
   });
-  var proportion = ee.Number(contributions.reduce(ee.Reducer.sum()));
+  var p = ee.Number(terms.map(function (t) { return ee.List(t).get(0); })
+    .reduce(ee.Reducer.sum()));
+  var se = ee.Number(terms.map(function (t) { return ee.List(t).get(1); })
+    .reduce(ee.Reducer.sum())).sqrt();
   return ee.Feature(null, {
     'class': ee.List(CLASS_NAMES).get(j),
-    'adjusted_ha': proportion.multiply(totalArea)
+    'map_ha': areaByClass.get(j.format('%d'), 0),
+    'adjusted_ha': p.multiply(totalArea),
+    'ci95_ha': se.multiply(1.96).multiply(totalArea)
   });
 });
 
-print('Area adjusted for classification error:', ee.FeatureCollection(adjusted));
+print('Area adjusted for classification error, with 95% interval:',
+  ee.FeatureCollection(adjusted));
 
 // ===========================================================================
 // PART 6. Compare against an existing product
@@ -213,7 +218,7 @@ print('Area adjusted for classification error:', ee.FeatureCollection(adjusted))
 // Common legitimate reasons for disagreement: different years, different
 // minimum mapping units, a different definition of what counts as mangrove,
 // and different treatment of degraded or sparse stands.
-var gmw = ee.FeatureCollection('projects/sat-io/open-datasets/GMW/GMW_V3/gmw_v3_2020')
+var gmw = ee.FeatureCollection('projects/sat-io/open-datasets/GMW/extent/gmw_v3_2020_vec')
   .filterBounds(aoi);
 
 var gmwArea = ee.Image.pixelArea().divide(10000)
@@ -221,7 +226,7 @@ var gmwArea = ee.Image.pixelArea().divide(10000)
   .reduceRegion({
     reducer: ee.Reducer.sum(),
     geometry: aoi,
-    scale: SCALE,
+    scale: AREA_SCALE,
     maxPixels: 1e13,
     tileScale: 4
   });

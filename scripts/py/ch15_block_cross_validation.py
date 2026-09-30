@@ -95,8 +95,8 @@ def products():
         {"kind": "table", "name": "ch15-folds-table", "data": results_with_random,
          "columns": ["fold", "n_train", "n_test", "accuracy", "random_split_accuracy"],
          "floatfmt": (".0f", ".0f", ".0f", ".3f", ".3f"),
-         "caption": "Per fold results. One fold scores 0.37 and another 0.96: the "
-                    "spread is the honest answer to how well the model travels."},
+         "caption": "Per fold results. The spread between folds is the honest answer "
+                    "to how well the model travels."},
     ]
 
 
