@@ -106,7 +106,10 @@ book:
         - 29-dataviz.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
-    - part: "Bagian IX: Garis Depan Riset"
+    - part: "Bagian IX: LiDAR untuk Kehutanan"
+      chapters:
+        - 32-lidar-trees.qmd
+    - part: "Bagian X: Garis Depan Riset"
       chapters:
         - 36-thesis-bank.qmd
     - dashboard.qmd

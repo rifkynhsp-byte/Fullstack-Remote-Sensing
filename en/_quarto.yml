@@ -106,7 +106,10 @@ book:
         - 29-dataviz.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
-    - part: "Part IX: Research Frontiers"
+    - part: "Part IX: LiDAR for Forestry"
+      chapters:
+        - 32-lidar-trees.qmd
+    - part: "Part X: Research Frontiers"
       chapters:
         - 36-thesis-bank.qmd
     - dashboard.qmd

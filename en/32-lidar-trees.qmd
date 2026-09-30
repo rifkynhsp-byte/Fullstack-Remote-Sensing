@@ -1,0 +1,84 @@
+# Airborne LiDAR: From Points to Trees {#sec-lidar-trees}
+
+::: {.chapter-goal}
+#### In this chapter
+You will take an airborne LiDAR point cloud from raw points to a table of individual trees: check the points, build a terrain model, make a canopy height model, find tree tops and draw crowns. The chain is shown in Python (runs here, in seconds) and in R with lidR, the tool used in the author's LiDAR workshops.
+:::
+
+## Why this chapter leaves Earth Engine
+
+Everything so far lived in Earth Engine. LiDAR does not. An airborne survey gives you files of points, often tens of millions per square kilometre, each with x, y, z, a return number and a class (ground, vegetation, building). Earth Engine stores rasters and tables, not point clouds. So the point work runs on your own machine, and Earth Engine comes back in at the end, when you compare the plot with satellite canopy height and scale up (Chapter 33).
+
+The data here are the three example files that ship with the lidR package [@roussel2020lidr]: `Megaplot`, `MixedConifer` and `Topography`. They are small, free (GPL-3) and already classified. They are also a conifer forest, not a tropical one. The steps are the same in a Sumatran plantation or a Papuan forest, but the numbers (tree height, crown size, window rules) are not. Tune them on your own forest.
+
+## The chain
+
+1. **Check the points.** Density, gaps, and whether ground was classified at all. A bad file caught here saves a week later.
+2. **Ground and terrain (DTM).** Interpolate only the ground returns into a surface. This is the same DTM that feeds drainage and flood work in Chapter 24.
+3. **Normalise.** Subtract the terrain from every point, so z becomes *height above ground*. On a slope this matters more than anything else.
+4. **Canopy height model (CHM).** Keep the highest point in each small cell (0.5 m here).
+5. **Tree tops.** A tree top is a cell higher than everything in a window around it. Taller trees have wider crowns, so the window grows with height: here 0.07 × height + 2 m, the rule in the lidR examples.
+6. **Crowns.** Grow a region from each top down the CHM until it meets a neighbour (a watershed), in the spirit of @dalponte2016tree.
+7. **Tree table.** One row per tree: position, height, crown area. This table is what biomass models eat.
+
+{{< include _snippets/ch32_lidar_trees.qmd >}}
+
+## Reading the results
+
+The density check shows flight-line overlap as stripes. In Megaplot the average is about 1.5 points per m², which is thin by today's standards: fine for a DTM and a CHM, weak for small trees. The cross-section is the quickest classification check there is. If brown ground points float inside the green canopy, the classification is wrong, and every height after it is wrong too.
+
+In the terrain figure, the blank patches on the right are where nothing stands above the ground. The DTM on the left is what you would carry into a drainage model.
+
+MixedConifer gives 145 tree tops in 0.81 ha, a median height near 22 m and a median crown about 7 m across. Two honest limits:
+
+- **This is detection, not counting.** Without field stems you do not know how many trees were missed (small ones under big crowns) or split (one wide crown read as two). Always report detection rate and commission error against field plots before you call it a tree count.
+- **The window rule is a parameter.** Change 0.07 to 0.05 and the count goes up. In tropical forest, with wide flat crowns and many layers, a fixed rule often fails. Test several against field data and report the one you chose.
+
+## The same chain in R with lidR
+
+This is the workflow from the author's workshop, in lidR. It is not run when the book is built. Run it in R with `install.packages("lidR")`.
+
+```r
+library(lidR)
+
+# 1. Read and check
+las <- readLAS(system.file("extdata", "MixedConifer.laz", package = "lidR"))
+las_check(las)                      # duplicates, classes, returns
+plot(las, color = "Classification")
+
+# Many tiles at once: a catalog, processed in chunks with a buffer
+ctg <- readLAScatalog("tiles/")
+opt_chunk_buffer(ctg) <- 20
+
+# 2. Terrain from ground points (TIN)
+dtm <- rasterize_terrain(las, res = 1, algorithm = tin())
+
+# 3. Height above ground
+nlas <- normalize_height(las, tin())
+
+# 4. Canopy height model: highest point per cell, or the pit-free version
+chm  <- rasterize_canopy(nlas, res = 0.5, algorithm = p2r(subcircle = 0.15))
+chm2 <- rasterize_canopy(nlas, res = 0.5, algorithm = pitfree(c(0, 2, 5, 10, 15)))
+
+# 5. Tree tops with a variable window
+f   <- function(x) { x * 0.07 + 2 }
+ttops <- locate_trees(nlas, lmf(ws = f, hmin = 2))
+
+# 6. Crowns (Dalponte and Coomes 2016), then 7. the tree table
+nlas  <- segment_trees(nlas, dalponte2016(chm, ttops))
+crowns <- crown_metrics(nlas, func = .stdtreemetrics, geom = "convex")
+```
+
+The Python tab does the same work with `laspy`, SciPy and scikit-image. It is there so you can see each step, not because it is better. For real projects with many tiles, lidR's catalog engine (chunks, buffers, parallel processing) is hard to beat.
+
+::: {.callout-tip}
+## Before you trust a tree map
+- Point density: at least about 5 points per m² for individual trees; below that, work at plot level (height percentiles, canopy cover).
+- Ground share: close to zero under a closed canopy means the DTM is a guess.
+- Field plots: a few with measured stems, to report detection and commission.
+- Units and datum: vertical datum and projection written down with the result.
+:::
+
+## Where this goes next
+
+A tree table is not biomass yet. Chapter 33 takes heights and crowns through allometry to above-ground biomass and compares the plot with the satellite layers in the JavaScript tab: GEDI footprints [@dubayah2020gedi] and a global canopy height map [@lang2023canopy]. That gap between one well-measured plot and the whole map is where most thesis topics in Chapter 36 live.

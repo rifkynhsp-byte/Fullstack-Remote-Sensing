@@ -1,0 +1,84 @@
+# LiDAR Udara: Dari Titik ke Pohon {#sec-lidar-trees}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengolah point cloud LiDAR udara dari titik mentah sampai menjadi tabel pohon satu per satu: memeriksa titik, membuat model medan, membuat model tinggi kanopi, mencari puncak pohon, lalu menggambar tajuknya. Alurnya ditulis dalam Python (langsung jalan di sini, hitungan detik) dan dalam R dengan lidR, alat yang dipakai di workshop LiDAR penulis.
+:::
+
+## Kenapa bab ini keluar dari Earth Engine
+
+Sampai bab sebelumnya, semua pekerjaan ada di Earth Engine. LiDAR lain ceritanya. Survei udara menghasilkan file berisi titik, sering puluhan juta per kilometer persegi. Setiap titik punya x, y, z, nomor pantulan (return), dan kelas (tanah, vegetasi, bangunan). Earth Engine menyimpan raster dan tabel, bukan point cloud. Jadi pengolahan titik dilakukan di komputer sendiri. Earth Engine baru dipakai lagi di akhir, saat plot dibandingkan dengan tinggi kanopi dari satelit dan hasilnya diperluas ke wilayah yang lebih besar (Bab 33).
+
+Datanya adalah tiga file contoh bawaan paket lidR [@roussel2020lidr]: `Megaplot`, `MixedConifer`, dan `Topography`. Ukurannya kecil, gratis (GPL-3), dan sudah diklasifikasi. Hanya saja, ini hutan konifer, bukan hutan tropis. Langkahnya sama saja untuk kebun di Sumatra atau hutan di Papua, tetapi angkanya (tinggi pohon, lebar tajuk, aturan jendela) berbeda. Setel ulang di hutan Anda sendiri.
+
+## Alur kerjanya
+
+1. **Periksa titik.** Kerapatan, bagian yang bolong, dan apakah tanah sudah diklasifikasi. File rusak yang ketahuan di sini menghemat seminggu kerja.
+2. **Tanah dan medan (DTM).** Interpolasikan hanya titik tanah menjadi sebuah permukaan. DTM ini sama dengan yang dipakai untuk analisis drainase dan banjir di Bab 24.
+3. **Normalisasi.** Kurangi setiap titik dengan ketinggian medan di bawahnya, sehingga z menjadi *tinggi di atas tanah*. Di lereng, langkah ini paling menentukan.
+4. **Model tinggi kanopi (CHM).** Ambil titik tertinggi di setiap sel kecil (di sini 0,5 m).
+5. **Puncak pohon.** Puncak pohon adalah sel yang lebih tinggi dari semua sel di sekitarnya dalam satu jendela. Pohon yang lebih tinggi biasanya bertajuk lebih lebar, jadi jendelanya ikut membesar: 0,07 × tinggi + 2 m, aturan yang dipakai di contoh lidR.
+6. **Tajuk.** Dari setiap puncak, wilayah tajuk "dialirkan" turun mengikuti CHM sampai bertemu tajuk tetangga (watershed), mirip pendekatan @dalponte2016tree.
+7. **Tabel pohon.** Satu baris per pohon: posisi, tinggi, luas tajuk. Tabel inilah yang nanti masuk ke model biomassa.
+
+{{< include _snippets/ch32_lidar_trees.qmd >}}
+
+## Membaca hasilnya
+
+Peta kerapatan memperlihatkan tumpang-tindih jalur terbang sebagai garis-garis. Rata-rata Megaplot sekitar 1,5 titik per m², tergolong jarang untuk ukuran sekarang: cukup untuk DTM dan CHM, tapi lemah untuk pohon kecil. Irisan melintang adalah cara tercepat mengecek klasifikasi. Kalau titik tanah (cokelat) melayang di tengah kanopi hijau, klasifikasinya salah, dan semua tinggi yang dihitung sesudahnya ikut salah.
+
+Pada gambar medan, bagian kosong di panel kanan adalah tempat yang tidak ada apa-apa di atas tanah. DTM di panel kiri itulah yang dibawa ke model drainase.
+
+MixedConifer menghasilkan 145 puncak pohon di lahan 0,81 ha, dengan median tinggi sekitar 22 m dan median lebar tajuk sekitar 7 m. Ada dua batasan yang perlu dikatakan terus terang:
+
+- **Ini deteksi, belum penghitungan.** Tanpa data batang dari lapangan, Anda tidak tahu berapa pohon yang terlewat (pohon kecil di bawah tajuk besar) atau terpecah (satu tajuk lebar terbaca dua). Laporkan dulu tingkat deteksi dan kesalahan komisi terhadap plot lapangan sebelum menyebutnya jumlah pohon.
+- **Aturan jendela adalah parameter.** Ganti 0,07 menjadi 0,05, jumlah pohon naik. Di hutan tropis yang tajuknya lebar, datar, dan berlapis, aturan tetap seperti ini sering gagal. Uji beberapa aturan dengan data lapangan, lalu laporkan mana yang dipilih.
+
+## Alur yang sama di R dengan lidR
+
+Ini alur kerja dari workshop penulis, ditulis dengan lidR. Kode ini tidak dijalankan saat buku dibangun. Jalankan sendiri di R setelah `install.packages("lidR")`.
+
+```r
+library(lidR)
+
+# 1. Baca dan periksa
+las <- readLAS(system.file("extdata", "MixedConifer.laz", package = "lidR"))
+las_check(las)                      # duplikat, kelas, return
+plot(las, color = "Classification")
+
+# Banyak tile sekaligus: catalog, diproses per potongan dengan buffer
+ctg <- readLAScatalog("tiles/")
+opt_chunk_buffer(ctg) <- 20
+
+# 2. Medan dari titik tanah (TIN)
+dtm <- rasterize_terrain(las, res = 1, algorithm = tin())
+
+# 3. Tinggi di atas tanah
+nlas <- normalize_height(las, tin())
+
+# 4. Model tinggi kanopi: titik tertinggi per sel, atau versi pit-free
+chm  <- rasterize_canopy(nlas, res = 0.5, algorithm = p2r(subcircle = 0.15))
+chm2 <- rasterize_canopy(nlas, res = 0.5, algorithm = pitfree(c(0, 2, 5, 10, 15)))
+
+# 5. Puncak pohon dengan jendela yang berubah menurut tinggi
+f   <- function(x) { x * 0.07 + 2 }
+ttops <- locate_trees(nlas, lmf(ws = f, hmin = 2))
+
+# 6. Tajuk (Dalponte dan Coomes 2016), lalu 7. tabel pohon
+nlas  <- segment_trees(nlas, dalponte2016(chm, ttops))
+crowns <- crown_metrics(nlas, func = .stdtreemetrics, geom = "convex")
+```
+
+Tab Python mengerjakan hal yang sama dengan `laspy`, SciPy, dan scikit-image. Tujuannya supaya setiap langkah kelihatan, bukan karena lebih bagus. Untuk proyek sungguhan dengan banyak tile, mesin catalog lidR (potongan, buffer, pemrosesan paralel) sulit ditandingi.
+
+::: {.callout-tip}
+## Sebelum percaya pada peta pohon
+- Kerapatan titik: minimal sekitar 5 titik per m² untuk pohon individu. Di bawah itu, bekerjalah di tingkat plot (persentil tinggi, tutupan kanopi).
+- Porsi titik tanah: kalau hampir nol di bawah kanopi rapat, DTM-nya hanya tebakan.
+- Plot lapangan: beberapa plot dengan batang yang diukur, untuk melaporkan deteksi dan komisi.
+- Satuan dan datum: datum vertikal dan proyeksi ditulis bersama hasilnya.
+:::
+
+## Langkah berikutnya
+
+Tabel pohon belum sama dengan biomassa. Bab 33 membawa tinggi dan tajuk melalui persamaan alometrik menjadi biomassa di atas tanah, lalu membandingkan plot dengan lapisan satelit di tab JavaScript: jejak GEDI [@dubayah2020gedi] dan peta tinggi kanopi global [@lang2023canopy]. Jarak antara satu plot yang terukur baik dan peta satu wilayah penuh itulah tempat sebagian besar topik tesis di Bab 36 berada.
