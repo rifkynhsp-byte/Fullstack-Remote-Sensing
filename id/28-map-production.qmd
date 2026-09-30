@@ -1,0 +1,39 @@
+# Produksi Peta dan Laporan Otomatis {#sec-mapproduction}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengubah hasil Earth Engine menjadi peta yang bisa dicetak oleh klien. Setelah itu, peta tersebut ditulis sekali sebagai fungsi, lalu sebuah perulangan membuat seluruh seri peta dan laporan PDF-nya.
+:::
+
+## Apa yang membuat peta dianggap selesai
+
+Layer di peta Code Editor adalah hasil. Peta yang selesai adalah dokumen yang bisa dibaca orang lain tanpa perlu Anda jelaskan. Peta seperti itu butuh tujuh unsur, dan masing masing menjawab pertanyaan yang pasti muncul dari pembaca:
+
+| Unsur | Pertanyaan yang dijawab |
+|---|---|
+| Judul yang menyebut apa, di mana, dan kapan | Saya sedang melihat apa? |
+| Legenda dengan angka dan satuan | Warna ini artinya apa? |
+| Skala | Seberapa luas ini? |
+| Arah utara | Utara di mana? |
+| Peta inset lokasi | Ini letaknya di mana? |
+| Koordinat di tepi peta | Bisakah saya menemukannya di GIS sendiri? |
+| Sumber data dan tanggal | Bisa dipercaya, dan apakah masih baru? |
+
+## Kenapa perlu otomatis
+
+Peta pertama bisa menghabiskan satu sore. Peta kelima belas yang sama persis untuk kabupaten kelima belas seharusnya tidak butuh waktu sama sekali, dan tampilannya harus persis sama dengan yang pertama. Artinya, rentang warna harus sama di seluruh seri, supaya warna yang sama berarti suhu yang sama di setiap halaman. Kalau tidak, pembaca akan membandingkan warna yang sebenarnya tidak bisa dibandingkan. Tulis tata letaknya sebagai fungsi, lakukan perulangan untuk setiap lokasi, lalu gabungkan semua halaman menjadi satu PDF. Begitulah cara pipeline pemantauan penulis mengirim laporan ke klien.
+
+## Contoh nyata: panas permukaan di tiga kabupaten dan kota di Jawa Barat
+
+{{< include _snippets/ch28_automated_maps.qmd >}}
+
+::: {.callout-tip}
+## Python atau JavaScript untuk peta?
+Gunakan Code Editor untuk eksplorasi dan mengekspor GeoTIFF yang sudah bergaya. Gunakan Python kalau produknya berupa dokumen: tata letak halaman, peta inset, tabel, PDF banyak halaman, dan apa pun yang harus dibuat ulang setiap bulan tanpa perlu klik.
+:::
+
+## Latihan {.unnumbered}
+
+1. Tambahkan ke-27 kabupaten dan kota ke `DISTRICTS`. Berapa lama laporannya selesai, dan langkah mana yang paling lambat?
+2. Tambahkan halaman kedua untuk setiap wilayah berisi histogram suhu. Apa yang ditunjukkan histogram yang tidak terlihat di peta?
+3. Beri setiap wilayah rentang warnanya sendiri. Lalu letakkan dua halaman berdampingan dan jelaskan kesalahan apa yang bisa dibuat pembaca.

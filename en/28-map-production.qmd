@@ -1,0 +1,39 @@
+# Map Production and Automated Reports {#sec-mapproduction}
+
+::: {.chapter-goal}
+#### In this chapter
+You will turn an Earth Engine result into a map a client can print. Then you will write it once as a function and let a loop produce the whole series and the PDF report.
+:::
+
+## What makes a map finished
+
+A layer on the Code Editor map is a result. A finished map is a document someone else can read without you in the room. It needs seven things, and each one answers a question the reader would otherwise ask:
+
+| Element | The question it answers |
+|---|---|
+| Title that says what, where and when | What am I looking at? |
+| Legend with numbers and units | What does this colour mean? |
+| Scale bar | How big is this? |
+| North arrow | Which way is up? |
+| Locator inset | Where on Earth is this? |
+| Coordinates on the frame | Can I find this in my own GIS? |
+| Data credit and date | Can I trust it, and is it current? |
+
+## Why automate
+
+The first map takes an afternoon. The fifteenth identical map for the fifteenth district should take no time at all, and it must look exactly like the first. That means a fixed colour range across the series, so the same colour means the same temperature on every page. Otherwise readers will compare colours that are not comparable. Write the layout as a function, loop over the places, and bind the pages into one PDF. The author's monitoring pipelines deliver client reports this way.
+
+## A working example: surface heat in three West Java districts
+
+{{< include _snippets/ch28_automated_maps.qmd >}}
+
+::: {.callout-tip}
+## Python or JavaScript for maps?
+Use the Code Editor to explore and to export styled GeoTIFFs. Use Python when the product is a document: page layout, inset maps, tables, multi-page PDFs and anything that has to be regenerated every month without clicking.
+:::
+
+## Exercises {.unnumbered}
+
+1. Add all 27 districts to `DISTRICTS`. How long does the report take, and which step is slowest?
+2. Add a second page per district with the temperature histogram. What does it show that the map does not?
+3. Give each district its own colour range. Then put two pages side by side and explain the error a reader could make.

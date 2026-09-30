@@ -1,0 +1,14 @@
+[
+ {
+  "name": "ch28-map-page",
+  "kind": "figure",
+  "caption": "Page 1 of the automated report: layout, locator inset, legend with units, scale bar, north arrow, summary and data credit, all from code. [Download the full PDF report](images/real/ch28-district-report.pdf).",
+  "image": "images/real/ch28-map-page.png"
+ },
+ {
+  "name": "ch28-report-table",
+  "kind": "table",
+  "caption": "The numbers printed on each page, for all three districts.",
+  "markdown": "| district     |   p10_C |   median_C |   p90_C |\n|:-------------|--------:|-----------:|--------:|\n| Kota Bandung |    33.8 |       38.4 |    40.8 |\n| Kota Bekasi  |    38.1 |       41.7 |    44.1 |\n| Garut        |    22.4 |       28.9 |    33.9 |"
+ }
+]

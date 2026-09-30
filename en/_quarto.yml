@@ -22,6 +22,7 @@ project:
   resources:
     - images/real/*.html
     - images/real/raw/*.png
+    - images/real/*.pdf
 
 lang: en
 
@@ -97,6 +98,9 @@ book:
         - 25-mining.qmd
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
+    - part: "Part VIII: The Geospatial Data Scientist's Craft"
+      chapters:
+        - 28-map-production.qmd
     - dashboard.qmd
     - references.qmd
   appendices:
