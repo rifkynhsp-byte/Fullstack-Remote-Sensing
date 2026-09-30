@@ -1,0 +1,40 @@
+[
+ {
+  "name": "ch25-growth",
+  "kind": "map",
+  "caption": "Ground that became bare between 2017 and 2024, over a 2024 Sentinel-2 composite.",
+  "image": "images/real/ch25-growth.jpg"
+ },
+ {
+  "name": "ch25-footprint",
+  "kind": "chart",
+  "caption": "Disturbed footprint per year inside the study rectangle.",
+  "image": "images/real/ch25-footprint.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"bare_km2,year\n4.1464,2016\n11.585,2017\n9.3788,2018\n8.7861,2019\n16.704,2020\n6.0601,2021\n11.066,2022\n4.7031,2023\n25.805,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_footprint(df):\n    \"\"\"Bare ground per year: the disturbed footprint.\"\"\"\n    df = df.sort_values(\"year\")\n    fig, ax = plt.subplots(figsize=(6.5, 3))\n    ax.bar(df[\"year\"].astype(int).astype(str), df[\"bare_km2\"], color=\"#8c510a\")\n    for x, v in zip(range(len(df)), df[\"bare_km2\"]):\n        ax.text(x, v, f\"{v:.1f}\", ha=\"center\", va=\"bottom\", fontsize=7)\n    ax.set_ylabel(\"Bare ground (km²)\")\n    ax.set_title(\"Disturbed footprint, Dynamic World 'bare' > 0.5\", loc=\"left\")\n    return fig\n\nplot_footprint(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch25-dz",
+  "kind": "map",
+  "caption": "Red is lower than in 2000 (pits), blue is higher (waste dumps). Both are surface models, so change smaller than about 30 m may be cleared forest, not excavation.",
+  "image": "images/real/ch25-dz.jpg"
+ },
+ {
+  "name": "ch25-volumes",
+  "kind": "table",
+  "caption": "Volumes from the elevation difference, counting only change beyond ±30 m inside the 2024 footprint. The time span is 2000 to 2011–2015, the dates of the two elevation models, not today.",
+  "markdown": "| change                         |   area_km2 |   volume_million_m3 |\n|:-------------------------------|-----------:|--------------------:|\n| cut (pits), deeper than 30 m   |        2.2 |                -275 |\n| fill (dumps), higher than 30 m |        0.2 |                  11 |"
+ },
+ {
+  "name": "ch25-lst",
+  "kind": "map",
+  "caption": "Dry-season median land surface temperature relative to the area median. Coal stockpiles that self-heat show as persistent hot spots; a drone or ground survey is still needed to confirm one.",
+  "image": "images/real/ch25-lst.jpg"
+ },
+ {
+  "name": "ch25-heat",
+  "kind": "chart",
+  "caption": "Temperature anomaly at 600 points on and off the bare footprint.",
+  "image": "images/real/ch25-heat.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"anomaly,bare\n-1.4337,0\n-0.11776,0\n-1.5636,0\n-4.3048,0\n1.0204,0\n-2.6129,0\n2.3569,0\n0.85979,0\n-0.2203,0\n-3.6281,0\n3.9052,0\n1.2358,0\n1.5776,0\n3.601,0\n-0.51767,0\n8.8392,0\n-1.6798,0\n5.4126,0\n1.0871,0\n8.4495,0\n-1.9601,0\n0.34709,0\n2.1894,0\n0.80852,0\n1.082,0\n0.090739,0\n-4.3595,0\n-3.9665,0\n-1.0372,0\n-1.837,0\n0.1403,0\n-0.17245,0\n-2.5907,0\n-1.0304,0\n-2.0831,0\n1.5417,0\n-0.3912,0\n1.5024,0\n1.3212,0\n10.068,0\n0.50774,0\n0.21379,0\n0.77434,0\n3.654,0\n-4.1681,0\n-0.50912,0\n-0.11605,0\n1.3896,0\n-0.21005,0\n-0.26132,0\n0.80852,0\n3.9206,0\n0.50945,0\n0.9931,0\n0.29582,0\n0.31975,0\n-1.673,0\n3.4848,0\n0.45988,0\n0.72478,0\n0.48381,0\n-1.8302,0\n0.71624,0\n1.364,0\n-3.1666,0\n-1.338,0\n0.66667,0\n-0.39633,0\n2.1877,0\n4.3496,0\n3.1464,0\n-0.91929,0\n-0.8458,0\n9.0835,0\n-1.1141,0\n-2.0695,0\n6.6875,0\n-2.5394,0\n-4.5714,0\n-2.442,0\n-1.4816,0\n0.63762,0\n-1.044,0\n-1.6251,0\n-1.8541,0\n-3.0128,0\n0.30607,0\n0.45647,0\n0.97259,0\n-0.46298,0\n-0.97227,0\n1.393,0\n0.48039,0\n5.2229,0\n-1.2765,0\n2.0219,0\n2.1997,0\n0.077067,0\n6.5559,0\n-1.5841,0\n-1.1124,0\n4.6367,0\n-2.9616,0\n-0.43735,0\n0.58977,0\n-0.76377,0\n-1.6918,0\n-0.86631,0\n-1.2662,0\n4.1684,0\n0.29924,0\n-1.8473,0\n-0.83213,0\n-4.609,0\n1.5058,0\n-2.295,0\n-1.0543,0\n0.80852,0\n-3.1154,0\n-0.57578,0\n-0.50912,0\n-2.9804,0\n-1.8199,0\n2.8593,0\n-0.82187,0\n-0.74668,0\n-3.5426,0\n0.28557,0\n-0.41855,0\n1.1982,0\n0.81365,0\n2.3347,0\n-2.1959,0\n-1.8114,0\n1.1367,0\n-0.085289,0\n-1.0731,0\n-1.5961,0\n-2.4095,0\n4.6743,0\n-0.84922,0\n1.0033,0\n-2.5497,0\n2.2954,0\n-1.4474,0\n-2.131,0\n-0.79453,0\n8.7417,0\n2.9038,0\n-0.092125,0\n2.0971,0\n10.642,0\n-2.1293,0\n7.1626,0\n0.39494,0\n5.2144,0\n-1.3653,0\n1.9125,0\n1.5195,0\n0.5761,0\n0.11466,0\n0.47697,0\n1.4477,0\n1.9775,0\n0.94524,0\n-1.4149,0\n-0.75009,0\n-2.724,0\n1.0273,0\n-0.71933,0\n2.3979,0\n-0.75351,0\n-0.70395,0\n-0.21347,0\n4.8264,0\n0.90081,0\n-0.52792,0\n2.8491,0\n-0.47665,0\n0.22404,0\n-0.83554,0\n5.3579,0\n-0.18954,0\n1.2939,0\n-3.611,0\n0.015542,0\n-5.6139,0\n3.3498,0\n4.3581,0\n-2.1925,0\n3.4695,0\n-3.3803,0\n-3.3563,0\n1.6613,0\n2.8662,0\n-1.6183,0\n4.6982,0\n-0.045982,0\n0.77776,0\n-0.83896,0\n1.81,0\n2.7636,0\n0.56926,0\n1.3588,0\n0.49065,0\n4.7529,0\n1.246,0\n-0.028892,0\n0.029214,0\n5.3818,0\n-1.9772,0\n-1.7276,0\n1.4579,0\n-2.5377,0\n1.9262,0\n-0.45444,0\n-3.3922,0\n5.5203,0\n-1.6251,0\n-0.11092,0\n-1.7054,0\n0.86492,0\n0.21721,0\n0.1591,0\n-1.8763,0\n1.0871,0\n-0.36728,0\n-0.8082,0\n-0.58945,0\n2.0817,0\n-0.45273,0\n0.45818,0\n1.7861,0\n-2.1241,0\n-1.7601,0\n0.43254,0\n-0.21347,0\n-3.3273,0\n6.638,0\n-0.35019,0\n-1.0663,0\n2.4201,0\n6.8687,0\n-0.86973,0\n-1.5243,0\n6.397,0\n2.5346,0\n0.96404,0\n-4.4142,0\n0.62224,0\n0.45647,0\n-3.4144,0\n-1.0577,0\n-1.6832,0\n-1.473,0\n0.97942,0\n-2.225,0\n1.7006,0\n-0.76377,0\n10.314,0\n-0.1639,0\n2.5825,0\n3.2627,0\n-0.97227,0\n0.17619,0\n1.3486,0\n-1.191,0\n2.2031,0\n2.5961,0\n0.54192,0\n-0.71933,0\n-0.88682,0\n-0.5228,0\n-0.022056,0\n-1.5277,0\n-0.96372,0\n-2.36,0\n-2.5411,0\n-1.9464,0\n0.58293,0\n-0.72275,0\n1.7109,0\n-0.95859,0\n0.94183,0\n-2.9205,0\n3.2199,0\n1.622,0\n1.3622,0\n3.5105,0\n-0.70224,0\n0.64446,0\n-1.7345,0\n-2.119,0\n6.3594,0\n-2.4318,0\n-1.8182,0\n-0.30575,0\n1.1298,0\n2.8115,0\n2.5466,0\n2.5842,0\n-5.1593,0\n-1.0834,0\n-0.49887,0\n-0.98594,0\n6.3218,0\n0.34367,0\n1.1811,0\n-0.52451,0\n2.7876,0\n1.4374,0\n-2.0131,0\n-0.68857,0\n0.59319,0\n-1.6217,0\n-0.42196,0\n-2.2369,0\n-1.4064,0\n-0.82871,0\n-0.45444,0\n1.3896,0\n1.3383,0\n-1.5892,0\n0.53337,0\n-1.7875,0\n-1.1329,0\n-2.0729,0\n6.8892,0\n-4.3886,0\n0.23259,0\n-2.3497,0\n-2.736,0\n3.2114,0\n0.52141,0\n-1.7704,0\n0.010415,0\n2.2612,0\n-4.6261,0\n4.1719,0\n1.058,0\n1.6904,0\n-2.5223,0\n4.647,0\n0.83928,0\n-1.7276,0\n-0.90732,0\n1.9399,0\n-1.0646,0\n2.2851,0\n-1.4679,0\n-1.2594,0\n3.5754,0\n2.2424,0\n-0.27841,0\n1.4802,0\n-0.47836,0\n-0.78086,0\n2.6577,0\n1.1811,0\n-2.4454,0\n-2.4437,0\n-0.47665,0\n0.31462,0\n-2.1276,0\n5.9356,0\n2.0681,0\n1.6664,0\n6.7918,0\n-1.3448,0\n0.44963,0\n0.44792,0\n-3.3341,0\n-1.0663,0\n3.0405,0\n3.0986,0\n0.99993,0\n-1.0184,0\n5.751,0\n1.2409,0\n0.68889,0\n0.91448,0\n-1.2218,0\n-1.89,0\n4.7837,0\n5.4775,0\n1.5366,0\n-1.673,0\n-4.9919,0\n-2.3326,0\n0.55901,0\n0.49919,0\n5.0742,0\n1.4169,0\n-1.5687,0\n1.2289,0\n1.9501,0\n-0.085289,0\n1.6271,0\n0.74187,0\n-0.20663,0\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_heat(df):\n    \"\"\"Surface temperature anomaly on bare ground against everything else.\"\"\"\n    fig, ax = plt.subplots(figsize=(6.5, 3))\n    bins = [x / 2 for x in range(-16, 31)]\n    ax.hist(df.loc[df[\"bare\"] == 0, \"anomaly\"], bins=bins, alpha=0.6, density=True,\n            color=\"#1b7837\", label=\"vegetated and other\")\n    ax.hist(df.loc[df[\"bare\"] == 1, \"anomaly\"], bins=bins, alpha=0.6, density=True,\n            color=\"#a50026\", label=\"bare footprint\")\n    ax.axvline(0, color=\"#616e7c\", lw=0.8)\n    ax.set_xlabel(\"Land surface temperature minus the area median (°C)\")\n    ax.set_ylabel(\"Density\")\n    ax.set_title(\"Pits, dumps and stockpiles run hot\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_heat(df)\nplt.show()\n"
+ }
+]

@@ -1,0 +1,46 @@
+# Flood: From Terrain to an Event Map {#sec-flood}
+
+::: {.chapter-goal}
+#### In this chapter
+You will build a flood product the way it is delivered in practice: terrain first, then the radar event map, then the people and buildings inside it, with every number checked against a second source.
+:::
+
+## Why terrain comes first
+
+A flood map made from radar alone answers one question: where was the water on the day of the pass? Response teams also need to know where it is likely to go next, and whether the radar map makes physical sense. Terrain answers both.
+
+The most useful terrain layer for this is not elevation. It is **height above the nearest drainage**, usually shortened to HAND. A house two metres above its river floods before a house ten metres above it, even if both sit at the same elevation above sea level. HAND is computed from a hydrologically conditioned elevation model: sinks are filled, flow directions are solved, and the drainage network is traced. MERIT Hydro provides it globally at 90 m. With your own LiDAR ground model you can compute it at 1 m in Python (Chapter 11 and the LiDAR part show how).
+
+## The radar rule, and why each part is there
+
+Sentinel-1 sees through cloud, which in a tropical flood is the whole point. Calm water reflects the radar pulse away from the satellite, so flooded ground turns dark. The rule used in the listing has four parts, and each one removes a specific false alarm:
+
+| Condition | What it removes |
+|---|---|
+| VV below −13 dB after the event | anything that is not dark enough to be open water |
+| at least 1.25 times darker than the dry-season baseline | ground that is always dark: smooth roads, sand, some crops |
+| slope under 5° | radar shadow on hillsides, which is dark for geometric reasons |
+| not permanent water (JRC occurrence under 80 %) | rivers and lakes that were never a flood |
+
+The same orbit direction is used for the baseline and the event. Mixing ascending and descending passes changes the viewing geometry, and the change detector reads that as water.
+
+## A working example: Aceh Tamiang, November 2025
+
+The listing reproduces the method of the author's Sumatra Flood Explorer for one district during the late November 2025 floods. Look at the chart before the map: if the mapped water did not sit low on the terrain, the radar rule would be doing something wrong.
+
+{{< include _snippets/ch24_flood_aceh.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: check the layer before you count with it
+The first version of this chapter counted buildings with Google Open Buildings v3. It returned 524 buildings for a district of about 196,000 people (WorldPop 2020). Microsoft's footprints hold about 60,000 for the same area. Neither dataset is wrong in general; one simply does not cover this district well. An exposure number is only as good as the least complete layer in it, so print the count for the whole area before you count inside the flood.
+:::
+
+## What this product is, and what it is not
+
+It is a first estimate of extent and exposure from one satellite pass, available within a day. It is not a damage assessment: flooded is not destroyed, and a building next to the water is not necessarily wet. Say this on the map itself. Response teams will act on what you give them.
+
+## Exercises {.unnumbered}
+
+1. What share of the mapped flood lies below 5 m HAND? Look at the rest on the map and decide whether it is real flooding or a false alarm.
+2. Run the rule on the ascending pass of 28 November 2025. Where do the two maps disagree, and why?
+3. Change the ratio threshold from 1.25 to 1.5. Which of the three exposure numbers changes most?

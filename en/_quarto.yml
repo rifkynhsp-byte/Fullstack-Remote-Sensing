@@ -86,6 +86,10 @@ book:
         - 21-time-series.qmd
         - 22-vector-geoai.qmd
         - 23-apps-mrv.qmd
+    - part: "Part VII: Industry Applications"
+      chapters:
+        - 24-flood.qmd
+        - 25-mining.qmd
     - dashboard.qmd
     - references.qmd
   appendices:

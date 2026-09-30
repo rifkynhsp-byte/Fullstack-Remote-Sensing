@@ -1,0 +1,39 @@
+# Mining and Stockpiles {#sec-mining}
+
+::: {.chapter-goal}
+#### In this chapter
+You will answer the three questions a mine operator, a regulator or an insurer actually asks: how fast is the footprint growing, how much material has moved, and where is the ground hot.
+:::
+
+## Three questions, three sensors
+
+Mining work is where remote sensing gets asked for numbers with money attached: a volume for a royalty audit, a footprint for a permit, a hot spot before a stockpile catches fire. Each question needs a different sensor.
+
+| Question | Data | Why that data |
+|---|---|---|
+| How big is the disturbed area, and how fast is it growing? | Dynamic World, every Sentinel-2 scene | a probability of "bare" every few days, averaged per year |
+| How much material has moved? | two elevation models of different dates | the difference, cell by cell, times cell area, is a volume |
+| Where is the ground hot? | Landsat 8 and 9 thermal band | 100 m surface temperature, resampled to 30 m, since 2013 |
+
+In commercial work the second question is answered with drone photogrammetry or LiDAR: a DSM at a few centimetres, flown this month, differenced against last month. The logic is identical to what follows; only the resolution and the dates change. Public elevation models give a coarse but real version of the same answer.
+
+## A working example: an open-pit coal mine in East Kalimantan
+
+The study area is a rectangle near Sangatta that contains large open pits. The methods come from the author's mine and stockpile monitoring work. Here they are applied to public data only.
+
+{{< include _snippets/ch25_mining_sangatta.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: a surface model is not a pit floor
+NASADEM (2000) and Copernicus GLO-30 (2011 to 2015) both record the top of whatever was there, including forest canopy. Clearing 25 m tall forest reads as a 25 m "cut". That is why the listing counts only change beyond ±30 m, and only inside today's bare footprint. State the cut-off next to any volume you report, and give the dates of both elevation models, not today's date.
+:::
+
+## Heat is a symptom, not a diagnosis
+
+Bare ground is hotter than forest in the dry season whether or not anything is burning, so a raw temperature map is mostly a map of bare ground. The useful signal is persistence: a stockpile that stays hotter than its neighbours pass after pass. Chapter 21's time series tools turn the map above into that test. A drone thermal flight or a probe on site confirms it.
+
+## Exercises {.unnumbered}
+
+1. Change the ±30 m cut-off to ±15 m. How much does the cut volume grow, and how much of that growth is likely cleared forest?
+2. Find the hottest 1 % of pixels in the anomaly map. Are they on pits, dumps or stockpile yards?
+3. Split the footprint chart into new bare ground and bare ground that has regrown. Which matters more to a regulator?
