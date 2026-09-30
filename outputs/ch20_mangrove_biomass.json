@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch20_mangrove_biomass-webmap",
+  "kind": "html",
+  "html": "images/real/ch20_mangrove_biomass-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch20-agb-by-category",
   "kind": "chart",
   "caption": "Field AGB of the CIFOR SWAMP Bintuni plots (Murdiyarso et al. 2019, doi:10.17528/CIFOR/DATA.00108) by category. Regrowth climbs from about 27 Mg/ha at 5 years to about 112 at 25.",

@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch24_flood_aceh-webmap",
+  "kind": "html",
+  "html": "images/real/ch24_flood_aceh-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch24-flood-map",
   "kind": "map",
   "caption": "Radar flood extent over relief, with the low terrain (HAND under 5 m) that terrain alone would have flagged beforehand.",

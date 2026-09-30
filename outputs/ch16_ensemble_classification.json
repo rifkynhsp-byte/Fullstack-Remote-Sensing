@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch16_ensemble_classification-webmap",
+  "kind": "html",
+  "html": "images/real/ch16_ensemble_classification-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch16-rf",
   "kind": "map",
   "caption": "One random forest, 100 trees, on the Chapter 10 stack.",
@@ -28,7 +35,7 @@
  {
   "name": "ch16-accuracy",
   "kind": "table",
-  "caption": "Validation accuracy per model and for the vote (agreement with WorldCover 2021 on held-out points). The raw SVM calls everything one class (kappa 0): its distances are dominated by bands measured in thousands. Standardising the bands lifts it to 0.65; the trees still win, because the SVM's gamma was never tuned for 24 bands.",
+  "caption": "Validation accuracy per model and for the vote (agreement with WorldCover 2021 on held-out points). The raw SVM calls everything one class (kappa 0): its distances are dominated by bands measured in thousands. Standardising the bands helps; the trees still win, because the SVM gamma was never tuned for 24 bands.",
   "markdown": "| model                         |   overall_accuracy |   kappa |\n|:------------------------------|-------------------:|--------:|\n| Random Forest                 |              0.816 |   0.762 |\n| SVM (RBF)                     |              0.284 |   0.000 |\n| SVM (RBF), bands standardised |              0.645 |   0.525 |\n| Gradient tree boost           |              0.799 |   0.742 |\n| Majority vote                 |              0.803 |   0.744 |"
  }
 ]

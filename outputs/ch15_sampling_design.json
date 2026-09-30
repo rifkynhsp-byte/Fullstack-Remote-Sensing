@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch15_sampling_design-webmap",
+  "kind": "html",
+  "html": "images/real/ch15_sampling_design-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch15-design",
   "kind": "map",
   "caption": "Training and validation points after stratified sampling and 60 m thinning. Labels come from WorldCover, a map rather than field data.",

@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch16_kmeans_bandung-webmap",
+  "kind": "html",
+  "html": "images/real/ch16_kmeans_bandung-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch16-bandung-rgb",
   "kind": "map",
   "caption": "The input: a cloud-masked median, January 2024 to February 2025.",

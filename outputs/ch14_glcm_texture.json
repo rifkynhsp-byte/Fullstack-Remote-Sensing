@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch14_glcm_texture-webmap",
+  "kind": "html",
+  "html": "images/real/ch14_glcm_texture-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch14-window-rgb",
   "kind": "map",
   "caption": "Aquaculture ponds cut into mangrove on the delta. In true colour the pond walls and the canopy read as similar greens.",

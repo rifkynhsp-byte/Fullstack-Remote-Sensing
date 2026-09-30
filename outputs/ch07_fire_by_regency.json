@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch07_fire_by_regency-webmap",
+  "kind": "html",
+  "html": "images/real/ch07_fire_by_regency-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch07-fire-map",
   "kind": "map",
   "caption": "Every 1 km pixel's count of days with a confident fire detection, with district boundaries.",

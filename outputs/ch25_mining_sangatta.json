@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch25_mining_sangatta-webmap",
+  "kind": "html",
+  "html": "images/real/ch25_mining_sangatta-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch25-growth",
   "kind": "map",
   "caption": "Ground that became bare between 2017 and 2024, over a 2024 Sentinel-2 composite.",

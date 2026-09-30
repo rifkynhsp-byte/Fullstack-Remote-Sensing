@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch05_first_script-webmap",
+  "kind": "html",
+  "html": "images/real/ch05_first_script-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch05-dem-grey",
   "kind": "map",
   "caption": "The same data as the next map, stretched from 0 m (black) to 1,200 m (white). It answers 'how high', but slowly.",

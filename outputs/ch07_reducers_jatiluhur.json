@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch07_reducers_jatiluhur-webmap",
+  "kind": "html",
+  "html": "images/real/ch07_reducers_jatiluhur-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch07-median",
   "kind": "map",
   "caption": "The per-band median of every clear 2019 observation over Jatiluhur.",

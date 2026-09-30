@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch19_satellite_embeddings-webmap",
+  "kind": "html",
+  "html": "images/real/ch19_satellite_embeddings-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch19-embedding-rgb",
   "kind": "map",
   "caption": "Bands A01, A16 and A09 shown as red, green and blue. The colours mean nothing physical; what matters is that similar places get similar colours without any training.",

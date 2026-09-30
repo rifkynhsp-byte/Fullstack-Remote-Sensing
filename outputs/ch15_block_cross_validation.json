@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch15_block_cross_validation-webmap",
+  "kind": "html",
+  "html": "images/real/ch15_block_cross_validation-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch15-blocks",
   "kind": "map",
   "caption": "Each colour is a 5 km block. Every point inside a block goes to the same fold, so test points are never next door to training points.",

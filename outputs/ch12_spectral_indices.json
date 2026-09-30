@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch12_spectral_indices-webmap",
+  "kind": "html",
+  "html": "images/real/ch12_spectral_indices-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch12-ndvi",
   "kind": "map",
   "caption": "NDVI. Inside the vegetated delta almost everything is dark green: the index has saturated and cannot tell one dense canopy from another.",

@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch08_optical_search-webmap",
+  "kind": "html",
+  "html": "images/real/ch08_optical_search-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch08-clearest-scene",
   "kind": "map",
   "caption": "The single least cloudy scene the filter found. Even this one carries cloud: in the tropics, the best scene is rarely a clear one.",

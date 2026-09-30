@@ -1,5 +1,12 @@
 [
  {
+  "name": "ch11_terrain-webmap",
+  "kind": "html",
+  "html": "images/real/ch11_terrain-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
   "name": "ch11-elevation",
   "kind": "map",
   "caption": "AW3D30 over the delta. Over mangrove this is canopy top, not ground, which is why the intertidal zone looks higher than it is.",
