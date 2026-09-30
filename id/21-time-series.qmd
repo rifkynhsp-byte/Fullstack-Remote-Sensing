@@ -199,6 +199,12 @@ for m in bulan:
 }
 </script>
 
+## Menghitung perubahan dengan Dynamic World
+
+Dynamic World memberi setiap citra Sentinel-2 sembilan probabilitas kelas, sehingga menjadi cara tercepat untuk menghitung perubahan. Tapi cara ini juga mudah menipu diri sendiri. Skrip ini berasal dari latihan GEE101 di Lampung, dengan satu koreksi: versi aslinya mengambil lahan terbangun dari kelas 2, padahal di Dynamic World kelas 2 adalah rumput. Lihat grafiknya dulu sebelum petanya. Angka tahunan yang turun separuh lalu naik dua kali lipat sedang bercerita tentang datanya, bukan tentang kotanya.
+
+{{< include _snippets/ch21_dynamic_world_change.qmd >}}
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.

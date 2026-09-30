@@ -145,6 +145,12 @@ for m in months:
 :::
 
 
+## Counting change with Dynamic World
+
+Dynamic World labels every Sentinel-2 scene with nine class probabilities, which makes it the fastest way to count change. It is also an easy way to fool yourself. This listing comes from the GEE101 Lampung exercise, with one correction: the original extracted built-up land with class 2, which in Dynamic World is grass. Look at the chart before the maps. A yearly number that halves and then doubles is telling you about the data, not the town.
+
+{{< include _snippets/ch21_dynamic_world_change.qmd >}}
+
 ## Source material
 
 The harmonic trend block in your code collection, session 4 of Akselerasi Konservasi, and the land cover change dashboards.

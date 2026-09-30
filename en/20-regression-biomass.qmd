@@ -65,6 +65,12 @@ Your AI model comparison notes and the carbon farming explorer methodology.
 }
 </script>
 
+## A first real test: 45 field plots in West Papua
+
+Before the theory, a result. CIFOR field teams measured above ground biomass in 45 mangrove plots around Bintuni Bay, from fish ponds through forest regrowing for 5 to 25 years to undisturbed stands. The script tries three ways to predict those numbers from space and tests each one honestly, by leaving one plot out at a time. The outcome is humbling, and the reason is more useful than a good score would have been.
+
+{{< include _snippets/ch20_mangrove_biomass.qmd >}}
+
 ## Exercises {.unnumbered}
 
 To be written alongside the chapter.

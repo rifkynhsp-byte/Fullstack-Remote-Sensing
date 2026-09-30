@@ -82,8 +82,23 @@ def initialise() -> None:
         ee.Initialize(project=os.environ.get("BOOK_EE_PROJECT"))
 
 
+_FRAMES: dict[int, pd.DataFrame] = {}
+
+
 def to_frame(data) -> pd.DataFrame:
-    """Turn whatever a twin returns (FeatureCollection, dict, list, frame) into a frame."""
+    """Turn whatever a twin returns (FeatureCollection, dict, list, frame) into a frame.
+
+    Results are cached per object, so a heavy collection used by a chart and a
+    table is computed on the server once.
+    """
+    if id(data) in _FRAMES:
+        return _FRAMES[id(data)].copy()
+    df = _to_frame(data)
+    _FRAMES[id(data)] = df
+    return df.copy()
+
+
+def _to_frame(data) -> pd.DataFrame:
     if isinstance(data, pd.DataFrame):
         return data
     if isinstance(data, ee.FeatureCollection):
@@ -279,6 +294,8 @@ def run(path: Path) -> None:
                     entry["live"] = live_cell(df, p["plot"])
             elif kind == "table":
                 df = to_frame(p["data"])
+                if "transform" in p:            # e.g. scores computed locally
+                    df = p["transform"](df)
                 if "columns" in p:
                     df = df[list(p["columns"])]
                 entry["markdown"] = df.to_markdown(index=False, floatfmt=p.get("floatfmt", ".3g"))  # str or per-column tuple

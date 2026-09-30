@@ -1,0 +1,27 @@
+[
+ {
+  "name": "ch21-dw-2024",
+  "kind": "map",
+  "caption": "The most frequent Dynamic World label of 2024, with relief drawn from the model's confidence: flat, dull areas are where it hesitated.",
+  "image": "images/real/ch21-dw-2024.jpg"
+ },
+ {
+  "name": "ch21-new-built",
+  "kind": "map",
+  "caption": "Magenta: labelled built in 2024 but not in 2017, over a 2024 Sentinel-2 composite.",
+  "image": "images/real/ch21-new-built.jpg"
+ },
+ {
+  "name": "ch21-built-series",
+  "kind": "chart",
+  "caption": "Built-up area per year two ways, with the scene count behind each year. The probability rule is stricter, so its numbers are lower, but it is not steadier: both series dip in 2020 and 2022. Nothing was demolished; the dips come from the data. A single year here is not a result. Report a multi-year window, or a trend with its uncertainty.",
+  "image": "images/real/ch21-built-series.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"built_km2,built_km2_prob,scenes,year\n0.090699,0.061632,10,2016\n2.4432,1.2772,7,2017\n4.5516,2.104,15,2018\n5.5166,2.5251,24,2019\n2.0418,0.81072,22,2020\n5.4017,2.5797,9,2021\n2.1222,1.1735,15,2022\n6.8997,3.7254,8,2023\n8.1237,4.6028,13,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_built_series(df):\n    \"\"\"Built-up area by year, with the number of scenes behind each year.\"\"\"\n    df = df.sort_values(\"year\")\n    fig, ax = plt.subplots(figsize=(7, 3.2))\n    ax.plot(df[\"year\"], df[\"built_km2\"], marker=\"o\", color=\"#C4281B\", label=\"yearly mode label\")\n    ax.plot(df[\"year\"], df[\"built_km2_prob\"], marker=\"s\", color=\"#6a51a3\",\n            label=\"mean 'built' probability > 0.5\")\n    ax.legend(frameon=False, fontsize=8, loc=\"upper left\")\n    ax.set_ylabel(\"Built-up area (km²)\", color=\"#C4281B\")\n    ax2 = ax.twinx()\n    ax2.bar(df[\"year\"], df[\"scenes\"], color=\"#9aa5b1\", alpha=0.35, width=0.6)\n    ax2.set_ylabel(\"Scenes in the year\", color=\"#616e7c\")\n    ax2.spines[\"right\"].set_visible(True)\n    ax.set_zorder(ax2.get_zorder() + 1)\n    ax.patch.set_visible(False)\n    ax.set_xticks(df[\"year\"])\n    ax.set_title(\"Built-up land, Dynamic World yearly mode\", loc=\"left\")\n    return fig\n\nplot_built_series(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch21-built-table",
+  "kind": "table",
+  "caption": "The yearly numbers.",
+  "markdown": "|   year |   built_km2 |   built_km2_prob |   scenes |\n|-------:|------------:|-----------------:|---------:|\n|   2016 |        0.09 |             0.06 |       10 |\n|   2017 |        2.44 |             1.28 |        7 |\n|   2018 |        4.55 |             2.10 |       15 |\n|   2019 |        5.52 |             2.53 |       24 |\n|   2020 |        2.04 |             0.81 |       22 |\n|   2021 |        5.40 |             2.58 |        9 |\n|   2022 |        2.12 |             1.17 |       15 |\n|   2023 |        6.90 |             3.73 |        8 |\n|   2024 |        8.12 |             4.60 |       13 |"
+ }
+]
