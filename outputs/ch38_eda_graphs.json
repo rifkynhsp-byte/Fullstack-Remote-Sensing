@@ -1,0 +1,44 @@
+[
+ {
+  "name": "ch38-summary",
+  "kind": "table",
+  "caption": "Step one of any exploration: what the data is, how much is missing, and how wide the range is (monthly rainfall, mm).",
+  "markdown": "| place     |   months |   missing |   mean |   sd |   min |   p10 |   median |   p90 |   max |\n|:----------|---------:|----------:|-------:|-----:|------:|------:|---------:|------:|------:|\n| Padang    |      408 |         0 |    312 |  135 |    30 |   151 |      301 |   490 |   773 |\n| Pontianak |      408 |         0 |    259 |   99 |    24 |   131 |      255 |   390 |   547 |\n| Jakarta   |      408 |         0 |    159 |  125 |     6 |    23 |      138 |   331 |   821 |\n| Makassar  |      408 |         0 |    250 |  269 |     2 |     7 |      138 |   651 |  1204 |\n| Kupang    |      408 |         0 |    102 |  125 |     2 |     4 |       32 |   295 |   674 |\n| Ambon     |      408 |         0 |    282 |  284 |    17 |    70 |      166 |   711 |  1886 |"
+ },
+ {
+  "name": "ch38-rule1",
+  "kind": "figure",
+  "caption": "The bar chart says the cities differ in average. The dot plot also shows that a single city's years differ by more than that.",
+  "image": "images/real/ch38-rule1.png"
+ },
+ {
+  "name": "ch38-rule2",
+  "kind": "figure",
+  "caption": "Kupang's average year is smooth. Real years are not; the band says how far a normal year can stray.",
+  "image": "images/real/ch38-rule2.png"
+ },
+ {
+  "name": "ch38-rule3",
+  "kind": "figure",
+  "caption": "The same two numbers. Cutting the axis makes a modest gap look huge.",
+  "image": "images/real/ch38-rule3.png"
+ },
+ {
+  "name": "ch38-rule4",
+  "kind": "figure",
+  "caption": "Six lines in six colours ask the reader to work. Grey context and one highlighted city tell a story: Ambon's wet season falls in the middle of the year, when most of the other cities are dry.",
+  "image": "images/real/ch38-rule4.png"
+ },
+ {
+  "name": "ch38-rule5",
+  "kind": "figure",
+  "caption": "Left needs its author standing next to it. Right does not.",
+  "image": "images/real/ch38-rule5.png"
+ },
+ {
+  "name": "ch38-correlation",
+  "kind": "figure",
+  "caption": "Correlation of monthly rainfall anomalies (season removed). Cities in the same rainfall regime move together (Makassar and Kupang 0.44, Padang and Pontianak 0.38), but no pair passes 0.5: most of each city's wet and dry months are its own.",
+  "image": "images/real/ch38-correlation.png"
+ }
+]

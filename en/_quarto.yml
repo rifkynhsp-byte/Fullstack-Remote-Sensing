@@ -102,6 +102,7 @@ book:
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:
         - 28-map-production.qmd
+        - 38-eda-graphs.qmd
         - 29-dataviz.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd

@@ -1,0 +1,45 @@
+# Exploratory Analysis and Graphs That Explain Themselves {#sec-eda}
+
+::: {.chapter-goal}
+#### In this chapter
+You will explore a dataset before modelling it. You will also learn five rules that turn a chart people have to decode into one they understand at a glance, each shown as a before-and-after pair.
+:::
+
+## Look before you model
+
+Exploratory data analysis (EDA) is the step where you find out what the data really is, before you ask it to answer anything. Four questions come first, and the summary table below answers all of them for the rainfall data used in Chapter 29:
+
+1. How much data is there, and how much is missing?
+2. What is the typical value, and how wide is the spread?
+3. Are there values that cannot be right?
+4. Does the data have a rhythm (a season, a trend) that must be removed before comparing?
+
+The table already shows something a mean would hide. In Kupang and Makassar the mean month is far above the median month. A few very wet months pull the mean up, and most months are much drier than the average suggests.
+
+## Five rules for graphs
+
+Each rule is one pair of panels: on the left the graph that most reports contain, on the right a better one. Look at how small the extra effort is.
+
+1. **Show the distribution, not only the average.** A bar of means hides how much individual years differ.
+2. **Do not average the variation away.** No real year looks like the average year. Show the range.
+3. **Keep axes honest.** A bar's length is its message. Cutting the axis turns a small gap into a big one.
+4. **Enough, not too much.** Six colours and a legend make the reader work. Grey context and one highlighted line tell a story.
+5. **Make the graph explain itself.** A title that states the finding, units on every axis, the data source, and labels on the points that matter.
+
+{{< include _snippets/ch38_eda_graphs.qmd >}}
+
+::: {.callout-tip}
+## A checklist before any graph leaves your desk
+- Can someone who has not read the text say what it shows?
+- Does the title state a finding, not a topic?
+- Are units on every axis, and does the source appear?
+- Is the variation visible, or hidden behind an average?
+- Would one colour, one highlight and grey everything else say it better?
+- For bars: does the axis start at zero?
+:::
+
+## Exercises {.unnumbered}
+
+1. Pick any chart from a report you wrote last year. Apply the checklist and redraw it.
+2. Redo Rule 2 for Ambon. What does the band show that the average hid?
+3. Make the correlation matrix with the season left in. Why does almost everything become strongly correlated?
