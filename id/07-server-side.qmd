@@ -183,6 +183,12 @@ Filter, map, reduce, act. Bab 9 mengisi kerangka itu sampai penuh.
 }
 </script>
 
+## Di waduk sungguhan: Jatiluhur, 2014 sampai 2024
+
+Semua konsep di atas, dipakai di satu tempat nyata. Jatiluhur adalah waduk yang memasok sebagian besar air Jakarta. Skrip ini menghitung indeks di setiap citra Landsat, meringkas satu tahun dengan tiga cara berbeda, lalu mengubah masker air menjadi satu angka luas untuk setiap musim kemarau. Bandingkan dua peta pertama sebelum melihat grafik: median dan *greenest pixel* sama sama disebut "citra 2019", tetapi hasilnya tidak sama.
+
+{{< include _snippets/ch07_reducers_jatiluhur.qmd >}}
+
 ## Latihan {.unnumbered}
 
 1. Tulis fungsi yang menambahkan band berisi tahun perekaman setiap citra, lalu petakan ke sebuah koleksi. Petunjuk: `image.date().get('year')` dan `ee.Image.constant()`.

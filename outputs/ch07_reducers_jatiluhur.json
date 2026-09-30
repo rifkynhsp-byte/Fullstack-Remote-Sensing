@@ -1,0 +1,33 @@
+[
+ {
+  "name": "ch07-median",
+  "kind": "map",
+  "caption": "The per-band median of every clear 2019 observation over Jatiluhur.",
+  "image": "images/real/ch07-median.jpg"
+ },
+ {
+  "name": "ch07-greenest",
+  "kind": "map",
+  "caption": "The same year reduced by keeping, at each pixel, the whole observation with the highest NDVI. The reservoir edge moves because the greenest date is a different date for every pixel.",
+  "image": "images/real/ch07-greenest.jpg"
+ },
+ {
+  "name": "ch07-water2019",
+  "kind": "map",
+  "caption": "The water mask that the reducer below turns into square kilometres.",
+  "image": "images/real/ch07-water2019.jpg"
+ },
+ {
+  "name": "ch07-water-area",
+  "kind": "chart",
+  "caption": "Water area inside the rectangle, July to October median of each year. One reduceRegion call per year.",
+  "image": "images/real/ch07-water-area.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"scenes,water_km2,year\n7,29.952,2014\n7,21.876,2015\n7,29.323,2016\n8,24.46,2017\n8,19.185,2018\n8,22.762,2019\n7,26.757,2020\n7,21.151,2021\n8,24.649,2022\n8,23.047,2023\n8,23.197,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_water_area(df):\n    \"\"\"Dry season water area by year. Which years stand out, and why?\"\"\"\n    df = df.sort_values(\"year\")\n    fig, ax = plt.subplots(figsize=(7, 3.2))\n    ax.plot(df[\"year\"], df[\"water_km2\"], marker=\"o\", color=\"#1A5BAB\")\n    ax.fill_between(df[\"year\"], df[\"water_km2\"], df[\"water_km2\"].min() * 0.95,\n                    color=\"#1A5BAB\", alpha=0.1)\n    for _, r in df.iterrows():\n        ax.text(r[\"year\"], r[\"water_km2\"], f\"{r['water_km2']:.0f}\", ha=\"center\",\n                va=\"bottom\", fontsize=7)\n    ax.set_xticks(df[\"year\"])\n    ax.set_ylabel(\"Water area (km²)\")\n    ax.set_title(\"Jatiluhur in the dry season, 2014 to 2024\", loc=\"left\")\n    return fig\n\nplot_water_area(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch07-water-table",
+  "kind": "table",
+  "caption": "The numbers behind the chart, with the scene count behind each median.",
+  "markdown": "|   year |   water_km2 |   scenes |\n|-------:|------------:|---------:|\n|   2014 |        30.0 |        7 |\n|   2015 |        21.9 |        7 |\n|   2016 |        29.3 |        7 |\n|   2017 |        24.5 |        8 |\n|   2018 |        19.2 |        8 |\n|   2019 |        22.8 |        8 |\n|   2020 |        26.8 |        7 |\n|   2021 |        21.2 |        7 |\n|   2022 |        24.6 |        8 |\n|   2023 |        23.0 |        8 |\n|   2024 |        23.2 |        8 |"
+ }
+]

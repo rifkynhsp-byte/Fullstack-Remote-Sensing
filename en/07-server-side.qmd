@@ -194,6 +194,12 @@ Filter, map, reduce, act. Chapter 9 fills that skeleton in completely.
 }
 </script>
 
+## On a real reservoir: Jatiluhur, 2014 to 2024
+
+Everything above, on one real place. Jatiluhur is the reservoir that supplies much of Jakarta's water. The script maps an index over every Landsat image, reduces a year three different ways, and then turns a water mask into one number per dry season. Read the two maps side by side before the chart: the median and the greenest pixel are both "the 2019 image", and they do not agree.
+
+{{< include _snippets/ch07_reducers_jatiluhur.qmd >}}
+
 ## Exercises {.unnumbered}
 
 1. Write a function that adds a band holding the acquisition year of each image, and map it over a collection. Hint: `image.date().get('year')` and `ee.Image.constant()`.

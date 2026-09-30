@@ -49,7 +49,27 @@ var lulcPalette = [
 // autocorrelated and nearly identical, so the model is being validated
 // against data it has effectively already seen. Accuracy comes back four to
 // eight points too high, consistently, and nothing in the output looks wrong.
-var withRandom = trainingDataGeometries.randomColumn('random', 42);
+// ---------------------------------------------------------------------------
+// No field data yet? Labels from ESA WorldCover 2021
+// ---------------------------------------------------------------------------
+// If you have not imported your own labelled points, these lines build labels from
+// WorldCover, which has a mangrove class (95). It is a map, not ground truth:
+// accuracy computed against it measures agreement with WorldCover, not
+// correctness. Delete this block once you have real field data.
+var worldCoverClasses = ee.ImageCollection('ESA/WorldCover/v200').first()
+  .select('Map')
+  .remap([95, 10, 80, 20, 30, 40, 60, 50],   // WorldCover codes
+         [0,  1,  2,  3,  3,  3,  3,  4])    // the book's five classes
+  .rename('landcover').toInt().clip(aoi);
+
+var labelledPoints = (typeof trainingDataGeometries !== 'undefined')
+  ? trainingDataGeometries
+  : worldCoverClasses.stratifiedSample({
+      numPoints: 0, classBand: 'landcover', region: aoi, scale: 10, seed: 42,
+      classValues: [0, 1, 2, 3, 4], classPoints: [300, 250, 150, 200, 150],
+      geometries: true, tileScale: 4});
+
+var withRandom = labelledPoints.randomColumn('random', 42);
 
 var SPLIT = 0.7;
 var trainingSet   = withRandom.filter(ee.Filter.lt('random', SPLIT));
@@ -225,6 +245,38 @@ var ensembleSmooth = ensemble.focalMode({
 // ===========================================================================
 // DISPLAY
 // ===========================================================================
+// How did each model do, and did the vote help? Same held-out points for all.
+var scoreModel = function (name, model) {
+  var m = validationSamples.classify(model).errorMatrix('landcover', 'classification');
+  return ee.Feature(null, {model: name, overall_accuracy: m.accuracy(), kappa: m.kappa()});
+};
+var voteMatrix = ensemble.sampleRegions({collection: validationSet,
+    properties: ['landcover'], scale: 10, tileScale: 4})
+  .errorMatrix('landcover', 'classification');
+// SVM measures distances, so every band needs the same scale. Standardise.
+var stats = image2023.reduceRegion({
+  reducer: ee.Reducer.mean().combine(ee.Reducer.stdDev(), '', true),
+  geometry: aoi, scale: 100, maxPixels: 1e9, bestEffort: true});
+var means = ee.Image.constant(bands.map(function (b) {
+  return stats.get(ee.String(b).cat('_mean')); })).rename(bands);
+var sds = ee.Image.constant(bands.map(function (b) {
+  return stats.get(ee.String(b).cat('_stdDev')); })).rename(bands);
+var imageScaled = image2023.subtract(means).divide(sds);
+var svmScaled = ee.Classifier.libsvm({kernelType: 'RBF', gamma: 0.5, cost: 10})
+  .train(imageScaled.sampleRegions({collection: trainingSet,
+    properties: ['landcover'], scale: 10, tileScale: 4}), 'landcover', bands);
+var svmScaledMatrix = imageScaled.sampleRegions({collection: validationSet,
+    properties: ['landcover'], scale: 10, tileScale: 4})
+  .classify(svmScaled).errorMatrix('landcover', 'classification');
+
+print('Accuracy by model', ee.FeatureCollection([
+  scoreModel('Random Forest', rf), scoreModel('SVM (RBF)', svm),
+  ee.Feature(null, {model: 'SVM (RBF), bands standardised',
+    overall_accuracy: svmScaledMatrix.accuracy(), kappa: svmScaledMatrix.kappa()}),
+  scoreModel('Gradient tree boost', gtb),
+  ee.Feature(null, {model: 'Majority vote', overall_accuracy: voteMatrix.accuracy(),
+                    kappa: voteMatrix.kappa()})]));
+
 Map.centerObject(aoi, 11);
 Map.addLayer(classifiedRF,  {min: 0, max: 4, palette: lulcPalette}, 'Random Forest', false);
 Map.addLayer(classifiedSVM, {min: 0, max: 4, palette: lulcPalette}, 'SVM', false);

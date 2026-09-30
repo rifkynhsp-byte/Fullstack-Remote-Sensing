@@ -183,7 +183,7 @@ def outputs_block(stem: str, lang_code: str) -> str:
         if "error" in item:
             parts += [f"*{lab['failed']}* ({item['name']})", ""]
             continue
-        if item["kind"] in ("map", "chart"):
+        if item["kind"] in ("map", "chart", "animation"):
             parts += [f"![{caption}](../{item['image']}){{.lightbox fig-alt=\"{caption}\"}}", ""]
         elif item["kind"] == "table":
             parts += [item["markdown"], "", f": {caption}", ""]

@@ -207,6 +207,12 @@ A final check, and it is the one most often skipped.
 }
 </script>
 
+## Time on a page: a chart and a time-lapse
+
+A map shows one moment. Two tools show change. A chart is honest about every observation and every gap; an animation is what a non-specialist remembers. The first half of this script is the NDVI chart from the GEE101 Bandung course. The second half builds one clear composite per year over the new capital, IKN, and plays them in order.
+
+{{< include _snippets/ch13_charts_timelapse.qmd >}}
+
 ## Exercises {.unnumbered}
 
 1. Render the same composite in true colour, false colour infrared and shortwave infrared. Which one makes the mangrove boundary clearest, and why?

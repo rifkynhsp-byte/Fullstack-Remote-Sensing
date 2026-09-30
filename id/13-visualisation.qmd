@@ -205,6 +205,12 @@ Satu pemeriksaan terakhir, dan justru yang paling sering dilewati.
 }
 </script>
 
+## Waktu dalam satu halaman: grafik dan time-lapse
+
+Peta hanya menunjukkan satu saat. Untuk menunjukkan perubahan ada dua alat. Grafik jujur tentang setiap pengamatan dan setiap celah data; animasi adalah yang diingat oleh orang awam. Bagian pertama skrip ini adalah grafik NDVI dari kursus GEE101 Bandung. Bagian kedua membuat satu komposit bersih per tahun di atas kawasan inti IKN, lalu memutarnya berurutan.
+
+{{< include _snippets/ch13_charts_timelapse.qmd >}}
+
 ## Latihan {.unnumbered}
 
 1. Tampilkan composite yang sama dalam warna sejati, inframerah warna semu, dan inframerah gelombang pendek. Mana yang membuat batas mangrove paling jelas, dan mengapa?

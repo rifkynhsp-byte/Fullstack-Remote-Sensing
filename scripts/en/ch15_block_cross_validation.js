@@ -70,9 +70,29 @@ var blocks = ee.Image.random(42)
   .rename('fold')
   .toInt();
 
+// ---------------------------------------------------------------------------
+// No field data yet? Labels from ESA WorldCover 2021
+// ---------------------------------------------------------------------------
+// If you have not imported your own labelled points, these lines build labels from
+// WorldCover, which has a mangrove class (95). It is a map, not ground truth:
+// accuracy computed against it measures agreement with WorldCover, not
+// correctness. Delete this block once you have real field data.
+var worldCoverClasses = ee.ImageCollection('ESA/WorldCover/v200').first()
+  .select('Map')
+  .remap([95, 10, 80, 20, 30, 40, 60, 50],   // WorldCover codes
+         [0,  1,  2,  3,  3,  3,  3,  4])    // the book's five classes
+  .rename('landcover').toInt().clip(aoi);
+
+var labelledPoints = (typeof samples !== 'undefined')
+  ? samples
+  : worldCoverClasses.stratifiedSample({
+      numPoints: 0, classBand: 'landcover', region: aoi, scale: 10, seed: 42,
+      classValues: [0, 1, 2, 3, 4], classPoints: [300, 250, 150, 200, 150],
+      geometries: true, tileScale: 4});
+
 // Give every sample the fold of the block it falls in.
 var samplesWithFold = blocks.sampleRegions({
-  collection: samples,
+  collection: labelledPoints,
   scale: BLOCK_SIZE_M,
   geometries: true,
   tileScale: 4

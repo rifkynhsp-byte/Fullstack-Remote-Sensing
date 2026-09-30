@@ -62,8 +62,24 @@ var MIN_SEPARATION = 60;
 // draw small, confidently pure polygons, then sample a controlled number of
 // POINTS from inside them. You get polygon convenience with point statistics.
 
-print('Training polygons by class:',
-  trainingPolygons.aggregate_histogram(CLASS_PROPERTY));
+// ---------------------------------------------------------------------------
+// No field data yet? Labels from ESA WorldCover 2021
+// ---------------------------------------------------------------------------
+// If you have not imported your own training polygons, these lines build labels from
+// WorldCover, which has a mangrove class (95). It is a map, not ground truth:
+// accuracy computed against it measures agreement with WorldCover, not
+// correctness. Delete this block once you have real field data.
+var worldCoverClasses = ee.ImageCollection('ESA/WorldCover/v200').first()
+  .select('Map')
+  .remap([95, 10, 80, 20, 30, 40, 60, 50],   // WorldCover codes
+         [0,  1,  2,  3,  3,  3,  3,  4])    // the book's five classes
+  .rename('landcover').toInt().clip(aoi);
+
+var havePolygons = typeof trainingPolygons !== 'undefined';
+if (havePolygons) {
+  print('Training polygons by class:',
+    trainingPolygons.aggregate_histogram(CLASS_PROPERTY));
+}
 
 // ===========================================================================
 // PART 2. Stratified sampling
@@ -81,13 +97,12 @@ print('Training polygons by class:',
 // Paint the class labels into a raster so stratifiedSample has a stratum band
 // to work from. This is the step people miss: the function stratifies on an
 // image band, not on a feature property.
-var classImage = trainingPolygons
-  .reduceToImage({
-    properties: [CLASS_PROPERTY],
-    reducer: ee.Reducer.first()
-  })
-  .rename(CLASS_PROPERTY)
-  .toInt();
+var classImage = havePolygons
+  ? trainingPolygons.reduceToImage({
+      properties: [CLASS_PROPERTY],
+      reducer: ee.Reducer.first()
+    }).rename(CLASS_PROPERTY).toInt()
+  : worldCoverClasses;
 
 var classValues = Object.keys(CLASS_TARGETS).map(Number);
 var classPoints = classValues.map(function (k) { return CLASS_TARGETS[k]; });

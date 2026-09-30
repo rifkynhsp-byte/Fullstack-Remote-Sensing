@@ -127,9 +127,19 @@ def _scale_bar(ax, x0, x1, y0, y1):
 def render_map(p: dict, out: Path) -> None:
     region = p["region"]
     vis = dict(p["vis"])
-    url = p["image"].visualize(**vis).getThumbURL(
-        {"region": region, "dimensions": MAP_WIDTH, "format": "png"})
-    img = Image.open(io.BytesIO(requests.get(url, timeout=300).content))
+    img, last_error = None, ""
+    # Heavy maps (several classifiers, focal filters) can time out on Earth
+    # Engine's side at full size. Step down the size before giving up.
+    for width in (p.get("width", MAP_WIDTH), 900, 600):
+        url = p["image"].visualize(**vis).getThumbURL(
+            {"region": region, "dimensions": width, "format": "png"})
+        reply = requests.get(url, timeout=600)
+        if reply.headers.get("content-type", "").startswith("image/"):
+            img = Image.open(io.BytesIO(reply.content))
+            break
+        last_error = reply.text[:200]
+    if img is None:
+        raise RuntimeError(f"Earth Engine returned no image: {last_error}")
     x0, x1, y0, y1 = _bounds(region)
 
     fig, ax = plt.subplots(figsize=(7.2, 7.2 * (y1 - y0) / (x1 - x0) + 0.9))
@@ -160,6 +170,55 @@ def render_map(p: dict, out: Path) -> None:
     fig.tight_layout()
     fig.savefig(out, bbox_inches="tight", pil_kwargs={"quality": 85, "optimize": True})
     plt.close(fig)
+
+
+def render_animation(p: dict, out: Path) -> None:
+    """An animated GIF from a collection of already visualised RGB frames.
+
+    Earth Engine renders the frames; each one then gets its label (usually
+    the year) burnt into the corner, because a time-lapse without dates is
+    a screensaver.
+    """
+    from PIL import ImageDraw, ImageSequence
+    if "frames" in p:
+        # One thumbnail per frame. Slower, but each request is small enough to
+        # stay under Earth Engine's per-request memory limit, which a single
+        # video request over several composites can exceed.
+        raw = []
+        for frame in p["frames"]:
+            url = frame.getThumbURL({"region": p["region"], "dimensions": p.get("width", 520),
+                                     "format": "png", "crs": "EPSG:3857"})
+            reply = requests.get(url, timeout=600)
+            if not reply.headers.get("content-type", "").startswith("image/"):
+                raise RuntimeError(reply.text[:200])
+            raw.append(Image.open(io.BytesIO(reply.content)))
+    else:
+        url = p["collection"].getVideoThumbURL({
+            "region": p["region"], "dimensions": p.get("width", 720),
+            "framesPerSecond": p.get("fps", 1), "crs": "EPSG:3857"})
+        reply = requests.get(url, timeout=600)
+        if not reply.headers.get("content-type", "").startswith("image/"):
+            raise RuntimeError(reply.text[:200])
+        raw = list(ImageSequence.Iterator(Image.open(io.BytesIO(reply.content))))
+    labels = p.get("labels", [])
+    frames = []
+    for i, frame in enumerate(raw):
+        f = frame.convert("RGB")
+        if i < len(labels):
+            d = ImageDraw.Draw(f)
+            from PIL import ImageFont
+            try:
+                font = ImageFont.load_default(size=18)
+            except TypeError:                      # Pillow < 10.1
+                font = ImageFont.load_default()
+            box = d.textbbox((14, 12), str(labels[i]), font=font)
+            d.rectangle([box[0] - 6, box[1] - 4, box[2] + 6, box[3] + 4], fill=(255, 255, 255))
+            d.text((14, 12), str(labels[i]), fill=(20, 20, 20), font=font)
+        frames.append(f)
+    # An adaptive 128 colour palette keeps a six frame GIF well under 1 MB.
+    frames = [f.quantize(colors=128, method=Image.Quantize.MEDIANCUT) for f in frames]
+    frames[0].save(out, save_all=True, append_images=frames[1:],
+                   duration=int(1000 / p.get("fps", 1)), loop=0, optimize=True)
 
 
 def render_chart(p: dict, out: Path) -> pd.DataFrame:
@@ -209,6 +268,9 @@ def run(path: Path) -> None:
             if kind == "map":
                 render_map(p, IMG_DIR / f"{name}.jpg")     # JPEG keeps pages light
                 entry["image"] = f"images/real/{name}.jpg"
+            elif kind == "animation":
+                render_animation(p, IMG_DIR / f"{name}.gif")
+                entry["image"] = f"images/real/{name}.gif"
             elif kind == "chart":
                 df = render_chart(p, IMG_DIR / f"{name}.png")
                 entry["image"] = f"images/real/{name}.png"
@@ -218,7 +280,7 @@ def run(path: Path) -> None:
                 df = to_frame(p["data"])
                 if "columns" in p:
                     df = df[list(p["columns"])]
-                entry["markdown"] = df.to_markdown(index=False, floatfmt=p.get("floatfmt", ".3g"))
+                entry["markdown"] = df.to_markdown(index=False, floatfmt=p.get("floatfmt", ".3g"))  # str or per-column tuple
             print(f"  + {kind:5s} {name}")
         except Exception as err:            # one failed product must not sink the rest
             entry["error"] = str(err)[:300]

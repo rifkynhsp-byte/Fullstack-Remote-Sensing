@@ -1,0 +1,34 @@
+[
+ {
+  "name": "ch16-rf",
+  "kind": "map",
+  "caption": "One random forest, 100 trees, on the Chapter 10 stack.",
+  "image": "images/real/ch16-rf.jpg"
+ },
+ {
+  "name": "ch16-ensemble",
+  "kind": "map",
+  "caption": "The majority vote of three models, with a 3 pixel mode filter. Smoothing tidies the map and also changes class areas (Chapter 16).",
+  "image": "images/real/ch16-ensemble.jpg"
+ },
+ {
+  "name": "ch16-tuning",
+  "kind": "chart",
+  "caption": "Accuracy flattens quickly: past a few dozen trees you are paying compute for nothing.",
+  "image": "images/real/ch16-tuning.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"accuracy,trees\n0.9,10\n0.92857,30\n0.92857,50\n0.92857,70\n0.92857,90\n0.92857,110\n0.92857,130\n0.92857,150\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_tuning(df):\n    \"\"\"Validation accuracy against forest size. Where does it stop improving?\"\"\"\n    df = df.sort_values(\"trees\")\n    fig, ax = plt.subplots(figsize=(6, 3))\n    ax.plot(df[\"trees\"], df[\"accuracy\"], marker=\"o\", color=\"#2166ac\")\n    ax.set_xlabel(\"Number of trees\")\n    ax.set_ylabel(\"Validation accuracy\")\n    ax.set_title(\"Random forest tuning\", loc=\"left\")\n    return fig\n\nplot_tuning(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch16-importance",
+  "kind": "chart",
+  "caption": "Random forest importance for the 24-band stack.",
+  "image": "images/real/ch16-importance.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"band,importance\nB1,14.54\nB11,13.422\nB12,22.416\nB2,16.778\nB3,8.0992\nB4,18.802\nB5,18.718\nB6,5.5072\nB7,9.8253\nB8,9.909\nB8A,11.111\nB9,12.661\nDSM,5.8171\nEVI,8.3392\nMNDWI,9.8122\nNDVI,11.776\nPALSAR_HH,17.324\nPALSAR_HV,19.36\nS1_VH,12.426\nS1_VV,15.468\nSAVI,11.419\nasm,11.428\ncontrast,12.889\nslope,13.338\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_importance(df):\n    \"\"\"Which bands the forest leaned on. Top 12.\"\"\"\n    df = df.sort_values(\"importance\").tail(12)\n    fig, ax = plt.subplots(figsize=(6, 3.8))\n    ax.barh(df[\"band\"], df[\"importance\"], color=\"#1b7837\")\n    ax.set_xlabel(\"Importance (random forest)\")\n    ax.set_title(\"Which predictors earn their place\", loc=\"left\")\n    return fig\n\nplot_importance(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch16-accuracy",
+  "kind": "table",
+  "caption": "Validation accuracy per model and for the vote (agreement with WorldCover 2021 on held-out points). The raw SVM calls everything one class (kappa 0): its distances are dominated by bands measured in thousands. Standardising the bands is the fix Chapter 10 describes.",
+  "markdown": "| model                         |   overall_accuracy |   kappa |\n|:------------------------------|-------------------:|--------:|\n| Random Forest                 |              0.929 |   0.897 |\n| SVM (RBF)                     |              0.343 |   0.000 |\n| SVM (RBF), bands standardised |              0.686 |   0.526 |\n| Gradient tree boost           |              0.914 |   0.878 |\n| Majority vote                 |              0.929 |   0.897 |"
+ }
+]
