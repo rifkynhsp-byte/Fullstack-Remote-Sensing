@@ -153,6 +153,22 @@
 
   function wireInstall() {
     var slot = document.getElementById('lms-install');
+    // Inside the book there is no slot in the page body: put one in the top
+    // bar, next to the language switch, so the offer is on every page.
+    if (!slot) {
+      var nav = document.querySelector('#quarto-header .navbar-nav.ms-auto') ||
+                document.querySelector('#quarto-header .navbar-nav');
+      slot = document.createElement(nav ? 'li' : 'div');
+      slot.id = 'lms-install';
+      slot.className = nav ? 'nav-item lms-install-nav' : 'lms-install-float';
+      slot.hidden = true;
+      (nav || document.body).appendChild(slot);
+    }
+    // Remember the edition the reader chose, so the site root opens it next time.
+    try {
+      var here = location.pathname.indexOf('/id/') > -1 ? 'id' : 'en';
+      localStorage.setItem('book-lang', here);
+    } catch (e) {}
     var standalone = window.matchMedia('(display-mode: standalone)').matches ||
                      navigator.standalone === true;
 

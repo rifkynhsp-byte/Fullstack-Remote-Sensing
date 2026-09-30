@@ -3,7 +3,7 @@
   "short_name": "Cloud GIS",
   "description": "Google Earth Engine and GeoAI for environmental monitoring. Physics first, then code. English and Bahasa Indonesia.",
 
-  "start_url": "./",
+  "start_url": "./en/",
   "scope": "./",
   "id": "./",
 
