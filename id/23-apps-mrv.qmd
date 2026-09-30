@@ -63,6 +63,12 @@ bagian demi bagian; lihat prakata untuk urutannya.
 }
 </script>
 
+## Contoh nyata: Jawa Barat sekilas pandang
+
+Kursus GEE101 ditutup dengan ekspor dan aplikasi kecil. Skrip ini menggabungkan keduanya. Earth Engine menghitung empat indikator untuk 27 kabupaten dan kota di Jawa Barat. Tab JavaScript mengubahnya menjadi aplikasi Code Editor yang bisa diklik, lalu mengekspor tabelnya. Tab Python mengubah tabel yang sama menjadi dashboard web: satu berkas HTML yang bisa dikirim lewat email, dipasang di situs, atau dibuka tanpa internet kecuali untuk memuat pustaka grafiknya.
+
+{{< include _snippets/ch23_westjava_dashboard.qmd >}}
+
 ## Latihan {.unnumbered}
 
 Ditulis bersamaan dengan naskah babnya.

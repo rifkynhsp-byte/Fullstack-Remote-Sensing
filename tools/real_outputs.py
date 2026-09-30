@@ -172,8 +172,11 @@ def render_map(p: dict, out: Path) -> None:
                 arrowprops=dict(arrowstyle="-|>", color="black"))
 
     if "palette" in vis and "classes" not in p and "min" in vis:
-        cmap = LinearSegmentedColormap.from_list(
-            "p", ["#" + c.lstrip("#") for c in vis["palette"]])
+        import re
+        def colour(c):             # hex with or without '#', or a named colour
+            c = c.lstrip("#")
+            return "#" + c if re.fullmatch(r"[0-9a-fA-F]{6}", c) else c
+        cmap = LinearSegmentedColormap.from_list("p", [colour(c) for c in vis["palette"]])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vis["min"], vis["max"]))
         cb = fig.colorbar(sm, ax=ax, orientation="horizontal", fraction=0.04, pad=0.09)
         cb.set_label(p.get("legend", ", ".join(vis.get("bands", []))), fontsize=8)
@@ -286,6 +289,10 @@ def run(path: Path) -> None:
             if kind == "map":
                 render_map(p, IMG_DIR / f"{name}.jpg")     # JPEG keeps pages light
                 entry["image"] = f"images/real/{name}.jpg"
+            elif kind == "html":               # an interactive page, e.g. plotly
+                p["build"](str(IMG_DIR / f"{name}.html"))
+                entry["html"] = f"images/real/{name}.html"
+                entry["height"] = p.get("height", 520)
             elif kind == "animation":
                 render_animation(p, IMG_DIR / f"{name}.gif")
                 entry["image"] = f"images/real/{name}.gif"

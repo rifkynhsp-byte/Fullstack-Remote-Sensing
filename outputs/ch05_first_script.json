@@ -1,0 +1,20 @@
+[
+ {
+  "name": "ch05-dem-grey",
+  "kind": "map",
+  "caption": "The same data as the next map, stretched from 0 m (black) to 1,200 m (white). It answers 'how high', but slowly.",
+  "image": "images/real/ch05-dem-grey.jpg"
+ },
+ {
+  "name": "ch05-dem-palette",
+  "kind": "map",
+  "caption": "A palette over the same 0 to 1,200 m range. The central highlands of Borneo separate from the coastal lowlands at a glance.",
+  "image": "images/real/ch05-dem-palette.jpg"
+ },
+ {
+  "name": "ch05-lonlat",
+  "kind": "table",
+  "caption": "One flipped sign moves the point about 120 km. Swapping the two numbers entirely gives a latitude of 117°, which does not exist.",
+  "markdown": "| point                                     |   elevation_m |\n|:------------------------------------------|--------------:|\n| [117.161, -0.53]  longitude first         |             3 |\n| [117.161, 0.53]  sign of latitude flipped |            80 |"
+ }
+]

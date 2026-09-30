@@ -67,6 +67,12 @@ The ui.Panel legend builders in your code collection, the Indraja Buana app, the
 }
 </script>
 
+## A working example: West Java at a glance
+
+The GEE101 course ends with exports and small apps. This listing joins the two. Earth Engine computes four indicators for all 27 districts of West Java. The JavaScript tab turns them into a click-to-explore Code Editor app and exports the table. The Python tab turns the same table into a web dashboard: one HTML file you can email, host, or open with no internet connection except for the chart library.
+
+{{< include _snippets/ch23_westjava_dashboard.qmd >}}
+
 ## Exercises {.unnumbered}
 
 To be written alongside the chapter.
