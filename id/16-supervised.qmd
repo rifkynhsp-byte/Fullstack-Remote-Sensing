@@ -11,6 +11,12 @@ Kupas nama nama algoritmanya dan klasifikasi terbimbing tinggal satu operasi: di
 
 Semua isi Bab 8 sampai 14 ada untuk membangun kolomnya. Bab 15 membangun labelnya. Bab ini adalah langkah terpendek dalam seluruh rantai dan justru yang paling banyak mendapat perhatian, dan itu kira kira kebalikan dari seberapa besar pengaruhnya.
 
+## Sebelum ada label: klaster
+
+Ada gunanya melihat bagaimana sebuah bentang lahan terbagi dengan sendirinya sebelum kita memberi tahu model apa saja kelasnya. k-means mengelompokkan piksel hanya berdasarkan kemiripan spektral. Skrip dari kursus GEE101 Bandung ini menjalankannya, lalu bertanya ke WorldCover apa sebenarnya isi setiap klaster. Jawabannya menunjukkan kenapa klaster tidak sama dengan kelas.
+
+{{< include _snippets/ch16_kmeans_bandung.qmd >}}
+
 ## Tiga algoritma, tiga titik buta yang berbeda
 
 Earth Engine menyediakan pustaka classifier yang tetap. Tiga di antaranya mencakup hampir semua pekerjaan penginderaan jauh, dan alasan mengetahui ketiganya bukan karena salah satunya terbaik. Alasannya, ketiganya gagal dengan cara berbeda, dan itulah yang membuat ansambel di akhir bab ini bekerja.

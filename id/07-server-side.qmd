@@ -189,6 +189,12 @@ Semua konsep di atas, dipakai di satu tempat nyata. Jatiluhur adalah waduk yang 
 
 {{< include _snippets/ch07_reducers_jatiluhur.qmd >}}
 
+## Banyak wilayah sekaligus: kebakaran di Riau
+
+reduceRegion menjawab satu pertanyaan untuk satu wilayah. reduceRegions menjawabnya untuk setiap fitur dalam satu koleksi, cukup dengan satu panggilan. Skrip dari latihan kebakaran GEE101 ini menghitung deteksi api yang meyakinkan selama sepuluh tahun di dua belas kabupaten dan kota di Riau, lalu menghitung hal yang sama untuk seluruh provinsi per tahun.
+
+{{< include _snippets/ch07_fire_by_regency.qmd >}}
+
 ## Latihan {.unnumbered}
 
 1. Tulis fungsi yang menambahkan band berisi tahun perekaman setiap citra, lalu petakan ke sebuah koleksi. Petunjuk: `image.date().get('year')` dan `ee.Image.constant()`.

@@ -1,0 +1,28 @@
+[
+ {
+  "name": "ch07-fire-map",
+  "kind": "map",
+  "caption": "Every 1 km pixel's count of days with a confident fire detection, with district boundaries.",
+  "image": "images/real/ch07-fire-map.jpg"
+ },
+ {
+  "name": "ch07-fire-districts",
+  "kind": "chart",
+  "caption": "reduceRegions returned one row per district in a single call.",
+  "image": "images/real/ch07-fire-districts.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"district,fire_days,per_1000_km2\nIndragiri Hilir,12821,950.04\nIndragiri Hulu,8720.5,1084.6\nKampar,3296.3,305.83\nKuantan Singingi,1762.4,331.96\nPelalawan,19904,1516.4\nRokan Hilir,12801,1388.7\nRokan Hulu,2415.1,332\nBengkalis,14163,1657.1\nKepulauan Meranti,5525.2,1510.7\nKota Dumai,5261.9,2307\nKota Pekanbaru,139.14,221.26\nSiak,8849,1126.4\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_districts(df):\n    \"\"\"Two rankings: raw totals and density. They do not agree.\"\"\"\n    df = df.sort_values(\"per_1000_km2\")\n    fig, axes = plt.subplots(1, 2, figsize=(9, 3.6), sharey=True)\n    axes[0].barh(df[\"district\"], df[\"fire_days\"], color=\"#cc4c02\")\n    axes[0].set_xlabel(\"Fire detection days, 2015 to 2024\")\n    axes[1].barh(df[\"district\"], df[\"per_1000_km2\"], color=\"#662506\")\n    axes[1].set_xlabel(\"Per 1,000 km²\")\n    fig.suptitle(\"Riau districts: total against density\", x=0.02, ha=\"left\")\n    fig.tight_layout()\n    return fig\n\nplot_districts(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch07-fire-years",
+  "kind": "chart",
+  "caption": "The province's yearly total.",
+  "image": "images/real/ch07-fire-years.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"fire_days,year\n19661,2015\n9112,2016\n4224.7,2017\n9585,2018\n28577,2019\n6354.1,2020\n5380.1,2021\n2677.7,2022\n5051.3,2023\n4570.9,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_years(df):\n    \"\"\"The province, one bar per year.\"\"\"\n    df = df.sort_values(\"year\")\n    fig, ax = plt.subplots(figsize=(7, 3))\n    ax.bar(df[\"year\"].astype(int).astype(str), df[\"fire_days\"], color=\"#cc4c02\")\n    ax.set_ylabel(\"Fire detection days\")\n    ax.set_title(\"Riau, fire detection days per year\", loc=\"left\")\n    return fig\n\nplot_years(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch07-fire-table",
+  "kind": "table",
+  "caption": "Per district, 2015 to 2024.",
+  "markdown": "| district          |   fire_days |   per_1000_km2 |\n|:------------------|------------:|---------------:|\n| Indragiri Hilir   |       12821 |          950.0 |\n| Indragiri Hulu    |        8721 |         1084.6 |\n| Kampar            |        3296 |          305.8 |\n| Kuantan Singingi  |        1762 |          332.0 |\n| Pelalawan         |       19904 |         1516.4 |\n| Rokan Hilir       |       12801 |         1388.7 |\n| Rokan Hulu        |        2415 |          332.0 |\n| Bengkalis         |       14163 |         1657.1 |\n| Kepulauan Meranti |        5525 |         1510.7 |\n| Kota Dumai        |        5262 |         2307.0 |\n| Kota Pekanbaru    |         139 |          221.3 |\n| Siak              |        8849 |         1126.4 |"
+ }
+]

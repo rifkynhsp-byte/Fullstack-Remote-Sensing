@@ -155,6 +155,12 @@ Uji dari Bab 3 tetap berlaku: jalankan klasifikasi hanya dengan optik, baca conf
 }
 </script>
 
+## Radar sepanjang musim hujan: Mahakam tengah
+
+Stack gabungan di atas memakai radar sebagai salah satu dari banyak layer. Kalau berdiri sendiri, radar bisa melakukan hal yang tidak bisa dilakukan sensor optis di iklim seperti ini: melihat permukaan setiap dua belas hari, berawan atau tidak. Skrip dari kursus GEE101 ini memberi ambang pada setiap lintasan Sentinel-1 di dataran banjir Mahakam tengah dari 2017 sampai 2024. Tumpukan citra itu pun berubah menjadi catatan banjir.
+
+{{< include _snippets/ch10_sar_water_mahakam.qmd >}}
+
 ## Latihan {.unnumbered}
 
 1. Berpindahlah antara composite optik dan layer VH di atas tegakan mangrove saat pasang. Temukan tanda tangan pantulan gandanya.

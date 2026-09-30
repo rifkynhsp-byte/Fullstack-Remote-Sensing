@@ -200,6 +200,12 @@ Everything above, on one real place. Jatiluhur is the reservoir that supplies mu
 
 {{< include _snippets/ch07_reducers_jatiluhur.qmd >}}
 
+## Many regions at once: fire in Riau
+
+reduceRegion answers one question about one area. reduceRegions answers it for every feature in a collection, in one call. This listing from the GEE101 fire exercise counts a decade of confident fire detections in each of Riau's twelve districts, and then does the same for the whole province one year at a time.
+
+{{< include _snippets/ch07_fire_by_regency.qmd >}}
+
 ## Exercises {.unnumbered}
 
 1. Write a function that adds a band holding the acquisition year of each image, and map it over a collection. Hint: `image.date().get('year')` and `ee.Image.constant()`.

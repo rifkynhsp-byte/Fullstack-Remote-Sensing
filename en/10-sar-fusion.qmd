@@ -160,6 +160,12 @@ The test from Chapter 3 applies: run the classification on optical alone, read t
 }
 </script>
 
+## Radar through the wet season: the middle Mahakam
+
+The fusion stack above uses radar as one layer among many. On its own, radar does something no optical sensor can do in this climate: it sees the ground every twelve days, cloud or no cloud. This listing from the GEE101 course thresholds every Sentinel-1 pass over the middle Mahakam floodplain from 2017 to 2024. The stack becomes a flood record.
+
+{{< include _snippets/ch10_sar_water_mahakam.qmd >}}
+
 ## Exercises {.unnumbered}
 
 1. Toggle between the optical composite and the VH layer over a stand of mangrove at high tide. Find the double bounce signature.

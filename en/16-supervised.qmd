@@ -11,6 +11,12 @@ Strip away the algorithm names and supervised classification is one operation: g
 
 Everything in Chapters 8 to 14 existed to build the columns. Chapter 15 built the labels. This chapter is the shortest step in the chain and it gets the most attention, which is roughly the inverse of how much it matters.
 
+## Before any labels: clusters
+
+It is worth seeing how a landscape divides itself before you tell a model what the classes are. k-means groups pixels by spectral similarity alone. This listing from the GEE101 Bandung course runs it, then asks WorldCover what each cluster actually contains. The answer shows why clusters are not classes.
+
+{{< include _snippets/ch16_kmeans_bandung.qmd >}}
+
 ## Three algorithms, three sets of blind spots
 
 Earth Engine ships a fixed library of classifiers. Three cover nearly all remote sensing work, and the reason to know all three is not that one is best. It is that they fail differently, which is what makes the ensemble at the end of this chapter work.

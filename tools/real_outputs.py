@@ -99,6 +99,8 @@ def to_frame(data) -> pd.DataFrame:
 
 
 def _to_frame(data) -> pd.DataFrame:
+    if callable(data):                      # a twin that fetches in batches itself
+        return data()
     if isinstance(data, pd.DataFrame):
         return data
     if isinstance(data, ee.FeatureCollection):
