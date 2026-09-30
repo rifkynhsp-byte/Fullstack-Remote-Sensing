@@ -60,6 +60,16 @@ print('Embedding bands:', embeddings.bandNames());
 // The same split discipline as Chapter 16 applies. Small sample sizes make
 // the split matter more, not less: with 20 points per class, a leak between
 // training and validation is proportionally far more damaging.
+// No labelled points yet? Twenty per class from ESA WorldCover 2021, which
+// has a mangrove class. Accuracy against it is agreement, not truth.
+var samplePoints = (typeof samplePoints !== 'undefined') ? samplePoints :
+  ee.ImageCollection('ESA/WorldCover/v200').first().select('Map')
+    .remap([95, 10, 80, 20, 30, 40, 60, 50], [0, 1, 2, 3, 3, 3, 3, 4])
+    .rename('landcover').toInt().clip(aoi)
+    .stratifiedSample({numPoints: 0, classBand: 'landcover', region: aoi, scale: 10,
+      seed: 42, classValues: [0, 1, 2, 3, 4], classPoints: [29, 29, 29, 29, 29],
+      geometries: true, tileScale: 4});
+
 var withRandom = samplePoints.randomColumn('random', 42);
 var trainingSet   = withRandom.filter(ee.Filter.lt('random', 0.7));
 var validationSet = withRandom.filter(ee.Filter.gte('random', 0.7));
@@ -113,7 +123,11 @@ print('User accuracy (commission):', matrix.consumersAccuracy());
 // every other pixel's vector is a meaningful similarity measure. Give it one
 // location you know is healthy mangrove and it will find everywhere else that
 // resembles it, with no training and no labels at all.
-var referencePoint = ee.Geometry.Point([117.58, -0.84]);
+// A pixel that ESA WorldCover AND Global Mangrove Watch both call mangrove,
+// with mangrove on every side for 100 m. An earlier version used
+// [117.58, -0.84], which is open water: the search then found the sea.
+// Check a reference point against two sources before you trust it.
+var referencePoint = ee.Geometry.Point([117.4222, -0.7504]);
 
 var referenceVector = ee.Image.constant(
   embeddings.reduceRegion({
@@ -130,7 +144,20 @@ var similarity = embeddings.subtract(referenceVector)
   .sqrt()
   .rename('distance');
 
-Map.addLayer(similarity, {min: 0, max: 2,
+// One pixel is a noisy reference: from it, water is on average CLOSER than
+// other mangrove. Average the embeddings of your mangrove training points
+// and search from that centroid instead.
+var mangroveRefs = embeddings.sampleRegions({
+  collection: trainingSet.filter(ee.Filter.eq('landcover', 0)), scale: 10});
+var centroid = ee.Image.constant(ee.List(mangroveRefs.reduceColumns(
+  ee.Reducer.mean().repeat(64), embeddings.bandNames()).get('mean')));
+var similarityCentroid = embeddings.subtract(centroid).pow(2)
+  .reduce(ee.Reducer.sum()).sqrt().rename('distance');
+Map.addLayer(similarityCentroid, {min: 0.4, max: 1.2,
+  palette: ['#08306b', '#4292c6', '#deebf7', '#ffffff']},
+  'Similarity to mangrove centroid (dark is similar)', false);
+
+Map.addLayer(similarity, {min: 0.4, max: 1.2,
   palette: ['#08306b', '#4292c6', '#deebf7', '#ffffff']},
   'Similarity to reference (dark is similar)', false);
 
