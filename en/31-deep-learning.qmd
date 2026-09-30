@@ -1,0 +1,37 @@
+# Deep Learning for Earth Observation {#sec-deeplearning}
+
+::: {.chapter-goal}
+#### In this chapter
+You will train a small convolutional network on real Sentinel-2 patches. You will compare it fairly with a Random Forest, and learn when deep learning is worth its cost and when it is not.
+:::
+
+## What Earth Engine cannot train
+
+Earth Engine's classifiers (Random Forest, gradient boosting, SVM) look at one pixel at a time. A convolutional network looks at a patch: the pixel and its neighbours, so it can learn shape, edges and context. Earth Engine cannot train such a network. It is still the best place to do everything around the training: build the composite, build the labels, cut patches, and later hold the predictions next to every other layer.
+
+The round trip used here is the one in the author's Colab notebooks, made small enough to run on an ordinary laptop:
+
+1. Earth Engine builds a 2021 Sentinel-2 composite of the Mahakam Delta and a label image from ESA WorldCover 2021.
+2. `ee.data.computePixels` hands back small tiles as NumPy arrays. There is no export task and no Cloud Storage.
+3. PyTorch trains a small U-Net on 64 × 64 patches.
+4. A Random Forest is trained on the same pixels, as the baseline.
+5. Both predict one block that no training tile touches.
+
+## A working example: mangrove, water and everything else
+
+{{< include _snippets/ch31_unet_mahakam.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: a fair baseline, and more than one seed
+The U-Net and a Random Forest given a little neighbourhood information (the 5 × 5 mean and spread) end up level: about 0.92 agreement each. The forest trains in seconds, the network in about two minutes on a CPU. Three training runs with different seeds spread from 0.917 to 0.923, so a difference smaller than that is noise. Two more cautions. The labels are another model's map, so "agreement" is not accuracy. And the test is one block, not a province. A deep learning paper that reports one seed against a pixel-only baseline has not shown very much.
+:::
+
+## When deep learning earns its place
+
+It earns its place when shape and context carry the answer: roads and buildings, fish ponds with straight walls, individual tree crowns, landslide scars, ship detection. It also helps when you have many labelled patches, and when the model will run on large areas many times. It does not help much when the classes differ mainly in spectrum, as mangrove and water do here. For bigger jobs, move training to a GPU (the author uses Colab Pro). Then bring the predictions back to Earth Engine as an asset, where they can be mapped, summarised and checked like any other layer.
+
+## Exercises {.unnumbered}
+
+1. Remove the 5 × 5 texture from the second Random Forest. How big is the gap to the U-Net now?
+2. Train the U-Net with a quarter of the tiles. Which model loses more?
+3. Look at the maps where the two models disagree. Is the U-Net smoother because it is right, or because it is a U-Net?

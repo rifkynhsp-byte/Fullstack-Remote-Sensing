@@ -101,6 +101,9 @@ book:
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:
         - 28-map-production.qmd
+        - 29-dataviz.qmd
+        - 30-statistics.qmd
+        - 31-deep-learning.qmd
     - dashboard.qmd
     - references.qmd
   appendices:

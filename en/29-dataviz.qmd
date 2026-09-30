@@ -1,0 +1,46 @@
+# Data Visualisation That Decides Things {#sec-dataviz}
+
+::: {.chapter-goal}
+#### In this chapter
+You will take one real table and show it badly, then well. Along the way you will pick the right colour for each map, and turn a static chart into one a reader can explore.
+:::
+
+## Start from the question, not the chart type
+
+A chart is an answer to a question. If you cannot say the question in one sentence, the chart will not know what to show either. The table in this chapter is always the same: monthly rainfall for six Indonesian cities from CHIRPS, 1991 to 2024. The questions change, and so does the best chart:
+
+| Question | Chart |
+|---|---|
+| How does the year go in each city? | small multiples on shared axes |
+| How much does a month vary between years? | a band around the median |
+| Were the dry-driver years really dry? | one dot per year, those years highlighted |
+| When exactly was a given month wet or dry? | an interactive year by month heatmap |
+
+## A working example: the same rainfall, charted badly and well
+
+{{< include _snippets/ch29_rainfall_charts.qmd >}}
+
+The first draft is not wrong: every number on it is correct. It fails because it makes the reader do the work. Small multiples on shared axes fix that. Each city gets its own panel, and the shared scale keeps the comparison honest. A band shows the spread between years, which an average hides.
+
+## Colour is a decision about the question
+
+Colour on a map is not decoration. It should match the question:
+
+- **Sequential** (one hue, light to dark) when the answer has one direction: how much.
+- **Diverging** (two hues, a neutral middle) when there is a meaningful centre: above or below normal.
+- **Categorical** (distinct hues, no order) when the classes have no ranking: which season.
+
+Rainbow palettes break all three. They add false boundaries where the hue jumps, and they fail for the roughly one in twelve men with red-green colour blindness.
+
+{{< include _snippets/ch29_rainfall_maps.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: a chart can make a claim the data does not support
+The dry-years chart first said "El Niño years". One of the four years, 2019, was driven mainly by the Indian Ocean Dipole, not El Niño. The claim was also checked before it went into the title: 22 of 24 city-years fall below the median, and two do not. Write the count in the title and the exceptions in the caption. A title that only says "they were dry" hides the two cases where they were not.
+:::
+
+## Exercises {.unnumbered}
+
+1. Redraw the small multiples with a free y-axis for each city. Which comparison becomes misleading?
+2. Add a seventh city from a different rainfall regime. Where does it belong in the panel order, and why?
+3. In the interactive heatmap, find the driest row for Kupang. Look up what happened that year.

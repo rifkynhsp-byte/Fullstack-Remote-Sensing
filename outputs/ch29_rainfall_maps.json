@@ -1,0 +1,27 @@
+[
+ {
+  "name": "ch29_rainfall_maps-webmap",
+  "kind": "html",
+  "html": "images/real/ch29_rainfall_maps-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch29-map-sequential",
+  "kind": "map",
+  "caption": "Sequential: one hue from light to dark, because the question has one direction (more rain). The stretch runs from 1,000 to 4,500 mm; values outside it are drawn at the ends.",
+  "image": "images/real/ch29-map-sequential.jpg"
+ },
+ {
+  "name": "ch29-map-diverging",
+  "kind": "map",
+  "caption": "Diverging: brown for drier, teal for wetter, near-white for normal. The colour scale is symmetric around zero, so equal colours mean equal departures in both directions.",
+  "image": "images/real/ch29-map-diverging.jpg"
+ },
+ {
+  "name": "ch29-map-categorical",
+  "kind": "map",
+  "caption": "Categorical: four seasons, four unrelated hues from the Okabe-Ito set, which stays distinct for the common forms of colour blindness.",
+  "image": "images/real/ch29-map-categorical.jpg"
+ }
+]

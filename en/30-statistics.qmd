@@ -1,0 +1,45 @@
+# Statistics and Modelling You Actually Need {#sec-statistics}
+
+::: {.chapter-goal}
+#### In this chapter
+You will check a satellite time series the way a careful analyst checks a weather station. Then you will fit a trend you can defend, and measure how far apart samples must be before they stop repeating each other.
+:::
+
+## First, what is missing and why
+
+Before any mean, trend or model, count what is not there. For optical and thermal sensors in the tropics, most missing values are clouds, and clouds are not random. They follow the wet season. An average of the days that remain describes clear days, not all days. That is a bias, and no statistical method removes it afterwards.
+
+{{< include _snippets/ch30_lst_quality.qmd >}}
+
+The quality table holds a surprise: none of the valid days at this pixel carries the "good quality" flag. This was checked, and it is not a bug. At the Bandung pixel all valid days are flagged "other quality"; a pixel in Bali has about half good; a pixel in the dry western United States is mostly good. In the humid tropics you will often work with data the producer itself marks as second best. Say so in the methods.
+
+## Trends that survive outliers
+
+Ordinary least squares lets one strange year pull the whole line. Sen's slope takes the median of all pairwise slopes, so it ignores a few bad values. The Mann-Kendall test asks whether values tend to rise or fall over time, without assuming a straight line or normal errors. Earth Engine computes both for every pixel in one call. Python adds the uncertainty.
+
+{{< include _snippets/ch30_trend_spatial.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: a slope needs an interval, and a map needs a second sensor
+The Bandung pixel has a slope of −0.38 °C per decade, and it looks like a finding. The bootstrap interval runs from −1.11 to +0.12, and the p-value is 0.08. The honest summary is "no clear trend". On the map, part of the widespread blue may come from the satellite, not the ground: Terra's overpass has drifted earlier in the day since about 2020. Before publishing a trend map, repeat it with a second sensor.
+:::
+
+## How far apart is independent?
+
+The semivariogram shows that NDVI samples closer than about 14 km in the Bandung basin share part of their information. This is the reason Chapter 15 splits training and test data by blocks and not by random points. It also tells you how many independent samples you really have. A thousand points within 5 km of each other are worth far fewer than a thousand.
+
+::: {.callout-tip}
+## Where R is the better tool
+For mixed-effects models (plots nested in sites nested in regions), `lme4` in R is still the reference. For geostatistics, `gstat` fits variogram models and kriging in a few lines. Python can do both, but with more code:
+```r
+library(gstat); library(sf)
+v <- variogram(ndvi ~ 1, pts_sf)
+fit <- fit.variogram(v, vgm("Sph"))   # range, sill, nugget
+```
+:::
+
+## Exercises {.unnumbered}
+
+1. Remove the QC "other quality" days and redo the monthly missing chart. What is left to analyse?
+2. Replace Sen's slope with an ordinary least squares slope. Which pixels change sign?
+3. Read the range off the semivariogram and use it as the block size in Chapter 15's cross-validation. Does the accuracy change?

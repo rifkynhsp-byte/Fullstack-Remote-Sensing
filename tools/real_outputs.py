@@ -122,17 +122,20 @@ def _to_frame(data) -> pd.DataFrame:
 from matplotlib.ticker import FuncFormatter, MaxNLocator  # noqa: E402
 
 
-def _deg(v, axis):
+def _deg(v, axis, decimals=2):
     hemi = ("E" if v >= 0 else "W") if axis == "x" else ("N" if v >= 0 else "S")
-    return f"{abs(v):.2f}°{hemi}"
+    return f"{abs(v):.{decimals}f}°{hemi}"
 
 
 def graticule(ax):
     """Latitude/longitude grid lines with degree labels on the frame."""
     ax.xaxis.set_major_locator(MaxNLocator(5))
     ax.yaxis.set_major_locator(MaxNLocator(5))
-    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "x")))
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "y")))
+    x0, x1 = ax.get_xlim()
+    span = abs(x1 - x0)
+    dec = 0 if span > 8 else 1 if span > 0.8 else 2      # fewer digits at wide extents
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "x", dec)))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "y", dec)))
     ax.grid(True, color="#ffffff", lw=0.6, alpha=0.6, ls="--")
     ax.grid(True, color="#333333", lw=0.3, alpha=0.5, ls="--")
     ax.tick_params(labelsize=7, direction="out")
@@ -144,7 +147,8 @@ def north_arrow(ax, x=0.93, y=0.86, size=0.08):
     """A filled north arrow: half black, half white, with N above."""
     from matplotlib.patches import Polygon
     t = ax.transAxes
-    w = size * 0.35
+    bbox = ax.get_window_extent()
+    w = size * 0.35 * bbox.height / max(bbox.width, 1)   # keep the arrow's shape on wide maps
     ax.add_patch(Polygon([[x, y + size], [x - w, y], [x, y + size * 0.25]], closed=True,
                          transform=t, fc="black", ec="black", lw=0.8, zorder=20))
     ax.add_patch(Polygon([[x, y + size], [x + w, y], [x, y + size * 0.25]], closed=True,

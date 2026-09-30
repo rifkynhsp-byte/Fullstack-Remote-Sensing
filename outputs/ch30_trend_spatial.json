@@ -1,0 +1,35 @@
+[
+ {
+  "name": "ch30_trend_spatial-webmap",
+  "kind": "html",
+  "html": "images/real/ch30_trend_spatial-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch30-trend-map",
+  "kind": "map",
+  "caption": "Per-pixel Sen's slope of dry-season daytime land surface temperature. Warming (red) follows the Bekasi, Karawang and Bogor growth corridor. Read the blue with care: MODIS Terra's overpass has drifted earlier since about 2020, and an earlier overpass alone makes later daytime values cooler. Check against Aqua or Landsat before calling it real cooling.",
+  "image": "images/real/ch30-trend-map.jpg"
+ },
+ {
+  "name": "ch30-trend-pixel",
+  "kind": "chart",
+  "caption": "One pixel's series, with the Sen line drawn through it.",
+  "image": "images/real/ch30-trend-pixel.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"lst,year\n36.388,2003\n36.439,2004\n35.4,2005\n36.815,2006\n36.562,2007\n36.722,2008\n36.544,2009\n36.27,2010\n36.362,2011\n37.101,2012\n35.912,2013\n36.698,2014\n37.518,2015\n34.541,2016\n36.213,2017\n36.697,2018\n37.017,2019\n36.123,2020\n36.247,2021\n34.279,2022\n35.113,2023\n33.738,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_trend(df):\n    \"\"\"The pixel's dry-season LST by year, with the Sen line.\"\"\"\n    df = df.dropna().sort_values(\"year\")\n    slope, intercept, lo, hi = stats.theilslopes(df[\"lst\"], df[\"year\"])\n    fig, ax = plt.subplots(figsize=(6.8, 3.2))\n    ax.plot(df[\"year\"], df[\"lst\"], \"o-\", color=\"#d55e00\", lw=1, ms=4)\n    xs = np.array([df[\"year\"].min(), df[\"year\"].max()])\n    ax.plot(xs, intercept + slope * xs, color=\"#1f2933\", lw=1.5,\n            label=f\"Sen's slope {slope * 10:+.2f} °C per decade\")\n    ax.set_ylabel(\"Dry-season daytime LST (°C)\")\n    ax.set_title(\"Central Bandung, one MODIS pixel\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_trend(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch30-trend-table",
+  "kind": "table",
+  "caption": "Mann-Kendall test and Sen's slope for the pixel, with a bootstrap 90 % interval. Twenty-two points are few: read the interval, not only the slope.",
+  "markdown": "|   years |   kendall_tau |   p_value |   sen_slope_C_per_decade |   bootstrap_90pct_low |   bootstrap_90pct_high |\n|--------:|--------------:|----------:|-------------------------:|----------------------:|-----------------------:|\n|      22 |         -0.27 |     0.080 |                    -0.38 |                 -1.11 |                   0.12 |"
+ },
+ {
+  "name": "ch30-semivariogram",
+  "kind": "chart",
+  "caption": "Semivariogram of Landsat NDVI from 900 random points in the Bandung basin. Where the curve levels off, samples stop sharing information: that distance is a sensible minimum spacing for training data and for cross-validation blocks (Chapter 15).",
+  "image": "images/real/ch30-semivariogram.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"lag_km,semivariance,pairs,total_variance\n0.5,0.019665,739,0.040944\n1.5,0.024139,2179,0.040944\n2.5,0.025282,3572,0.040944\n3.5,0.026784,4698,0.040944\n4.5,0.027664,6049,0.040944\n5.5,0.030038,6920,0.040944\n6.5,0.032547,8105,0.040944\n7.5,0.034855,8911,0.040944\n8.5,0.036677,9690,0.040944\n9.5,0.038852,10361,0.040944\n10.5,0.040328,11212,0.040944\n11.5,0.042134,11746,0.040944\n12.5,0.043785,12242,0.040944\n13.5,0.045885,12333,0.040944\n14.5,0.047166,12719,0.040944\n15.5,0.047405,12783,0.040944\n16.5,0.046727,13084,0.040944\n17.5,0.047603,13307,0.040944\n18.5,0.048498,13491,0.040944\n19.5,0.047729,13619,0.040944\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_semivariogram(df):\n    \"\"\"Semivariance rises with distance until samples stop being related.\"\"\"\n    fig, ax = plt.subplots(figsize=(6.5, 3.2))\n    ax.plot(df[\"lag_km\"], df[\"semivariance\"], \"o-\", color=\"#2166ac\")\n    ax.axhline(df[\"total_variance\"].iloc[0], color=\"#9aa5b1\", ls=\"--\", lw=1,\n               label=\"variance of all samples (the sill)\")\n    ax.set_xlabel(\"Distance between two samples (km)\")\n    ax.set_ylabel(\"Semivariance of NDVI\")\n    ax.set_title(\"Nearby samples repeat each other\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_semivariogram(df)\nplt.show()\n"
+ }
+]

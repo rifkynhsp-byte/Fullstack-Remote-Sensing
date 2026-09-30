@@ -1,0 +1,27 @@
+[
+ {
+  "name": "ch30-gap-heatmap",
+  "kind": "chart",
+  "caption": "Share of days with no daytime LST, for every month of 22 years. Dark is missing. The pattern repeats every year: clouds, not a sensor fault.",
+  "image": "images/real/ch30-gap-heatmap.png"
+ },
+ {
+  "name": "ch30-missing-vs-rain",
+  "kind": "chart",
+  "caption": "Missing days against rainfall for the twelve calendar months. The gaps are not random, so an average of the days that remain describes clear days, not all days.",
+  "image": "images/real/ch30-missing-vs-rain.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"month,missing,rain_mm\n1,0.88563,208.41\n2,0.89871,201.95\n3,0.79326,225.84\n4,0.76061,285.73\n5,0.61584,224.15\n6,0.50152,75.671\n7,0.43109,65.064\n8,0.35044,45.532\n9,0.4,119.97\n10,0.58798,165.64\n11,0.78788,299.41\n12,0.91202,289.84\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_missing_vs_rain(df):\n    \"\"\"Is the gap random? Missing share against rainfall, one point per month.\"\"\"\n    fig, ax = plt.subplots(figsize=(5.6, 3.8))\n    ax.scatter(df[\"rain_mm\"], df[\"missing\"] * 100, s=40, color=\"#2a78d6\",\n               edgecolor=\"white\", zorder=3)\n    names = [\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\",\n             \"Nov\", \"Dec\"]\n    for _, r in df.iterrows():\n        ax.annotate(names[int(r[\"month\"]) - 1], (r[\"rain_mm\"], r[\"missing\"] * 100),\n                    xytext=(5, -3), textcoords=\"offset points\", fontsize=7)\n    r = np.corrcoef(df[\"rain_mm\"], df[\"missing\"])[0, 1]\n    ax.set_xlabel(\"Mean monthly rainfall, CHIRPS 2003-2024 (mm)\")\n    ax.set_ylabel(\"Days with no LST value (%)\")\n    ax.set_ylim(0, 100)\n    ax.grid(color=\"#e4e7eb\", lw=0.6)\n    ax.set_title(f\"The wetter the month, the more is missing (r = {r:.2f})\",\n                 loc=\"left\", fontsize=10)\n    return fig\n\nplot_missing_vs_rain(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch30-outliers",
+  "kind": "chart",
+  "caption": "All valid daytime LST values, stacked by the error class in the QC band, with the fences of two outlier rules.",
+  "image": "images/real/ch30-outliers.png"
+ },
+ {
+  "name": "ch30-quality-table",
+  "kind": "table",
+  "caption": "The data quality summary for one pixel. Write this table before any trend or model. The zero on the 'good quality' line was checked: at this pixel every valid day is flagged 'other quality', which is common in the humid tropics.",
+  "markdown": "| check                                      |   days |\n|:-------------------------------------------|-------:|\n| Calendar days, 2003-2024                   |   8036 |\n| Days with no MODIS granule at all          |     30 |\n| Days with a granule but no LST (cloud)     |   5267 |\n| Days with a valid LST                      |   2739 |\n| of which QC 'good quality' (bits 0-1 = 00) |      0 |\n| of which LST error ≤ 1 K                   |    216 |\n| of which LST error ≤ 2 K                   |   2116 |\n| of which LST error ≤ 3 K                   |    407 |\n| Outliers by mean ± 3 SD                    |     11 |\n| Outliers by 1.5 × IQR                      |     30 |"
+ }
+]

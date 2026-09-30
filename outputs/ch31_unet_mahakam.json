@@ -1,0 +1,52 @@
+[
+ {
+  "name": "ch31_unet_mahakam-webmap",
+  "kind": "html",
+  "html": "images/real/ch31_unet_mahakam-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch31-tiles",
+  "kind": "map",
+  "caption": "Every white square is one 1.28 km training tile fetched with computePixels; open sea tiles are dropped. The red square is the held-out block. No training tile comes within 2 km of it.",
+  "image": "images/real/ch31-tiles.jpg"
+ },
+ {
+  "name": "ch31-history",
+  "kind": "chart",
+  "caption": "Training curves for the U-Net on a desktop CPU. The dotted line is the epoch that was kept: the one with the lowest validation loss.",
+  "image": "images/real/ch31-history.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"epoch,train_loss,val_loss,val_accuracy\n1,0.57302,0.35619,0.91615\n2,0.38715,0.28203,0.9331\n3,0.30021,0.24164,0.93122\n4,0.2605,0.22594,0.93517\n5,0.23921,0.2141,0.92458\n6,0.23212,0.26107,0.92047\n7,0.24347,0.18906,0.9297\n8,0.20915,0.20061,0.92757\n9,0.21365,0.19329,0.92607\n10,0.20732,0.18801,0.93619\n11,0.20862,0.17866,0.92783\n12,0.19234,0.19589,0.92557\n13,0.19244,0.18066,0.93755\n14,0.19368,0.16631,0.93803\n15,0.18055,0.17682,0.9328\n16,0.17452,0.16364,0.93816\n17,0.18173,0.17517,0.93129\n18,0.18228,0.20271,0.91496\n19,0.17556,0.19486,0.92722\n20,0.1737,0.1746,0.93266\n21,0.17948,0.17521,0.94032\n22,0.16376,0.17366,0.93954\n23,0.15985,0.1769,0.93888\n24,0.16838,0.20761,0.91776\n25,0.15527,0.16213,0.93944\n26,0.15801,0.1672,0.93711\n27,0.15677,0.16556,0.93525\n28,0.17248,0.16382,0.94274\n29,0.15985,0.15716,0.94125\n30,0.15009,0.158,0.93752\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_history(df):\n    \"\"\"Loss falls on both sets; where validation stops falling, training has learnt enough.\"\"\"\n    fig, (a, b) = plt.subplots(1, 2, figsize=(9, 3.2))\n    a.plot(df[\"epoch\"], df[\"train_loss\"], color=\"#1f78b4\", label=\"training\")\n    a.plot(df[\"epoch\"], df[\"val_loss\"], color=\"#e66101\", label=\"validation\")\n    best = df.loc[df[\"val_loss\"].idxmin(), \"epoch\"]\n    a.axvline(best, color=\"#616e7c\", ls=\":\", lw=1)\n    a.text(best + 0.3, a.get_ylim()[1] * 0.95, f\"kept: epoch {best}\", fontsize=7, va=\"top\")\n    a.set_xlabel(\"Epoch\")\n    a.set_ylabel(\"Weighted cross-entropy\")\n    a.legend(frameon=False, fontsize=8)\n    a.set_title(\"Loss\", loc=\"left\")\n    b.plot(df[\"epoch\"], df[\"val_accuracy\"], color=\"#e66101\")\n    b.set_xlabel(\"Epoch\")\n    b.set_ylabel(\"Share of validation pixels\")\n    b.set_title(\"Validation agreement with WorldCover\", loc=\"left\")\n    fig.tight_layout()\n    return fig\n\nplot_history(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch31-maps",
+  "kind": "figure",
+  "caption": "The held-out block through both models. Compare the edges of the aquaculture ponds and the thin creeks.",
+  "image": "images/real/ch31-maps.png"
+ },
+ {
+  "name": "ch31-confusion",
+  "kind": "figure",
+  "caption": "Confusion matrices on the held-out block, against WorldCover 2021.",
+  "image": "images/real/ch31-confusion.png"
+ },
+ {
+  "name": "ch31-scores",
+  "kind": "table",
+  "caption": "Agreement with WorldCover 2021 on the held-out block. Training time is wall-clock seconds on the author's desktop CPU (8 threads, no GPU); yours will differ.",
+  "markdown": "| model                                |   overall_agreement |   kappa |   F1_mangrove |   F1_water |   F1_other |   train_seconds_cpu |\n|:-------------------------------------|--------------------:|--------:|--------------:|-----------:|-----------:|--------------------:|\n| Random Forest, 6 bands per pixel     |               0.914 |   0.787 |         0.943 |      0.922 |      0.630 |                   3 |\n| Random Forest, + 5 x 5 mean and s.d. |               0.922 |   0.806 |         0.948 |      0.931 |      0.658 |                   8 |\n| U-Net, 64 x 64 patches               |               0.923 |   0.806 |         0.949 |      0.928 |      0.645 |                 113 |"
+ },
+ {
+  "name": "ch31-seeds",
+  "kind": "table",
+  "caption": "The same U-Net trained with three seeds. The spread is the noise floor: a gap between models smaller than this is not a result.",
+  "markdown": "|   seed |   overall_agreement |   kappa |   F1_other |   train_seconds_cpu |\n|-------:|--------------------:|--------:|-----------:|--------------------:|\n|     42 |               0.923 |   0.806 |      0.645 |                 113 |\n|      7 |               0.920 |   0.793 |      0.608 |                 114 |\n|   2021 |               0.917 |   0.784 |      0.587 |                 116 |"
+ },
+ {
+  "name": "ch31-setup",
+  "kind": "table",
+  "caption": "What went into the comparison.",
+  "markdown": "| item                                                      | value          |\n|:----------------------------------------------------------|:---------------|\n| Training tiles / validation tiles (128 x 128 px)          | 212 / 52       |\n| U-Net training pixels (all of them)                       | 3,473,408      |\n| Random Forest training pixels (random subset)             | 200,000        |\n| U-Net weights                                             | 483,907        |\n| Held-out block, WorldCover share mangrove / water / other | 75% / 17% / 9% |"
+ }
+]

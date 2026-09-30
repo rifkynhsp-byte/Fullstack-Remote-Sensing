@@ -1,0 +1,175 @@
+# Deep Learning untuk Observasi Bumi: Yang Tidak Bisa Dilatih di Earth Engine {#sec-deep-learning}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menarik patch citra dan label dari Earth Engine sebagai array NumPy, melatih U-Net kecil di CPU biasa, lalu mengujinya melawan Random Forest pada blok uji yang sama. Setelah itu Anda akan memutuskan, berdasarkan angka, apakah jaringan saraf itu memang sepadan dengan biayanya.
+:::
+
+## Apa yang bisa dilatih Earth Engine, dan apa yang tidak
+
+Semua classifier di buku ini sejauh ini melihat satu piksel pada satu waktu. Random Forest di Earth Engine menerima daftar nilai band untuk satu piksel lalu mengembalikan kelasnya. Ia tidak pernah melihat piksel di sebelahnya, kecuali Anda sendiri yang memasukkan informasi tetangga ke dalam stack, seperti tekstur (Bab 14) atau segmen (Bab 18).
+
+Jaringan konvolusi (convolutional network) bekerja sebaliknya. Ia menerima satu patch utuh, misalnya 64 kali 64 piksel, dan mempelajari filternya sendiri: tepi, bentuk, pematang tambak yang lurus, lengkung alur pasang surut. U-Net [@ronneberger2015unet] adalah rancangan baku untuk pemetaan. Patch diperkecil bertahap untuk mengenali apa isinya, lalu diperbesar kembali ke ukuran penuh untuk menentukan di mana letaknya. "Skip connection" membawa detail halus dari tahap awal ke tahap akhir, sehingga tepi objek tetap tajam. U-Net awalnya dibuat untuk citra medis. Penginderaan jauh cepat mengadopsi deep learning setelah 2015 [@zhu2017deeprs], dan U-Net menjadi salah satu rancangan yang paling sering dipakai untuk segmentasi citra satelit.
+
+Model seperti ini tidak bisa dilatih di Earth Engine. Tidak ada `ee.Classifier` untuk konvolusi, dan server tidak menjalankan pembaruan bobot berulang kali yang dibutuhkan pelatihan. Jadi pekerjaannya dibagi dua:
+
+| Langkah | Dijalankan di | Alasannya |
+|---|---|---|
+| Composite, cloud masking, citra label | Earth Engine | arsip citranya ada di sana, dan Bab 8 sampai 10 sudah mengerjakannya |
+| Memotong menjadi patch dan mengeluarkannya | Earth Engine ke Python | `computePixels` untuk pekerjaan kecil, export TFRecord untuk yang besar |
+| Melatih jaringan | PC Anda, atau Colab dengan GPU | butuh PyTorch atau TensorFlow dan banyak putaran atas data |
+| Mengecek, memetakan, merangkum prediksi | kembali ke Earth Engine | sebagai asset yang diunggah, berdampingan dengan layer lain |
+
+Pola ini sama dengan notebook Colab penulis sendiri: autentikasi Earth Engine, susun fitur di server, tarik stack-nya, latih di PyTorch, buat confusion matrix, lalu kembalikan hasilnya ke peta. Contoh di bawah adalah versi kecilnya, cukup ringan untuk jalan di CPU dalam beberapa menit.
+
+## Tugasnya: mangrove, air, dan sisanya di Delta Mahakam
+
+Delta Mahakam di Kalimantan Timur adalah wilayah kajian Bab 10 dan Bab 16. Cuping delta bagian luar berupa mangrove dan nipah, dipotong alur pasang surut dan ribuan petak tambak berbentuk persegi. Tiga kelas sudah cukup untuk melihat perilaku kedua jenis model: mangrove, air, dan lainnya.
+
+Labelnya diambil dari ESA WorldCover 2021 [@zanaga2022worldcover]: kelas 95 adalah mangrove, kelas 80 adalah air, sisanya "lainnya". Ini jalan pintas, dan harus disebut sebagai jalan pintas. WorldCover sendiri adalah keluaran sebuah model. Melatih jaringan dengan label ini berarti mengajarinya meniru WorldCover, termasuk kesalahannya. Semua skor di bawah adalah **kesesuaian dengan WorldCover**, bukan akurasi terhadap kondisi di lapangan.
+
+Rancangan ujinya dibuat supaya jujur:
+
+- **Tile latih** berukuran 128 kali 128 piksel (1,28 km) pada resolusi 10 m, disusun dalam grid berjarak 0,03 derajat sehingga tidak ada dua tile yang bersentuhan. Tile yang hampir seluruhnya laut dibuang. Tersisa 264 tile: 212 untuk latih dan 52 untuk validasi, dibagi per tile utuh.
+- **Satu blok uji**, 768 kali 768 piksel (7,7 km), terletak di pertemuan delta dan daratan. Tidak ada tile latih dalam jarak sekitar 2 km darinya. Kedua model baru melihat blok ini di akhir.
+- **Kedua model memakai tile latih yang sama dan enam band Sentinel-2 yang sama** (biru, hijau, merah, NIR, SWIR1, SWIR2) dari composite 2021 yang di-mask dengan Cloud Score+.
+
+::: {.callout-note}
+## Konsep: mengeluarkan piksel tanpa export
+`ee.data.computePixels` menerima citra Earth Engine apa pun dan sebuah grid piksel (ukuran, titik asal, ukuran piksel, proyeksi), lalu mengembalikan pikselnya langsung ke Python sebagai array NumPy. Tidak perlu task, tidak perlu bucket, tidak perlu antre export. Satu permintaan dibatasi sekitar 48 MB. Blok 768 kali 768 piksel dengan tujuh band float (16,5 MB) masih aman, sedangkan seluruh delta pada 10 m tidak. `getDownloadURL` dengan `format: 'NPY'` bekerja kurang lebih sama. `sampleRectangle` juga mengembalikan array, tetapi dibatasi 262.144 piksel dan lebih lambat. Untuk ribuan patch, pakai export TFRecord (lihat tab JavaScript).
+:::
+
+Tab Code Editor menyusun citra dan label, melatih Random Forest bawaan Earth Engine sebagai pembanding, dan meng-export wilayah itu sebagai patch TFRecord. Tab Python menarik tile dengan `computePixels`, melatih U-Net dan Random Forest scikit-learn dengan piksel yang sama, lalu menilai keduanya pada blok uji.
+
+{{< include _snippets/ch31_unet_mahakam.qmd >}}
+
+## Membaca kurva pelatihan
+
+Yang pertama dilihat adalah grafik pelatihan, bukan petanya. Kedua loss turun cepat selama lima epoch, lalu mendatar. Loss validasi tetap dekat dengan loss latih sepanjang pelatihan, artinya jaringan tidak sedang menghafal tile latih. Kesesuaian validasi naik turun antara sekitar 0,915 dan 0,943 dari satu epoch ke epoch berikutnya. Naik turun seperti itu wajar dengan 52 tile validasi: beberapa tile yang penuh tambak saja sudah bisa menggeser skornya. Karena itu pula skrip menyimpan epoch dengan loss validasi terendah, bukan epoch terakhir.
+
+Di PC ini (16 core, tanpa GPU, 8 thread dipakai) satu kali pelatihan 30 epoch butuh waktu sedikit di bawah dua menit. Menarik tile dari Earth Engine untuk pertama kali justru lebih lama, sekitar tujuh menit, karena setiap tile meminta Earth Engine menyusun citra Sentinel-2 setahun penuh yang sudah di-mask awannya. Skrip menyimpan array-nya ke disk, jadi proses berikutnya langsung mulai.
+
+## Apakah U-Net menang?
+
+Tidak, setidaknya tidak dengan selisih yang berarti. Pada blok uji:
+
+- Random Forest per piksel sesuai dengan WorldCover pada 91,4 % piksel (kappa 0,787), dengan waktu latih 3 detik.
+- U-Net sesuai pada 92,3 % piksel (kappa 0,806), dengan waktu latih sekitar 113 detik.
+- Random Forest yang diberi rata rata dan simpangan baku setiap band dalam jendela 5 kali 5 juga mencapai 92,2 % (kappa 0,806), dengan waktu latih 8 detik.
+
+Random Forest bawaan Earth Engine dari tab Code Editor (100 pohon, 9.000 titik terstratifikasi dari tile yang sama) sesuai pada 90,8 % dari 20.000 piksel sampel di blok uji (kappa 0,77) saat langkah yang sama kami jalankan. Posisinya setara dengan Random Forest scikit-learn.
+
+Sekarang lihat tabel seed. U-Net yang sama, dilatih tiga kali dengan seed acak berbeda, menghasilkan 92,3 %, 92,0 %, dan 91,7 %. Selisih U-Net dengan Random Forest biasa (0,9 poin) kira kira sebesar goyangan U-Net itu sendiri (0,6 poin). Random Forest yang diberi sedikit informasi tetangga bahkan menyamai hasil terbaik U-Net.
+
+::: {.callout-important}
+## Integritas ilmiah: laporkan hasil seri apa adanya
+Menulis "U-Net mengungguli Random Forest (92,3 % berbanding 91,4 %)" memang menggoda. Kedua angka itu nyata, tetapi kalimatnya tetap menyesatkan. Satu seed, satu blok uji, dan label dari model lain tidak cukup untuk menopang klaim selisih 0,9 poin. Laporkan sebaran antar seed, sertakan pembanding yang adil yang juga mendapat konteks spasial, dan katakan terus terang kalau biaya tambahannya tidak menghasilkan perbaikan yang terukur.
+:::
+
+Kenapa jaringan saraf tidak unggul? Ada tiga alasan, dan masing masing memberi pelajaran tentang kapan deep learning membantu.
+
+**Labelnya berasal dari classifier lain.** WorldCover dibuat oleh model machine learning dari data Sentinel-1 dan Sentinel-2 pada 10 m, bukan dari bentuk yang digambar orang. U-Net yang dilatih dengannya belajar meniru peta model lain. Ia tidak bisa mempelajari bentuk yang tidak pernah digambar oleh labelnya. Lihat tambak persegi yang gelap di kanan atas panel Sentinel-2: WorldCover menyebut banyak di antaranya mangrove, dan kedua model ikut setuju.
+
+**Kelasnya mudah dipisahkan secara spektral.** Air dan mangrove rapat berjauhan di NIR dan SWIR. Kalau satu piksel saja sudah memberi jawaban, konteks tidak banyak menambah. Kelas yang sulit adalah "lainnya": kedua model memasukkan 43 sampai 46 % piksel "lainnya" versi WorldCover ke kelas mangrove. Di blok ini, "lainnya" sebagian besar berupa bercak kecil yang tersebar di dalam delta yang bervegetasi. Pada 10 m bercak ini mirip mangrove di sekitarnya, dan jumlahnya hanya sekitar 9 % dari blok.
+
+**Datanya sedikit.** 212 tile tergolong kecil untuk jaringan dengan 483.907 bobot. Augmentasi (membalik dan memutar seperempat putaran) membantu, tetapi U-Net biasanya butuh ribuan patch berlabel baik sebelum kapasitas tambahannya terbayar.
+
+Skornya seri, petanya tidak. Peta Random Forest berbintik bintik, dengan piksel "lainnya" tunggal tersebar di tengah mangrove. Peta U-Net terdiri dari petak yang bersih dengan tepi halus, karena setiap piksel keluaran diputuskan berdasarkan lingkungannya. Untuk peta yang akan dibaca orang, hal ini bisa lebih penting daripada satu poin kesesuaian. Namun ini perbaikan tampilan yang juga bisa didapat dengan majority filter pada keluaran Random Forest (Bab 16), dan Anda perlu mengecek bahwa penghalusan itu tidak menghapus alur sungai kecil yang justru penting.
+
+## Kapan deep learning sepadan
+
+Jaringan saraf sepadan dengan biayanya kalau jawabannya ada pada **bentuk atau tekstur**, bukan pada spektrum satu piksel:
+
+- citra resolusi sangat tinggi (drone, foto udara, 0,3 sampai 1 m), di mana objek terdiri dari banyak piksel: bangunan, tajuk individu di tegakan campuran, perahu, pematang tambak;
+- pola dalam waktu sekaligus ruang, misalnya urutan penggenangan, tanam, dan panen dalam satu musim padi;
+- tugas yang punya banyak label bagus: poligon yang didigitasi tangan, plot lapangan, dataset nasional yang lebih Anda percaya daripada peta global.
+
+Kalau labelnya berasal dari peta global 10 m dan kelasnya terpisah secara spektral, mulailah dengan Random Forest, tambahkan statistik tetangga, dan berhenti di situ kecuali ada alasan untuk melangkah lebih jauh. Bab 27 menyampaikan hal yang sama untuk penghitungan sawit.
+
+## Kapan pindah ke GPU
+
+U-Net di sini sengaja dibuat kecil: patch 64 kali 64, jaringan tiga tingkat, 3,5 juta piksel latih. Waktu latih kira kira sebanding dengan jumlah piksel kali jumlah epoch kali ukuran model. Gandakan ukuran patch, pakai jaringan yang lebih dalam, tambahkan beberapa bulan sebagai band tambahan, dan pekerjaan dua menit berubah menjadi berjam jam di CPU.
+
+Patokan yang dipakai penulis: kalau satu epoch butuh lebih dari beberapa menit di CPU, atau RAM PC tidak cukup, pindahkan pelatihan ke Colab dengan GPU. Sisanya tetap dikerjakan di komputer sendiri. Pola yang terbukti jalan:
+
+1. Kerjakan sisi Earth Engine dan persiapan data di PC. Simpan patch sebagai berkas `.npz` atau TFRecord, lalu unggah ke Google Drive dalam satu bundel.
+2. Simpan satu notebook runner di Drive dengan sel pengaturan di bagian atas: skrip mana, nama run, jumlah epoch, ukuran patch. Bagian lain notebook tidak perlu disunting.
+3. Ubah runtime ke GPU lalu jalankan semua sel. Skrip menulis keluarannya ke `runs/<tanggal>_<nama>/` di Drive: log, `run_summary.json`, tabel metrik, dan bobot model yang tersimpan.
+4. Baca hasilnya dari Drive di PC, lalu buat peta dan laporannya di sana.
+
+::: {.callout-tip}
+## Dari lapangan: Colab bukan komputer yang lebih cepat untuk segala hal
+Sesi Colab memberi GPU, tetapi jumlah core CPU-nya sedikit, sering kali lebih sedikit dari komputer desktop. Random Forest, penarikan data dari Earth Engine, atau langkah apa pun yang tidak berjalan di GPU akan lebih lambat di sana daripada di rumah. Kirim hanya loop pelatihannya. Tuliskan juga pengaturan run dan perkiraan durasinya sebelum mulai, supaya run yang gagal bisa diulang persis sama.
+:::
+
+## Mengembalikan prediksi ke Earth Engine
+
+Prediksi yang hanya ada di dalam notebook tidak bisa dicek terhadap layer lain dalam proyek. Ada dua jalan kembali, dan tab JavaScript menunjukkan garis besar keduanya.
+
+**Unggah sebagai asset.** Tulis kelas hasil prediksi ke GeoTIFF dengan grid yang sama seperti saat piksel ditarik (titik asal, ukuran piksel, dan proyeksi yang dipakai di `computePixels`), lalu unggah lewat Assets > New > GeoTIFF, atau dengan `earthengine upload image` dari bucket Cloud Storage. Setelah itu ia menjadi `ee.Image` biasa: tampilkan di peta, hitung luas per kelas, jalankan `errorMatrix` yang sama seperti di Bab 17. Ini pilihan yang tepat untuk peta yang dibuat setahun sekali.
+
+**Pasang modelnya di server dan biarkan Earth Engine memanggilnya.** `ee.Model.fromVertexAi` menghubungkan Earth Engine dengan model yang di-deploy di endpoint Vertex AI. Earth Engine mengirim potongan citra ke endpoint dan menerima prediksinya kembali, sehingga peta bisa digambar untuk wilayah atau tanggal mana pun tanpa export manual. Setiap tile yang dihitung ada biayanya, modelnya harus disajikan dalam format yang dipahami endpoint, dan usaha ini baru sepadan kalau petanya sering digambar ulang. Cara ini tidak dijalankan di buku ini.
+
+::: {.callout-warning}
+## Kesalahan umum: hasil unggahan bergeser
+Kalau transformasi GeoTIFF tidak sama dengan grid asal patch, prediksinya bergeser beberapa piksel, dan semua akurasi yang dihitung di Earth Engine turun tanpa sebab yang kelihatan. Simpan grid-nya (titik asal, ukuran piksel, CRS) bersama data saat Anda menariknya, lalu tulis prediksi dengan grid yang persis sama.
+:::
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch31-deep-learning",
+  "questions": [
+    {
+      "q": "Kenapa U-Net tidak bisa dilatih di dalam Earth Engine seperti Random Forest?",
+      "options": [
+        "Earth Engine tidak punya data Sentinel-2 pada 10 m",
+        "Classifier Earth Engine bekerja per piksel, dan server tidak menjalankan pelatihan berulang yang panjang seperti yang dibutuhkan jaringan konvolusi",
+        "U-Net hanya bisa dipakai untuk citra medis",
+        "Earth Engine melarang export label"
+      ],
+      "answer": 1,
+      "why": "ee.Classifier menerima daftar nilai band per piksel. Jaringan konvolusi mempelajari filter atas patch utuh lewat banyak putaran pembaruan bobot, dan itu dikerjakan di PyTorch atau TensorFlow di luar Earth Engine."
+    },
+    {
+      "q": "U-Net sesuai dengan WorldCover pada 92,3 % blok uji, Random Forest per piksel pada 91,4 %. Bagaimana membacanya dengan jujur?",
+      "options": [
+        "U-Net jelas lebih baik",
+        "Random Forest jelas lebih baik karena latihnya lebih cepat",
+        "Selisihnya kira kira sebesar sebaran U-Net antar seed, dan Random Forest dengan statistik 5 kali 5 menyamainya, jadi tidak ada kemenangan yang berarti",
+        "Kedua model 92 % akurat di lapangan"
+      ],
+      "answer": 2,
+      "why": "Tiga seed menghasilkan 91,7 sampai 92,3 %. Selisih 0,9 poin pada satu blok, dengan label dari model lain, belum bisa disebut hasil. Kesesuaian dengan WorldCover juga bukan akurasi di lapangan."
+    },
+    {
+      "q": "Tugas mana yang paling mungkin membuat U-Net unggul atas Random Forest per piksel?",
+      "options": [
+        "Memisahkan air terbuka dari mangrove rapat pada Sentinel-2 10 m",
+        "Memetakan tapak bangunan dari foto udara 0,5 m dengan label hasil digitasi tangan",
+        "Memetakan NDVI di atas 0,6",
+        "Meniru ESA WorldCover pada 10 m"
+      ],
+      "answer": 1,
+      "why": "Pada 0,5 m satu bangunan terdiri dari banyak piksel dan dikenali dari bentuk serta tepinya, dan itulah yang dipelajari konvolusi. Label yang digambar tangan memungkinkan jaringan belajar bentuk yang tidak pernah digambar peta global 10 m."
+    },
+    {
+      "q": "Apa alasan utama mengirim pekerjaan ke Colab, bukan menjalankannya di PC sendiri?",
+      "options": [
+        "Colab punya lebih banyak core CPU daripada komputer desktop",
+        "Loop pelatihannya butuh GPU atau RAM yang lebih besar dari yang dimiliki PC",
+        "Earth Engine hanya bisa dipakai di dalam Colab",
+        "Random Forest berlatih lebih cepat di Colab"
+      ],
+      "answer": 1,
+      "why": "Nilai utama Colab adalah GPU-nya. Jatah CPU-nya kecil, jadi persiapan data, permintaan ke Earth Engine, dan Random Forest biasanya lebih cepat di komputer sendiri."
+    }
+  ]
+}
+</script>
+
+## Latihan {.unnumbered}
+
+1. Ganti `SEED` dan dua seed lain di `seeds_frame` dengan lima nilai baru. Seberapa lebar sebaran U-Net sekarang? Apakah masih tumpang tindih dengan Random Forest yang memakai statistik 5 kali 5?
+2. Pindahkan `TEST_CENTRE` ke delta bagian luar, di tengah kawasan tambak (misalnya 117,55°BT, 0,78°LS). Model mana yang lebih terpukul, dan apakah WorldCover sendiri tampak benar di sana?
+3. Beri Random Forest jendela 9 kali 9, bukan 5 kali 5. Pada ukuran jendela berapa hasilnya berhenti membaik?
+4. Tulis prediksi U-Net untuk blok uji ke GeoTIFF dengan `rasterio`, memakai transformasi yang sama dengan permintaan `computePixels`. Unggah ke asset Earth Engine Anda dan ulangi confusion matrix di sana. Apakah angkanya sama dengan hasil di Python?
