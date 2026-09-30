@@ -61,6 +61,7 @@ book:
       chapters:
         - p1-radiation.qmd
         - p2-orbits.qmd
+        - p3-scanning.qmd
     - part: "Part I: Foundations, Purpose and Physics"
       chapters:
         - 01-why-monitor.qmd

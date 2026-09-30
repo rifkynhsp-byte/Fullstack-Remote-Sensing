@@ -1,0 +1,51 @@
+[
+ {
+  "name": "ch00c_scanning-webmap",
+  "kind": "html",
+  "html": "images/real/ch00c_scanning-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "p3-scanning",
+  "kind": "figure",
+  "caption": "Three ways to build an image. A whisk broom sweeps one pixel at a time across track with a mirror; a push broom records a whole line with a row of detectors; a frame camera records a whole area. In every case the platform's forward motion supplies the along-track direction.",
+  "image": "images/real/p3-scanning.png"
+ },
+ {
+  "name": "p3-geometry",
+  "kind": "table",
+  "caption": "Ground pixel size (GSD = altitude × IFOV), swath and field of view for six sensors. SPOT's 4.1° field of view from 832 km gives its 60 km swath; Landsat needs about 15° for 185 km.",
+  "markdown": "| sensor                      |   altitude_km |   gsd_m |   swath_km |   fov_deg |   pixels_per_line |\n|:----------------------------|--------------:|--------:|-----------:|----------:|------------------:|\n| Landsat 1-3 MSS             |           917 |      79 |        185 |      11.5 |             2,346 |\n| Landsat 5 TM                |           705 |      30 |        185 |      14.9 |             6,174 |\n| SPOT 1-4 HRV multispectral  |           832 |      20 |         60 |       4.1 |             3,000 |\n| SPOT 1-4 HRV panchromatic   |           832 |      10 |         60 |       4.1 |             6,000 |\n| Landsat 8 OLI multispectral |           705 |      30 |        185 |      14.9 |             6,167 |\n| Sentinel-2 MSI (10 m bands) |           786 |      10 |        290 |      20.9 |            29,000 |"
+ },
+ {
+  "name": "p3-dwell",
+  "kind": "table",
+  "caption": "How long each detector looks at one 30 m pixel. The push broom has thousands of times longer to collect light, which is why it can have better signal-to-noise with smaller optics.",
+  "markdown": "| design                                                  |   dwell_time_us |\n|:--------------------------------------------------------|----------------:|\n| push broom: one detector per pixel (OLI)                |         4,444.4 |\n| whisk broom, one detector sweeping one line             |             0.7 |\n| whisk broom, 16 detectors, 16 lines per sweep (TM-like) |            11.5 |"
+ },
+ {
+  "name": "p3-offnadir",
+  "kind": "figure",
+  "caption": "Tilting the camera lets SPOT image a target up to about 430 km either side of its track, so it can revisit a place every few days instead of every 26. The cost is larger, distorted pixels.",
+  "image": "images/real/p3-offnadir.png"
+ },
+ {
+  "name": "p3-slc-on",
+  "kind": "map",
+  "caption": "Bandung before May 2003. The whisk broom and its scan line corrector together fill every line.",
+  "image": "images/real/p3-slc-on.jpg"
+ },
+ {
+  "name": "p3-slc-off",
+  "kind": "map",
+  "caption": "The same area after the corrector failed on 31 May 2003. Without it, each mirror sweep traces a zig-zag, leaving wedge-shaped gaps that widen away from the centre of the scene.",
+  "image": "images/real/p3-slc-off.jpg"
+ },
+ {
+  "name": "p3-gaps",
+  "kind": "table",
+  "caption": "Share of pixels with data where both scenes (same path and row) cover the box, before and after the failure. Clouds are not removed, so only the scan gaps differ.",
+  "markdown": "| image                               | date       |   valid_share |\n|:------------------------------------|:-----------|--------------:|\n| Landsat 7, before May 2003 (SLC on) | 2001-12-22 |          100% |\n| Landsat 7, 2015-2016 (SLC off)      | 2015-07-06 |           70% |"
+ }
+]

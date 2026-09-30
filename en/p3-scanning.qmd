@@ -1,0 +1,137 @@
+# P3 · How Sensors Scan {#sec-p3-scanning .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+You will learn how a sensor on a moving platform builds a two-dimensional image: by sweeping a mirror (whisk broom), by reading a row of detectors (push broom), or by taking whole frames. You will compute pixel size and swath from a sensor's angles and altitude, see why Landsat switched from whisk broom to push broom, why SPOT can tilt its camera, and what the failure of one small mirror did to every Landsat 7 image since 2003.
+:::
+
+## Two directions
+
+A satellite image has rows and columns. The two directions come from two different sources:
+
+- **Along track**: the direction the platform flies. New rows come for free, because the platform keeps moving forward.
+- **Across track**: at right angles to the flight. Something inside the sensor must build each row. How it does that is what separates the scanning systems.
+
+Radar uses its own words for the same two directions: *azimuth* for along track and *range* for across track (P5). The width of ground covered across track is the **swath**.
+
+## Whisk broom: one pixel at a time
+
+A **whisk broom** scanner, also called a *line scanner*, *mirror scanner* or *optical-mechanical scanner*, uses a rotating or swinging mirror. The mirror sweeps the view of a small detector across the track, from one side of the swath to the other, collecting one pixel after another along the row. Then the platform has moved forward and the next sweep records the next row. The ground is swept like a whisk sweeping a floor, which is where the name comes from.
+
+Because the scanning happens in front of the telescope, on the ground side, this is called **object-plane scanning**. Landsat 1 to 7 all used it: the MSS on Landsat 1 to 5, the Thematic Mapper (TM) on Landsat 4 and 5, and the Enhanced Thematic Mapper Plus (ETM+) on Landsat 7. MODIS on Terra and Aqua is a whisk broom too, with a very wide 2,330 km swath.
+
+To give each pixel more time, real whisk brooms do not sweep one row at a time. The MSS swept 6 rows per mirror sweep, with 6 detectors per band. The TM swept 16 rows, and recorded on both the forward and the return swing.
+
+## Push broom: one row at a time
+
+A **push broom** scanner, also called an *array scanner* or *along-track scanner*, has no moving mirror. It has a long row of detectors (a *linear array*, thousands of elements long) in the focal plane of the telescope. Each detector looks at one pixel across the track, and the whole row is recorded at once. The platform's forward motion "pushes" the row across the ground like a push broom. The electronics read the detectors out one after another. Because the scanning happens behind the telescope, in the image, this is called **image-plane scanning**.
+
+The French SPOT-1 (1986) was the first civilian Earth observation satellite with a push broom sensor. For almost 30 years the rule was simple: Landsat is a line scanner (whisk broom), SPOT is an array scanner (push broom). Then Landsat 8 (2013) carried the Operational Land Imager (OLI), a push broom. Landsat 9 does the same, as does Sentinel-2's MultiSpectral Instrument. So be careful with the old rule. "All Landsat satellites use line scanning" is **false**: Landsat 1 to 7 do, Landsat 8 and 9 do not. A good design is worth copying, whoever made it first.
+
+Airborne push brooms such as the Leica ADS40 use three linear arrays, looking forward, straight down (nadir) and backward. Every point on the ground is seen three times from different angles, which gives stereo for elevation models. ASTER on Terra does something similar with a second, backward-looking near-infrared telescope.
+
+## Frame cameras
+
+A **frame camera** has a two-dimensional *area array* of detectors, like a phone camera, and records a whole rectangle at once. Aerial survey cameras, drones and many small satellites use them. Consecutive frames overlap, and the overlap gives stereo, the basis of photogrammetry.
+
+The drawings in the output block show the three designs side by side.
+
+## Measuring the geometry: IFOV, FOV and swath
+
+Four terms describe a scanner's geometry. They come in pairs, one angle and one distance on the ground:
+
+| Angle | Distance on the ground | Also called |
+|---|---|---|
+| **Angular IFOV** ($\beta$): the angle one detector sees | **Linear IFOV**: the ground width one detector sees | ground sampling distance (GSD), pixel size, spatial resolution |
+| **Angular FOV**: the angle the whole row covers | **Swath**: the ground width the whole row covers | spatial coverage |
+
+IFOV means *instantaneous field of view*: what one detector sees at one instant. Because $\beta$ is tiny, the pixel size follows from simple multiplication, with $\beta$ in radians:
+
+$$\text{GSD} \approx H \times \beta$$
+
+For the MSS example in many lectures: $H = 900$ km and $\beta = 90$ µrad give $900{,}000 \times 0.00009 = 81$ m, the familiar "80 m" MSS pixel. The swath comes from the angular field of view:
+
+$$\text{swath} = 2H \tan\left(\frac{\text{FOV}}{2}\right)$$
+
+SPOT's camera covers an angle of 4.13° from 832 km, so its swath is $2 \times 832 \times \tan(2.065°) = 60$ km. Landsat needs about 15° to cover its 185 km. The number of pixels in a row is swath ÷ GSD: 60 km ÷ 20 m = 3,000 for SPOT multispectral, so one SPOT scene is 3,000 × 3,000 = 9 million pixels. The table in the output block does this for six sensors.
+
+The same arithmetic explains a classic exam trick. SPOT's panchromatic band has 10 m pixels, half its 20 m multispectral pixels. By the same principle Landsat's panchromatic band is 15 m, half of 30 m. Why can a pan band have smaller pixels? Because it is spectrally broad: it collects light over a wide range of wavelengths, so a smaller detector still gathers enough energy. Spatial and spectral resolution compete for the same limited light (P4).
+
+## Dwell time: why push brooms won
+
+A detector needs time to collect enough light to rise above its own noise. That time is its **dwell time**. At Landsat's ground speed (6.75 km/s), the satellite advances one 30 m row in about 4.4 milliseconds.
+
+- A push broom has one detector per pixel in the row, so each detector can look at its pixel for the whole 4.4 ms.
+- A whisk broom with one detector would have to visit all 6,167 pixels of the row in that same 4.4 ms: 0.7 microseconds per pixel, six thousand times less.
+- Sweeping 16 rows at once, as the TM did, raises this to about 11 µs, still hundreds of times shorter than a push broom.
+
+Longer dwell time means more signal for the same noise. That is why a push broom can have better radiometric quality from smaller optics.
+
+| | Whisk broom (line scanning) | Push broom (array scanning) |
+|---|---|---|
+| Moving parts | scan mirror: wear, vibration, can fail | none |
+| Dwell time | very short | long: better signal-to-noise |
+| Detectors to calibrate | few per band | thousands per band; slight differences show as stripes |
+| Field of view | can be very wide (MODIS 2,330 km) | limited by the optics and the array length |
+| Geometry | each pixel at a different time and angle; needs careful correction | one row at one instant; simpler geometry |
+
+## The optics behind the detectors
+
+A sensor's telescope decides which wavelengths it can record at all (P1):
+
+- **Reflective optics** use curved mirrors. Landsat's telescopes are mirror systems. A mirror reflects every wavelength from blue to thermal infrared, and is lighter than a thick lens. The visible and near-infrared detectors sit on one focal plane at normal temperature. The SWIR and thermal detectors sit on a separate **cold focal plane**, cooled so that the instrument's own heat does not swamp the faint thermal signal from the ground.
+- **Refractive optics** use lenses. SPOT's HRV used lenses, which is one reason the early SPOTs had only visible and near-infrared bands.
+
+This leads to a nice exam question: *which is more advanced, Landsat or SPOT?* On scanning, SPOT was ahead: push broom in 1986, which Landsat adopted only in 2013. On spectral range, Landsat was ahead: its mirror telescope covered visible, NIR, SWIR and thermal, while early SPOT covered visible and NIR. "More advanced" depends on the property you compare.
+
+## Pointing sideways: SPOT's trick
+
+Landsat always looks straight down (*nadir*). SPOT's HRV can tilt its view up to 27° to either side, using a steerable mirror in front of the camera. From 832 km that reaches targets up to about 430 km from the ground track on each side (the output figure uses a spherical Earth). Two consequences:
+
+- **Much shorter revisit.** SPOT's repeat cycle is 26 days, but by pointing sideways from neighbouring tracks it can image a given place every few days, and more often at higher latitudes. When a flood or fire happens, the operator points the camera at it on the next suitable pass. You give up coverage (you only see where you point) to gain frequency.
+- **Stereo.** Two images of the same place from opposite sides give height, the basis of SPOT's elevation models.
+
+The price is pixel size. At 27° the across-track pixel is about 1.33 times the nadir size, and buildings lean more. Many modern high-resolution satellites point in every direction and even tilt 45° or more, which buys fast revisit at the cost of more distortion.
+
+## When the mirror fails: Landsat 7
+
+Landsat 7's ETM+ had a second small mirror, the **scan line corrector (SLC)**. Because the satellite moves forward while the main mirror sweeps, each sweep on its own traces a slightly slanted path, and successive sweeps form a zig-zag. The SLC tilted the view backwards during each sweep to straighten it, so the rows lay parallel. On 31 May 2003 the SLC failed. Since then every Landsat 7 image has wedge-shaped gaps: narrow near the centre of the scene, wide towards the edges. Across a whole scene about 22 % of pixels are missing.
+
+The two maps in the output block show the same area of Bandung from the same path and row, in 2001 and in 2015. Near this scene's edge, the share of pixels with data drops from 100 % to 70 %. It is the most visible consequence of whisk broom design in the whole archive: a single moving part broke, and 20 years of images carry its mark. Landsat 7 SLC-off data are still usable, but every composite, mosaic or time series that uses them must handle the gaps.
+
+{{< include _snippets/ch00c_scanning.qmd >}}
+
+## Key terms
+
+**Along track / across track**: flight direction / perpendicular to it (radar: azimuth / range). **Whisk broom**: line scanning, a mirror sweeps pixel by pixel, object-plane scanning. **Push broom**: array scanning, a linear array records a row at once, image-plane scanning. **Frame camera**: area array, whole frame at once. **Angular / linear IFOV**: angle / ground width seen by one detector. **FOV / swath**: angle / ground width seen by the whole row. **GSD**: ground sampling distance ≈ H × β. **Dwell time**: how long a detector looks at one pixel. **Reflective / refractive optics**: mirrors / lenses. **Nadir / off-nadir**: straight down / tilted. **SLC**: scan line corrector.
+
+## Quiz
+
+1. A sensor at 705 km has an angular IFOV of 42.5 µrad. What is its ground pixel size, and which Landsat sensor is this?
+2. A camera at 832 km has a 4.13° angular field of view. What is its swath? How many 20 m pixels are in one row?
+3. List two other names for whisk broom scanning and two for push broom scanning.
+4. Why is whisk broom scanning called object-plane scanning, and push broom image-plane scanning?
+5. True or false: "All Landsat satellites use line scanning." Explain.
+6. Calculate the dwell time per pixel for a single-detector whisk broom and for a push broom, for 30 m pixels, a 185 km swath and a ground speed of 6.75 km/s. Why does the difference matter?
+7. Give one advantage of whisk broom over push broom, and two of push broom over whisk broom.
+8. Why do Landsat's SWIR and thermal detectors need a cooled focal plane, but the visible detectors do not?
+9. SPOT's panchromatic band has 10 m pixels and its multispectral bands 20 m. Predict Landsat 8's panchromatic pixel size and explain why a pan band can have smaller pixels.
+10. SPOT has a 26-day repeat cycle, yet it can image a flood within a few days. How? What does it give up?
+11. What did the scan line corrector on Landsat 7 do, and why are the SLC-off gaps widest at the scene edges?
+12. Which is more advanced, Landsat or SPOT? Give an answer that depends on the property compared.
+
+::: {.callout-note collapse="true"}
+## Answers
+1. $705{,}000 \times 42.5\times10^{-6} \approx 30$ m. The Thematic Mapper (Landsat 4 and 5).
+2. $2 \times 832 \times \tan(2.065°) \approx 60$ km; $60{,}000 / 20 = 3{,}000$ pixels.
+3. Whisk broom: line scanning, mirror scanning, optical-mechanical scanning. Push broom: array scanning, along-track scanning.
+4. In a whisk broom the scanning (the moving mirror) happens in front of the optics, on the side of the object (the ground). In a push broom nothing moves; the image is scanned electronically by reading out the detector array in the image (focal) plane.
+5. False. Landsat 1 to 7 used line scanners (MSS, TM, ETM+). Landsat 8 and 9 use push broom sensors (OLI, OLI-2).
+6. Row time $= 30 / 6750 \approx 4.4$ ms. Push broom: about 4.4 ms per pixel. Single-detector whisk broom: $4.4 \text{ ms} / 6{,}167 \approx 0.7$ µs. Longer dwell collects more light, so the push broom has better signal-to-noise.
+7. Whisk broom: very wide field of view possible, and few detectors to calibrate. Push broom: no moving parts; longer dwell time, better signal-to-noise; simpler geometry.
+8. SWIR and thermal detectors are sensitive to heat radiation, including the instrument's own. Cooling them stops the sensor from measuring itself. Visible detectors are not sensitive to thermal emission at normal temperatures.
+9. 15 m (half of 30 m, the same principle as SPOT). A pan band is spectrally broad, so it collects more light and a smaller detector (smaller pixel) still gets enough signal.
+10. By tilting its view up to 27° from nadir, it can image the flood from neighbouring tracks. It gives up coverage (it sees only where it points) and pixel quality (larger, more distorted pixels off-nadir).
+11. It tilted the view backwards during each mirror sweep to cancel the satellite's forward motion, so rows lay parallel. Without it, each sweep traces a zig-zag. The rows touch at the scene centre (nadir), and the gap between them grows towards the ends of each sweep, the edges of the scene.
+12. For scanning technology, SPOT (push broom since 1986, adopted by Landsat in 2013). For spectral range, Landsat (reflective optics cover visible to thermal; early SPOT only visible and NIR).
+:::
