@@ -57,6 +57,9 @@ book:
   chapters:
     - index.qmd
     - 00-different.qmd
+    - part: "Prinsip: Cara Kerja Penginderaan Jauh"
+      chapters:
+        - p1-radiation.qmd
     - part: "Bagian I: Fondasi, Tujuan dan Fisika"
       chapters:
         - 01-why-monitor.qmd

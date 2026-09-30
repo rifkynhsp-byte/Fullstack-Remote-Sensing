@@ -57,6 +57,9 @@ book:
   chapters:
     - index.qmd
     - 00-different.qmd
+    - part: "Principles: How Remote Sensing Works"
+      chapters:
+        - p1-radiation.qmd
     - part: "Part I: Foundations, Purpose and Physics"
       chapters:
         - 01-why-monitor.qmd

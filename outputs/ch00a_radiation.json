@@ -1,0 +1,52 @@
+[
+ {
+  "name": "ch00a_radiation-webmap",
+  "kind": "html",
+  "html": "images/real/ch00a_radiation-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "p1-planck",
+  "kind": "figure",
+  "caption": "Sunlight reaching the Earth and the Earth's own emission, both from Planck's law. Optical bands (blue to SWIR) sit where reflected sunlight is strong; the thermal band sits where the Earth's own glow is strong.",
+  "image": "images/real/p1-planck.png"
+ },
+ {
+  "name": "p1-paths",
+  "kind": "figure",
+  "caption": "Specular and diffuse reflection, and the three kinds of light a sensor adds together. Atmospheric correction tries to remove 2 and 3 and keep 1.",
+  "image": "images/real/p1-paths.png"
+ },
+ {
+  "name": "p1-spectrum",
+  "kind": "table",
+  "caption": "Wavelength, frequency and photon energy are three names for one property (c = λf, E = hf). Radar photons carry about a hundred-thousandth of the energy of blue light.",
+  "markdown": "| region                      | wavelength   |   frequency_GHz |   photon_energy_eV |\n|:----------------------------|:-------------|----------------:|-------------------:|\n| Blue (Landsat 8 band 2)     | 0.48 µm      |       624,567.6 |           2.58     |\n| Red (band 4)                | 0.655 µm     |       457,698.4 |           1.89     |\n| Near infrared (band 5)      | 0.865 µm     |       346,580.9 |           1.43     |\n| Shortwave infrared (band 6) | 1.61 µm      |       186,206.5 |           0.77     |\n| Thermal infrared (band 10)  | 10.9 µm      |        27,503.9 |           0.114    |\n| X-band radar (TerraSAR-X)   | 3.1 cm       |             9.7 |           4e-05    |\n| C-band radar (Sentinel-1)   | 5.55 cm      |             5.4 |           2.23e-05 |\n| L-band radar (ALOS-2)       | 23.6 cm      |             1.3 |           5.25e-06 |"
+ },
+ {
+  "name": "p1-toa",
+  "kind": "map",
+  "caption": "Jakarta as the sensor recorded it, through the atmosphere.",
+  "image": "images/real/p1-toa.jpg"
+ },
+ {
+  "name": "p1-sr",
+  "kind": "map",
+  "caption": "The same overpass after atmospheric correction, same colour stretch. The haze and the blue cast are gone.",
+  "image": "images/real/p1-sr.jpg"
+ },
+ {
+  "name": "p1-atmosphere",
+  "kind": "chart",
+  "caption": "Mean reflectance over the scene before and after correction (left) and top-of-atmosphere minus surface in each band (right). In the blue the atmosphere adds light scattered into the sensor, falling off with wavelength as Rayleigh scattering predicts. From the red edge on the sign flips: there the atmosphere mostly removes light (absorption and scattering out of the beam), so correction raises the values.",
+  "image": "images/real/p1-atmosphere.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"band,centre_um,toa,surface\nB1,0.443,0.17981,0.064587\nB2,0.49,0.14972,0.076648\nB3,0.56,0.12876,0.089168\nB4,0.665,0.11649,0.093692\nB5,0.705,0.11736,0.11845\nB6,0.74,0.14917,0.15394\nB7,0.783,0.1704,0.17206\nB8,0.842,0.1539,0.16702\nB8A,0.865,0.17853,0.18008\nB11,1.61,0.1578,0.18155\nB12,2.19,0.1189,0.15893\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_atmosphere(df):\n    d = df.assign(added=df[\"toa\"] - df[\"surface\"])\n    fig, (a, b) = plt.subplots(1, 2, figsize=(10, 3.8))\n    a.plot(d.centre_um, d.toa, \"o-\", color=\"#6b7680\", label=\"top of atmosphere (L1C)\")\n    a.plot(d.centre_um, d.surface, \"o-\", color=\"#1b7837\", label=\"surface (L2A)\")\n    a.set_xlabel(\"Band centre (µm)\"); a.set_ylabel(\"Mean reflectance\")\n    a.set_title(\"Same pixels, same minute, two answers\", loc=\"left\", fontsize=10)\n    a.legend(frameon=False, fontsize=8)\n    vis = d[d.centre_um < 0.9]\n    b.bar(vis.band, vis.added, color=\"#2a78d6\")\n    ref = vis.added.iloc[0] * (vis.centre_um.iloc[0] / vis.centre_um) ** 4\n    b.plot(vis.band, ref, color=\"#c0392b\", lw=1.5, label=\"λ⁻⁴ (pure Rayleigh), scaled to B1\")\n    b.set_ylabel(\"TOA minus surface\")\n    b.set_title(\"The atmosphere adds most in the blue\", loc=\"left\", fontsize=10)\n    b.legend(frameon=False, fontsize=8)\n    b.tick_params(axis=\"x\", labelsize=7)\n    fig.tight_layout()\n    return fig\n\nplot_atmosphere(df)\nplt.show()\n"
+ },
+ {
+  "name": "p1-emissivity",
+  "kind": "figure",
+  "caption": "A thermal sensor measures radiance, not temperature. Two surfaces at the same true temperature look different if their emissivity differs.",
+  "image": "images/real/p1-emissivity.png"
+ }
+]

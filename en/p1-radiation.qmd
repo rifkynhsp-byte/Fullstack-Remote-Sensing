@@ -1,0 +1,148 @@
+# P1 · Energy, Waves and the Atmosphere {#sec-p1-radiation .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+You will learn where the energy measured by every satellite comes from, what the atmosphere does to it on the way, and what a surface does when the energy arrives. By the end you should be able to explain why the sky is blue, why Landsat carries a thermal band but SPOT does not, and why a satellite image of a city looks hazy before correction, and to prove the last one with real data.
+:::
+
+::: {.callout-note}
+## The Principles part
+Chapters P1 to P5 are the physics and engineering underneath everything else in this book. They follow the order of a university course in principles of remote sensing: energy (P1), platforms and orbits (P2), how sensors scan (P3), the four resolutions (P4) and radar (P5). Each ends with a quiz. The figures are our own: computed from the physics, drawn for this book, or made from real satellite data in the code tabs.
+:::
+
+## Remote sensing is measuring energy
+
+Remote sensing means measuring something without touching it. A satellite never touches the rice field it maps. All it records is electromagnetic energy that left the field and travelled up to the sensor. Everything we later call "NDVI", "land cover" or "flood extent" is an interpretation of that energy.
+
+So the first question is always: **where did the energy come from?** There are only two answers.
+
+- **Passive** sensors record energy from a natural source. For optical sensors (Landsat, Sentinel-2, SPOT) the source is the Sun: they record sunlight reflected by the ground. Thermal sensors record energy the ground emits by itself because it is warm.
+- **Active** sensors bring their own source. A radar sends microwave pulses and records the echo (P5). A LiDAR sends laser pulses (Chapter 32).
+
+This one distinction explains a lot. Optical sensors need daylight and a clear sky. Radar works at night and through cloud, because it is its own torch and uses wavelengths that pass through cloud.
+
+## Electromagnetic radiation: one wave, three names
+
+Electromagnetic radiation is a wave of electric and magnetic fields that travels at the speed of light, $c \approx 3 \times 10^8$ m/s. The electric and magnetic fields vibrate at right angles to each other and to the direction of travel. That makes it a *transverse* wave. Sound, which your professor may compare it with, is a *longitudinal* wave and needs air to travel through. Light crosses empty space.
+
+Three numbers describe the same wave, and you can always get one from another:
+
+$$c = \lambda f \qquad\qquad E = h f = \frac{h c}{\lambda}$$
+
+where $\lambda$ is the wavelength, $f$ the frequency and $E$ the energy carried by one photon ($h$ is Planck's constant). Long wavelength means low frequency and low energy per photon. The table in the output block works this out for Landsat's bands and for three radar bands. A blue photon carries about 2.6 electron-volts. A C-band radar photon carries about 0.00002 eV, a hundred thousand times less. That is why radar can pass through cloud and rain almost untouched while carrying almost no energy, and why radar engineers speak of *frequency* (5.4 GHz) while optical people speak of *wavelength* (0.48 µm). They are describing the same thing.
+
+The parts of the spectrum used in remote sensing, from short to long:
+
+| Region | Wavelength | What it is used for |
+|---|---|---|
+| Visible (blue, green, red) | 0.4 to 0.7 µm | what the eye sees; water, soil, true colour |
+| Near infrared (NIR) | 0.7 to 1.3 µm | healthy vegetation reflects strongly |
+| Shortwave infrared (SWIR) | 1.3 to 3 µm | moisture in leaves and soil, minerals, active fire |
+| Thermal infrared (TIR) | 8 to 14 µm | heat emitted by the surface |
+| Microwave | 1 mm to 1 m | radar and passive microwave |
+
+## Where the energy comes from: blackbodies
+
+Every object warmer than absolute zero emits electromagnetic radiation. A *blackbody* is an ideal object that absorbs everything that falls on it and emits the maximum possible for its temperature. The Sun behaves roughly like a blackbody at about 5,800 K (your lecture notes may round it to 6,000 K). The Earth's surface is roughly a blackbody at about 300 K. Three laws describe them:
+
+- **Planck's law** gives the whole curve: how much energy a blackbody emits at each wavelength.
+- **Wien's displacement law** gives the peak: $\lambda_{max} = 2898 / T$ µm. For the Sun that is 0.50 µm, in the middle of the visible range; our eyes evolved to see where the Sun is brightest. For the Earth it is 9.7 µm, in the thermal infrared.
+- **Stefan–Boltzmann law** gives the total: $M = \sigma T^4$. Because of the fourth power, each square metre of the Sun emits about $(5800/300)^4 \approx 140{,}000$ times more than a square metre of the Earth.
+
+The Planck figure in the output block shows both curves on one chart. Look at where they cross, near 4 to 5 µm. Below that wavelength, the energy reaching a satellite is mostly *reflected sunlight*. Above it, it is mostly the Earth's *own emission*. This is the most useful fact in the chapter:
+
+- Optical bands (visible, NIR, SWIR) measure **reflection**. They show what a surface *is*.
+- Thermal bands measure **emission**. They show how *warm* a surface is.
+- Between about 3 and 5 µm (the mid-wave infrared) both are mixed. That is why fire-detection sensors use it: a fire at 800 K peaks near 3.6 µm and outshines everything around it.
+
+## What the atmosphere does
+
+Before energy reaches the sensor it passes through the atmosphere, sometimes twice (Sun to ground, ground to sensor). Two things can happen on the way.
+
+**Absorption.** Gases take energy out at particular wavelengths. Water vapour absorbs around 0.94, 1.14, 1.38, 1.87 and 2.7 µm, and much of the range beyond 5 to 8 µm. Carbon dioxide absorbs near 2.7, 4.3 and 15 µm, and ozone below 0.3 µm (this is what protects us from ultraviolet) and near 9.6 µm. The ranges where little is absorbed are called **atmospheric windows**: roughly 0.4 to 1.3 µm, around 1.6 and 2.2 µm, 3 to 5 µm, 8 to 14 µm, and nearly all of the microwave. Satellite bands are placed inside windows, because a band outside one would see only the atmosphere. There is one clever exception. Landsat 8's band 9 and Sentinel-2's band 10 sit at 1.38 µm, *inside* a strong water vapour absorption band. Water vapour in the lower atmosphere absorbs everything from the ground, so the only thing the band can see is high, thin cirrus cloud above most of the water vapour. That makes it a cirrus detector (Chapter 9).
+
+**Scattering.** Particles and molecules redirect energy without absorbing it. Which kind of scattering happens depends on the size of the particle compared with the wavelength:
+
+| Type | Particle size | Depends on wavelength? | Everyday example |
+|---|---|---|---|
+| Rayleigh | much smaller than λ (gas molecules) | strongly, ∝ λ⁻⁴ | blue sky, red sunset, blue haze in images |
+| Mie | about the same as λ (smoke, dust, haze) | weakly | brownish haze over cities, smoke plumes |
+| Non-selective | much larger than λ (cloud droplets) | no | white clouds and fog |
+
+Because Rayleigh scattering goes as $\lambda^{-4}$, blue light (0.45 µm) is scattered about $(0.65/0.45)^4 \approx 4.4$ times more than red light (0.65 µm). That is why the sky is blue. At sunset the light crosses so much air that most of the blue is scattered away and only the red reaches you.
+
+For a satellite, scattering adds light that never touched the pixel you are looking at. This extra light is called **path radiance**. It makes images hazy and bluish, and it adds most in the blue band.
+
+## Proof from a real image
+
+The Code tabs show this with one Sentinel-2 overpass of Jakarta in July 2024, stored at two processing levels. Level-1C is **top-of-atmosphere** reflectance: what reached the satellite. Level-2A is **surface reflectance**: the same pixels after an atmospheric correction model has removed the atmosphere's effect. Same pixels, same minute, two answers.
+
+The difference between them is the atmosphere, measured. In the coastal-aerosol and blue bands the atmosphere adds about 0.07 to 0.12 to the reflectance, which is more than the surface itself reflects in those bands. The added amount falls off quickly with wavelength, close to what Rayleigh's $\lambda^{-4}$ predicts. From the red edge onwards the sign flips: there the atmosphere mostly *removes* light (absorption and scattering out of the beam), so correction pushes the values up. Compare the two true-colour maps: the hazy, bluish city on the left is what the sensor saw; the one on the right is what the ground looks like.
+
+This is why Chapter 8 insists on surface reflectance for anything you compare across dates. The atmosphere changes from day to day. The ground, mostly, does not.
+
+## What the surface does with the energy
+
+Energy that reaches the ground is split three ways, and the parts always add up to what arrived:
+
+$$E_{incident} = E_{reflected} + E_{absorbed} + E_{transmitted}$$
+
+The proportions depend on the material *and* the wavelength. That dependence is the whole basis of optical remote sensing: plot reflectance against wavelength and each material draws its own curve, its **spectral signature** (Chapter 2). Healthy leaves absorb red and blue light for photosynthesis and reflect near infrared strongly. Clear water absorbs almost all NIR. Dry soil reflects more and more towards the SWIR.
+
+How the reflected energy leaves the surface matters as much as how much of it there is:
+
+- **Specular reflection** happens on surfaces that are smooth compared with the wavelength: calm water, a wet road, a glass roof. The energy leaves at the same angle it arrived, like a mirror. A sensor looking straight down sees dark water, unless the Sun is exactly placed to give a bright glint.
+- **Diffuse reflection** happens on rough surfaces: soil, grass, canopies. Energy leaves in all directions. A perfectly diffuse surface is called *Lambertian*; it looks equally bright from every angle.
+
+"Smooth" and "rough" depend on the wavelength. A ploughed field is rough for visible light (wavelengths below a micrometre) but can be smooth for L-band radar (24 cm). This is how the same flood can be dark in a radar image and bright in another (P5).
+
+## Emitted energy and emissivity
+
+Thermal sensors measure emitted energy, and a real surface emits less than a blackbody at the same temperature. The ratio is its **emissivity**, $\varepsilon$, between 0 and 1. Water and dense vegetation are close to 0.98 to 0.99. Bare rock and dry soil are lower, and polished metal much lower. Kirchhoff's law links emission to absorption: at a given wavelength, a good absorber is a good emitter.
+
+A thermal sensor measures *radiant* temperature. What we usually want is *kinetic* temperature, the one a thermometer in contact would read. By the Stefan–Boltzmann law they differ by the fourth root of emissivity:
+
+$$T_{radiant} = \varepsilon^{1/4} \, T_{kinetic}$$
+
+The emissivity figure shows why this matters. At 27 °C, a surface with $\varepsilon = 0.92$ looks about 6 °C cooler than a blackbody at the same true temperature. Land surface temperature products (Chapter 30, Chapter 35) estimate emissivity from land cover before converting radiance to temperature. Errors in emissivity become errors in temperature.
+
+This also answers a classic question: **why does Landsat carry a thermal band while SPOT does not?** Landsat's telescope is built from mirrors (reflective optics), and a mirror reflects every wavelength from blue to thermal. SPOT's cameras are built around lenses (refractive optics). Optical glass passes visible and near-infrared light, and with the right glass some SWIR (SPOT 4 and 5 added a SWIR band), but it is opaque in the thermal infrared. Mirrors are also lighter than thick glass, which matters for anything launched into orbit. The choice of telescope limits the bands a satellite can have (P3).
+
+{{< include _snippets/ch00a_radiation.qmd >}}
+
+## Key terms
+
+**Passive / active**: natural source (Sun, Earth) versus the sensor's own source (radar, LiDAR). **Blackbody**: ideal absorber and emitter. **Wien's law**: peak wavelength = 2898 / T µm. **Atmospheric window**: a wavelength range the atmosphere lets through. **Path radiance**: light scattered into the sensor by the atmosphere. **Rayleigh / Mie / non-selective scattering**: by molecules, by aerosols, by cloud droplets. **Top-of-atmosphere / surface reflectance**: before and after atmospheric correction. **Specular / diffuse**: mirror-like versus scattered in all directions. **Emissivity**: how well a surface emits compared with a blackbody.
+
+## Quiz
+
+Try each question before opening the answers.
+
+1. A satellite band is centred at 0.55 µm. What is its frequency, and what colour is it?
+2. Radar engineers describe Sentinel-1 as a 5.405 GHz system. What is its wavelength?
+3. Using Wien's law, where does a forest fire at about 800 K emit most strongly? Which band would you use to detect it?
+4. Why do optical satellites carry no bands between about 5 and 8 µm?
+5. Explain, using scattering, why the sky is blue and why sunsets are red.
+6. A Level-1C image of a city looks hazy and bluish; the Level-2A image of the same overpass does not. What was removed, and why did it affect the blue band most?
+7. In the Jakarta example the near-infrared reflectance is *lower* before correction than after. How can the atmosphere make a band darker?
+8. What is the 1.38 µm band on Landsat 8 and Sentinel-2 for, and why does it work?
+9. Two roofs are both at 40 °C. One has emissivity 0.98, the other 0.90. Which looks hotter to a thermal sensor, and by roughly how much?
+10. Calm floodwater looks black to a sensor looking straight down. Name the kind of reflection and explain.
+11. Why can Landsat have a thermal band but the original SPOT could not?
+12. True or false: "Remote sensing measures the temperature of the ground." Explain.
+
+::: {.callout-note collapse="true"}
+## Answers
+1. $f = c/\lambda = 3\times10^8 / 0.55\times10^{-6} \approx 5.5\times10^{14}$ Hz (545 THz). Green.
+2. $\lambda = c/f = 3\times10^8 / 5.405\times10^9 \approx 0.0555$ m, about 5.5 cm (C-band).
+3. $2898/800 \approx 3.6$ µm, the mid-wave infrared. A MWIR band (about 3.7 to 4 µm) detects fire best; SWIR (about 2.2 µm) also responds strongly, which is why SWIR composites show active fire.
+4. Water vapour absorbs strongly there. A band placed there would see the atmosphere, not the ground.
+5. Molecules scatter as $\lambda^{-4}$, so blue is scattered about four times more than red and reaches you from every direction of the sky. At sunset light crosses much more air, most blue is scattered out of the direct beam, and the remaining light is red.
+6. Path radiance, mostly from Rayleigh scattering, which is strongest at short wavelengths.
+7. Along the path the atmosphere also absorbs and scatters light *out* of the beam. In the NIR these losses are larger than the small amount of light scattered in, so the top-of-atmosphere value is lower than the surface value.
+8. Cirrus detection. The band sits in a strong water vapour absorption band. Light from the ground and low cloud is absorbed; only high, thin cirrus above most of the water vapour reflects light back to the sensor.
+9. The 0.98 roof. Radiant temperatures are $0.98^{1/4}\times313 \approx 311.4$ K and $0.90^{1/4}\times313 \approx 304.8$ K, so about 6.6 °C apart.
+10. Specular reflection. The smooth water surface sends the energy away at the mirror angle, not back to the sensor.
+11. Landsat's telescope uses mirrors (reflective optics), which work from visible to thermal wavelengths. SPOT uses refractive optics (lenses); glass is opaque in the thermal infrared, and the first three SPOTs had no SWIR band either.
+12. False as stated. It measures radiance. Temperature is derived from it using the emissivity and an atmospheric correction, so it is an estimate that is only as good as those two steps.
+:::
