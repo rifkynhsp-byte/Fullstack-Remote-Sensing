@@ -1,0 +1,39 @@
+[
+ {
+  "name": "ch09-truecolour",
+  "kind": "map",
+  "caption": "Every clear pixel of 2023, reduced to one image by the median. No single scene of the delta looks like this.",
+  "image": "images/real/ch09-truecolour.jpg"
+ },
+ {
+  "name": "ch09-ndvi",
+  "kind": "map",
+  "caption": "NDVI from the same composite. Mangrove and upland forest are almost the same colour here, which is the problem Chapter 12 takes on.",
+  "image": "images/real/ch09-ndvi.jpg"
+ },
+ {
+  "name": "ch09-ndwi",
+  "kind": "map",
+  "caption": "NDWI. Aquaculture ponds and river channels stand out; the vegetated delta sits below zero.",
+  "image": "images/real/ch09-ndwi.jpg"
+ },
+ {
+  "name": "ch09-clear-count",
+  "kind": "map",
+  "caption": "Clear observations per pixel after masking. Red pixels were assembled from very few looks and deserve less trust. The dark blue band is not clearer sky: it is where two Sentinel-2 tiles overlap, so every date is counted twice. Check for this before you report a count.",
+  "image": "images/real/ch09-clear-count.jpg"
+ },
+ {
+  "name": "ch09-monthly-cloud",
+  "kind": "chart",
+  "caption": "Mean scene cloud cover by month, from metadata alone. n is the number of scenes that month.",
+  "image": "images/real/ch09-monthly-cloud.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"mean_cloud_pct,month,scenes\n86.523,1,12\n95.932,2,12\n83.617,3,12\n80.759,4,10\n70.562,5,12\n59.332,6,12\n73.998,7,14\n54.038,8,12\n54.427,9,12\n57.49,10,12\n72.065,11,12\n78.682,12,12\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_monthly_cloud(df):\n    \"\"\"Mean scene cloud cover by month. Change the colour or the threshold line.\"\"\"\n    df = df.sort_values(\"month\")\n    fig, ax = plt.subplots(figsize=(7, 3.2))\n    bars = ax.bar(df[\"month\"], df[\"mean_cloud_pct\"], color=\"#5b8db8\")\n    ax.axhline(50, color=\"#b2182b\", lw=1, ls=\"--\", label=\"half the scene cloudy\")\n    for bar, n in zip(bars, df[\"scenes\"]):\n        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1,\n                f\"n={int(n)}\", ha=\"center\", fontsize=7)\n    ax.set_xticks(range(1, 13))\n    ax.set_xlabel(\"Month (2023)\")\n    ax.set_ylabel(\"Mean scene cloud cover (%)\")\n    ax.set_title(\"Mahakam Delta: how cloudy is each month?\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_monthly_cloud(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch09-count-summary",
+  "kind": "table",
+  "caption": "Clear observations per pixel across the delta (100 m sample).",
+  "markdown": "|   clear_obs_max |   clear_obs_median |   clear_obs_min |\n|----------------:|-------------------:|----------------:|\n|              51 |                 20 |               1 |"
+ }
+]

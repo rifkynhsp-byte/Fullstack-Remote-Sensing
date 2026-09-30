@@ -34,7 +34,13 @@ var aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60]);   // Mahakam De
 //
 // All four are SURFACE models, not terrain models. Read the next comment
 // before using any of them over forest.
-var dem = ee.Image('JAXA/ALOS/AW3D30/V2_2').select('AVE_DSM').clip(aoi);
+// AW3D30 version 4.1 arrives as tiles in a collection (V2_2 is deprecated).
+// Mosaic the tiles, then give the mosaic back its native projection: without
+// that, slope is computed on a default 1 degree grid and comes out as zero.
+var aw3d = ee.ImageCollection('JAXA/ALOS/AW3D30/V4_1');
+var dem = aw3d.select('DSM').filterBounds(aoi).mosaic()
+  .setDefaultProjection(aw3d.first().projection())
+  .clip(aoi);
 
 // ---------------------------------------------------------------------------
 // The surface model trap
@@ -138,8 +144,11 @@ print('Terrain bands:', terrainStack.bandNames());
 // Summary statistics are worth printing once. If the reported minimum
 // elevation over a coastal AOI is 40 m, your area of interest does not
 // actually reach the coast, and every conclusion below it is wrong.
-print('Elevation statistics:', dem.reduceRegion({
-  reducer: ee.Reducer.minMax().combine(ee.Reducer.mean(), '', true),
+// Statistics over land only. The open sea in the rectangle returns void and
+// noise values (down to -100 m) that would wreck a mean.
+var land = ee.Image('MERIT/Hydro/v1_0_1').select('hnd').mask();
+print('Elevation statistics, land only:', dem.updateMask(land).reduceRegion({
+  reducer: ee.Reducer.percentile([1, 50, 99]).combine(ee.Reducer.minMax(), '', true),
   geometry: aoi,
   scale: 30,
   maxPixels: 1e10,
@@ -158,6 +167,48 @@ Map.addLayer(distanceToWater, {min: 0, max: 10000,
   palette: ['#0047AB', '#8ED2E5', '#FFFFFF']}, 'Distance to water', false);
 Map.addLayer(intertidalEnvelope.selfMask(), {palette: ['#14a37f']},
   'Intertidal envelope', false);
+
+// ---------------------------------------------------------------------------
+// STEP 7. From terrain to drainage: where water goes, and how high above it
+// ---------------------------------------------------------------------------
+// MERIT Hydro is a hydrologically conditioned DEM with flow direction already
+// solved. Two of its bands carry most of the practical value:
+//   upa  upstream drainage area (km2): how much land drains through a pixel
+//   hnd  height above the nearest drainage (m), usually called HAND
+// A pixel one metre above its channel floods before one ten metres up, even
+// when both sit at the same absolute elevation. That is why HAND, not the DEM,
+// is the first layer to reach for in flood work (the flood chapter builds on it).
+var hydro = ee.Image('MERIT/Hydro/v1_0_1').clip(aoi);
+var hand = hydro.select('hnd').rename('HAND');
+var channels = hydro.select('upa').gt(50).selfMask().rename('channel');   // > 50 km2
+
+Map.addLayer(hand, {min: 0, max: 15,
+  palette: ['#08306b', '#2171b5', '#6baed6', '#c6dbef', '#f7fbff']}, 'HAND (m)', false);
+Map.addLayer(channels, {palette: ['#00e5ff']}, 'Channels, > 50 km2 upstream', false);
+
+// How much of the delta sits within 1, 2 and 5 m of its drainage?
+var areaWithin = function (metres) {
+  return hand.lt(metres).multiply(ee.Image.pixelArea()).divide(1e6)
+    .reduceRegion({reducer: ee.Reducer.sum(), geometry: aoi, scale: 90,
+                   maxPixels: 1e10, bestEffort: true}).get('HAND');
+};
+print('Land within 1, 2, 5 m of drainage (km2):',
+  ee.Dictionary({within_1m: areaWithin(1), within_2m: areaWithin(2),
+                 within_5m: areaWithin(5)}));
+
+// ---------------------------------------------------------------------------
+// STEP 8. See the DSM problem with your own eyes: a transect
+// ---------------------------------------------------------------------------
+// Sample the surface model and the canopy corrected ground along one line
+// across the delta. Where the two lines part, the DSM is measuring trees.
+var transect = ee.Geometry.LineString([[117.35, -0.70], [117.62, -0.78]]);
+var profile = dem.rename('surface').addBands(approxGround)
+  .addBands(ee.Image.pixelLonLat())
+  .sample({region: transect, scale: 30, geometries: false});
+print(ui.Chart.feature.byFeature(profile.sort('longitude'), 'longitude',
+    ['surface', 'ground_est'])
+  .setOptions({title: 'Surface model versus estimated ground',
+               hAxis: {title: 'Longitude'}, vAxis: {title: 'Height (m)'}}));
 
 // ---------------------------------------------------------------------------
 // Exercise

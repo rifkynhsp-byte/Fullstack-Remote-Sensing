@@ -76,6 +76,25 @@ EE_REPO = ""   # e.g. "users/rifkynauval/book"
 
 EE_LINK_BASE = "https://code.earthengine.google.com/?scriptPath="
 
+# Python twins of the JavaScript listings, and the real outputs they produced
+# (see tools/real_outputs.py). When scripts/py/<name>.py exists, the listing
+# becomes a JavaScript | Python tab set; when outputs/<name>.json exists, the
+# maps, charts and tables it describes are printed under the tabs, with a
+# runnable Python cell holding each chart's real data.
+PY_DIR = SCRIPT_DIR / "py"
+OUTPUT_DIR = ROOT / "outputs"
+
+LABELS = {
+    "en": {"js": "JavaScript (Code Editor)", "py": "Python (Colab or local)",
+           "out": "What this code produces", "live": "Change the chart yourself. "
+           "The data below is the real output of the script above; press **Run**.",
+           "failed": "This output could not be regenerated on the last build."},
+    "id": {"js": "JavaScript (Code Editor)", "py": "Python (Colab atau lokal)",
+           "out": "Hasil kode ini", "live": "Ubah grafiknya sendiri. Data di bawah "
+           "adalah hasil nyata dari skrip di atas; tekan **Run**.",
+           "failed": "Hasil ini gagal dibuat ulang pada build terakhir."},
+}
+
 DIRECTIVE = re.compile(r"^(?://\||#\|)\s*(\w+)\s*:\s*(.+?)\s*$")
 
 HIGHLIGHT = {".js": "javascript", ".py": "python", ".sh": "bash", ".json": "json"}
@@ -140,6 +159,41 @@ def build(path: Path, display_path: str, lang_code: str = "en") -> str | None:
     return "\n".join(parts)
 
 
+def tabbed(js_snippet: str, py_path: Path, lang_code: str) -> str:
+    """Wrap the JavaScript listing and its Python twin in one tab set."""
+    py_snippet = build(py_path, f"scripts/py/{py_path.name}", lang_code) or ""
+    lab = LABELS[lang_code]
+    return "\n".join([
+        "::: {.panel-tabset group=\"code-language\"}", "",
+        f"## {lab['js']}", "", js_snippet, "",
+        f"## {lab['py']}", "", py_snippet, "",
+        ":::", ""])
+
+
+def outputs_block(stem: str, lang_code: str) -> str:
+    """The real maps, charts and tables recorded for this script."""
+    manifest = OUTPUT_DIR / f"{stem}.json"
+    if not manifest.exists():
+        return ""
+    import json
+    lab = LABELS[lang_code]
+    parts = ["::: {.real-output}", "", f"#### {lab['out']} {{.unnumbered .unlisted}}", ""]
+    for item in json.loads(manifest.read_text(encoding="utf-8")):
+        caption = item.get("caption", "").replace("\n", " ")
+        if "error" in item:
+            parts += [f"*{lab['failed']}* ({item['name']})", ""]
+            continue
+        if item["kind"] in ("map", "chart"):
+            parts += [f"![{caption}](../{item['image']}){{.lightbox fig-alt=\"{caption}\"}}", ""]
+        elif item["kind"] == "table":
+            parts += [item["markdown"], "", f": {caption}", ""]
+        if item.get("live"):
+            parts += [lab["live"], "", "::: {.py-live}", "```python",
+                      item["live"].rstrip(), "```", ":::", ""]
+    parts += [":::", ""]
+    return "\n".join(parts)
+
+
 def main() -> int:
     if not SCRIPT_DIR.is_dir():
         print(f"No scripts/ directory at {SCRIPT_DIR}; nothing to do.")
@@ -175,7 +229,13 @@ def main() -> int:
             if snippet is None:
                 continue
 
-            (target_dir / f"{Path(name).stem}.qmd").write_text(snippet, encoding="utf-8")
+            stem = Path(name).stem
+            twin = PY_DIR / f"{stem}.py"
+            if chosen.suffix == ".js" and twin.exists():
+                snippet = tabbed(snippet, twin, lang)
+            snippet += outputs_block(stem, lang)
+
+            (target_dir / f"{stem}.qmd").write_text(snippet, encoding="utf-8")
             written += 1
 
     print(f"build_snippets: wrote {written} snippet(s), {fell_back} using fallback")

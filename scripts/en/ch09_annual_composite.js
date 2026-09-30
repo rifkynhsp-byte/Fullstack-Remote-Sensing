@@ -23,7 +23,9 @@
 // ---------------------------------------------------------------------------
 // STEP 1. Area of interest and raw collection
 // ---------------------------------------------------------------------------
-var aoi = ee.Geometry.Point([117.58, -0.84]);   // Mahakam Delta, Indonesia
+// The Mahakam Delta, East Kalimantan. A rectangle rather than a point, so the
+// maps below cover the whole delta and not just the tile under one pixel.
+var aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60]);
 
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
   .filterDate('2023-01-01', '2023-12-31')
@@ -158,6 +160,40 @@ Map.addLayer(annualComposite, visTrueColour, 'Annual true colour composite');
 // still letting you flick between interpretations.
 Map.addLayer(annualComposite, visNdwi, 'Annual NDWI', false);
 Map.addLayer(annualComposite, visNdvi, 'Annual NDVI', false);
+
+// ---------------------------------------------------------------------------
+// STEP 7. How much clear sky did each pixel actually get?
+// ---------------------------------------------------------------------------
+// A composite hides how many observations built each pixel. Count them. A
+// pixel assembled from two clear looks deserves less trust than one from forty.
+var clearCount = processed.select('B4').count().rename('clear_obs').clip(aoi);
+Map.addLayer(clearCount, {min: 0, max: 40,
+  palette: ['#b2182b', '#f4a582', '#f7f7f7', '#92c5de', '#2166ac']},
+  'Clear observations per pixel', false);
+
+// Scene cloud cover month by month, from the metadata alone. This is the
+// chart that tells you when in the year optical work is realistic here.
+var months = ee.List.sequence(1, 12).map(function (m) {
+  var inMonth = s2.filter(ee.Filter.calendarRange(m, m, 'month'));
+  return ee.Feature(null, {
+    month: m,
+    scenes: inMonth.size(),
+    mean_cloud_pct: inMonth.aggregate_mean('CLOUDY_PIXEL_PERCENTAGE')
+  });
+});
+var monthly = ee.FeatureCollection(months);
+print(ui.Chart.feature.byFeature(monthly, 'month', ['mean_cloud_pct'])
+  .setChartType('ColumnChart')
+  .setOptions({title: 'Mean scene cloud cover by month, Mahakam 2023',
+               hAxis: {title: 'Month'}, vAxis: {title: 'Cloud (%)'}}));
+
+// The same numbers as a table, plus a summary of the count layer.
+print('Monthly scenes and cloud cover', monthly);
+print('Clear observations per pixel (min, median, max):',
+  clearCount.reduceRegion({
+    reducer: ee.Reducer.minMax().combine(ee.Reducer.median(), '', true),
+    geometry: aoi, scale: 100, maxPixels: 1e9, bestEffort: true
+  }));
 
 // ---------------------------------------------------------------------------
 // Exercise
