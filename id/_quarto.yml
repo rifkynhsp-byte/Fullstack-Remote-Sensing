@@ -60,6 +60,7 @@ book:
     - part: "Prinsip: Cara Kerja Penginderaan Jauh"
       chapters:
         - p1-radiation.qmd
+        - p2-orbits.qmd
     - part: "Bagian I: Fondasi, Tujuan dan Fisika"
       chapters:
         - 01-why-monitor.qmd

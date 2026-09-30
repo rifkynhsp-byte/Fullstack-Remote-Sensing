@@ -1,0 +1,129 @@
+# P2 · Platforms, Orbits and the Ground {#sec-p2-orbits .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+You will learn what a remote sensing satellite is made of besides its camera, why most Earth observation satellites fly about 700 km up in a near-polar, sun-synchronous orbit, how to tell an ascending pass from a descending one by looking at an image, and why a Landsat scene is a tilted parallelogram. Every claim is checked against orbit physics or against the real archive.
+:::
+
+## Three segments, not one satellite
+
+People say "Landsat" and picture a satellite. A working remote sensing system has three parts:
+
+1. **Space segment**: the spacecraft and its sensors.
+2. **Ground segment**: receiving stations, mission control, processing centres, archives.
+3. **User segment**: everyone who orders, downloads and uses the data, including you in the Earth Engine Code Editor.
+
+If any one of the three fails, there are no images. A satellite whose downlink breaks is as useless as one whose camera breaks.
+
+## What a spacecraft is made of
+
+The sensor (the *payload*) is the reason the spacecraft exists, but it cannot work alone. A remote sensing satellite has about five main modules, a bit like a team that needs more than one star player:
+
+- **Power module.** Solar panels are the visible part. Less visible are the rechargeable batteries, which keep everything running while the satellite is in the Earth's shadow, for about a third of every orbit in low Earth orbit.
+- **Telecommunication module.** It sends the images down (*downlink*) and receives commands (*uplink*). When a cyclone suddenly threatens a coast, operators can upload a new acquisition plan so the satellite images the area on its next pass.
+- **Control module.** The "brain": it manages power, data storage, temperature and communication with the ground.
+- **Position and attitude module.** To put a pixel in the right place on a map, you must know exactly where the camera was and which way it was pointing. That is **six unknowns**. Position is three coordinates (X, Y, Z), measured by GNSS receivers (GPS and others). Attitude is three rotation angles: *roll* (tilting sideways), *pitch* (nose up or down) and *yaw* (turning left or right), measured by an inertial measurement unit (IMU) with star trackers. An attitude error of only 0.001° seen from 705 km moves the pixel by 12 m on the ground.
+- **Sensor module (payload).** The camera, radar or LiDAR itself, with its telescope or antenna, detectors and electronics (P3).
+
+## Orbits: the physics
+
+A satellite does not "float". It falls towards the Earth all the time, but moves sideways so fast that the ground curves away beneath it as fast as it falls. The higher the orbit, the weaker gravity is and the slower the satellite needs to move. Kepler's third law gives the time for one orbit:
+
+$$T = 2\pi \sqrt{\frac{a^3}{GM}}$$
+
+where $a$ is the distance from the Earth's centre (Earth radius plus altitude) and $GM$ is the Earth's gravitational parameter. The figure and table in the output block apply it:
+
+- **Low Earth orbit (LEO)**, a few hundred to about 1,000 km. Landsat 8 and 9 at 705 km take 98.9 minutes per orbit, about 14.6 orbits a day, moving at 7.5 km/s. The point below them sweeps across the ground at 6.75 km/s.
+- **Medium Earth orbit (MEO)**, around 20,000 km: navigation satellites such as GPS.
+- **Geostationary orbit (GEO)**, 35,786 km above the equator. The period equals one sidereal day (23.93 h), so the satellite turns with the Earth and stays above one point. Weather satellites such as Himawari live here: they can image the same hemisphere every ten minutes, but from so far away that pixels are kilometres wide.
+
+The same camera placed on an aircraft, a LEO satellite and a GEO satellite gives very different pixel sizes, because ground pixel size grows in proportion to distance (P3). That is the basic trade: **closer means sharper, farther means wider and more frequent views.**
+
+## Near-polar and sun-synchronous
+
+Most Earth observation satellites use an orbit that is both *near-polar* and *sun-synchronous*.
+
+**Near-polar.** The orbit is tilted about 98° from the equator (its *inclination*). As the Earth turns underneath, each orbit crosses a new strip of ground, and over days the whole planet is covered. The simulated ground track shows one day: 14.6 orbits, each shifted west. The track never quite reaches the poles. With $i = 98.2°$ the highest latitude is $180° - 98.2° = 81.8°$, which is why it is called *near*-polar. Because the inclination is above 90°, the orbit is slightly *retrograde*: the satellite moves a little westward, against the Earth's rotation.
+
+**Sun-synchronous.** The Earth is not a perfect sphere. It bulges at the equator, and that bulge slowly turns the plane of an inclined orbit (the effect is called *J2 precession*). At about 98° inclination and 700 to 800 km altitude, the plane turns eastward by about 0.986° per day. That is exactly the rate at which the Earth moves round the Sun (360° in 365.25 days). The orbit plane therefore keeps the same angle to the Sun all year, and the satellite crosses any latitude at the **same local solar time** on every pass. For a 705 km orbit, the required inclination works out to 98.2°.
+
+Why does that matter? Because the lighting is then nearly the same on every image: similar Sun angle, similar shadows. Comparing images over the years (change detection, time series) depends on it.
+
+The real archive confirms it. The chart and table in the output block use the acquisition time of every 2023 image covering Bandung. Landsat 8 and 9 passed at 10:10 local solar time, within about one minute across the whole year. Sentinel-2 passed at 10:30. Sentinel-1 passed at 05:36 (descending) and 18:25 (ascending). Mid-morning is a deliberate choice for optical satellites: late enough for good sunlight, early enough to beat the afternoon clouds that build up over the tropics. Sentinel-1 flies a *dawn–dusk* orbit along the line between day and night. A radar brings its own illumination, so it does not need daylight, and in that orbit its solar panels are in sunlight almost all the time.
+
+## Ascending and descending
+
+Each orbit has two halves:
+
+- **Descending**: the satellite moves from north to south.
+- **Ascending**: from south to north.
+
+The points where the orbit crosses the equator are the *descending node* and the *ascending node*. For Landsat and Sentinel-2 the daytime half is descending (morning), so almost all their optical images are descending passes; the ascending half is at night, useful only for thermal bands. A radar such as Sentinel-1 images on both halves, and ascending and descending images look at a mountain from opposite sides (P5).
+
+**How to tell from an image.** With north up, a descending satellite records the top (northern) line of the scene first and the bottom line last. While it does so, the Earth turns eastward underneath it. So the bottom of the scene is shifted west compared with the top: the scene leans. Two effects add up, and the numbers can be worked out:
+
+| Cause | Size for a Landsat scene |
+|---|---|
+| The orbit is tilted about 8° from north–south, across a 185 km swath | about 185 × tan 8° ≈ 26 km |
+| The Earth rotates during the ≈ 25 s needed to image 170 km along track | ≈ 12 km at the equator, less towards the poles |
+
+The footprint map in the output block shows real Landsat 8 scenes along path 120 across Java. They are parallelograms leaning from north-north-east to south-south-west, exactly as a descending pass should produce. If an exam gives you an image and its orbit arrow, look first for north, then for the direction of flight.
+
+## Covering the whole Earth: path, row and repeat
+
+Landsat divides the world into the **Worldwide Reference System (WRS-2)**. A *path* is one ground track. A *row* is one frame along it. Every Landsat scene has a path/row address, and a given place always falls in the same one or two. Landsat's swath is 185 km, which is 100 nautical miles, a choice from the early days of the programme. With 233 paths, the satellite returns to the same path every **16 days** (the *repeat cycle*). Landsat 8 and 9 fly 8 days apart, so together they image each path every 8 days.
+
+History matters when you use the archive. Landsat 1 to 3 flew higher, at about 917 km, with an 18-day repeat. From Landsat 4 onwards the orbit was lowered to 705 km with a 16-day repeat, and the Thematic Mapper's pixels shrank to 30 m. Lower orbit, closer camera, finer pixels.
+
+**Repeat cycle** and **revisit time** are not the same:
+
+- *Repeat cycle*: the time to return to exactly the same ground track (16 days for one Landsat).
+- *Revisit time*: how often a place can be imaged at all. It can be much shorter: neighbouring tracks overlap more at high latitudes; a satellite can point its camera sideways (SPOT, P3); and several satellites can share an orbit (Sentinel-2A and 2B, 5 days together).
+
+This is why constellations exist. One satellite gives a clear image of a flooded city only if it happens to pass over, on a cloud-free day, soon after the flood. Many satellites, including radar that ignores cloud, turn that luck into a routine.
+
+## The ground segment
+
+Images are useless until they reach the ground. There are two ways:
+
+- **Direct downlink**: the satellite sends data straight to a receiving station while flying within its view, typically for about 10 minutes per pass for LEO.
+- **Store and forward**: data is recorded on board and sent later, to another station or through a relay satellite in GEO.
+
+Near-polar satellites pass close to the poles on *every* orbit. A station at very high latitude (Svalbard in the Arctic, or stations in Antarctica) therefore sees almost every orbit, while a station near the equator sees only a few passes a day. That is why so many receiving antennas are built at high latitudes. The white domes over many antennas are *radomes*: covers that protect the dish from wind, rain and ice while letting radio waves through.
+
+{{< include _snippets/ch00b_orbits.qmd >}}
+
+## Key terms
+
+**Space / ground / user segment**. **Payload**: the sensor. **Roll, pitch, yaw**: the three attitude angles. **LEO / MEO / GEO**: low, medium, geostationary orbit. **Inclination**: angle between the orbit plane and the equator. **Near-polar**: high inclination, never quite over the poles. **Sun-synchronous**: orbit plane keeps the same angle to the Sun, so passes happen at the same local time. **Ascending / descending**: south-to-north / north-to-south half of the orbit. **Node**: equator crossing. **Swath**: width of ground imaged in one pass. **Path / row**: WRS-2 address of a Landsat scene. **Repeat cycle / revisit time**: return to the same track / to the same place.
+
+## Quiz
+
+1. A satellite's position is measured by GNSS and its attitude by an IMU. How many unknowns do they determine together, and what are they?
+2. Using Kepler's law, estimate the period of a satellite at 900 km. Is it still in low Earth orbit?
+3. Why does a geostationary satellite have to be above the equator?
+4. The same camera is put on an aircraft at 3 km, a satellite at 700 km and a satellite at 36,000 km. How do their ground pixel sizes compare?
+5. Why is Landsat's orbit called *near*-polar? What is the highest latitude its ground track reaches?
+6. Explain what "sun-synchronous" means and why optical Earth observation satellites use it.
+7. In the Bandung example, Landsat 8's passes spread by only about a minute of local time over a whole year. What would you expect for a satellite that is not sun-synchronous?
+8. A north-up Landsat scene leans so that its bottom edge is further west than its top edge. Was it acquired on an ascending or a descending pass? Give two reasons it leans.
+9. Why do Landsat and Sentinel-2 almost never provide ascending optical images?
+10. What is the difference between repeat cycle and revisit time? Give two ways to shorten revisit time.
+11. Where would you build a ground station to receive data from polar-orbiting satellites as often as possible, and why?
+12. Why does Sentinel-1 fly a dawn–dusk orbit while Sentinel-2 flies a mid-morning one?
+
+::: {.callout-note collapse="true"}
+## Answers
+1. Six: X, Y, Z (position) and roll, pitch, yaw (attitude).
+2. $a = 6{,}378 + 900 = 7{,}278$ km, $T = 2\pi\sqrt{a^3/GM} \approx 103$ minutes. Yes, low Earth orbit.
+3. To stay above one point, it must turn with the Earth around the Earth's axis. Only an orbit in the equatorial plane can do that; an inclined orbit would drift north and south every day.
+4. Ground pixel size grows in proportion to distance: roughly 1 : 230 : 12,000. A 0.5 m aircraft pixel would be about 120 m from LEO and about 6 km from GEO.
+5. The orbit is inclined about 98.2°, so it passes within 8.2° of each pole but never over it; the highest latitude is about 81.8°.
+6. The orbit plane turns once a year, keeping pace with the Earth's motion around the Sun (by J2 precession at about 98° inclination). The satellite then crosses each latitude at the same local solar time, so illumination and shadows stay similar between images, which makes images comparable over time.
+7. Pass times that drift through the day over the year (for example, a satellite in a low-inclination orbit such as the International Space Station images the same place at many different local times).
+8. Descending. The first (northern) line is recorded first; during the ≈ 25 s of imaging the Earth turns eastward, so later (southern) lines fall further west; and the orbit itself is inclined about 8° from north–south, which tilts the whole frame.
+9. Their ascending half-orbit is on the night side of the Earth. Without sunlight there is no reflected signal to record.
+10. Repeat cycle: time to return to the same ground track. Revisit: time until a place can be imaged again. Shorten it by pointing the sensor off-nadir, flying several satellites in the same orbit, or using wider swaths (overlap also increases at high latitudes).
+11. At high latitude (for example, the Arctic). A near-polar orbit passes near the poles on every orbit, so a high-latitude station is within view of almost every pass.
+12. Radar brings its own illumination and does not need daylight; the dawn–dusk orbit keeps its solar panels in near-constant sunlight. An optical sensor needs good sunlight and fewer clouds, which mid-morning gives.
+:::

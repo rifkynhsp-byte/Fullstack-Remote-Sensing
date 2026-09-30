@@ -1,0 +1,129 @@
+# P2 · Wahana, Orbit, dan Stasiun Bumi {#sec-p2-orbits .unnumbered}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mempelajari isi sebuah satelit penginderaan jauh selain kameranya, kenapa kebanyakan satelit pengamat bumi terbang sekitar 700 km di atas permukaan dalam orbit hampir-kutub yang sinkron matahari, cara membedakan lintasan naik (ascending) dan turun (descending) hanya dengan melihat citranya, dan kenapa satu scene Landsat berbentuk jajaran genjang yang miring. Setiap klaim dicek dengan fisika orbit atau dengan arsip citra yang sebenarnya.
+:::
+
+## Tiga segmen, bukan satu satelit
+
+Orang menyebut "Landsat" lalu membayangkan satelitnya saja. Padahal sistem penginderaan jauh yang berjalan punya tiga bagian:
+
+1. **Segmen antariksa**: wahana antariksa beserta sensornya.
+2. **Segmen bumi**: stasiun penerima, pusat kendali misi, pusat pengolahan, dan arsip.
+3. **Segmen pengguna**: semua orang yang memesan, mengunduh, dan memakai datanya, termasuk Anda di Code Editor Earth Engine.
+
+Kalau salah satu gagal, citra tidak akan ada. Satelit yang saluran kirimnya rusak sama tidak bergunanya dengan satelit yang kameranya rusak.
+
+## Isi sebuah wahana antariksa
+
+Sensor (disebut *muatan* atau payload) adalah alasan wahana itu dibuat, tetapi sensor tidak bisa bekerja sendirian. Satelit penginderaan jauh punya sekitar lima modul utama, mirip sebuah tim yang tidak cukup hanya punya satu pemain bintang:
+
+- **Modul daya.** Panel surya adalah bagian yang terlihat. Yang kurang terlihat adalah baterai isi ulang, yang menjaga semua sistem tetap hidup ketika satelit masuk ke bayangan bumi, sekitar sepertiga dari setiap putaran di orbit rendah.
+- **Modul telekomunikasi.** Mengirim citra ke bumi (*downlink*) dan menerima perintah (*uplink*). Ketika siklon tiba-tiba mengancam sebuah pesisir, operator bisa mengirim rencana perekaman baru supaya satelit memotret daerah itu pada lintasan berikutnya.
+- **Modul kendali.** "Otak" satelit: mengatur daya, penyimpanan data, suhu, dan komunikasi dengan stasiun bumi.
+- **Modul posisi dan sikap (attitude).** Supaya piksel jatuh di tempat yang benar di peta, kita harus tahu persis di mana kamera berada dan ke mana kamera menghadap. Totalnya **enam besaran yang tidak diketahui**. Posisi terdiri dari tiga koordinat (X, Y, Z), diukur dengan penerima GNSS (GPS dan sejenisnya). Sikap terdiri dari tiga sudut putar: *roll* (miring ke samping), *pitch* (hidung naik atau turun), dan *yaw* (berbelok ke kiri atau kanan), diukur dengan unit pengukur inersia (IMU) dibantu pelacak bintang. Kesalahan sikap sebesar 0,001° saja, bila dilihat dari ketinggian 705 km, menggeser piksel sejauh 12 m di permukaan.
+- **Modul sensor (muatan).** Kamera, radar, atau LiDAR itu sendiri, lengkap dengan teleskop atau antena, detektor, dan elektroniknya (P3).
+
+## Orbit: fisikanya
+
+Satelit tidak "melayang". Satelit terus jatuh ke arah bumi, tetapi bergerak ke samping begitu cepat sehingga permukaan bumi melengkung menjauh secepat satelit itu jatuh. Makin tinggi orbitnya, makin lemah gravitasinya dan makin lambat satelit perlu bergerak. Hukum ketiga Kepler memberi waktu yang dibutuhkan untuk satu putaran:
+
+$$T = 2\pi \sqrt{\frac{a^3}{GM}}$$
+
+dengan $a$ jarak dari pusat bumi (jari-jari bumi ditambah ketinggian) dan $GM$ parameter gravitasi bumi. Gambar dan tabel di bagian keluaran menerapkan rumus ini:
+
+- **Orbit bumi rendah (LEO)**, beberapa ratus sampai sekitar 1.000 km. Landsat 8 dan 9 di ketinggian 705 km butuh 98,9 menit per putaran, sekitar 14,6 putaran sehari, dengan kecepatan 7,5 km/s. Titik di bawahnya menyapu permukaan dengan kecepatan 6,75 km/s.
+- **Orbit bumi menengah (MEO)**, sekitar 20.000 km: satelit navigasi seperti GPS.
+- **Orbit geostasioner (GEO)**, 35.786 km di atas khatulistiwa. Periodenya sama dengan satu hari sideris (23,93 jam), sehingga satelit ikut berputar bersama bumi dan diam di atas satu titik. Satelit cuaca seperti Himawari berada di sini: bisa memotret belahan bumi yang sama setiap sepuluh menit, tetapi dari jarak sejauh itu ukuran pikselnya mencapai kilometer.
+
+Kamera yang sama bila dipasang di pesawat, di satelit LEO, dan di satelit GEO akan menghasilkan ukuran piksel yang sangat berbeda, karena ukuran piksel di permukaan sebanding dengan jarak (P3). Itulah pertukaran dasarnya: **makin dekat makin tajam, makin jauh makin luas dan makin sering.**
+
+## Hampir-kutub dan sinkron matahari
+
+Kebanyakan satelit pengamat bumi memakai orbit yang sekaligus *hampir-kutub* (near-polar) dan *sinkron matahari* (sun-synchronous).
+
+**Hampir-kutub.** Bidang orbitnya miring sekitar 98° terhadap khatulistiwa (disebut *inklinasi*). Sementara bumi berputar di bawahnya, setiap putaran melintasi jalur permukaan yang baru, dan dalam beberapa hari seluruh bumi tercakup. Gambar lintasan tanah hasil simulasi memperlihatkan satu hari: 14,6 putaran, masing-masing bergeser ke barat. Lintasannya tidak pernah benar-benar sampai ke kutub. Dengan $i = 98,2°$, lintang tertinggi yang dicapai adalah $180° - 98,2° = 81,8°$. Karena itulah disebut *hampir*-kutub. Karena inklinasinya di atas 90°, orbitnya sedikit *retrograd*: satelit bergerak sedikit ke arah barat, berlawanan dengan rotasi bumi.
+
+**Sinkron matahari.** Bumi tidak bulat sempurna. Bumi menggembung di khatulistiwa, dan tonjolan itu perlahan memutar bidang orbit yang miring (efek ini disebut *presesi J2*). Pada inklinasi sekitar 98° dan ketinggian 700 sampai 800 km, bidang orbit berputar ke timur sekitar 0,986° per hari. Angka ini sama persis dengan kecepatan bumi mengelilingi matahari (360° dalam 365,25 hari). Akibatnya, bidang orbit menjaga sudut yang sama terhadap matahari sepanjang tahun, dan satelit melintasi lintang mana pun pada **waktu matahari setempat yang sama** di setiap lintasan. Untuk orbit 705 km, inklinasi yang dibutuhkan ternyata 98,2°.
+
+Kenapa ini penting? Karena pencahayaan di setiap citra jadi hampir sama: sudut matahari serupa, bayangan serupa. Membandingkan citra dari tahun ke tahun (deteksi perubahan, deret waktu) sangat bergantung pada hal ini.
+
+Arsip citra membuktikannya. Grafik dan tabel di bagian keluaran memakai waktu perekaman setiap citra tahun 2023 yang mencakup Bandung. Landsat 8 dan 9 melintas pukul 10.10 waktu matahari setempat, dengan selisih hanya sekitar satu menit sepanjang tahun. Sentinel-2 melintas pukul 10.30. Sentinel-1 melintas pukul 05.36 (turun) dan 18.25 (naik). Pagi menjelang siang sengaja dipilih untuk satelit optis: cukup siang untuk cahaya yang baik, cukup pagi untuk mendahului awan sore yang tumbuh di atas daerah tropis. Sentinel-1 terbang di orbit *fajar–senja*, menyusuri garis batas siang dan malam. Radar membawa penerangannya sendiri sehingga tidak butuh siang, dan di orbit itu panel suryanya hampir selalu terkena sinar matahari.
+
+## Naik dan turun
+
+Setiap putaran orbit punya dua paruh:
+
+- **Turun (descending)**: satelit bergerak dari utara ke selatan.
+- **Naik (ascending)**: dari selatan ke utara.
+
+Titik perpotongan orbit dengan khatulistiwa disebut *simpul turun* dan *simpul naik*. Untuk Landsat dan Sentinel-2, paruh siangnya adalah paruh turun (pagi), sehingga hampir semua citra optisnya berasal dari lintasan turun; paruh naiknya terjadi malam hari dan hanya berguna untuk kanal termal. Radar seperti Sentinel-1 merekam di kedua paruh, dan citra naik serta citra turun melihat sebuah gunung dari sisi yang berlawanan (P5).
+
+**Cara mengenalinya dari citra.** Dengan utara di atas, satelit yang sedang turun merekam baris paling atas (utara) lebih dulu dan baris paling bawah terakhir. Selama perekaman itu, bumi berputar ke timur di bawahnya. Jadi bagian bawah scene bergeser ke barat dibandingkan bagian atasnya: scene-nya miring. Ada dua efek yang bertambah, dan angkanya bisa dihitung:
+
+| Penyebab | Besarnya untuk satu scene Landsat |
+|---|---|
+| Orbit miring sekitar 8° dari arah utara–selatan, sepanjang lebar sapuan 185 km | sekitar 185 × tan 8° ≈ 26 km |
+| Bumi berputar selama ≈ 25 detik yang dibutuhkan untuk merekam 170 km searah lintasan | ≈ 12 km di khatulistiwa, makin kecil ke arah kutub |
+
+Peta jejak scene di bagian keluaran menampilkan scene Landsat 8 yang sebenarnya di sepanjang path 120 yang melintasi Jawa. Bentuknya jajaran genjang yang miring dari utara-timur laut ke selatan-barat daya, persis seperti hasil lintasan turun. Kalau soal ujian memberi Anda sebuah citra beserta panah arah orbitnya, cari dulu arah utara, lalu arah terbangnya.
+
+## Mencakup seluruh bumi: path, row, dan siklus ulang
+
+Landsat membagi dunia dengan **Worldwide Reference System (WRS-2)**. *Path* adalah satu lintasan tanah. *Row* adalah satu bingkai di sepanjang path itu. Setiap scene Landsat punya alamat path/row, dan sebuah tempat selalu jatuh di satu atau dua alamat yang sama. Lebar sapuan Landsat 185 km, sama dengan 100 mil laut, pilihan sejak awal program. Dengan 233 path, satelit kembali ke path yang sama setiap **16 hari** (*siklus ulang*). Landsat 8 dan 9 terbang berselang 8 hari, sehingga bersama-sama memotret setiap path setiap 8 hari.
+
+Sejarahnya penting ketika memakai arsip. Landsat 1 sampai 3 terbang lebih tinggi, sekitar 917 km, dengan siklus ulang 18 hari. Mulai Landsat 4, orbitnya diturunkan ke 705 km dengan siklus 16 hari, dan piksel Thematic Mapper mengecil menjadi 30 m. Orbit lebih rendah, kamera lebih dekat, piksel lebih halus.
+
+**Siklus ulang** dan **waktu kunjung ulang** (revisit time) tidak sama:
+
+- *Siklus ulang*: waktu untuk kembali ke lintasan tanah yang persis sama (16 hari untuk satu Landsat).
+- *Waktu kunjung ulang*: seberapa sering sebuah tempat bisa dipotret. Bisa jauh lebih singkat: lintasan yang bersebelahan makin banyak tumpang-tindih di lintang tinggi; satelit bisa memiringkan kameranya ke samping (SPOT, P3); dan beberapa satelit bisa berbagi satu orbit (Sentinel-2A dan 2B, bersama-sama 5 hari).
+
+Inilah alasan konstelasi satelit dibuat. Satu satelit hanya bisa memberi citra cerah sebuah kota yang kebanjiran kalau kebetulan melintas, di hari tanpa awan, tidak lama setelah banjir. Banyak satelit, termasuk radar yang tidak terganggu awan, mengubah kebetulan itu menjadi rutinitas.
+
+## Segmen bumi
+
+Citra tidak berguna sampai citra itu tiba di bumi. Ada dua caranya:
+
+- **Kirim langsung** (direct downlink): satelit mengirim data langsung ke stasiun penerima selama stasiun itu terlihat, biasanya sekitar 10 menit per lintasan untuk LEO.
+- **Simpan lalu kirim** (store and forward): data direkam di dalam satelit lalu dikirim kemudian, ke stasiun lain atau lewat satelit relai di GEO.
+
+Satelit hampir-kutub lewat dekat kutub pada *setiap* putaran. Karena itu stasiun di lintang sangat tinggi (Svalbard di Arktik, atau stasiun di Antartika) melihat hampir semua putaran, sedangkan stasiun di dekat khatulistiwa hanya melihat beberapa lintasan sehari. Itulah sebabnya begitu banyak antena penerima dibangun di lintang tinggi. Kubah putih yang menutupi banyak antena disebut *radome*: pelindung piringan antena dari angin, hujan, dan es, tetapi tetap tembus gelombang radio.
+
+{{< include _snippets/ch00b_orbits.qmd >}}
+
+## Istilah kunci
+
+**Segmen antariksa / bumi / pengguna**. **Muatan (payload)**: sensornya. **Roll, pitch, yaw**: tiga sudut sikap wahana. **LEO / MEO / GEO**: orbit rendah, menengah, geostasioner. **Inklinasi**: sudut antara bidang orbit dan khatulistiwa. **Hampir-kutub**: inklinasi tinggi, tidak pernah tepat di atas kutub. **Sinkron matahari**: bidang orbit menjaga sudut yang sama terhadap matahari, sehingga lintasan terjadi pada waktu setempat yang sama. **Naik / turun**: paruh orbit dari selatan ke utara / dari utara ke selatan. **Simpul**: titik perpotongan dengan khatulistiwa. **Lebar sapuan (swath)**: lebar permukaan yang terekam dalam satu lintasan. **Path / row**: alamat WRS-2 sebuah scene Landsat. **Siklus ulang / waktu kunjung ulang**: kembali ke lintasan yang sama / ke tempat yang sama.
+
+## Kuis
+
+1. Posisi satelit diukur dengan GNSS dan sikapnya dengan IMU. Berapa besaran yang ditentukan keduanya bersama-sama, dan apa saja?
+2. Dengan hukum Kepler, taksir periode satelit di ketinggian 900 km. Apakah masih termasuk orbit bumi rendah?
+3. Kenapa satelit geostasioner harus berada di atas khatulistiwa?
+4. Kamera yang sama dipasang di pesawat pada 3 km, di satelit pada 700 km, dan di satelit pada 36.000 km. Bagaimana perbandingan ukuran pikselnya di permukaan?
+5. Kenapa orbit Landsat disebut *hampir*-kutub? Berapa lintang tertinggi yang dicapai lintasan tanahnya?
+6. Jelaskan arti "sinkron matahari" dan kenapa satelit pengamat bumi optis memakainya.
+7. Pada contoh Bandung, waktu lintasan Landsat 8 hanya bergeser sekitar satu menit waktu setempat sepanjang tahun. Apa yang Anda harapkan dari satelit yang tidak sinkron matahari?
+8. Sebuah scene Landsat dengan utara di atas tampak miring sehingga tepi bawahnya lebih ke barat daripada tepi atasnya. Direkam dari lintasan naik atau turun? Sebutkan dua alasan scene itu miring.
+9. Kenapa Landsat dan Sentinel-2 hampir tidak pernah menyediakan citra optis dari lintasan naik?
+10. Apa beda siklus ulang dan waktu kunjung ulang? Sebutkan dua cara memperpendek waktu kunjung ulang.
+11. Di mana Anda akan membangun stasiun bumi supaya bisa menerima data satelit orbit kutub sesering mungkin, dan kenapa?
+12. Kenapa Sentinel-1 terbang di orbit fajar–senja, sedangkan Sentinel-2 di orbit pagi menjelang siang?
+
+::: {.callout-note collapse="true"}
+## Kunci jawaban
+1. Enam: X, Y, Z (posisi) serta roll, pitch, yaw (sikap).
+2. $a = 6.378 + 900 = 7.278$ km, $T = 2\pi\sqrt{a^3/GM} \approx 103$ menit. Ya, masih orbit bumi rendah.
+3. Supaya diam di atas satu titik, satelit harus berputar bersama bumi mengelilingi sumbu bumi. Hanya orbit di bidang khatulistiwa yang bisa begitu; orbit yang miring akan bergeser ke utara dan selatan setiap hari.
+4. Ukuran piksel di permukaan sebanding dengan jarak: kira-kira 1 : 230 : 12.000. Piksel pesawat 0,5 m akan menjadi sekitar 120 m dari LEO dan sekitar 6 km dari GEO.
+5. Orbitnya berinklinasi sekitar 98,2°, sehingga lewat dalam jarak 8,2° dari setiap kutub tetapi tidak pernah tepat di atasnya; lintang tertingginya sekitar 81,8°.
+6. Bidang orbit berputar sekali setahun, mengikuti gerak bumi mengelilingi matahari (lewat presesi J2 pada inklinasi sekitar 98°). Satelit lalu melintasi setiap lintang pada waktu matahari setempat yang sama, sehingga pencahayaan dan bayangan tetap mirip antarcitra dan citra bisa dibandingkan dari waktu ke waktu.
+7. Waktu lintasan yang bergeser sepanjang hari dari musim ke musim (misalnya satelit berinklinasi rendah seperti Stasiun Antariksa Internasional memotret tempat yang sama pada banyak jam yang berbeda).
+8. Lintasan turun. Baris pertama (utara) direkam lebih dulu; selama ≈ 25 detik perekaman bumi berputar ke timur, sehingga baris-baris berikutnya (selatan) jatuh lebih ke barat; dan orbitnya sendiri miring sekitar 8° dari arah utara–selatan, sehingga seluruh bingkai ikut miring.
+9. Paruh naik orbitnya berada di sisi malam bumi. Tanpa sinar matahari tidak ada pantulan yang bisa direkam.
+10. Siklus ulang: waktu untuk kembali ke lintasan tanah yang sama. Kunjung ulang: waktu sampai sebuah tempat bisa dipotret lagi. Cara memperpendeknya: memiringkan sensor dari nadir, menerbangkan beberapa satelit di orbit yang sama, atau memakai lebar sapuan yang lebih besar (tumpang-tindih juga bertambah di lintang tinggi).
+11. Di lintang tinggi (misalnya Arktik). Orbit hampir-kutub lewat dekat kutub di setiap putaran, sehingga stasiun di lintang tinggi bisa melihat hampir semua lintasan.
+12. Radar membawa penerangannya sendiri dan tidak butuh siang; orbit fajar–senja membuat panel suryanya hampir selalu terkena matahari. Sensor optis butuh cahaya matahari yang baik dan awan yang lebih sedikit, dan pagi menjelang siang memberi keduanya.
+:::

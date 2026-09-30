@@ -60,6 +60,7 @@ book:
     - part: "Principles: How Remote Sensing Works"
       chapters:
         - p1-radiation.qmd
+        - p2-orbits.qmd
     - part: "Part I: Foundations, Purpose and Physics"
       chapters:
         - 01-why-monitor.qmd
