@@ -21,6 +21,7 @@ project:
   # does not follow, so publish them explicitly.
   resources:
     - images/real/*.html
+    - images/real/raw/*.png
 
 lang: en
 
@@ -95,6 +96,7 @@ book:
         - 24-flood.qmd
         - 25-mining.qmd
         - 26-forestry-eudr.qmd
+        - 27-agriculture.qmd
     - dashboard.qmd
     - references.qmd
   appendices:

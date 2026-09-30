@@ -1,0 +1,29 @@
+# Agriculture and Plantations {#sec-agriculture}
+
+::: {.chapter-goal}
+#### In this chapter
+You will count oil palms from a drone image with a method that has no neural network in it, check the count without field data, and turn it into the numbers an estate manager uses.
+:::
+
+## Not every problem needs deep learning
+
+Tree counting is often presented as a deep learning task. For mature oil palm it usually is not. Palms are planted on a regular grid. Each crown is a bright, star-shaped blob about eight metres across, and there is a clear gap between neighbours. A vegetation index, a light blur and a local-maximum filter find one summit per crown. That takes three lines of code, runs in seconds, and needs no training data.
+
+Deep learning earns its place where this breaks: young palms under weeds, overlapping crowns in old stands, mixed smallholder gardens, or counting other species. Start simple, measure where it fails, and only then reach for a network.
+
+## A working example: a smallholder block near Banjarbaru
+
+The image is a 3.7 cm drone orthophoto from OpenAerialMap, published under CC BY 4.0. Python reads it straight from the cloud at 0.3 m, the resolution the author's Earth Engine method was built for. In the JavaScript tab the same recipe runs in the Code Editor once you upload the image as your own asset.
+
+{{< include _snippets/ch27_palm_counting.qmd >}}
+
+::: {.callout-important}
+## Scientific integrity: a count without a reference is a claim
+There is no field count for this block, so the book does not report an accuracy. The spacing chart is the evidence that is available. Planted palms stand at a known distance. If most counted crowns have a neighbour near that distance, the method is finding palms and not noise. For a report to a client, count every palm in two or three sample plots on the ground and compare.
+:::
+
+## Exercises {.unnumbered}
+
+1. Change `MIN_SPACING_M` from 5.5 to 4 and to 7. Watch the spacing histogram. Which setting starts double counting?
+2. Draw a polygon around the planted block only and count inside it. Compare the palms per hectare with a standard 9 m triangular planting.
+3. Run the method on the town scene "kebun_sawit_SPP" from the same survey. What does it count that is not a palm?

@@ -83,6 +83,7 @@ def initialise() -> None:
 
 
 _FRAMES: dict[int, pd.DataFrame] = {}
+WEB_LAYERS: list[dict] = []     # filled by render_map, one entry per map product
 
 
 def to_frame(data) -> pd.DataFrame:
@@ -158,6 +159,16 @@ def render_map(p: dict, out: Path) -> None:
     if img is None:
         raise RuntimeError(f"Earth Engine returned no image: {last_error}")
     x0, x1, y0, y1 = _bounds(region)
+    # Keep the bare image and its bounds for the chapter's interactive web map.
+    raw_dir = IMG_DIR / "raw"
+    raw_dir.mkdir(exist_ok=True)
+    web = img.convert("RGBA")
+    web.thumbnail((1000, 1000))
+    # 256 colours with transparency keeps each overlay to a few hundred kB.
+    web.quantize(colors=255, method=Image.Quantize.FASTOCTREE).save(
+        raw_dir / f"{out.stem}.png", optimize=True)
+    WEB_LAYERS.append({"name": out.stem, "title": p.get("title", out.stem),
+                       "png": f"raw/{out.stem}.png", "bounds": [[y0, x0], [y1, x1]]})
 
     fig, ax = plt.subplots(figsize=(7.2, 7.2 * (y1 - y0) / (x1 - x0) + 0.9))
     ax.imshow(img, extent=[x0, x1, y0, y1], interpolation="nearest")
@@ -268,6 +279,55 @@ def live_cell(df: pd.DataFrame, plot_fn) -> str:
 # ---------------------------------------------------------------------------
 # Driver
 # ---------------------------------------------------------------------------
+def web_map(stem: str, layers: list[dict], compare=None) -> str | None:
+    """One interactive Leaflet map per chapter script.
+
+    Every map product becomes a toggleable image overlay on a real basemap,
+    with an opacity slider. If the script names a before/after pair, a swipe
+    control is added. The overlays are the rendered PNGs themselves, so the
+    page keeps working after Earth Engine tile links would have expired.
+    """
+    if not layers:
+        return None
+    import folium
+    from folium import plugins
+    south = min(l["bounds"][0][0] for l in layers)
+    west = min(l["bounds"][0][1] for l in layers)
+    north = max(l["bounds"][1][0] for l in layers)
+    east = max(l["bounds"][1][1] for l in layers)
+    m = folium.Map(tiles=None, control_scale=True)
+    folium.TileLayer("OpenStreetMap", name="Street map").add_to(m)
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri World Imagery", name="Satellite basemap").add_to(m)
+    overlays = {}
+    for i, l in enumerate(layers):
+        # folium would try to embed a relative path as a file; give it a URL
+        # placeholder and point it back at the sibling PNG after saving.
+        ov = folium.raster_layers.ImageOverlay(
+            image="https://overlay.invalid/" + l["png"], bounds=l["bounds"], name=l["title"], opacity=0.85,
+            show=(i == 0), interactive=False, zindex=10 + i)
+        ov.add_to(m)
+        overlays[l["name"]] = ov
+    if compare and all(c in overlays for c in compare):
+        plugins.SideBySideLayers(layer_left=overlays[compare[0]],
+                                 layer_right=overlays[compare[1]]).add_to(m)
+    folium.LayerControl(collapsed=False).add_to(m)
+    plugins.Fullscreen().add_to(m)
+    m.fit_bounds([[south, west], [north, east]])
+    # Opacity slider for every overlay, in plain JavaScript.
+    m.get_root().html.add_child(folium.Element(
+        '<div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;'
+        'padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity '
+        '<input type="range" min="0" max="100" value="85" oninput="'
+        'document.querySelectorAll(\'.leaflet-image-layer\').forEach(function(e){'
+        'e.style.opacity=this.value/100}.bind(this))"></div>'))
+    path = IMG_DIR / f"{stem}-webmap.html"
+    m.save(str(path))
+    path.write_text(path.read_text().replace("https://overlay.invalid/", ""))
+    return f"images/real/{stem}-webmap.html"
+
+
 def load(path: Path):
     spec = importlib.util.spec_from_file_location(path.stem, path)
     module = importlib.util.module_from_spec(spec)
@@ -281,6 +341,7 @@ def run(path: Path) -> None:
         print(f"  - {path.name}: no products(), skipped")
         return
     print(f"==> {path.name}")
+    WEB_LAYERS.clear()
     items = []
     for p in module.products():
         name, kind = p["name"], p["kind"]
@@ -293,6 +354,11 @@ def run(path: Path) -> None:
                 p["build"](str(IMG_DIR / f"{name}.html"))
                 entry["html"] = f"images/real/{name}.html"
                 entry["height"] = p.get("height", 520)
+            elif kind == "figure":             # any matplotlib figure, no Earth Engine
+                fig = p["figure"]()
+                fig.savefig(IMG_DIR / f"{name}.png", bbox_inches="tight")
+                plt.close(fig)
+                entry["image"] = f"images/real/{name}.png"
             elif kind == "animation":
                 render_animation(p, IMG_DIR / f"{name}.gif")
                 entry["image"] = f"images/real/{name}.gif"
@@ -313,6 +379,16 @@ def run(path: Path) -> None:
             entry["error"] = str(err)[:300]
             print(f"  ! {kind:5s} {name}: {entry['error']}")
         items.append(entry)
+    try:
+        html = web_map(path.stem, list(WEB_LAYERS), getattr(module, "COMPARE", None))
+        if html:
+            items.insert(0, {"name": f"{path.stem}-webmap", "kind": "html", "html": html,
+                             "height": 480,
+                             "caption": "Interactive: pan, zoom, switch layers and basemaps, "
+                                        "change the overlay opacity."})
+            print(f"  + web   {path.stem}-webmap")
+    except Exception as err:
+        print(f"  ! web map: {err}")
     (OUT_DIR / f"{path.stem}.json").write_text(json.dumps(items, indent=1, ensure_ascii=False))
 
 

@@ -183,7 +183,7 @@ def outputs_block(stem: str, lang_code: str) -> str:
         if "error" in item:
             parts += [f"*{lab['failed']}* ({item['name']})", ""]
             continue
-        if item["kind"] in ("map", "chart", "animation"):
+        if item["kind"] in ("map", "chart", "animation", "figure"):
             parts += [f"![{caption}]({item['image']}){{.lightbox fig-alt=\"{caption}\"}}", ""]
         elif item["kind"] == "html":
             parts += [f'<iframe src="{item["html"]}" width="100%" '
