@@ -1,0 +1,119 @@
+# P4 · Empat Resolusi {#sec-p4-resolution .unnumbered}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mempelajari empat resolusi yang menggambarkan setiap sensor pencitra (spasial, spektral, radiometrik, dan temporal) ditambah cakupan spasial, cara menghitung masing-masing, dan kenapa tidak ada sensor yang unggul di semuanya. Setiap resolusi ditunjukkan dengan data sungguhan: satu pelabuhan pada tiga ukuran piksel, susunan kanal Landsat 7, Landsat 8, dan Sentinel-2, satu citra pada lima kedalaman bit, dan empat puluh tahun arsip di atas satu kota.
+:::
+
+## Empat resolusi dan satu cakupan
+
+Kalau ada yang bertanya "seberapa bagus satelit ini?", jawaban jujurnya adalah "bagus untuk apa?". Empat resolusi menggambarkan apa yang bisa dibedakan sebuah sensor, dan sifat kelima menggambarkan seberapa luas yang dilihatnya sekaligus:
+
+| Sifat | Pertanyaan yang dijawab | Diukur sebagai |
+|---|---|---|
+| **Resolusi spasial** | seberapa kecil benda yang bisa terlihat? | ukuran piksel, jarak sampel permukaan (GSD), IFOV linear |
+| **Resolusi spektral** | seberapa halus spektrum dibagi? | jumlah, letak, dan lebar kanal |
+| **Resolusi radiometrik** | seberapa halus kecerahan dibagi? | bit per piksel, jumlah tingkat keabuan |
+| **Resolusi temporal** | seberapa sering bisa melihat? | waktu kunjung ulang |
+| **Cakupan spasial** | seberapa luas yang terlihat sekaligus? | lebar sapuan, FOV, ukuran scene |
+
+Banyak soal ujian menyembunyikan salah satunya di balik istilah lain. "IFOV linear", "GSD", dan "ukuran piksel" berarti resolusi spasial. "Lebar sapuan", "FOV", dan "jejak" berarti cakupan. "Tingkat kuantisasi" berarti resolusi radiometrik. Biasakan menerjemahkannya.
+
+## Resolusi spasial
+
+Resolusi spasial adalah ukuran luas terkecil yang direkam sensor sebagai satu nilai, yaitu satu piksel. P3 sudah menunjukkan cara menghitungnya: GSD ≈ ketinggian × IFOV sudut.
+
+Tiga panel di bagian keluaran menampilkan pelabuhan Semarang pada 250 m (MODIS), 30 m (Landsat 8), dan 10 m (Sentinel-2). Pada 250 m, pelabuhan hanya berupa campuran darat dan laut yang kabur. Pada 30 m, dermaga, landasan bandara, dan jalan-jalan utama mulai tampak. Pada 10 m, dermaga bisa dihitung dan kapal terlihat. Aturan di baliknya: benda yang lebih kecil dari piksel masih bisa *terdeteksi* kalau cukup terang dibandingkan sekitarnya, tetapi untuk *mengenali bentuknya* dibutuhkan beberapa piksel melintang benda itu, minimal dua atau tiga.
+
+Ada dua akibatnya:
+
+- **Piksel campuran.** Kalau satu piksel mencakup beberapa bahan (tepi sawah, jalan yang membelah hutan), nilainya adalah campuran. Makin besar piksel, makin banyak piksel campuran. Sebagian besar kesalahan klasifikasi di Bab 16 dan 17 terjadi di piksel campuran.
+- **Ukuran piksel bukan segalanya.** Optik mengaburkan, atmosfer menghamburkan, dan satelit bergerak selama perekaman. Dua sensor dengan ukuran piksel sama bisa berbeda ketajamannya. Mengubah ukuran piksel menjadi lebih kecil (resampling) tidak pernah menambah detail (Bab 3).
+
+## Resolusi spektral
+
+Resolusi spektral menggambarkan cara spektrum dibagi: berapa kanal, di mana letaknya, dan seberapa lebar masing-masing. Kanal *pankromatik* adalah satu kanal lebar, biasanya meliputi cahaya tampak. Sensor *multispektral* punya beberapa sampai sekitar selusin kanal. Sensor *hiperspektral* punya ratusan kanal sempit yang bersambung (masing-masing sekitar 10 nm), cukup untuk menggambar spektrum yang hampir utuh bagi setiap piksel.
+
+Gambar kanal di bagian keluaran membandingkan tiga sensor berdasarkan spesifikasi resminya. Gambar ini menjawab soal ujian klasik: *mana yang lebih lebar, kanal 5 Landsat 7 atau kanal 6 Landsat 8?* Keduanya berada di wilayah SWIR yang sama di dekat 1,6 µm, tetapi kanal 5 ETM+ membentang dari 1,55 sampai 1,75 µm (200 nm), sedangkan kanal 6 OLI dari 1,57 sampai 1,65 µm (80 nm). Sensor yang lebih baru memakai kanal yang lebih sempit, yang diletakkan untuk menghindari serapan atmosfer. Landsat 8 mempersempit kanal inframerah dekatnya menjadi 0,85 sampai 0,88 µm untuk menghindari serapan uap air di dekat 0,825 µm. Landsat 8 juga menambah dua kanal: kanal pesisir/aerosol (0,43 sampai 0,45 µm) dan kanal sirus di 1,38 µm (P1).
+
+Nomor kanalnya juga berubah. Di Landsat 5 dan 7, inframerah dekat adalah kanal 4. Di Landsat 8 dan 9, inframerah dekat adalah kanal 5, dan kanal 4 adalah merah. Skrip yang menghitung NDVI dengan "kanal 4 dan kanal 3" benar untuk Landsat 7 tetapi salah untuk Landsat 8. Inilah salah satu kesalahan diam-diam yang paling sering muncul dalam kode penginderaan jauh.
+
+Kanal yang lebih sempit membedakan bahan dengan lebih baik, tetapi kanal sempit mengumpulkan cahaya lebih sedikit. Pertukaran ini muncul lagi di bawah.
+
+## Resolusi radiometrik
+
+Resolusi radiometrik adalah seberapa halus sensor membagi kecerahan. Sinyal dari setiap detektor diubah menjadi bilangan bulat, dan banyaknya nilai yang mungkin bergantung pada jumlah bit:
+
+$$\text{tingkat keabuan} = 2^{n} \qquad n = \text{bit per piksel}$$
+
+1 bit memberi 2 tingkat (hitam atau putih), 8 bit memberi 256, 12 bit memberi 4.096. Kalau soal ujian menyebut "kecerahan dicuplik menjadi 256 tingkat", jawabannya 8 bit; kalau "1.024 tingkat", 10 bit. Tabel di bagian keluaran mendaftar kedalaman bit sensor-sensor umum: MSS Landsat memakai 6 bit, TM dan ETM+ 8 bit, OLI Landsat 8 12 bit, OLI-2 Landsat 9 14 bit.
+
+Gambarnya menampilkan satu potongan inframerah dekat Sentinel-2 sungguhan yang disimpan dengan 1, 2, 4, 8, dan 12 bit. Dengan 1 bit, scene berubah menjadi topeng hitam-putih. Dengan 4 bit, tampilannya seperti cetakan poster. Antara 8 dan 12 bit tidak terlihat bedanya di layar, karena layar hanya menampilkan sekitar 256 tingkat dan mata tidak bisa membedakan lebih dari itu. Tingkat tambahan itu tetap penting: pada sasaran gelap seperti air, tempat seluruh sinyal hanya menempati beberapa dari 256 anak tangga, 12 bit menyimpan perbedaan kecil kekeruhan atau kedalaman yang akan hilang terbulatkan pada 8 bit.
+
+Bit juga memakan ruang simpan dan kapasitas kirim. Satu scene multispektral SPOT berukuran 3.000 × 3.000 piksel × 3 kanal × 8 bit = 27 megabita. Scene yang sama pada 12 bit menjadi 40 MB.
+
+## Resolusi temporal
+
+Resolusi temporal adalah seberapa sering tempat yang sama dipotret: waktu kunjung ulang (P2). Inilah resolusi yang paling pesat kemajuannya. Grafik di bagian keluaran menghitung setiap citra Landsat dan Sentinel-2 yang mencakup pusat kota Bandung, tahun demi tahun. Pada 1988 ada 7 citra. Pada 2023 ada 137: Landsat 7, 8, dan 9 ditambah dua satelit Sentinel-2.
+
+Ada dua catatan:
+
+- **Kunjung ulang tidak sama dengan pandangan cerah.** Grafik itu menghitung citra dalam segala kondisi awan. Di Indonesia yang tropis, sebagian besar koleksi setiap tahun berawan (Bab 9). Resolusi temporal efektif, yaitu jumlah pandangan cerah ke permukaan, jauh lebih rendah daripada angka nominalnya. Karena itu radar penting untuk pemantauan di daerah tropis (P5).
+- **Citra makin banyak, pekerjaan makin banyak.** Resolusi temporal baru berguna kalau bisa diolah: pembuatan komposit, deret waktu, deteksi perubahan (Bab 13, 21). Untuk itulah Earth Engine dibuat.
+
+## Melihat beberapa kanal sekaligus
+
+Layar punya tiga saluran warna: merah, hijau, dan biru. **Komposit warna** memasang satu kanal ke setiap saluran:
+
+- **Warna asli** (true colour) memasang kanal merah di saluran merah, hijau di hijau, biru di biru: pada Landsat 8, kanal 4-3-2. Tampilannya seperti foto.
+- **Warna semu** (false colour) memakai kanal yang tidak bisa dilihat mata. Komposit inframerah dekat klasik memasang NIR di saluran merah, merah di hijau, dan hijau di biru: pada Landsat 8, kanal 5-4-3. Vegetasi sehat, yang memantulkan NIR dengan kuat, menjadi merah terang, seperti pada panel-panel pelabuhan.
+- **Komposit SWIR** seperti Landsat 8 kanal 7-5-4 atau 6-5-4 menampakkan kelembapan, bekas terbakar, dan api aktif (P1).
+
+Komposit kanal-kanal radar selalu berwarna semu, karena panjang gelombang radar tidak punya warna alami.
+
+## Kenapa tidak bisa mendapat semuanya
+
+Kelima sifat itu berebut sumber daya yang sama dan terbatas:
+
+- **Cahaya.** Energi yang sampai ke satu detektor bertambah seiring luas piksel, lebar kanal, dan waktu tinggal. Perkecil piksel atau persempit kanal, maka setiap detektor mendapat energi lebih sedikit, dan derau makin berpengaruh. Kanal pankromatik dibuat lebar supaya pikselnya bisa kecil (P3).
+- **Volume data.** Landsat 8 merekam sekitar 6.000 piksel di setiap baris dan satu baris baru setiap 4,4 ms. Artinya sekitar 1,4 juta piksel per detik per kanal. Dengan 11 kanal pada 12 bit, jumlahnya lebih dari 180 juta bit per detik, sebelum dikompresi. Semuanya harus muat melalui saluran kirim (P2).
+- **Geometri.** Lebar sapuan yang besar dari ketinggian yang sama butuh medan pandang yang lebar. Piksel kecil pada sapuan lebar berarti lebih banyak detektor, optik lebih besar, dan data lebih banyak.
+
+Gambar pertukaran menempatkan enam sensor menurut ukuran piksel dan lebar sapuannya. Keenamnya berjajar pada satu garis: WorldView-3 melihat piksel 0,31 m pada jalur selebar 13 km, MODIS melihat piksel 250 m pada 2.330 km, dan Himawari di orbit geostasioner melihat seluruh piringan bumi dengan piksel paling halus 500 m. Tidak ada sensor di pojok kiri atas, yang tajam *sekaligus* luas. Memilih sensor berarti memilih resolusi mana yang paling penting untuk pertanyaan Anda (Bab 3).
+
+{{< include _snippets/ch00d_resolution.qmd >}}
+
+## Istilah kunci
+
+**Resolusi spasial**: ukuran piksel (GSD). **Piksel campuran**: piksel yang mencakup beberapa bahan. **Resolusi spektral**: jumlah, letak, dan lebar kanal. **Pankromatik / multispektral / hiperspektral**: satu kanal lebar / beberapa kanal / ratusan kanal sempit. **Resolusi radiometrik**: bit per piksel; tingkat keabuan = 2ⁿ. **Resolusi temporal**: waktu kunjung ulang. **Cakupan spasial**: lebar sapuan atau ukuran scene. **Komposit warna asli / semu**: kanal tampak dengan warnanya sendiri / kanal lain yang ditampilkan sebagai warna.
+
+## Kuis
+
+1. Sebutkan empat resolusi dan sifat kelima yang biasa disebut bersamanya. Untuk masing-masing, sebutkan satuan atau ukurannya.
+2. Sebuah sensor menyimpan setiap piksel dalam 10 bit. Berapa tingkat keabuan yang bisa direkamnya? Berapa bit yang dibutuhkan untuk 256 tingkat?
+3. Mana yang lebih lebar: kanal 5 ETM+ Landsat 7 atau kanal 6 OLI Landsat 8? Kenapa sensor yang lebih baru mempersempitnya?
+4. Sebuah skrip menghitung NDVI sebagai (B4 − B3)/(B4 + B3). Untuk Landsat yang mana skrip itu benar, dan apa yang terjadi kalau dijalankan pada Landsat 8?
+5. Kenapa versi 8 bit dan 12 bit sebuah citra bisa tampak sama persis di layar? Kenapa 12 bit tetap disimpan?
+6. Foto berwarna dan foto hitam-putih diambil pada saat yang sama dari pesawat yang sama. Resolusi mana yang berbeda di antara keduanya, dan mana yang sama?
+7. Anda perlu memantau sawah seluas sekitar 0,3 ha di Jawa Barat setiap minggu sepanjang musim hujan. Resolusi mana yang paling penting, dan masalah apa yang tetap ada meskipun memakai Sentinel-2?
+8. Hitung ruang simpan untuk satu scene berukuran 6.000 × 6.000 piksel, 4 kanal, 12 bit per piksel.
+9. Kenapa kanal pankromatik biasanya punya piksel lebih kecil daripada kanal multispektral pada sensor yang sama?
+10. Pada grafik arsip Bandung, kenapa jumlah citra melonjak setelah 2015?
+11. Apa itu piksel campuran? Beri contoh pada citra Landsat sebuah kota.
+12. Warna apa vegetasi sehat pada komposit Landsat 8 5-4-3, dan kenapa?
+
+::: {.callout-note collapse="true"}
+## Kunci jawaban
+1. Spasial (ukuran piksel, m), spektral (jumlah, letak, dan lebar kanal, µm atau nm), radiometrik (bit per piksel), temporal (waktu kunjung ulang, hari), ditambah cakupan spasial (lebar sapuan, km).
+2. $2^{10} = 1.024$ tingkat keabuan. 8 bit untuk 256 tingkat.
+3. Kanal 5 ETM+ (1,55 sampai 1,75 µm, 200 nm) lebih lebar daripada kanal 6 OLI (1,57 sampai 1,65 µm, 80 nm). Kanal sempit menghindari serapan atmosfer dan membedakan bahan dengan lebih baik.
+4. Benar untuk Landsat 4, 5, dan 7 (kanal 4 = NIR, kanal 3 = merah). Pada Landsat 8, kanal 4 adalah merah dan kanal 3 hijau, sehingga hasilnya indeks hijau–merah, bukan NDVI. Skrip tetap berjalan tanpa pesan galat, itulah sebabnya kesalahan ini mudah terlewat.
+5. Layar dan mata hanya bisa membedakan sekitar 256 tingkat. Tingkat tambahan menyimpan perbedaan kecil dalam data, yang penting untuk analisis sasaran gelap (air) dan untuk besaran yang diturunkan dari nilai-nilai itu.
+6. Resolusi spektral berbeda (tiga kanal warna dibandingkan satu kanal lebar), mungkin juga resolusi radiometrik. Resolusi spasial dan temporal sama: posisi kamera sama, waktu sama.
+7. Spasial (0,3 ha kira-kira 55 × 55 m: beberapa piksel 10 m, hanya sedikit piksel 30 m) dan temporal (mingguan). Masalahnya awan di musim hujan: kunjung ulang optis tidak menjamin pandangan cerah, jadi radar (P5) juga dibutuhkan.
+8. $6.000 \times 6.000 \times 4 \times 12 = 1,728\times10^9$ bit $= 216$ MB.
+9. Kanalnya lebar secara spektral sehingga mengumpulkan cahaya lebih banyak; setiap detektor bisa dibuat lebih kecil (piksel lebih kecil) dan tetap mendapat sinyal yang cukup.
+10. Sentinel-2A (mulai 2015) dan Sentinel-2B (mulai 2017) mulai merekam, dengan kunjung ulang gabungan 5 hari, menambah sekitar 70 citra per tahun.
+11. Piksel yang mencakup lebih dari satu bahan, sehingga nilainya campuran. Pada piksel Landsat 30 m di sebuah kota: sebagian atap, sebagian jalan, sebagian pohon.
+12. Merah terang. Vegetasi memantulkan inframerah dekat (kanal 5) dengan kuat, dan kanal 5 ditampilkan di saluran merah.
+:::

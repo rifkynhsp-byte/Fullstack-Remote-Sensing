@@ -62,6 +62,7 @@ book:
         - p1-radiation.qmd
         - p2-orbits.qmd
         - p3-scanning.qmd
+        - p4-resolution.qmd
     - part: "Bagian I: Fondasi, Tujuan dan Fisika"
       chapters:
         - 01-why-monitor.qmd

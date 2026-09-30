@@ -1,0 +1,119 @@
+# P4 · The Four Resolutions {#sec-p4-resolution .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+You will learn the four resolutions that describe every imaging sensor (spatial, spectral, radiometric and temporal) plus spatial coverage, how to calculate each, and why no sensor can be best at all of them. Each one is shown with real data: one harbour at three pixel sizes, the band layouts of Landsat 7, Landsat 8 and Sentinel-2, one image at five bit depths, and forty years of the archive over one city.
+:::
+
+## Four resolutions and one coverage
+
+When someone asks "how good is this satellite?", the honest answer is "good at what?". Four resolutions describe what a sensor can tell apart, and a fifth property describes how much it sees at once:
+
+| Property | The question it answers | Measured as |
+|---|---|---|
+| **Spatial resolution** | how small a thing can I see? | pixel size, ground sampling distance (GSD), linear IFOV |
+| **Spectral resolution** | how finely is the spectrum split? | number, position and width of bands |
+| **Radiometric resolution** | how finely is brightness split? | bits per pixel, number of grey levels |
+| **Temporal resolution** | how often can I look? | revisit time |
+| **Spatial coverage** | how much do I see at once? | swath width, FOV, scene size |
+
+Many exam questions hide one of these behind different words. "Linear IFOV", "GSD" and "pixel size" are spatial resolution. "Swath", "FOV" and "footprint" are coverage. "Quantization level" is radiometric resolution. Learn to translate.
+
+## Spatial resolution
+
+Spatial resolution is the size of the smallest area the sensor records as one value, one pixel. P3 showed how to compute it: GSD ≈ altitude × angular IFOV.
+
+The three panels in the output block show Semarang harbour at 250 m (MODIS), 30 m (Landsat 8) and 10 m (Sentinel-2). At 250 m the harbour is a blur of mixed land and sea. At 30 m the piers, the airport runway and the main roads appear. At 10 m you can count the piers and see ships. The rule behind this: you can *detect* an object smaller than a pixel if it is bright enough compared with its surroundings, but to *recognise its shape* you need several pixels across it, at least two or three.
+
+Two consequences:
+
+- **Mixed pixels.** Where a pixel covers several materials (the edge of a field, a road through a forest), its value is a mixture. The larger the pixel, the more pixels are mixed. Much of the classification error in Chapters 16 and 17 happens at mixed pixels.
+- **Pixel size is not the whole story.** Optics blur, atmosphere scatters and a satellite moves during exposure. Two sensors with the same pixel size can differ in sharpness. Resampling an image to smaller pixels never adds detail (Chapter 3).
+
+## Spectral resolution
+
+Spectral resolution describes how the spectrum is divided: how many bands, where they sit, and how wide each is. A *panchromatic* band is one wide band, usually across the visible range. A *multispectral* sensor has a few to about a dozen bands. A *hyperspectral* sensor has hundreds of narrow, contiguous bands (about 10 nm each), enough to draw a nearly continuous spectrum for every pixel.
+
+The band figure in the output block compares three sensors from the published specifications. It answers a classic exam question: *which is wider, Landsat 7's band 5 or Landsat 8's band 6?* Both are in the same SWIR region near 1.6 µm, but ETM+ band 5 spans 1.55 to 1.75 µm (200 nm) while OLI band 6 spans 1.57 to 1.65 µm (80 nm). Newer sensors use narrower bands, placed to avoid absorption by the atmosphere. Landsat 8 narrowed its near-infrared band to 0.85 to 0.88 µm to avoid a water-vapour absorption near 0.825 µm. It also added two bands: a coastal/aerosol band (0.43 to 0.45 µm) and a cirrus band at 1.38 µm (P1).
+
+The band numbers also changed. On Landsat 5 and 7, near infrared is band 4. On Landsat 8 and 9, near infrared is band 5, and band 4 is red. A script that computes NDVI with "band 4 and band 3" is right for Landsat 7 and wrong for Landsat 8. This is one of the most common silent errors in remote sensing code.
+
+Narrower bands separate materials better, but a narrow band collects less light. That trade reappears below.
+
+## Radiometric resolution
+
+Radiometric resolution is how finely a sensor divides brightness. The signal from each detector is converted to a whole number, and the number of possible values depends on the number of bits:
+
+$$\text{grey levels} = 2^{n} \qquad n = \text{bits per pixel}$$
+
+1 bit gives 2 levels (black or white), 8 bits give 256, 12 bits give 4,096. If an exam says "the brightness is sampled into 256 levels", the answer is 8 bits; if it says "1,024 levels", 10 bits. The table in the output block lists the bit depth of common sensors: Landsat MSS used 6 bits, TM and ETM+ 8 bits, Landsat 8 OLI 12 bits, Landsat 9 OLI-2 14 bits.
+
+The figure shows one real Sentinel-2 near-infrared patch stored with 1, 2, 4, 8 and 12 bits. With 1 bit the scene becomes a black-and-white mask. With 4 bits it looks like a posterised print. Between 8 and 12 bits you can see no difference on screen, because a screen shows only about 256 levels and the eye cannot tell more. The extra levels still matter: in dark targets such as water, where all the signal fits into a few of the 256 steps, 12 bits keeps small differences in turbidity or depth that 8 bits would round away.
+
+Bits also cost storage and downlink. One SPOT multispectral scene is 3,000 × 3,000 pixels × 3 bands × 8 bits = 27 megabytes. The same scene at 12 bits is 40 MB.
+
+## Temporal resolution
+
+Temporal resolution is how often the same place is imaged: the revisit time (P2). It is the resolution that has improved most. The chart in the output block counts every Landsat and Sentinel-2 image covering central Bandung, year by year. In 1988 there were 7. In 2023 there were 137: Landsat 7, 8 and 9 plus the two Sentinel-2 satellites.
+
+Two cautions:
+
+- **Revisit is not the same as clear views.** The chart counts images in all cloud conditions. Over tropical Indonesia, much of each year's collection is cloudy (Chapter 9). Effective temporal resolution, clear views of the ground, is much lower than the nominal one. This is why radar matters for monitoring in the tropics (P5).
+- **More images, more work.** Temporal resolution is only useful if you can process it: compositing, time series, change detection (Chapters 13, 21). This is exactly what Earth Engine was built for.
+
+## Seeing several bands at once
+
+A screen has three colour channels: red, green and blue. A **colour composite** assigns one band to each:
+
+- **True colour** puts the red band in red, green in green, blue in blue: on Landsat 8, bands 4-3-2. It looks like a photograph.
+- **False colour** uses bands we cannot see. The classic near-infrared composite puts NIR in red, red in green and green in blue: on Landsat 8, bands 5-4-3. Healthy vegetation, which reflects NIR strongly, turns bright red, as in the harbour panels.
+- **SWIR composites** such as Landsat 8 bands 7-5-4 or 6-5-4 show moisture, burn scars and active fire (P1).
+
+A composite of radar bands is always false colour, because radar wavelengths have no natural colour.
+
+## Why you cannot have everything
+
+The five properties compete for the same limited resources:
+
+- **Light.** The energy reaching one detector grows with pixel area, band width and dwell time. Make the pixel smaller or the band narrower and each detector gets less energy, so noise matters more. Panchromatic bands are wide so that their pixels can be small (P3).
+- **Data volume.** Landsat 8 records about 6,000 pixels across each row and a new row every 4.4 ms. That is about 1.4 million pixels per second per band. With 11 bands at 12 bits, it adds up to more than 180 million bits per second, before any compression. Everything must fit through the downlink (P2).
+- **Geometry.** A wide swath from the same altitude needs a wide field of view. A small pixel over a wide swath means more detectors, larger optics, more data.
+
+The trade-off figure places six sensors by pixel size and swath. They fall along a line: WorldView-3 sees 0.31 m pixels over a 13 km strip, MODIS sees 250 m pixels over 2,330 km, and Himawari in geostationary orbit sees the whole disk of the Earth with 500 m pixels at best. No sensor sits in the top-left corner, sharp *and* wide. Choosing a sensor means choosing which resolution matters most for your question (Chapter 3).
+
+{{< include _snippets/ch00d_resolution.qmd >}}
+
+## Key terms
+
+**Spatial resolution**: pixel size (GSD). **Mixed pixel**: a pixel covering several materials. **Spectral resolution**: number, position and width of bands. **Panchromatic / multispectral / hyperspectral**: one wide band / a few bands / hundreds of narrow bands. **Radiometric resolution**: bits per pixel; grey levels = 2ⁿ. **Temporal resolution**: revisit time. **Spatial coverage**: swath or scene size. **True / false colour composite**: visible bands in their own colours / other bands shown as colours.
+
+## Quiz
+
+1. List the four resolutions and the fifth property usually quoted with them. For each, give the unit or measure.
+2. A sensor stores each pixel in 10 bits. How many grey levels can it record? How many bits are needed for 256 levels?
+3. Which is wider: Landsat 7 ETM+ band 5 or Landsat 8 OLI band 6? Why did the newer sensor narrow it?
+4. A script computes NDVI as (B4 − B3)/(B4 + B3). For which Landsat is it correct, and what happens if you run it on Landsat 8?
+5. Why can 8-bit and 12-bit versions of an image look identical on a screen? Why keep 12 bits anyway?
+6. A colour photo and a black-and-white photo were taken at the same moment from the same aircraft. Which of the four resolutions differ between them, and which are the same?
+7. You need to monitor rice fields of about 0.3 ha in West Java every week through the wet season. Which resolutions matter most, and what problem remains even with Sentinel-2?
+8. Calculate the storage for one scene of 6,000 × 6,000 pixels, 4 bands, 12 bits per pixel.
+9. Why does a panchromatic band usually have smaller pixels than the multispectral bands of the same sensor?
+10. In the Bandung archive chart, why did the number of images jump after 2015?
+11. What is a mixed pixel? Give an example in a Landsat image of a city.
+12. What colour does healthy vegetation have in a Landsat 8 5-4-3 composite, and why?
+
+::: {.callout-note collapse="true"}
+## Answers
+1. Spatial (pixel size, m), spectral (number, position and width of bands, µm or nm), radiometric (bits per pixel), temporal (revisit time, days), plus spatial coverage (swath, km).
+2. $2^{10} = 1{,}024$ grey levels. 8 bits for 256 levels.
+3. ETM+ band 5 (1.55 to 1.75 µm, 200 nm) is wider than OLI band 6 (1.57 to 1.65 µm, 80 nm). Narrow bands avoid atmospheric absorption and separate materials better.
+4. Correct for Landsat 4, 5 and 7 (band 4 = NIR, band 3 = red). On Landsat 8 band 4 is red and band 3 green, so the result is a green–red index, not NDVI. It runs without an error, which makes the mistake easy to miss.
+5. Screens and eyes distinguish only about 256 levels. The extra levels keep small differences in the data, which matter for analysis of dark targets (water) and for quantities derived from the values.
+6. Spectral resolution differs (three colour bands versus one broad band) and possibly radiometric resolution. Spatial and temporal resolution are the same: same camera position, same time.
+7. Spatial (0.3 ha is about 55 × 55 m: several 10 m pixels, only a few 30 m pixels) and temporal (weekly). Clouds in the wet season: optical revisit does not guarantee clear views, so radar (P5) is needed as well.
+8. $6{,}000 \times 6{,}000 \times 4 \times 12 = 1.728\times10^9$ bits $= 216$ MB.
+9. It is spectrally wide, so it collects more light; each detector can then be smaller (a smaller pixel) and still get enough signal.
+10. Sentinel-2A (from 2015) and Sentinel-2B (from 2017) began imaging, with a 5-day combined revisit, adding about 70 images a year.
+11. A pixel covering more than one material, whose value is a mixture. In a 30 m Landsat pixel of a city: part roof, part road, part tree.
+12. Bright red. Vegetation reflects near infrared (band 5) strongly, and band 5 is displayed in the red channel.
+:::

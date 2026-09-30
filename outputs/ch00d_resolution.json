@@ -1,0 +1,39 @@
+[
+ {
+  "name": "p4-spatial",
+  "kind": "figure",
+  "caption": "Spatial resolution. The same harbour from MODIS (250 m), Landsat 8 (30 m) and Sentinel-2 (10 m). Piers, ships and streets appear only when the pixel is smaller than they are.",
+  "image": "images/real/p4-spatial.png"
+ },
+ {
+  "name": "p4-spectral",
+  "kind": "figure",
+  "caption": "Spectral resolution. Band positions and widths from the published specifications. Landsat 8 narrowed its NIR band to avoid a water-vapour absorption near 0.825 µm, and added a coastal band (1) and a cirrus band (9).",
+  "image": "images/real/p4-spectral.png"
+ },
+ {
+  "name": "p4-radiometric",
+  "kind": "figure",
+  "caption": "Radiometric resolution. The same real Sentinel-2 near-infrared patch stored with 2, 4, 16, 256 and 4,096 grey levels. With few levels, water, land and everything between merge into flat blocks. 8 and 12 bits look the same on screen, because screens and eyes stop near 256 levels; the extra levels matter for analysis, above all in dark targets such as water.",
+  "image": "images/real/p4-radiometric.png"
+ },
+ {
+  "name": "p4-bits",
+  "kind": "table",
+  "caption": "Bits per pixel and the number of grey levels they allow, 2ⁿ.",
+  "markdown": "| sensor          |   bits |   grey_levels |\n|:----------------|-------:|--------------:|\n| Landsat 1-3 MSS |      6 |            64 |\n| Landsat 4-5 TM  |      8 |           256 |\n| Landsat 7 ETM+  |      8 |           256 |\n| Landsat 8 OLI   |     12 |          4096 |\n| Landsat 9 OLI-2 |     14 |         16384 |\n| Sentinel-2 MSI  |     12 |          4096 |\n| MODIS           |     12 |          4096 |"
+ },
+ {
+  "name": "p4-temporal",
+  "kind": "chart",
+  "caption": "Temporal resolution. Every Landsat and Sentinel-2 image in the archive that covers central Bandung, per year (all cloud conditions).",
+  "image": "images/real/p4-temporal.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,Landsat 5,Landsat 7,Landsat 8,Landsat 9,Sentinel-2\n1988,7,0,0,0,0\n1989,9,0,0,0,0\n1990,9,0,0,0,0\n1991,6,0,0,0,0\n1992,7,0,0,0,0\n1993,12,0,0,0,0\n1994,10,0,0,0,0\n1995,19,0,0,0,0\n1996,21,0,0,0,0\n1997,17,0,0,0,0\n1998,14,0,0,0,0\n1999,10,4,0,0,0\n2000,24,7,0,0,0\n2001,0,18,0,0,0\n2002,0,22,0,0,0\n2003,2,14,0,0,0\n2004,19,20,0,0,0\n2005,17,19,0,0,0\n2006,18,18,0,0,0\n2007,14,11,0,0,0\n2008,15,10,0,0,0\n2009,19,15,0,0,0\n2010,5,11,0,0,0\n2011,3,12,0,0,0\n2012,0,16,0,0,0\n2013,0,19,12,0,0\n2014,0,21,21,0,0\n2015,0,22,19,0,4\n2016,0,20,23,0,26\n2017,0,26,22,0,31\n2018,0,20,22,0,72\n2019,0,22,21,0,72\n2020,0,20,22,0,71\n2021,0,20,21,4,73\n2022,0,21,22,22,72\n2023,0,23,21,21,72\n2024,0,1,22,22,75\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_acquisitions(df):\n    d = df.set_index(\"year\")\n    order = [\"Landsat 5\", \"Landsat 7\", \"Landsat 8\", \"Landsat 9\", \"Sentinel-2\"]\n    cols = [\"#9aa5b1\", \"#8e44ad\", \"#c0392b\", \"#e67e22\", \"#1b7837\"]\n    fig, ax = plt.subplots(figsize=(10, 3.6))\n    bottom = np.zeros(len(d))\n    for s, c in zip(order, cols):\n        if s in d:\n            ax.bar(d.index, d[s], bottom=bottom, color=c, label=s, width=0.85)\n            bottom += d[s].to_numpy()\n    ax.set_ylabel(\"Images covering Bandung\")\n    ax.set_title(\"From 7 images in 1988 to 137 in 2023: temporal resolution improved \"\n                 \"the most\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8, ncol=5, loc=\"upper left\")\n    return fig\n\nplot_acquisitions(df)\nplt.show()\n"
+ },
+ {
+  "name": "p4-tradeoff",
+  "kind": "figure",
+  "caption": "Coverage against spatial resolution for six sensors: no sensor is both sharp and wide.",
+  "image": "images/real/p4-tradeoff.png"
+ }
+]
