@@ -99,6 +99,7 @@ book:
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
         - 34-fire.qmd
+        - 37-peat.qmd
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:
         - 28-map-production.qmd

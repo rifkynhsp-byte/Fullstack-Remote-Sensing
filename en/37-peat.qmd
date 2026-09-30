@@ -1,0 +1,51 @@
+# Peatland: Drought, Drainage and Fire {#sec-peat}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map peat in Central Kalimantan, measure how much of the burned area in fire years lies on peat, and test how monthly fire follows rainfall. Everything uses open data, so you can repeat it for any peat landscape.
+:::
+
+## Why peat is different
+
+Tropical peat is soil made of plant material that has not rotted, because it stays waterlogged. It builds up by a millimetre or two a year, into domes several metres thick. It stores far more carbon per hectare than the forest standing on it.
+
+Drain it with canals for farming or plantations, and the top dries. Dry peat burns, and it keeps burning under the surface, where rain cannot reach it and optical satellites cannot see it. The 1997 fires in Indonesia released an estimated 0.81 to 2.57 billion tonnes of carbon, equal to 13 to 40 % of the world's yearly fossil fuel emissions at the time, most of it from peat [@page2002carbon]. Central Kalimantan, around Palangka Raya, is where much of that evidence was gathered. The former Mega Rice Project dug thousands of kilometres of canals there in the 1990s, and parts of it still burn in dry years.
+
+## The data
+
+| Layer | Source | Cell size |
+|---|---|---|
+| Peat extent | Global Peatland Map 2.0 (Global Peatlands Initiative, Greifswald Mire Centre), in the GEE community catalog | 1 km |
+| Burned area | MODIS MCD64A1 v6.1 | 500 m |
+| Active fire | FIRMS, MODIS | 1 km, daily |
+| Rainfall | CHIRPS v2 pentads | about 5 km |
+
+The peat map is coarse. At 1 km it is fine for "is this landscape mostly peat?" and poor for "is this parcel on peat?". A national peat map at 1:50,000 is the right tool for a parcel. The analysis here asks the landscape question, so the global map is enough.
+
+{{< include _snippets/ch37_peat_fire.qmd >}}
+
+## What the numbers say
+
+Peat covers about 73 % of the box, but 99 % of the burned area in 2015, 2019 and 2023 lies on it. The mineral uplands in the north barely burned in the same droughts. MCD64A1 misses small and slow surface fires, so the burned areas are lower bounds, but the split between peat and non-peat is too lopsided to be an artefact.
+
+The monthly series shows how fire on peat behaves. It stays near zero for most of the year, then jumps in August to October when the dry season ends late. 2015 and 2019 were the worst. Both were dry years, 2015 with a strong El Niño and 2019 with a strong positive Indian Ocean Dipole. Fires also came in 2012, 2014 and 2018, so a named climate event is not required, just a long enough dry spell.
+
+A single month's rain is a weak guide, because peat dries over weeks. The rain of the month plus the two before it works much better: 17 of the 21 months with more than 1,000 fire pixel-days came after less than 450 mm in three months, and only 4 quiet months did. The 450 mm line was read off this chart. It is a local rule of thumb for this box, not a published threshold, and you would test it on other years and places before using it for a warning.
+
+::: {.callout-tip}
+## Doing this for your own peat landscape
+- Use the best peat map you have. A national or project map is better than the 1 km global one for anything below landscape scale.
+- Count fire as pixel-days, not as separate events: one peat fire can smoulder in the same pixel for weeks.
+- Look at rain over several months, not one.
+- Report burned area as a lower bound, and say which product you used.
+:::
+
+## What satellites do not see here
+
+Three things matter most for peat and are hard to get from open optical data:
+
+1. **Water table depth.** It controls both fire and carbon loss. Field loggers measure it; Sentinel-1 soil moisture can hint at it, but only weakly under forest.
+2. **Subsidence.** Drained peat sinks by several centimetres a year. It is measured with InSAR time series, which Earth Engine does not process.
+3. **Burn depth.** How much carbon a fire released depends on how deep it burned. It needs LiDAR before and after, or field measurement.
+
+Each is a thesis-sized question.

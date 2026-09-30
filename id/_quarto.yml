@@ -99,6 +99,7 @@ book:
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
         - 34-fire.qmd
+        - 37-peat.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:
         - 28-map-production.qmd

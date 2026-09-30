@@ -1,0 +1,51 @@
+# Lahan Gambut: Kemarau, Kanal, dan Api {#sec-peat}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memetakan gambut di Kalimantan Tengah, menghitung berapa bagian dari area terbakar di tahun-tahun kebakaran yang jatuh di atas gambut, dan menguji bagaimana api bulanan mengikuti curah hujan. Semua memakai data terbuka, jadi bisa diulang untuk bentang gambut mana pun.
+:::
+
+## Kenapa gambut berbeda
+
+Gambut tropis adalah tanah dari sisa tumbuhan yang tidak membusuk karena terus tergenang air. Lapisannya bertambah satu sampai dua milimeter per tahun, sampai membentuk kubah setebal beberapa meter. Karbon yang tersimpan per hektare jauh lebih banyak daripada di hutan yang tumbuh di atasnya.
+
+Begitu dikeringkan dengan kanal untuk pertanian atau kebun, lapisan atasnya mengering. Gambut kering mudah terbakar, dan apinya terus menjalar di bawah permukaan, tempat yang tidak terjangkau hujan dan tidak terlihat satelit optis. Kebakaran tahun 1997 di Indonesia diperkirakan melepas 0,81 sampai 2,57 miliar ton karbon, setara 13 sampai 40 % emisi bahan bakar fosil dunia per tahun saat itu, sebagian besar dari gambut [@page2002carbon]. Kalimantan Tengah, di sekitar Palangka Raya, adalah tempat banyak bukti itu dikumpulkan. Proyek Lahan Gambut Sejuta Hektare (PLG) menggali ribuan kilometer kanal di sana pada 1990-an, dan sebagian wilayahnya masih terbakar setiap kali kemarau panjang.
+
+## Datanya
+
+| Lapisan | Sumber | Ukuran sel |
+|---|---|---|
+| Sebaran gambut | Global Peatland Map 2.0 (Global Peatlands Initiative, Greifswald Mire Centre), di katalog komunitas GEE | 1 km |
+| Area terbakar | MODIS MCD64A1 v6.1 | 500 m |
+| Titik api aktif | FIRMS, MODIS | 1 km, harian |
+| Curah hujan | CHIRPS v2 pentad | sekitar 5 km |
+
+Peta gambutnya kasar. Pada resolusi 1 km, peta ini cukup untuk menjawab "apakah bentang lahan ini sebagian besar gambut?", tetapi lemah untuk "apakah persil ini di atas gambut?". Untuk persil, pakailah peta gambut nasional skala 1:50.000. Analisis di bab ini bertanya di tingkat bentang lahan, jadi peta global sudah memadai.
+
+{{< include _snippets/ch37_peat_fire.qmd >}}
+
+## Apa kata angkanya
+
+Gambut menutupi sekitar 73 % kotak ini, tetapi 99 % area terbakar pada 2015, 2019, dan 2023 berada di atasnya. Tanah mineral di bagian utara hampir tidak terbakar pada kemarau yang sama. MCD64A1 melewatkan api kecil dan api permukaan yang lambat, jadi luas terbakar ini adalah batas bawah. Namun, perbandingan gambut dan bukan gambut terlalu timpang untuk sekadar kebetulan dari datanya.
+
+Deret bulanan memperlihatkan watak api gambut. Hampir sepanjang tahun nilainya mendekati nol, lalu melonjak pada Agustus sampai Oktober ketika musim kemarau berakhir terlambat. Tahun terparah adalah 2015 dan 2019. Keduanya tahun kering: 2015 dengan El Niño kuat, 2019 dengan Indian Ocean Dipole positif yang kuat. Api juga muncul pada 2012, 2014, dan 2018. Jadi tidak perlu ada peristiwa iklim besar, cukup kemarau yang cukup panjang.
+
+Hujan satu bulan saja kurang bisa diandalkan, karena gambut mengering dalam hitungan minggu. Jumlah hujan bulan itu ditambah dua bulan sebelumnya jauh lebih baik: 17 dari 21 bulan dengan lebih dari 1.000 piksel-hari api terjadi setelah hujan tiga bulan kurang dari 450 mm, sementara bulan yang tenang hanya 4. Garis 450 mm dibaca dari grafik ini. Angka itu patokan kasar untuk kotak ini saja, bukan ambang yang sudah diterbitkan. Uji dulu di tahun dan tempat lain sebelum dipakai untuk peringatan dini.
+
+::: {.callout-tip}
+## Kalau mau mengerjakannya di bentang gambut Anda sendiri
+- Pakai peta gambut terbaik yang ada. Peta nasional atau peta proyek lebih baik daripada peta global 1 km untuk apa pun di bawah skala bentang lahan.
+- Hitung api sebagai piksel-hari, bukan kejadian terpisah: satu api gambut bisa membara di piksel yang sama berminggu-minggu.
+- Lihat hujan beberapa bulan, bukan satu bulan.
+- Laporkan luas terbakar sebagai batas bawah, dan sebutkan produk yang dipakai.
+:::
+
+## Yang tidak terlihat dari satelit
+
+Ada tiga hal yang paling penting untuk gambut tetapi sulit didapat dari data optis terbuka:
+
+1. **Kedalaman muka air tanah.** Inilah yang mengendalikan api dan hilangnya karbon. Diukur dengan logger di lapangan. Kelembapan tanah dari Sentinel-1 bisa memberi petunjuk, tetapi lemah di bawah hutan.
+2. **Penurunan muka tanah (subsiden).** Gambut yang dikeringkan turun beberapa sentimeter per tahun. Pengukurannya memakai deret waktu InSAR, yang tidak diproses Earth Engine.
+3. **Kedalaman bakaran.** Banyaknya karbon yang lepas tergantung seberapa dalam gambut terbakar. Perlu LiDAR sebelum dan sesudah kebakaran, atau pengukuran lapangan.
+
+Masing-masing cukup besar untuk menjadi satu tesis.
