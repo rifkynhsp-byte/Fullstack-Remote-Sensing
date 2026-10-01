@@ -1,0 +1,47 @@
+[
+ {
+  "name": "ch57_solar_pv-webmap",
+  "kind": "html",
+  "html": "images/real/ch57_solar_pv-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch57-overview",
+  "kind": "map",
+  "caption": "Magenta: reservoir water in 2021 that was no longer water in 2024. Orange: surfaces that were not water in either year, mostly floating fish cages.",
+  "image": "images/real/ch57-overview.jpg"
+ },
+ {
+  "name": "ch57-before",
+  "kind": "map",
+  "caption": "The plant's footprint (yellow) in 2021: open water.",
+  "image": "images/real/ch57-before.jpg"
+ },
+ {
+  "name": "ch57-after",
+  "kind": "map",
+  "caption": "The same place in 2024: rows of dark panel blocks with water lanes between them.",
+  "image": "images/real/ch57-after.jpg"
+ },
+ {
+  "name": "ch57-area",
+  "kind": "table",
+  "caption": "Detected plant area against the reported 200 ha.",
+  "markdown": "|   detected_plant_ha |   reported_ha |   plant_outline_ha |   old_fish_cages_ha |   reservoir_ha |   plant_lon |   plant_lat |\n|--------------------:|--------------:|-------------------:|--------------------:|---------------:|------------:|------------:|\n|                 149 |           200 |                260 |                 167 |          3,915 |    107.3344 |     -6.7039 |"
+ },
+ {
+  "name": "ch57-signature",
+  "kind": "chart",
+  "caption": "Mean 2024 reflectance of the three floating surfaces.",
+  "image": "images/real/ch57-signature.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"surface,B2,B3,B4,B8,B11,B12\nfloating PV (new),0.088094,0.081459,0.074316,0.070942,0.17594,0.092395\nfish cages (old),0.048689,0.062335,0.039638,0.22866,0.086506,0.043052\nopen water,0.04893,0.049833,0.036273,0.038349,0.022873,0.016869\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_signature(df):\n    wl = [490, 560, 665, 842, 1610, 2190]\n    cols = {\"floating PV (new)\": \"#6a3d9a\", \"fish cages (old)\": \"#ff7f00\", \"open water\": \"#1f78b4\"}\n    fig, ax = plt.subplots(figsize=(6.8, 3.4))\n    for _, r in df.iterrows():\n        ax.plot(wl, [r[b] for b in [\"B2\", \"B3\", \"B4\", \"B8\", \"B11\", \"B12\"]], marker=\"o\",\n                color=cols[r.surface], label=r.surface)\n    ax.set_xlabel(\"Wavelength (nm)\")\n    ax.set_ylabel(\"Surface reflectance\")\n    ax.set_title(\"What panels, fish cages and water look like to Sentinel-2\", loc=\"left\",\n                 fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_signature(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch57-radar",
+  "kind": "chart",
+  "caption": "Monthly Sentinel-1 VV backscatter over the plant footprint and over open water nearby, 2021-2024.",
+  "image": "images/real/ch57-radar.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"month,pv_vv_db,water_vv_db\n2021-01,-22.307,-22.178\n2021-02,-22.904,-22.724\n2021-03,-22.959,-22.507\n2021-04,-23.15,-23.04\n2021-05,-22.78,-22.584\n2021-06,-23.519,-23.386\n2021-07,-23.934,-23.86\n2021-08,-23.14,-22.913\n2021-09,-22.373,-22.189\n2021-10,-23.03,-22.631\n2021-11,-24.196,-24.182\n2021-12,-23.573,-23.295\n2022-01,-23.591,-23.377\n2022-02,-22.88,-22.59\n2022-03,-23.077,-22.918\n2022-04,-22.679,-22.461\n2022-05,-20.58,-20.711\n2022-06,-23.282,-23.319\n2022-07,-21.896,-21.926\n2022-08,-22.96,-22.687\n2022-09,-22.727,-22.537\n2022-10,-22.593,-22.461\n2022-11,-22.921,-22.735\n2022-12,-22.055,-22.114\n2023-01,-21.899,-21.689\n2023-02,-23.237,-23.069\n2023-03,-22.89,-22.714\n2023-04,-23.131,-22.995\n2023-05,-22.363,-22.424\n2023-06,-20.58,-20.465\n2023-07,-19.75,-20.749\n2023-08,-15.672,-19.582\n2023-09,-14.511,-21.413\n2023-10,-14.506,-21.745\n2023-11,-15.228,-21.886\n2023-12,-14.946,-20.75\n2024-01,-14.664,-21.322\n2024-02,-14.816,-19.72\n2024-03,-15.275,-22.441\n2024-04,-15.112,-22.249\n2024-05,-14.756,-20.761\n2024-06,-14.409,-20.243\n2024-07,-15.021,-21.53\n2024-08,-15.139,-21.885\n2024-09,-15.194,-21.487\n2024-10,-15.039,-21.992\n2024-11,-15.286,-22.318\n2024-12,-13.801,-15.317\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_radar(df):\n    fig, ax = plt.subplots(figsize=(7.4, 3.4))\n    x = pd.to_datetime(df.month)\n    ax.plot(x, df.pv_vv_db, color=\"#6a3d9a\", lw=2, marker=\"o\", ms=3,\n            label=\"inside the plant footprint\")\n    ax.plot(x, df.water_vv_db, color=\"#1f78b4\", lw=1.2, ls=\"--\", label=\"open water nearby\")\n    ax.axvline(pd.Timestamp(\"2023-11-09\"), color=\"#4b5563\", lw=0.8)\n    ax.text(pd.Timestamp(\"2023-11-20\"), ax.get_ylim()[0] + 1, \"inaugurated\\n9 Nov 2023\",\n            fontsize=7, color=\"#4b5563\")\n    ax.set_ylabel(\"Sentinel-1 VV (dB)\")\n    ax.set_title(\"A power plant appearing on a lake, month by month\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8, loc=\"upper left\")\n    return fig\n\nplot_radar(df)\nplt.show()\n"
+ }
+]

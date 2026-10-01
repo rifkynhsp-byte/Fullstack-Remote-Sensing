@@ -1,0 +1,49 @@
+# PLTS Terapung dari Antariksa: Menyaksikan Pembangkit Listrik Muncul {#sec-solar-pv}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menemukan PLTS Terapung Cirata di Jawa Barat hanya dari data satelit, mengukurnya terhadap luas yang dilaporkan, dan menentukan waktu pembangunannya bulan demi bulan dengan radar. Di tengah jalan, indeks air yang biasa dipakai gagal, inframerah gelombang pendek menyelamatkannya, dan Anda akan melihat kenapa pertanyaan "seberapa besar pembangkitnya" punya lebih dari satu jawaban yang jujur.
+:::
+
+## Pembangkit listrik di atas waduk
+
+PLTS terapung terbesar di Asia Tenggara saat diresmikan berada di Waduk Cirata, waduk PLTA di Sungai Citarum yang terbagi di Purwakarta, Cianjur, dan Bandung Barat. Pembangkit ini dilaporkan berkapasitas **192 MWp di atas sekitar 200 ha**, dengan sekitar 340.000 panel di 13 "pulau" terapung, dan diresmikan pada 9 November 2023 [@antara2023cirata]. PLTS terapung memakai permukaan air yang sudah ada, membuat panel tetap sejuk, dan berbagi sambungan jaringan dengan bendungannya. PLTS seperti ini juga persis jenis aset yang ingin dipantau perencana energi, investor, dan regulator: di mana letaknya, seberapa besar, dan kapan dibangun.
+
+Waduk ini juga penuh benda terapung yang lebih tua: ribuan keramba jaring apung (KJA) dan hamparan gulma air. Metode yang baik harus bisa membedakan ketiganya.
+
+## Metodenya
+
+1. **Waduk**: piksel yang berupa air setidaknya 80 % waktu dari 1984 sampai 2021 (JRC Global Surface Water).
+2. **Air atau bukan**, pada musim kemarau 2021 dan 2024 (komposit Sentinel-2).
+3. **Panel**: air pada 2021, bukan air pada 2024, dan tidak hijau (NDVI di bawah 0,1, untuk membuang hamparan gulma).
+4. **Keramba**: bukan air di kedua tahun. Keramba sudah ada sebelum PLTS.
+5. **Pembangkitnya**: petak-petak panel diperbesar sekitar 100 m agar blok-blok larik yang terpisah menyatu, lalu petak gabungan terbesar diambil.
+6. **Lini waktu**: radar Sentinel-1 di atas tapak pembangkit, setiap bulan dari 2021 sampai 2024.
+
+{{< include _snippets/ch57_solar_pv.qmd >}}
+
+## Membaca hasilnya
+
+**Indeks air yang paling jelas justru gagal.** Versi pertama skrip ini memakai NDWI, indeks hijau lawan inframerah dekat dari Bab [-@sec-indices], untuk menentukan mana yang air. Hasilnya 44 ha, di tempat yang salah. Panel abu-abu di atas air gelap di kanal hijau maupun inframerah dekat, sehingga NDWI-nya tetap *positif*: bagi NDWI, panel tampak seperti air. Inframerah gelombang pendek (kanal 11 Sentinel-2) tidak punya masalah ini. Air menyerapnya hampir seluruhnya (reflektansi sekitar 0,02 di sini), sedangkan panel memantulkan rata-rata sekitar 0,18. Memilih kanal yang menurut fisika memang bisa memisahkan kelas Anda lebih berharga daripada ambang secerdik apa pun (P1, Bab [-@sec-physics]).
+
+**Tiga permukaan terapung, tiga sidik jari.** Pada grafik tanda spektral, air terbuka gelap di semua kanal dan paling gelap di SWIR. Panel lebih terang di setiap kanal, terutama di SWIR. Keramba lama terang di inframerah dekat, lebih mirip vegetasi, kemungkinan karena banyak yang ditumbuhi atau dikelilingi gulma terapung.
+
+**Hamparan gulma bukan panel.** Setelah uji air diperbaiki, petak "baru" terbesar masih berada di lengan waduk yang salah: hamparan vegetasi terapung. Panel punya NDVI sedikit negatif; gulma berwarna hijau. Satu syarat tambahan menyingkirkannya.
+
+**Seberapa besar pembangkitnya? Dua jawaban yang jujur.** Di dalam garis batas pembangkit, piksel yang berupa panel berjumlah sekitar **150 ha**. Garis batas seluruh pembangkit, termasuk lorong air di antara blok-blok larik, sekitar **260 ha**. (Tiga belas blok yang terlihat di citra 2024 sesuai dengan 13 "pulau" terapung dalam deskripsi resmi.) Angka resmi 200 ha berada di antara keduanya. Tidak ada yang salah: keduanya menjawab pertanyaan berbeda (luas permukaan panel atau luas air yang ditempati), dan sebuah laporan harus menyebutkan yang mana. Piksel campuran di tepi blok juga menggeser angka panel puluhan hektare ke atas atau ke bawah pada resolusi 10 m.
+
+**Radar menentukan waktu pembangunan menembus awan.** Di atas tapak pembangkit, sinyal radar bertahan di tingkat air tenang (sekitar −23 dB) sampai pertengahan 2023. Antara Juli dan September 2023 sinyalnya melonjak sekitar 8 dB, ke sekitar −15 dB, dan tetap di sana, sementara air terbuka di dekatnya tetap sekitar −21 dB. Sebagian besar larik diapungkan dalam tiga bulan itu, *sebelum* peresmian bulan November. Air tenang memantulkan radar menjauhi satelit (P5); rangka logam dan panel yang miring mengembalikannya. Citra optik bulanan tidak akan bisa menunjukkan ini: musim hujan menutupi Jawa Barat dengan awan selama berbulan-bulan.
+
+## Di luar Cirata
+
+Tiga pertanyaan yang sama (di mana, seberapa besar, sejak kapan) berlaku untuk setiap aset surya:
+
+- **PLTS darat**: panel terang di SWIR dan gelap di NIR dibandingkan tanaman atau rumput yang digantikannya.
+- **PLTS atap** terlalu kecil untuk piksel 10 m. Diperlukan foto udara atau citra resolusi sangat tinggi dan deteksi objek (Bab [-@sec-deeplearning]).
+- **Memeriksa kapasitas yang dilaporkan**: luas panel dikali kerapatan daya yang umum (dalam orde 1 MWp per hektare panel untuk pembangkit jenis ini) memberi pemeriksaan kasar atas kapasitas yang dilaporkan. Pakai hanya sebagai pemeriksaan kewajaran, bukan pengukuran.
+
+## Latihan {.unnumbered}
+
+1. Ganti lagi uji SWIR dengan NDWI dan petakan apa yang disebut skrip sebagai "panel baru". Di mana kelirunya?
+2. Perpanjang lini waktu radar sampai 2025. Apakah sinyalnya tetap, atau menunjukkan perawatan atau perluasan?
+3. Cari PLTS terapung lain, di Indonesia atau di tempat lain, dan jalankan metode yang sama. Langkah mana yang perlu diubah?

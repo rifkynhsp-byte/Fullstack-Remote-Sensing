@@ -118,6 +118,7 @@ book:
         - 50-landslide-simple.qmd
         - 37-peat.qmd
         - 35-urban-energy.qmd
+        - 57-solar-pv.qmd
     - part: "Ilmu Lingkungan: Air, Karbon, dan Kebijakan"
       chapters:
         - 40-water-cycle.qmd

@@ -1,0 +1,49 @@
+# Floating Solar from Space: Watching a Power Plant Appear {#sec-solar-pv}
+
+::: {.chapter-goal}
+#### In this chapter
+You will find the Cirata floating solar plant in West Java from satellite data alone, measure it against its reported size, and date its construction month by month with radar. On the way, a standard water index fails, shortwave infrared rescues it, and you will see why "how big is the plant" has more than one honest answer.
+:::
+
+## A power plant on a reservoir
+
+The largest floating solar plant in Southeast Asia when it opened sits on Waduk Cirata, a hydropower reservoir on the Citarum river shared by Purwakarta, Cianjur and Bandung Barat. It was reported at **192 MWp on about 200 ha**, with about 340,000 panels on 13 floating "islands", and was inaugurated on 9 November 2023 [@antara2023cirata]. Floating solar uses water that already exists, keeps the panels cool, and shares the grid connection of the dam. It is also exactly the kind of asset that energy planners, investors and regulators want to track: where it is, how big it is, and when it was built.
+
+The reservoir is also crowded with older floating objects: thousands of floating fish cages (*keramba jaring apung*), and mats of water weed. A good method must tell all three apart.
+
+## The method
+
+1. **Reservoir**: pixels that were water at least 80 % of the time from 1984 to 2021 (JRC Global Surface Water).
+2. **Water or not**, in the 2021 and 2024 dry seasons (Sentinel-2 composites).
+3. **Panels**: water in 2021, not water in 2024, and not green (NDVI below 0.1, which removes weed mats).
+4. **Fish cages**: not water in either year. They were there before the plant.
+5. **The plant**: the panel patches grown by about 100 m so the separate array blocks join, and the largest joined patch kept.
+6. **Timeline**: Sentinel-1 radar over the plant's footprint, every month from 2021 to 2024.
+
+{{< include _snippets/ch57_solar_pv.qmd >}}
+
+## Reading the results
+
+**The obvious water index failed.** The first version of this script used NDWI, the green-versus-near-infrared index of Chapter [-@sec-indices], to decide what is water. It found 44 ha, in the wrong place. Grey panels over water are dark in both green and near infrared, so their NDWI stays *positive*: to NDWI the panels look like water. Shortwave infrared (Sentinel-2 band 11) does not have this problem. Water absorbs it almost completely (reflectance about 0.02 here), while the panels reflect about 0.18 on average. Choosing the band that physics says can separate your classes is worth more than any clever threshold (P1, Chapter [-@sec-physics]).
+
+**Three floating surfaces, three fingerprints.** In the signature chart, open water is dark everywhere and darkest in SWIR. The panels are brighter in every band and especially in SWIR. The old fish cages are bright in near infrared, more like vegetation, probably because many are overgrown or ringed with floating weed.
+
+**Weed mats are not panels.** With the water test fixed, the largest "new" patch was still in the wrong arm of the reservoir: a mat of floating vegetation. Panels have a slightly negative NDVI; weed is green. One extra condition removed it.
+
+**How big is the plant? Two honest answers.** Inside the plant's outline, the pixels that are panels add up to about **150 ha**. The outline of the whole plant, including the water lanes between the array blocks, is about **260 ha**. (The 13 blocks visible in the 2024 image match the 13 floating "islands" in the official description.) The reported 200 ha lies between the two. Neither number is wrong: they answer different questions (panel surface or occupied water), and a report must say which one it gives. Mixed pixels at the block edges also shift the panel number by tens of hectares either way at 10 m resolution.
+
+**Radar dates the construction through the clouds.** Over the plant's footprint, the radar signal stays at the level of calm water (about −23 dB) until mid-2023. Between July and September 2023 it jumps by about 8 dB, to about −15 dB, and stays there, while open water nearby stays near −21 dB. Most of the arrays were floated in during those three months, *before* the November inauguration. Calm water reflects radar away from the satellite (P5); metal frames and tilted panels send it back. Monthly optical images could not have shown this: the wet season covers West Java in cloud for months at a time.
+
+## Beyond Cirata
+
+The same three questions (where, how big, since when) apply to every solar asset:
+
+- **Ground-mounted solar farms** on land: panels are bright in SWIR and dark in NIR compared with the crops or grass they replace.
+- **Rooftop solar** is too small for 10 m pixels. It needs aerial or very high-resolution images and object detection (Chapter [-@sec-deeplearning]).
+- **Checking reported capacity**: a plant's panel area times a typical power density (in the order of 1 MWp per hectare of panels for this kind of plant) gives a rough check on a reported capacity. Use it only as a sanity check, not as a measurement.
+
+## Exercises {.unnumbered}
+
+1. Replace the SWIR test with NDWI again and map what the script calls "new panels". Where does it go wrong?
+2. Extend the radar timeline to 2025. Has the signal stayed constant, or does it show maintenance or expansion?
+3. Find another floating solar plant, in Indonesia or elsewhere, and run the same method. Which step needs changing?

@@ -140,7 +140,8 @@ def graticule(ax):
     ax.yaxis.set_major_locator(MaxNLocator(5))
     x0, x1 = ax.get_xlim()
     span = abs(x1 - x0)
-    dec = 0 if span > 8 else 1 if span > 0.8 else 2      # fewer digits at wide extents
+    # Enough digits that neighbouring labels differ: fewer at wide extents, more when zoomed in.
+    dec = 0 if span > 8 else 1 if span > 0.8 else 2 if span > 0.08 else 3
     ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "x", dec)))
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: _deg(v, "y", dec)))
     ax.grid(True, color="#ffffff", lw=0.6, alpha=0.6, ls="--")
