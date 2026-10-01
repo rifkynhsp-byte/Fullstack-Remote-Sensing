@@ -1,0 +1,41 @@
+[
+ {
+  "name": "ch63_mining_cost_benefit-webmap",
+  "kind": "html",
+  "html": "images/real/ch63_mining_cost_benefit-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch63-mine",
+  "kind": "map",
+  "caption": "Sentinel-2 2024 with the outline of forest cleared since 2001 that is still bare ground in 2024 (yellow).",
+  "image": "images/real/ch63-mine.jpg"
+ },
+ {
+  "name": "ch63-footprint",
+  "kind": "chart",
+  "caption": "Forest cleared each year that is still bare ground in 2024, and the running total.",
+  "image": "images/real/ch63-footprint.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,new_mine_ha,cumulative_ha\n2000,0,0\n2001,2.8531,2.8531\n2002,2.6748,5.528\n2003,2.4965,8.0245\n2004,10.075,18.1\n2005,5.6172,23.717\n2006,7.1327,30.849\n2007,7.7566,38.606\n2008,33.345,71.951\n2009,18.456,90.406\n2010,21.398,111.8\n2011,160.75,272.55\n2012,13.284,285.84\n2013,5.7062,291.55\n2014,2.8531,294.4\n2015,5.1713,299.57\n2016,4.5472,304.12\n2017,12.572,316.69\n2018,10.7,327.39\n2019,15.069,342.46\n2020,18.992,361.45\n2021,35.219,396.67\n2022,21.042,417.71\n2023,18.456,436.17\n2024,21.131,457.3\n2025,0,457.3\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_footprint(df):\n    fig, ax = plt.subplots(figsize=(7, 3.3))\n    ax.bar(df.year, df.new_mine_ha, color=\"#b2182b\", label=\"forest cleared, still bare in 2024\")\n    ax2 = ax.twinx()\n    ax2.plot(df.year, df.cumulative_ha, color=\"#1f2933\", marker=\"o\", ms=3, label=\"cumulative\")\n    ax.set_ylabel(\"ha per year\"); ax2.set_ylabel(\"cumulative ha\")\n    ax.set_title(\"The mine footprint grows, Pomalaa\", loc=\"left\", fontsize=10)\n    h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()\n    ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=8, loc=\"upper left\")\n    return fig\n\nplot_footprint(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch63-cost",
+  "kind": "table",
+  "caption": "Carbon released per hectare cleared, from GEDI biomass of intact forest nearby, valued at the central social cost of carbon.",
+  "markdown": "| case           |   forest_agb_mg_ha |   t_co2_per_ha |   carbon_usd_per_ha_central |   mine_ha_since_2001 |   gedi_shots |\n|:---------------|-------------------:|---------------:|----------------------------:|---------------------:|-------------:|\n| biomass p25    |                116 |            274 |                      52,004 |                  457 |          157 |\n| biomass median |                216 |            509 |                      96,685 |                  457 |          157 |\n| biomass p75    |                347 |            819 |                     155,673 |                  457 |          157 |"
+ },
+ {
+  "name": "ch63-breakeven",
+  "kind": "table",
+  "caption": "Break-even: the net benefit per hectare mining must deliver to outweigh the carbon and ecosystem services lost (undiscounted).",
+  "markdown": "| carbon price      | service value          |   years |   carbon_usd_ha |   services_usd_ha |   breakeven_usd_ha |   breakeven_for_footprint_musd |\n|:------------------|:-----------------------|--------:|----------------:|------------------:|-------------------:|-------------------------------:|\n| low (120 $/t)     | median (2,355 $/ha/yr) |      10 |          61,064 |             23550 |             84,614 |                             39 |\n| low (120 $/t)     | median (2,355 $/ha/yr) |      30 |          61,064 |             70650 |            131,714 |                             60 |\n| low (120 $/t)     | mean (5,264 $/ha/yr)   |      10 |          61,064 |             52640 |            113,704 |                             52 |\n| low (120 $/t)     | mean (5,264 $/ha/yr)   |      30 |          61,064 |            157920 |            218,984 |                            100 |\n| central (190 $/t) | median (2,355 $/ha/yr) |      10 |          96,685 |             23550 |            120,235 |                             55 |\n| central (190 $/t) | median (2,355 $/ha/yr) |      30 |          96,685 |             70650 |            167,335 |                             77 |\n| central (190 $/t) | mean (5,264 $/ha/yr)   |      10 |          96,685 |             52640 |            149,325 |                             68 |\n| central (190 $/t) | mean (5,264 $/ha/yr)   |      30 |          96,685 |            157920 |            254,605 |                            116 |\n| high (340 $/t)    | median (2,355 $/ha/yr) |      10 |         173,015 |             23550 |            196,565 |                             90 |\n| high (340 $/t)    | median (2,355 $/ha/yr) |      30 |         173,015 |             70650 |            243,665 |                            111 |\n| high (340 $/t)    | mean (5,264 $/ha/yr)   |      10 |         173,015 |             52640 |            225,655 |                            103 |\n| high (340 $/t)    | mean (5,264 $/ha/yr)   |      30 |         173,015 |            157920 |            330,935 |                            151 |"
+ },
+ {
+  "name": "ch63-breakeven-chart",
+  "kind": "chart",
+  "caption": "Break-even per hectare over 30 years, for each carbon price and service value.",
+  "image": "images/real/ch63-breakeven-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"carbon price,service value,years,carbon_usd_ha,services_usd_ha,breakeven_usd_ha,breakeven_for_footprint_musd\nlow (120 $/t),\"median (2,355 $/ha/yr)\",10,61064,23550,84614,38.694\nlow (120 $/t),\"median (2,355 $/ha/yr)\",30,61064,70650,1.3171e+05,60.232\nlow (120 $/t),\"mean (5,264 $/ha/yr)\",10,61064,52640,1.137e+05,51.996\nlow (120 $/t),\"mean (5,264 $/ha/yr)\",30,61064,157920,2.1898e+05,100.14\ncentral (190 $/t),\"median (2,355 $/ha/yr)\",10,96685,23550,1.2023e+05,54.983\ncentral (190 $/t),\"median (2,355 $/ha/yr)\",30,96685,70650,1.6733e+05,76.522\ncentral (190 $/t),\"mean (5,264 $/ha/yr)\",10,96685,52640,1.4932e+05,68.286\ncentral (190 $/t),\"mean (5,264 $/ha/yr)\",30,96685,157920,2.546e+05,116.43\nhigh (340 $/t),\"median (2,355 $/ha/yr)\",10,1.7301e+05,23550,1.9656e+05,89.888\nhigh (340 $/t),\"median (2,355 $/ha/yr)\",30,1.7301e+05,70650,2.4366e+05,111.43\nhigh (340 $/t),\"mean (5,264 $/ha/yr)\",10,1.7301e+05,52640,2.2565e+05,103.19\nhigh (340 $/t),\"mean (5,264 $/ha/yr)\",30,1.7301e+05,157920,3.3093e+05,151.34\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_breakeven(df):\n    d = df[df.years == 30]\n    fig, ax = plt.subplots(figsize=(7.2, 3.4))\n    labels = [f\"{a.split(' ')[0]} C / {b.split(' ')[0]} ES\" for a, b in\n              zip(d[\"carbon price\"], d[\"service value\"])]\n    ax.barh(labels, d.carbon_usd_ha / 1000, color=\"#525252\", label=\"carbon (once)\")\n    ax.barh(labels, d.services_usd_ha / 1000, left=d.carbon_usd_ha / 1000, color=\"#1a9850\",\n            label=\"ecosystem services, 30 years\")\n    ax.set_xlabel(\"Thousand US$ per hectare\")\n    ax.set_title(\"What mining must earn per hectare to outweigh the loss\", loc=\"left\",\n                 fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_breakeven(df)\nplt.show()\n"
+ }
+]

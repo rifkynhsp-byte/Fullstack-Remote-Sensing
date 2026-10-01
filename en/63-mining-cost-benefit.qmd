@@ -1,0 +1,49 @@
+# Mining Against the Services It Removes {#sec-mining-cost-benefit}
+
+::: {.chapter-goal}
+#### In this chapter
+You will measure what nickel mining around Pomalaa, Kolaka (Southeast Sulawesi), has removed since 2001: the forest area, the carbon it held, and the ecosystem services it provided. Then you will turn those losses into money with published values and compute a **break-even**: how much net benefit each hectare of mining must deliver to outweigh what it took. Satellites cannot tell you whether a mine is worth it. They can tell you the size of the bill.
+:::
+
+## Two questions, one map
+
+An **environmental impact statement** (AMDAL in Indonesia) asks what a project will remove or damage. A **cost-benefit analysis** asks whether what it gives is worth more than what it takes. Both need the same first number: how much land, of what kind, has been lost. That is the part remote sensing does well.
+
+Pomalaa has been mined for nickel since long before the satellite archives used here; the laterite pits, haul roads and stockpiles are visible as orange ground south of the town. Mining has expanded sharply in Sulawesi with the growth of nickel processing in the last decade.
+
+## The method
+
+1. **Footprint**: forest in 2000 (Hansen tree cover at least 30 %) that was lost after 2001 *and is still bare ground in 2024* (Dynamic World). A first version also accepted built-up land and counted the growing towns as mine; bare ground only keeps the pits and roads.
+2. **Carbon**: the median GEDI L4A biomass of intact forest nearby, plus roots (IPCC root-to-shoot ratio 0.37 for tropical rainforest), times the carbon fraction 0.47 and 44/12, gives tonnes of CO₂ released per hectare cleared [@ipcc2006vol4].
+3. **Price of carbon**: the US EPA social cost of carbon, 190 US$ per tonne of CO₂ for 2020 emissions at a 2 % discount rate, with 120 and 340 US$ as the low and high values [@epa2023scghg].
+4. **Ecosystem services**: tropical forest unit values from Costanza et al. [-@costanza2014changes], in 2007 international dollars per hectare per year: a **median of 2,355** and a **mean of 5,264** across 96 studies. The difference between the two is itself a lesson: a few very high local studies pull the mean up.
+5. **Break-even**: carbon (lost once) plus services (lost every year, for 10 or 30 years, not discounted).
+
+{{< include _snippets/ch63_mining_cost_benefit.qmd >}}
+
+## Reading the results
+
+**The footprint.** About **457 ha** of forest cleared since 2001 is still bare ground in 2024. The largest single year is 2011, with about 160 ha; since 2017, between about 10 and 35 ha a year. This is a *minimum*: pits opened before 2001, land that was not forest in 2000, and the coastal stockpiles and port are not counted, and some of the orange ground on the map lies outside the outline for exactly those reasons.
+
+**The carbon.** Intact forest around the mines holds a median of about **216 Mg of aboveground biomass per hectare** (157 GEDI footprints; the middle half between 116 and 347). With roots, that is about **509 t CO₂ per hectare** released when it is cleared. At the central social cost of carbon, that is about **97,000 US$ per hectare**, between 61,000 and 173,000 US$ across the low and high carbon prices.
+
+**The services.** A tropical forest hectare provides, in the global average, between 2,355 (median) and 5,264 (mean) US$ of services a year: water regulation, erosion control, food, timber, recreation and more. Over 30 years, that is 71,000 to 158,000 US$ per hectare, without discounting.
+
+**The break-even.** Put together, a hectare of mining has to deliver a net benefit of roughly **85,000 to 331,000 US$** to outweigh what was lost, depending on the carbon price, the service value and the time span; about **120,000 to 255,000 US$** with the central carbon price. For the 457 ha footprint, that is roughly 40 to 150 million US$.
+
+**So does it outweigh?** This chapter does not answer that, on purpose. Revenue per hectare of a nickel mine depends on the ore grade, the price, costs and taxes, and those are not visible from space. What the break-even does is turn a vague debate into a precise question that can be put to the company and the government: *does this mine produce more than about 170,000 US$ of net benefit per hectare cleared, and who receives it?* For scale, Indonesia's non-tax state revenue from all minerals and coal was about Rp173 trillion in 2023, according to the Ministry of Energy and Mineral Resources [@esdm2024pnbp]. That is national, and it is only the state's share.
+
+**Who pays and who gains.** The losses fall on people near the mine: water, fish in the bay, land. The benefits go mostly to companies, workers and the state. A cost-benefit total can be positive while the people who bear the costs are worse off. An environmental impact statement must show *who*, not only *how much*. On the map, the red-brown river that runs from the pits to the coast is a cost that this calculation does not even count.
+
+## Limits
+
+- **Values transfer badly.** Costanza's numbers are global averages; services in Kolaka could be worth more (a fishing bay, drinking water) or less. Local valuation studies are better when they exist.
+- **No discounting.** A dollar of service in 30 years is counted the same as one today. Discounting lowers the service total; a lower discount rate is also why the EPA's carbon price rose to 190 US$.
+- **GEDI biomass is a model.** L4A biomass is predicted from waveform heights; it was built for forests like these, but it is not a field plot.
+- **Restoration recovers some of it.** A mine that is properly rehabilitated (Chapter [-@sec-mining-restoration]) gives back part of the carbon and the services over time.
+
+## Exercises {.unnumbered}
+
+1. Add a discount rate of 3 % to the services and recompute the break-even for 30 years. How much does it change?
+2. Replace the global unit values with values from a local study you can find for Sulawesi or eastern Indonesia, and say where the number came from.
+3. Measure the turbidity (red band) of the bay next to the mines and of a bay far from any mine. Is there a difference you can see from space?

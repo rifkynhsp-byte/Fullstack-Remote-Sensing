@@ -1,0 +1,49 @@
+# Tambang Melawan Jasa yang Dihilangkannya {#sec-mining-cost-benefit}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengukur apa yang telah dihilangkan penambangan nikel di sekitar Pomalaa, Kolaka (Sulawesi Tenggara), sejak 2001: luas hutannya, karbon yang dikandungnya, dan jasa ekosistem yang diberikannya. Lalu Anda akan mengubah kehilangan itu menjadi uang dengan nilai-nilai terbitan, dan menghitung **titik impas**: berapa manfaat bersih yang harus dihasilkan setiap hektare tambang untuk mengimbangi apa yang diambilnya. Satelit tidak bisa memberi tahu apakah sebuah tambang layak. Satelit bisa memberi tahu besarnya tagihan.
+:::
+
+## Dua pertanyaan, satu peta
+
+**Analisis dampak lingkungan** (AMDAL) bertanya apa yang akan dihilangkan atau dirusak sebuah proyek. **Analisis biaya-manfaat** bertanya apakah yang diberikannya lebih berharga daripada yang diambilnya. Keduanya butuh angka pertama yang sama: berapa luas lahan, dan lahan jenis apa, yang sudah hilang. Bagian itulah yang dikerjakan penginderaan jauh dengan baik.
+
+Pomalaa sudah ditambang untuk nikel jauh sebelum arsip satelit yang dipakai di sini; lubang tambang laterit, jalan angkut, dan timbunan bijih tampak sebagai tanah jingga di selatan kota. Penambangan meluas pesat di Sulawesi seiring tumbuhnya pengolahan nikel dalam satu dasawarsa terakhir.
+
+## Metodenya
+
+1. **Tapak tambang**: hutan pada 2000 (tutupan pohon Hansen setidaknya 30 %) yang hilang sesudah 2001 *dan masih berupa tanah terbuka pada 2024* (Dynamic World). Versi pertama juga menerima lahan terbangun dan menghitung kota yang tumbuh sebagai tambang; hanya tanah terbuka yang menyisakan lubang tambang dan jalan.
+2. **Karbon**: median biomassa GEDI L4A hutan utuh di sekitarnya, ditambah akar (rasio akar-tajuk IPCC 0,37 untuk hutan hujan tropis), dikali fraksi karbon 0,47 dan 44/12, memberi ton CO₂ yang dilepas per hektare yang dibuka [@ipcc2006vol4].
+3. **Harga karbon**: social cost of carbon dari US EPA, 190 US$ per ton CO₂ untuk emisi 2020 pada tingkat diskonto 2 %, dengan 120 dan 340 US$ sebagai nilai rendah dan tinggi [@epa2023scghg].
+4. **Jasa ekosistem**: nilai satuan hutan tropis dari Costanza dkk. [-@costanza2014changes], dalam dolar internasional 2007 per hektare per tahun: **median 2.355** dan **rerata 5.264** dari 96 studi. Perbedaan keduanya sendiri adalah pelajaran: segelintir studi lokal yang nilainya sangat tinggi menarik rerata ke atas.
+5. **Titik impas**: karbon (hilang sekali) ditambah jasa ekosistem (hilang setiap tahun, selama 10 atau 30 tahun, tanpa diskonto).
+
+{{< include _snippets/ch63_mining_cost_benefit.qmd >}}
+
+## Membaca hasilnya
+
+**Tapak tambang.** Sekitar **457 ha** hutan yang dibuka sejak 2001 masih berupa tanah terbuka pada 2024. Tahun terbesar adalah 2011, sekitar 160 ha; sejak 2017, antara sekitar 10 dan 35 ha per tahun. Ini angka *minimum*: lubang yang dibuka sebelum 2001, lahan yang bukan hutan pada 2000, serta timbunan dan pelabuhan di pesisir tidak dihitung, dan sebagian tanah jingga di peta berada di luar garis batas persis karena alasan-alasan itu.
+
+**Karbonnya.** Hutan utuh di sekitar tambang menyimpan median sekitar **216 Mg biomassa atas permukaan per hektare** (157 jejak GEDI; separuh tengahnya antara 116 dan 347). Dengan akarnya, itu setara sekitar **509 t CO₂ per hektare** yang lepas ketika hutan dibuka. Pada social cost of carbon tengah, nilainya sekitar **97.000 US$ per hektare**, antara 61.000 dan 173.000 US$ pada harga karbon rendah dan tinggi.
+
+**Jasa ekosistemnya.** Satu hektare hutan tropis, dalam rata-rata global, memberi jasa senilai 2.355 (median) sampai 5.264 (rerata) US$ per tahun: pengaturan air, pengendalian erosi, pangan, kayu, rekreasi, dan lainnya. Selama 30 tahun, itu setara 71.000 sampai 158.000 US$ per hektare, tanpa diskonto.
+
+**Titik impasnya.** Digabungkan, satu hektare tambang harus menghasilkan manfaat bersih kira-kira **85.000 sampai 331.000 US$** untuk mengimbangi yang hilang, bergantung pada harga karbon, nilai jasa, dan rentang waktunya; sekitar **120.000 sampai 255.000 US$** dengan harga karbon tengah. Untuk tapak 457 ha, itu kira-kira 40 sampai 150 juta US$.
+
+**Jadi, apakah manfaatnya lebih besar?** Bab ini sengaja tidak menjawabnya. Pendapatan per hektare tambang nikel bergantung pada kadar bijih, harga, biaya, dan pajak, dan semua itu tidak terlihat dari antariksa. Yang dilakukan titik impas adalah mengubah perdebatan yang kabur menjadi pertanyaan yang tepat yang bisa diajukan kepada perusahaan dan pemerintah: *apakah tambang ini menghasilkan manfaat bersih lebih dari sekitar 170.000 US$ per hektare yang dibuka, dan siapa yang menerimanya?* Sebagai gambaran skala, penerimaan negara bukan pajak dari seluruh mineral dan batu bara Indonesia sekitar Rp173 triliun pada 2023, menurut Kementerian ESDM [@esdm2024pnbp]. Angka itu nasional, dan hanya bagian negara.
+
+**Siapa menanggung, siapa menikmati.** Kerugiannya jatuh pada orang-orang di dekat tambang: air, ikan di teluk, lahan. Manfaatnya sebagian besar jatuh pada perusahaan, pekerja, dan negara. Total biaya-manfaat bisa positif sementara orang yang menanggung biayanya justru lebih buruk keadaannya. AMDAL harus menunjukkan *siapa*, bukan hanya *berapa*. Di peta, sungai cokelat kemerahan yang mengalir dari lubang tambang ke pantai adalah biaya yang bahkan tidak dihitung dalam perhitungan ini.
+
+## Batasan
+
+- **Nilai tidak mudah dipindahkan.** Angka Costanza adalah rata-rata global; jasa di Kolaka bisa lebih berharga (teluk tempat nelayan mencari ikan, air minum) atau kurang. Studi valuasi lokal lebih baik bila tersedia.
+- **Tanpa diskonto.** Satu dolar jasa 30 tahun lagi dihitung sama dengan satu dolar hari ini. Diskonto menurunkan total jasa; tingkat diskonto yang lebih rendah juga menjadi alasan harga karbon EPA naik menjadi 190 US$.
+- **Biomassa GEDI adalah model.** Biomassa L4A diprediksi dari tinggi gelombang pantul; model itu dibuat untuk hutan seperti ini, tetapi tetap bukan plot lapangan.
+- **Restorasi mengembalikan sebagian.** Tambang yang direhabilitasi dengan benar (Bab [-@sec-mining-restoration]) mengembalikan sebagian karbon dan jasa ekosistem seiring waktu.
+
+## Latihan {.unnumbered}
+
+1. Tambahkan tingkat diskonto 3 % pada jasa ekosistem dan hitung ulang titik impas untuk 30 tahun. Seberapa besar perubahannya?
+2. Ganti nilai satuan global dengan nilai dari studi lokal yang bisa Anda temukan untuk Sulawesi atau Indonesia timur, dan sebutkan dari mana angkanya berasal.
+3. Ukur kekeruhan (kanal merah) teluk di dekat tambang dan teluk yang jauh dari tambang mana pun. Apakah ada perbedaan yang bisa dilihat dari antariksa?
