@@ -1,0 +1,38 @@
+# Keanekaragaman Hayati dari Antariksa: Luas, Bentuk, dan Mutu Habitat {#sec-biodiversity}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengukur apa yang bisa dikatakan satelit tentang keanekaragaman hayati, yaitu habitat, di sekitar Taman Nasional Bukit Barisan Selatan di Sumatra, rumah harimau, gajah, dan badak. Anda akan membandingkan kehilangan hutan di dalam dan di luar taman nasional, menemukan bahwa hutan inti hilang jauh lebih cepat daripada hutan secara keseluruhan, dan memakai GEDI untuk membandingkan mutu struktur hutan yang tersisa.
+:::
+
+## Habitat, bukan spesies
+
+Satelit tidak melihat harimau. Satelit melihat hutan yang dibutuhkan harimau, dan ada tiga sifat hutan yang penting bagi sebagian besar spesies hutan:
+
+- **Luas**: berapa banyak hutan yang tersisa.
+- **Susunan**: bagaimana hutan itu tertata. Hutan yang terpotong-potong punya lebih banyak *tepi*: cahaya, angin, kekeringan, api, gulma, pemburu, dan jalan masuk lebih jauh. Banyak spesies hutan menghindari tepi, sehingga hutan *inti* yang jauh dari tepi itulah habitat yang benar-benar berarti bagi mereka.
+- **Mutu**: seberapa kompleks hutannya. Hutan yang tinggi dan berlapis-lapis mendukung lebih banyak burung, mamalia, dan serangga daripada tajuk satu lapis (Bab [-@sec-gedi-structure]).
+
+Bab ini mengukur ketiganya. Hutan inti di sini berarti hutan yang berjarak lebih dari 300 m dari tepi bukan hutan mana pun, jarak kerja yang umum dipakai untuk efek tepi di hutan tropis. Analisis membandingkan lahan di dalam batas taman nasional (dari World Database on Protected Areas) dengan lahan di luarnya.
+
+{{< include _snippets/ch53_biodiversity.qmd >}}
+
+## Membaca hasilnya
+
+**Luas hutan.** Di luar taman nasional, hutan berkurang sekitar 12 % antara 2000 dan 2023; di dalamnya, sekitar 3 %. Taman nasional sangat memperlambat pembukaan hutan, meskipun tidak sampai nol.
+
+**Hutan inti, cerita yang sebenarnya.** Di luar taman nasional, hutan inti berkurang sekitar **78 %**, dari sekitar 85.000 ha menjadi 19.000 ha, sementara hutan secara keseluruhan hanya berkurang 12 %. Setiap bukaan, jalan, atau kebun memotong ke bagian dalam dan mengubah inti menjadi tepi. Di dalam taman nasional hutan inti berkurang sekitar 20 %, jauh lebih kecil, tetapi tetap enam sampai tujuh kali lebih cepat daripada hutan secara keseluruhan. Harimau butuh hutan inti: laporan habitat yang hanya menghitung luas hutan menyembunyikan sebagian besar kehilangannya.
+
+**Mutu.** Hutan yang tersisa di dalam taman nasional lebih kompleks strukturnya: median keragaman tinggi dedaunan dari GEDI sekitar 3,1, dibandingkan sekitar 2,7 untuk hutan di luar. Hutan di luar lebih muda, lebih terganggu, atau bercampur dengan kebun.
+
+## Batasan
+
+- **"Hutan" versi Hansen mencakup kebun** dengan tutupan pohon 30 %. Sebagian "hutan" di luar taman nasional adalah karet atau sawit, yang hanya menjadi habitat bagi sedikit sekali spesies hutan.
+- **300 m adalah pilihan.** Efek tepi berbeda menurut spesies dan menurut apa yang ada di balik tepi itu.
+- **Habitat bukan keberadaan satwa.** Hutan bisa kosong dari mamalia besar karena perburuan. Kamera jebak dan survei lapangan tetap menjadi ukuran untuk satwanya.
+
+## Latihan {.unnumbered}
+
+1. Ganti jarak inti menjadi 100 m dan 1 km. Bagaimana kehilangan hutan inti di luar taman nasional berubah?
+2. Petakan blok hutan inti terbesar yang tersambung pada 2000 dan 2023. Apakah intinya sudah terpecah menjadi potongan-potongan terpisah?
+3. Ulangi untuk kawasan lindung lain yang Anda kenal, lalu bandingkan.

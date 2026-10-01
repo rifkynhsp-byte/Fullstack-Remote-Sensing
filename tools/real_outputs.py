@@ -315,7 +315,10 @@ def render_chart(p: dict, out: Path) -> pd.DataFrame:
 
 def live_cell(df: pd.DataFrame, plot_fn) -> str:
     """Python a reader can run in the page: the real data plus the plot function."""
-    small = df.head(LIVE_MAX_ROWS)
+    # A random sample in the original order, not the first rows: head() would
+    # keep only the first group of a grouped table (e.g. one class of two).
+    small = (df.sample(n=LIVE_MAX_ROWS, random_state=0).sort_index()
+             if len(df) > LIVE_MAX_ROWS else df)
     csv = small.to_csv(index=False, float_format="%.5g")
     src = textwrap.dedent(inspect.getsource(plot_fn))
     name = plot_fn.__name__

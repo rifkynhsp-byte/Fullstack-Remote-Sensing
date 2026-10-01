@@ -1,0 +1,38 @@
+# Biodiversity from Space: Habitat Amount, Shape and Quality {#sec-biodiversity}
+
+::: {.chapter-goal}
+#### In this chapter
+You will measure what satellites can say about biodiversity, which is habitat, around Bukit Barisan Selatan National Park in Sumatra, home of tigers, elephants and rhinos. You will compare forest loss inside and outside the park, find that interior forest disappears far faster than forest overall, and use GEDI to compare the structural quality of what remains.
+:::
+
+## Habitat, not species
+
+Satellites do not see tigers. They see the forest tigers need, and three properties of it matter for most forest species:
+
+- **Amount**: how much forest is left.
+- **Configuration**: how it is arranged. A forest cut into small pieces has more *edge*: more light, wind, drying, fire, weeds, hunters and roads reach in. Many forest species avoid edges, so the *core* forest away from edges is the habitat that counts for them.
+- **Quality**: how complex the forest is. Tall, multi-layered forest supports more birds, mammals and insects than a single-layer canopy (Chapter [-@sec-gedi-structure]).
+
+This chapter measures all three. Core forest here means forest more than 300 m from any non-forest edge, a common working distance for edge effects in tropical forest. The analysis compares land inside the national park boundary (from the World Database on Protected Areas) with land outside it.
+
+{{< include _snippets/ch53_biodiversity.qmd >}}
+
+## Reading the results
+
+**Forest amount.** Outside the park, forest fell by about 12 % between 2000 and 2023; inside it, by about 3 %. The park slows clearing a great deal, though not to zero.
+
+**Core forest, the real story.** Outside the park, core forest fell by about **78 %**, from about 85,000 ha to 19,000 ha, while forest overall lost 12 %. Every clearing, road or garden cuts into the interior and turns core into edge. Inside the park core forest fell by about 20 %, much less, but still six to seven times faster than forest overall. A tiger needs core forest: a habitat report that counts only forest area hides most of the loss.
+
+**Quality.** The forest that remains inside the park is structurally more complex: its median foliage height diversity from GEDI is about 3.1, against about 2.7 for forest outside. Outside forest is younger, more disturbed, or mixed with plantations.
+
+## Limits
+
+- **Hansen's "forest" includes plantations** with 30 % tree cover. Some of the "forest" outside the park is rubber or oil palm, which is habitat for very few forest species.
+- **300 m is a choice.** Edge effects differ by species and by what lies beyond the edge.
+- **Habitat is not occupancy.** A forest can be empty of large mammals because of hunting. Camera traps and field surveys remain the measure of animals.
+
+## Exercises {.unnumbered}
+
+1. Change the core distance to 100 m and to 1 km. How does the core-forest loss outside the park change?
+2. Map the largest connected block of core forest in 2000 and 2023. Has the core been split into separate pieces?
+3. Repeat for another protected area you know, and compare.
