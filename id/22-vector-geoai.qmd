@@ -2,66 +2,138 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Alur kerja yang sama, kini pada pertanyaan komersial tanpa satu pun citra di dalamnya. Anda akan membangun permukaan kesesuaian lokasi kedai kopi, menemukan kebocoran data yang menghasilkan model sempurna namun tak berguna, dan menafsirkan hasilnya dengan SHAP.
+Alur kerja yang selama ini Anda jalankan pada citra satelit, kini diterapkan pada pertanyaan komersial tanpa satu pun citra di dalamnya. Anda akan membangun permukaan kesesuaian lokasi untuk membuka kedai kopi, menemukan kebocoran data yang menghasilkan model nyaris sempurna namun tak berguna, dan menafsirkan hasilnya dengan SHAP.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
+## Kenapa bab ini ada di buku penginderaan jauh
+
+Semua yang sampai di sini memakai fitur raster dari satelit. Tetapi perhatikan: tidak ada bagian dari Bab [-@sec-sampling] sampai [-@sec-obia] yang sebenarnya peduli soal itu. Desain sampel, pembagian data latih dan validasi, classifier, matriks konfusi: tidak satu pun tahu atau perlu tahu bahwa angkanya berasal dari sensor yang mengorbit.
+
+Ganti reflektansi dengan jarak ke sekolah terdekat. Ganti piksel dengan heksagon. Ganti poligon ground truth dengan lokasi usaha yang sudah ada. Mesinnya sama persis, dan pertanyaannya menjadi komersial.
+
+Menyadari hal ini lebih berharga daripada masing-masing teknik itu sendiri, dan dalam praktik inilah yang membuat keterampilan ini bisa dibawa ke mana-mana. Orang yang sama yang memetakan mangrove untuk LSM konservasi bisa membangun model pemilihan lokasi untuk jaringan ritel tanpa mempelajari metode baru, cukup ranah yang baru.
+
+## Masalahnya
+
+Lokasi termasuk penentu terkuat apakah sebuah usaha makanan dan minuman bertahan, dan secara tradisional diputuskan dengan intuisi dan berjalan-jalan di sekitar lingkungan. Perbaikan SIG yang lazim adalah analisis keputusan multikriteria, di mana analis memberi bobot pada kriteria berdasarkan penilaian lalu menumpangsusunkannya. Itu lebih baik daripada intuisi, tetapi bobotnya tetap keluar dari kepala seseorang.
+
+Versi GeoAI mempelajari bobot dari apa yang sudah terjadi. Alih-alih menyatakan bahwa kedekatan ke kampus dua kali lebih penting daripada kepadatan penduduk, kita membiarkan model mengamati di mana kedai kopi benar-benar mengelompok dan menurunkan hubungannya, lalu memakai SHAP untuk membaca bobotnya kembali dalam bentuk yang bisa diperdebatkan manusia.
+
+## Membangun fitur
+
+Geometri mentah tidak bisa masuk ke model. Titik, garis, dan poligon harus menjadi angka yang melekat pada satuan analisis yang konsisten, dan ada dua keputusan yang paling menentukan mutu hasilnya.
+
+**Satuannya.** Wilayah administrasi adalah pilihan yang paling jelas sekaligus keliru, karena ukurannya sangat beragam sehingga hitungan apa pun tidak bisa dibandingkan antarwilayah. Grid yang teratur memperbaikinya. Heksagon lebih baik daripada persegi karena dua alasan: setiap tetangga heksagon berjarak sama dari pusatnya, sedangkan tetangga diagonal persegi 1,41 kali lebih jauh, yang mengacaukan penalaran ketetanggaan; dan heksagon tidak punya sumbu istimewa, sehingga tidak memaksakan pola utara-selatan pada kota yang strukturnya membentang diagonal. Sistem H3 dari Uber menyediakan indeks heksagonal hierarkis global, dan resolusi 9, sekitar 175 meter, setara dengan dua menit berjalan kaki.
+
+**Keluarga fitur.** Dua jenis fitur spasial menjawab pertanyaan yang benar-benar berbeda.
+
+*Kedekatan* bertanya seberapa jauh ke yang terdekat. Ini mengukur aksesibilitas.
+
+*Kerapatan* bertanya berapa banyak dalam radius tertentu. Ini mengukur intensitas.
+
+Keduanya dibutuhkan. Satu sekolah berjarak 300 meter dan dua belas sekolah berjarak 300 meter menghasilkan nilai kedekatan yang sama, tetapi arus orang yang sangat berbeda.
+
+Untuk penduduk, skrip ini menjumlahkan raster WorldPop 100 m ke setiap heksagon di Earth Engine, sehingga setiap heksagon punya jumlah penduduknya sendiri, bukan rata-rata kecamatan.
+
+::: {.callout-warning}
+## Kesalahan umum: menghitung jarak dalam derajat
+Setiap operasi jarak harus dijalankan dalam sistem koordinat terproyeksi dengan satuan meter. Kalau GeoDataFrame Anda masih EPSG:4326 ketika memanggil `.distance()`, hasilnya dalam derajat busur, yang berubah menurut lintang dan bukan meter. Kodenya tetap jalan, angkanya tampak masuk akal, dan modelnya dibangun di atas ukuran yang tidak ada. Proyeksikan ulang ke zona UTM yang benar dulu, setiap kali.
 :::
 
-## Rencana bagian
+## Membuat label
 
-1. **Mengapa bab ini ada di buku penginderaan jauh**: mesin yang sama, ranah berbeda
-2. **Grid heksagonal H3 sebagai unit analisis, dan mengapa heksagon mengalahkan kotak**
-3. **Fitur proksimitas dan densitas**: dua pertanyaan yang berbeda
-4. **Menghitung jarak dalam meter, bukan derajat**
-5. **Presence dan pseudo-absence**: memproduksi label ketika tidak ada label
-6. **Kebocoran data**: model dengan akurasi 1,00 dan apa artinya
-7. **SHAP**: bukan hanya fitur mana yang penting, tetapi ke arah mana
-8. **Dari klasifikasi ke skor kontinu yang dapat dipertahankan di hadapan klien**
+Inilah langkah yang paling sulit secara konsep dalam bab ini, dan yang paling sering dilewati tutorial.
+
+Tidak ada dataset lokasi kedai kopi yang bagus. Jadi kita mengasumsikan bahwa tempat yang sudah ada kedai kopinya adalah tempat yang berhasil, dan memberi heksagon itu label 1. Asumsi ini perlu diucapkan dengan jelas, karena ia menyimpan penilaian pasar yang sudah ada, termasuk titik butanya. Lingkungan yang benar-benar belum terlayani tampak seperti lokasi buruk bagi model ini, semata karena belum ada yang membuka usaha di sana.
+
+Sisi ketiadaannya lebih buruk lagi. Heksagon kosong bukan kegagalan yang terbukti. Mungkin belum dicoba, tidak tersedia, atau peruntukannya lain. Ahli ekologi sudah lama menghadapi masalah ini dalam pemodelan sebaran spesies dan menamainya: presence dan pseudo-absence. Penanganan bakunya adalah mengambil sampel acak sel kosong sebanyak sel berpenghuni dan memberinya label 0, sambil ingat bahwa sel itu mewakili lokasi kosong yang biasa, bukan lokasi yang terbukti buruk.
+
+::: {.callout-important}
+## Integritas ilmiah: label adalah asumsi, bukan pengamatan
+Setiap kesimpulan dari model ini mewarisi asumsi di atas. Saat menyajikan hasilnya, katakan itu. Peta kesesuaian yang dibangun dari presence dan pseudo-absence adalah peta tempat-tempat yang mirip dengan tempat yang sudah berhasil, sebuah pernyataan yang berguna dan bisa dipertanggungjawabkan, dan itu bukan pernyataan yang sama dengan di mana usaha baru akan berhasil.
+:::
 
 ## Alur kerja lengkap
 
 {{< include _snippets/ch22_site_selection.qmd >}}
+
+## Model sempurna yang tidak berarti apa-apa
+
+Jalankan model dengan semua fitur dan ia melaporkan akurasi uji 0,975, f1 0,976, dan skor out-of-bag 0,98, pada 100 heksagon yang punya kedai kopi dan 100 yang tidak, dari 1.159 heksagon di Kota Malang. Di buku teks itu keberhasilan. Dalam pekerjaan nyata itu alarm.
+
+Kebocorannya jelas begitu terlihat. Heksagon berlabel 1 berisi kedai kopi. Karena itu jaraknya ke pesaing terdekat mendekati nol *akibat cara labelnya dibuat*. Model tidak belajar apa yang membuat lokasi bagus. Model belajar mengenali heksagon yang berisi kedai kopi, yaitu labelnya sendiri yang dinyatakan ulang sebagai fitur.
+
+Buang satu variabel itu dan nilainya turun: akurasi uji 0,875, out-of-bag 0,79. Lebih rendah, dan merupakan angka nyata tentang hubungan yang nyata. (Dengan hanya 40 heksagon uji, akurasi uji itu sendiri tidak pasti sampai beberapa poin; skor out-of-bag, yang dihitung pada setiap heksagon latih, adalah yang lebih stabil dari keduanya.)
+
+::: {.callout-tip}
+## Dari lapangan
+Perlakukan setiap classifier yang melaporkan akurasi nyaris sempurna sebagai bersalah sampai terbukti tidak. Tanyakan, untuk setiap fitur, apakah fitur itu bisa diamati sebelum labelnya ada. Kalau tidak, fitur itu bocor. Satu refleks ini menangkap lebih banyak model buruk daripada validasi silang sebanyak apa pun, dan berlaku sama persis di penginderaan jauh: classifier mangrove yang dilatih dengan feature stack yang memuat peta sebaran mangrove yang sudah ada akan melaporkan akurasi luar biasa tanpa mempelajari apa pun.
+:::
+
+Perhatikan fitur pesaing mana yang bertahan. Jarak ke pesaing terdekat bocor; jumlah pesaing dalam 500 meter tidak, karena ia menggambarkan lingkungannya, bukan sel itu sendiri. Memahami kenapa yang satu bocor dan yang lain tidak adalah inti latihan ini.
+
+## Membaca model dengan SHAP
+
+Kepentingan fitur Random Forest memberi tahu variabel mana yang dipakai model. Ia tidak memberi tahu arahnya, padahal untuk keputusan bisnis arah itulah seluruh nilainya.
+
+SHAP menguraikan setiap prediksi menjadi sumbangan per fitur, sehingga Anda tahu bukan hanya bahwa kerapatan pesaing penting, tetapi juga bahwa makin banyak pesaing mendorong prediksi naik. Di Malang, jumlah kedai kopi dalam 500 m memikul hampir separuh bobot model (46 %), jauh di depan fitur lain.
+
+Temuan terakhir itulah yang menarik secara komersial, dan bertentangan dengan intuisi. Pengelompokan justru menarik, bukan menolak: jalan yang dikenal sebagai tempat ngopi mendatangkan orang yang mencari kopi, dan efek aglomerasi mengalahkan efek persaingan pada skala ini.
+
+Efek lainnya lebih kecil dan sebagian besar sesuai dugaan. Makin banyak penduduk di heksagon (WorldPop) menaikkan skor; jauh dari jalan utama menurunkannya; makin banyak objek wisata di sekitar menaikkannya, dan jauh darinya menurunkannya. Satu efek bertentangan dengan intuisi: makin *jauh* dari sekolah terdekat, skornya sedikit naik. Sekolah di Malang tersebar di lingkungan permukiman, sementara kedai kopi mengelompok di jalan-jalan komersial dan sekitar kampus, sehingga "dekat sekolah" sebagian berarti "di jalan permukiman yang sepi". Itu penjelasan yang masuk akal, bukan temuan: model menghasilkan hipotesis, dan hipotesis itu perlu diuji sebelum ada yang bertindak. (Draf awal bab ini, yang ditulis sebelum skripnya dijalankan di sini, menyebut wisata menurunkan skor. Hasil sebenarnya berkata sebaliknya; selalu percayai keluaran, bukan draf.)
+
+## Dari klasifikasi menjadi skor
+
+Classifier menjawab pertanyaan biner tentang 200 sel berlabel. Bisnis membutuhkan peringkat berkelanjutan untuk seluruh 1.159 sel.
+
+Anda bisa langsung memprediksi probabilitas kelas. Bab ini memakai bobot SHAP untuk membangun jumlah berbobot yang eksplisit, karena satu alasan praktis: klien bisa melihat persis kenapa sebuah sel mendapat skornya, dan bisa mengubah bobot yang tidak ia setujui berdasarkan pertimbangan bisnis yang ia punya dan Anda tidak. Model yang bisa ditafsirkan dan benar-benar dipakai pengambil keputusan mengalahkan model yang sedikit lebih baik tetapi tidak dipakai.
+
+Dua hal teknis penting dalam perhitungan itu. Fitur harus dinormalisasi ke skala 0 sampai 1 sebelum diberi bobot, kalau tidak variabel yang diukur dalam ribuan orang akan mendominasi variabel berupa hitungan. Dan fitur yang efeknya negatif harus dibalik, sehingga nilai ternormalisasi yang tinggi selalu berarti "lebih baik". Skrip mengambil arah ini dari SHAP, bukan dari asumsi: jarak ke jalan dan ke wisata dibalik, jarak ke sekolah tidak, karena model menemukan sebaliknya. Arah yang salah menghasilkan peta yang tampak sepenuhnya masuk akal dan merekomendasikan tepat lokasi yang salah.
+
+## Yang bukan merupakan arti skor ini
+
+Skor ini adalah peringkat lokasi yang terstruktur, bisa diulang, dan bisa ditafsirkan berdasarkan ciri yang terukur, dan merupakan kemajuan besar dibanding berjalan-jalan lalu membentuk kesan.
+
+Skor ini bukan prediksi keuntungan. Di dalamnya tidak ada harga sewa, ketersediaan tempat, parkir, aturan setempat, mutu pesaing, dan pengetahuan tentang siapa yang benar-benar lewat di jalan mana pada pukul delapan pagi. Sel dengan skor tertinggi bisa saja sebuah pemakaman.
+
+Pakai skor ini untuk menyaring seribu kandidat lokasi menjadi sepuluh. Lalu kirim seseorang untuk berdiri di sudut jalan itu selama satu jam. Model mempersempit pencarian; model tidak membuat keputusan.
 
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch22-leakage",
   "questions": [
     {
-      "q": "Model melaporkan presisi, recall, dan f1 bernilai 1,00. Apa reaksi pertama yang benar?",
+      "q": "Dengan semua fitur, model melaporkan nilai nyaris sempurna 0,98. Apa reaksi pertama yang benar?",
       "options": [
-        "Terbitkan, berarti fiturnya dipilih dengan baik",
-        "Anggap ada fitur yang membocorkan labelnya lalu cari fitur itu",
-        "Tambah jumlah pohonnya untuk memastikan kestabilan",
+        "Terbitkan, fiturnya dipilih dengan baik",
+        "Anggap ada fitur yang membocorkan label dan cari fitur itu",
+        "Tambah jumlah pohon untuk memastikan kestabilan",
         "Kumpulkan lebih banyak data latih"
       ],
       "answer": 1,
-      "why": "Di luar buku teks, akurasi sempurna berarti ada prediktor yang menyandikan jawabannya. Perlakukan setiap classifier yang hampir sempurna sebagai bersalah sampai terbukti tidak."
+      "why": "Di luar buku teks, akurasi nyaris sempurna berarti ada prediktor yang menyimpan jawabannya. Perlakukan setiap classifier yang nyaris sempurna sebagai bersalah sampai terbukti tidak."
     },
     {
-      "q": "Jarak ke pesaing terdekat membocorkan label, tetapi jumlah pesaing dalam radius 500 m tidak. Kenapa?",
+      "q": "Jarak ke pesaing terdekat bocor, tetapi jumlah pesaing dalam 500 m tidak. Kenapa?",
       "options": [
         "Hitungan selalu lebih aman daripada jarak",
-        "Sel berlabel ada berisi sebuah kafe, sehingga jaraknya ke kafe terdekat mendekati nol secara konstruksi; hitungannya justru menggambarkan lingkungannya",
-        "Hitungan punya varians lebih rendah",
-        "Fitur jaraknya diukur dalam derajat"
+        "Sel berlabel 1 berisi kedai kopi, sehingga jaraknya ke kedai kopi terdekat mendekati nol akibat cara labelnya dibuat; hitungan menggambarkan lingkungannya",
+        "Hitungan punya varians lebih kecil",
+        "Fitur jarak diukur dalam derajat"
       ],
       "answer": 1,
       "why": "Ujinya adalah apakah sebuah fitur bisa diamati sebelum labelnya ada. Memahami kenapa yang satu bocor dan yang lain tidak adalah inti latihan ini."
     },
     {
-      "q": "Apa yang sebenarnya diasumsikan pendekatan presence dan pseudo absence?",
+      "q": "Apa yang sebenarnya diasumsikan pendekatan presence dan pseudo-absence?",
       "options": [
-        "Bahwa setiap sel kosong adalah lokasi buruk yang sudah terbukti",
-        "Bahwa sel tempat sebuah usaha sudah berdagang adalah lokasi yang berhasil, dan sel kosong acak mewakili sel tak terpakai yang tipikal",
-        "Bahwa pasarnya efisien sempurna",
+        "Bahwa setiap sel kosong adalah lokasi yang terbukti buruk",
+        "Bahwa sel tempat usaha sudah berjalan adalah lokasi yang berhasil, dan sel kosong acak mewakili lokasi kosong yang biasa",
+        "Bahwa pasar sepenuhnya efisien",
         "Bahwa kepadatan penduduk memprediksi keberhasilan"
       ],
       "answer": 1,
-      "why": "Setiap kesimpulan mewarisi asumsi ini, termasuk titik butanya: lingkungan yang benar benar kurang terlayani terlihat seperti lokasi buruk hanya karena belum ada yang membuka di sana."
+      "why": "Setiap kesimpulan mewarisi asumsi ini, termasuk titik butanya: lingkungan yang benar-benar belum terlayani tampak seperti lokasi buruk karena belum ada yang membuka usaha di sana."
     }
   ]
 }
@@ -69,4 +141,8 @@ ditulis; rencana bagian menunjukkan apa yang akan datang.
 
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Jalankan ulang dengan resolusi H3 8 dan jelaskan apa yang terjadi pada efek aglomerasi, dan kenapa.
+2. Definisikan ulang pseudo-absence sebagai sel yang berjarak lebih dari satu kilometer dari kedai kopi mana pun. Berargumenlah untuk atau melawan definisi itu dibanding sampel acak.
+3. Tambahkan satu fitur buatan Anda sendiri dan pakai SHAP untuk memutuskan apakah fitur itu layak dipertahankan.
+4. Ambil sepuluh sel dengan skor tertinggi dan periksa masing-masing di citra tingkat jalan. Hitung berapa yang masuk akal. Hitungan itulah akurasi Anda yang sebenarnya.
+5. Petakan alur kerja bab ini ke Bab [-@sec-supervised] baris demi baris. Tuliskan langkah mana di satu bab yang sesuai dengan langkah mana di bab lainnya.

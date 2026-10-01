@@ -1,0 +1,33 @@
+[
+ {
+  "name": "ch22-leakage",
+  "kind": "table",
+  "caption": "The leakage trap: the same Random Forest with and without the distance to the nearest cafe.",
+  "markdown": "| model                                            |   oob |   test_accuracy |   test_f1 |   hexagons |   presence_hexagons |\n|:-------------------------------------------------|------:|----------------:|----------:|-----------:|--------------------:|\n| all features (includes distance to nearest cafe) | 0.981 |           0.975 |     0.976 |       1159 |                 100 |\n| without distance to nearest cafe                 | 0.794 |           0.875 |     0.889 |       1159 |                 100 |"
+ },
+ {
+  "name": "ch22-shap",
+  "kind": "chart",
+  "caption": "SHAP weights of the honest model, coloured by the direction of each feature's effect.",
+  "image": "images/real/ch22-shap.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"feature,mean_abs_shap,direction,corr_value_shap,weight\nn_cafe_500m,0.20165,higher value -> more suitable,0.70562,0.46383\ndist_tourism,0.054395,higher value -> less suitable,-0.76815,0.12512\npopulation,0.049291,higher value -> more suitable,0.73283,0.11338\nn_tourism_500m,0.04487,higher value -> more suitable,0.62098,0.10321\ndist_road,0.028699,higher value -> less suitable,-0.64594,0.066011\nn_education_500m,0.028488,higher value -> more suitable,0.49105,0.065526\ndist_education,0.027359,higher value -> more suitable,0.35196,0.06293\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_shap(df):\n    fig, ax = plt.subplots(figsize=(6.8, 3.4))\n    cols = [\"#1a9850\" if r > 0.1 else \"#d73027\" if r < -0.1 else \"#9aa5b1\"\n            for r in df.corr_value_shap]\n    ax.barh(df.feature[::-1], df.weight[::-1], color=cols[::-1])\n    ax.set_xlabel(\"Weight (share of mean |SHAP|)\")\n    ax.set_title(\"What the model used (green: more is better; red: less is better)\",\n                 loc=\"left\", fontsize=9)\n    return fig\n\nplot_shap(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch22-shap-table",
+  "kind": "table",
+  "caption": "Mean |SHAP| per feature, its direction, and the weight used in the score.",
+  "markdown": "| feature          |   mean_abs_shap | direction                     |   corr_value_shap |   weight |\n|:-----------------|----------------:|:------------------------------|------------------:|---------:|\n| n_cafe_500m      |          0.2017 | higher value -> more suitable |              0.71 |    46.4% |\n| dist_tourism     |          0.0544 | higher value -> less suitable |             -0.77 |    12.5% |\n| population       |          0.0493 | higher value -> more suitable |              0.73 |    11.3% |\n| n_tourism_500m   |          0.0449 | higher value -> more suitable |              0.62 |    10.3% |\n| dist_road        |          0.0287 | higher value -> less suitable |             -0.65 |     6.6% |\n| n_education_500m |          0.0285 | higher value -> more suitable |              0.49 |     6.6% |\n| dist_education   |          0.0274 | higher value -> more suitable |              0.35 |     6.3% |"
+ },
+ {
+  "name": "ch22-score",
+  "kind": "figure",
+  "caption": "Suitability score per H3 hexagon (resolution 9) from the SHAP-weighted features. Outlined hexagons already have a cafe in OpenStreetMap.",
+  "image": "images/real/ch22-score.png"
+ },
+ {
+  "name": "ch22-top",
+  "kind": "table",
+  "caption": "The ten highest-scoring hexagons without a cafe today: a shortlist to visit, not a decision.",
+  "markdown": "|   rank |   score |      lat |       lon |   people_in_hexagon |   cafes_within_500m |\n|-------:|--------:|---------:|----------:|--------------------:|--------------------:|\n|    1.0 |   0.804 | -7.98171 | 112.62893 |               1,449 |                  13 |\n|    2.0 |   0.661 | -7.97764 | 112.62487 |               1,444 |                  10 |\n|    3.0 |   0.657 | -7.97738 | 112.61687 |               1,234 |                  12 |\n|    4.0 |   0.616 | -7.93445 | 112.62808 |                 837 |                  11 |\n|    5.0 |   0.598 | -7.97295 | 112.63177 |               1,453 |                   7 |\n|    6.0 |   0.589 | -7.97995 | 112.63489 |               1,491 |                   5 |\n|    7.0 |   0.589 | -7.93649 | 112.63011 |                 944 |                  10 |\n|    8.0 |   0.587 | -7.94260 | 112.63622 |               1,301 |                   9 |\n|    9.0 |   0.582 | -7.93852 | 112.63215 |               1,133 |                  10 |\n|   10.0 |   0.577 | -7.96950 | 112.61673 |               1,398 |                   9 |"
+ }
+]
