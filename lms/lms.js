@@ -408,9 +408,13 @@
   /* ---------------------------------------------------------------------- */
 
   function renderAccountBar() {
-    var host = document.querySelector('.navbar .navbar-nav.ms-auto') ||
-               document.querySelector('#quarto-header nav') ||
-               document.body;
+    // Only on the progress dashboard: the header stays one clean row
+    // (title, language, install) on every chapter page.
+    var dash = document.getElementById('lms-dashboard');
+    if (!dash) return;
+    var host = document.createElement('div');
+    host.className = 'lms-account-host';
+    dash.parentNode.insertBefore(host, dash);
 
     var wrap = el('div', { class: 'lms-account' });
 

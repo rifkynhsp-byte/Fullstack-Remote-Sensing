@@ -30,6 +30,8 @@
   var T = {
     en: {
       install: 'Install as an app',
+      installShort: 'Install',
+      otherLang: 'ID', otherLangTitle: 'Baca dalam Bahasa Indonesia',
       installed: 'Installed. It opens from your home screen now.',
       iosHint: 'On iPhone and iPad: Share, then Add to Home Screen.',
       offline: 'You are offline. Chapters you have already opened still work.',
@@ -39,6 +41,8 @@
     },
     id: {
       install: 'Pasang sebagai aplikasi',
+      installShort: 'Pasang',
+      otherLang: 'EN', otherLangTitle: 'Read in English',
       installed: 'Terpasang. Sekarang bisa dibuka dari layar utama Anda.',
       iosHint: 'Di iPhone dan iPad: Bagikan, lalu Tambahkan ke Layar Utama.',
       offline: 'Anda sedang luring. Bab yang sudah pernah dibuka tetap bisa dibaca.',
@@ -151,19 +155,49 @@
   /* 2. Installation                                                     */
   /* ------------------------------------------------------------------ */
 
+  /* One small group of buttons right after the book title, outside the
+     collapsible menu, so the header stays a single row on a phone:
+     [title] [ID|EN] [Install]. */
+  function headerTools() {
+    var tools = document.getElementById('book-tools');
+    if (tools) return tools;
+    var brand = document.querySelector('#quarto-header .navbar-brand-container') ||
+                document.querySelector('#quarto-header .navbar-brand');
+    if (!brand) return null;
+    tools = document.createElement('div');
+    tools.id = 'book-tools';
+    tools.className = 'book-tools';
+    brand.insertAdjacentElement('afterend', tools);
+
+    // Language: the same page in the other edition (both use the same file names).
+    var path = location.pathname;
+    var other = path.indexOf('/id/') > -1 ? path.replace('/id/', '/en/')
+              : path.indexOf('/en/') > -1 ? path.replace('/en/', '/id/') : null;
+    if (other) {
+      var a = document.createElement('a');
+      a.className = 'book-tool book-lang';
+      a.href = other + location.hash;
+      a.textContent = T.otherLang;
+      a.title = T.otherLangTitle;
+      a.setAttribute('aria-label', T.otherLangTitle);
+      tools.appendChild(a);
+    }
+    return tools;
+  }
+
   function wireInstall() {
     var slot = document.getElementById('lms-install');
-    // Inside the book there is no slot in the page body: put one in the top
-    // bar, next to the language switch, so the offer is on every page.
+    // Inside the book there is no slot in the page body: put a compact one in
+    // the header tools, next to the language button, so it is on every page.
     if (!slot) {
-      var nav = document.querySelector('#quarto-header .navbar-nav.ms-auto') ||
-                document.querySelector('#quarto-header .navbar-nav');
-      slot = document.createElement(nav ? 'li' : 'div');
+      var tools = headerTools();
+      slot = document.createElement('span');
       slot.id = 'lms-install';
-      slot.className = nav ? 'nav-item lms-install-nav' : 'lms-install-float';
+      slot.className = tools ? 'book-install' : 'lms-install-float';
       slot.hidden = true;
-      (nav || document.body).appendChild(slot);
+      (tools || document.body).appendChild(slot);
     }
+    var compact = slot.className === 'book-install';
     // Remember the edition the reader chose, so the site root opens it next time.
     try {
       var here = location.pathname.indexOf('/id/') > -1 ? 'id' : 'en';
@@ -191,9 +225,10 @@
       slot.innerHTML = '';
 
       var btn = document.createElement('button');
-      btn.className = 'lms-install-btn';
+      btn.className = compact ? 'book-tool' : 'lms-install-btn';
       btn.type = 'button';
-      btn.textContent = T.install;
+      btn.textContent = compact ? T.installShort : T.install;
+      btn.title = T.install;
       btn.addEventListener('click', function () {
         if (!prompt) return;
         prompt.prompt();
@@ -216,8 +251,20 @@
               (/Mac/.test(navigator.platform || '') && navigator.maxTouchPoints > 1);
     if (slot && iOS) {
       slot.hidden = false;
-      slot.innerHTML = '<span class="lms-install-hint"></span>';
-      slot.querySelector('.lms-install-hint').textContent = T.iosHint;
+      if (compact) {
+        // No room for a sentence in the header: the button shows the hint.
+        slot.innerHTML = '';
+        var hint = document.createElement('button');
+        hint.className = 'book-tool';
+        hint.type = 'button';
+        hint.textContent = T.installShort;
+        hint.title = T.iosHint;
+        hint.addEventListener('click', function () { notice(T.iosHint); });
+        slot.appendChild(hint);
+      } else {
+        slot.innerHTML = '<span class="lms-install-hint"></span>';
+        slot.querySelector('.lms-install-hint').textContent = T.iosHint;
+      }
     }
   }
 

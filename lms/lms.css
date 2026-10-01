@@ -1228,3 +1228,20 @@ body.quarto-dark .lms-appbar { background: #262c33; }
   border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
 .lms-install-nav .lms-install-hint { font-size: .75rem; max-width: 14rem; line-height: 1.2; }
 .lms-install-float { position: fixed; right: 1rem; bottom: 1rem; z-index: 1000; }
+
+/* Header tools: [title] [ID|EN] [Install] in one row, outside the collapsible
+   menu, so a phone never shows a second navigation panel. */
+.book-tools { display: inline-flex; align-items: center; gap: .35rem; margin-left: .5rem;
+  flex-shrink: 0; }
+.book-tool { display: inline-flex; align-items: center; justify-content: center;
+  height: 1.75rem; padding: 0 .6rem; font-size: .8rem; font-weight: 600; line-height: 1;
+  color: #fff; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 999px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.book-tool:hover, .book-tool:focus-visible { background: rgba(255, 255, 255, .25); color: #fff; }
+.book-install[hidden] { display: none !important; }
+.lms-account-host { display: flex; justify-content: flex-end; margin: 0 0 1rem; }
+@media (max-width: 575.98px) {
+  /* Long titles wrap instead of pushing the buttons off screen. */
+  #quarto-header .navbar-title { white-space: normal; font-size: 1.05rem; line-height: 1.2; }
+  .book-tools { margin-left: .25rem; }
+}

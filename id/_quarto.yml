@@ -43,9 +43,7 @@ book:
   page-navigation: true
   favicon: favicon.svg
   navbar:
-    right:
-      - text: "English"
-        href: ../en/index.html
+    collapse: false
   sidebar:
     style: docked
     collapse-level: 1

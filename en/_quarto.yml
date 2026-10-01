@@ -43,9 +43,7 @@ book:
   page-navigation: true
   favicon: favicon.svg
   navbar:
-    right:
-      - text: "Bahasa Indonesia"
-        href: ../id/index.html
+    collapse: false
   sidebar:
     style: docked
     collapse-level: 1
