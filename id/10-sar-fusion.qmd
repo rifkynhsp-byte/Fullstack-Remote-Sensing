@@ -7,7 +7,7 @@ Anda akan menambahkan sensor yang sepenuhnya mengabaikan awan, memahami apa yang
 
 ## Sensor yang tidak memerlukan matahari
 
-Semua isi Bab 8 dan 9 bergantung pada sinar matahari yang dipantulkan. Itu membuat sensor optik buta pada malam hari dan buta menembus awan, dan Bab 9 menghabiskan seluruh isinya untuk menyiasati keterbatasan kedua.
+Semua isi Bab [-@sec-optical] dan [-@sec-cloud] bergantung pada sinar matahari yang dipantulkan. Itu membuat sensor optik buta pada malam hari dan buta menembus awan, dan Bab [-@sec-cloud] menghabiskan seluruh isinya untuk menyiasati keterbatasan kedua.
 
 Radar menghapus keterbatasan itu, bukan menyiasatinya. Sentinel-1 memancarkan pulsa gelombang mikronya sendiri lalu mengukur apa yang kembali. Gelombang mikro pada panjang gelombang ini menembus awan tanpa kehilangan yang berarti, sehingga perekaman Sentinel-1 di atas Delta Mahakam pada bulan Februari sama layak pakainya dengan perekaman di bulan Agustus.
 
@@ -44,7 +44,7 @@ Sentinel-1 adalah **C band**, sekitar 5,6 sentimeter. Gelombang itu berinteraksi
 
 ALOS PALSAR adalah **L band**, sekitar 23 sentimeter. Gelombang yang lebih panjang menembus dedaunan dan berinteraksi dengan batang serta cabang besar. L band menjangkau lebih dalam, berkorelasi lebih baik dengan total biomassa di atas permukaan, dan lebih tahan jenuh pada hutan rapat.
 
-Untuk mangrove implikasinya langsung. C band melaporkan kondisi tajuk; L band melaporkan struktur dan biomassa. Bab 20 memerlukan yang kedua ketika peta diubah menjadi angka karbon.
+Untuk mangrove implikasinya langsung. C band melaporkan kondisi tajuk; L band melaporkan struktur dan biomassa. Bab [-@sec-regression] memerlukan yang kedua ketika peta diubah menjadi angka karbon.
 
 ## Speckle, dan mengapa ia bukan derau dalam pengertian biasa
 
@@ -72,7 +72,7 @@ Sentinel-1 melintas pada orbit ascending dan descending, memandang medan yang sa
 
 ## Alur kerja lengkap
 
-Skrip di bawah adalah yang menjadi tumpuan semua bab berikutnya. Ia ditulis sebagai `getAnalysisReadyData(year)` dan bukan sebagai skrip linear, dan satu perubahan itulah yang mengubah peta sekali jadi menjadi sistem pemantauan: Bab 21 memanggilnya dalam perulangan untuk membangun deret waktu, Bab 16 memanggilnya sekali untuk melatih classifier, dan keduanya tidak perlu tahu cara kerjanya.
+Skrip di bawah adalah yang menjadi tumpuan semua bab berikutnya. Ia ditulis sebagai `getAnalysisReadyData(year)` dan bukan sebagai skrip linear, dan satu perubahan itulah yang mengubah peta sekali jadi menjadi sistem pemantauan: Bab [-@sec-timeseries] memanggilnya dalam perulangan untuk membangun deret waktu, Bab [-@sec-supervised] memanggilnya sekali untuk melatih classifier, dan keduanya tidak perlu tahu cara kerjanya.
 
 {{< include _snippets/ch10_multisensor_stack.qmd >}}
 
@@ -101,7 +101,7 @@ Untuk pemetaan mangrove jelas iya. Kekeliruan yang membatasi akurasi adalah deng
 
 Untuk peta hutan dan bukan hutan yang kasar, biasanya tidak. Data optik sudah memisahkan kelas itu dengan bersih, dan band radar hanya menambah komputasi, beban pemeliharaan, dan satu mode kegagalan lagi demi mungkin setengah poin akurasi.
 
-Uji dari Bab 3 tetap berlaku: jalankan klasifikasi hanya dengan optik, baca confusion matrix-nya, kenali pasangan kelas mana yang gagal, lalu tambahkan satu sumber data yang menangani pasangan itu. Menambahkan semuanya sekaligus lalu mendapati akurasi naik tiga poin tidak mengajarkan apa pun tentang sebabnya.
+Uji dari Bab [-@sec-sensors] tetap berlaku: jalankan klasifikasi hanya dengan optik, baca confusion matrix-nya, kenali pasangan kelas mana yang gagal, lalu tambahkan satu sumber data yang menangani pasangan itu. Menambahkan semuanya sekaligus lalu mendapati akurasi naik tiga poin tidak mengajarkan apa pun tentang sebabnya.
 
 <script type="application/json" class="lms-quiz">
 {

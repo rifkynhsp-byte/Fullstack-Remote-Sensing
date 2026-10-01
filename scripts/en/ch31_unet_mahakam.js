@@ -54,7 +54,7 @@ var stack = composite.addBands(label).toFloat();
 // ===========================================================================
 // Tiles 1.28 km wide, 0.03 degrees (about 3.3 km) apart, so no two touch.
 // Neighbouring pixels look alike; if training and test pixels touched,
-// the test score would flatter the model (Chapter 15).
+// the test score would flatter the model (chapter “Ground Truth and Sampling Design”).
 var tiles = [];
 for (var x = 117.15; x < 117.75 - TILE; x += 0.03) {
   for (var y = -0.30; y > -1.00 + TILE; y -= 0.03) {

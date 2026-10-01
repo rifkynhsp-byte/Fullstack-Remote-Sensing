@@ -1,11 +1,11 @@
 //| title: Low shot mapping with satellite embeddings
-//| description: The same map as Chapter 16, from 20 points per class and no feature engineering.
+//| description: The same map as chapter “Classical Supervised Learning”, from 20 points per class and no feature engineering.
 
 /**
  * CHAPTER 19 | The GeoAI shortcut, and its price
  * ---------------------------------------------------------------------------
  * Goal
- *   Produce a land cover map comparable to Chapter 16 using Google's annual
+ *   Produce a land cover map comparable to chapter “Classical Supervised Learning” using Google's annual
  *   satellite embeddings, with roughly 20 training points per class, no cloud
  *   masking, no compositing and no feature engineering.
  *
@@ -18,7 +18,7 @@
  *   organised so that semantically similar places sit near each other.
  *
  * Why this changes the workload
- *   Chapter 10 spent 180 lines assembling optical, radar, terrain and texture
+ *   chapter “Synthetic Aperture Radar Fusion” spent 180 lines assembling optical, radar, terrain and texture
  *   into a stack. The embedding already encodes all of that context, because
  *   the model saw all of those sensors during training. The stack below is
  *   one line.
@@ -57,7 +57,7 @@ print('Embedding bands:', embeddings.bandNames());
 // ===========================================================================
 // PART 2. Train on very little
 // ===========================================================================
-// The same split discipline as Chapter 16 applies. Small sample sizes make
+// The same split discipline as chapter “Classical Supervised Learning” applies. Small sample sizes make
 // the split matter more, not less: with 20 points per class, a leak between
 // training and validation is proportionally far more damaging.
 // No labelled points yet? Twenty per class from ESA WorldCover 2021, which
@@ -184,7 +184,7 @@ Map.addLayer(classified, {min: 0, max: 4, palette: lulcPalette},
 // ---------------------------------------------------------------------------
 // Annual granularity. One vector per year. This cannot answer a question
 // about a single storm, a single harvest, or the month a clearing happened.
-// For those, Chapter 21 and the optical time series remain the only route.
+// For those, chapter “Time Series and Change Detection” and the optical time series remain the only route.
 //
 // Opacity. When a boundary looks wrong there is no band to inspect and no
 // physical reasoning to apply, because A37 does not mean anything you can
@@ -200,7 +200,7 @@ Map.addLayer(classified, {min: 0, max: 4, palette: lulcPalette},
 // ---------------------------------------------------------------------------
 // Exercise
 // ---------------------------------------------------------------------------
-// 1. Run this over the same area as Chapter 16 and put the two classifications
+// 1. Run this over the same area as chapter “Classical Supervised Learning” and put the two classifications
 //    side by side. Find three places where they disagree and use high
 //    resolution basemap imagery to decide which one is right.
 // 2. Cut the training points to 10 per class, then 5. Plot accuracy against

@@ -60,7 +60,7 @@ this chapter is still being written; the section plan shows what is coming.
         "It cannot be combined with other data"
       ],
       "answer": 1,
-      "why": "Annual granularity puts an entire class of question out of reach. A single event needs a time series, which is Chapter 21, and this is precisely why the older approach is still taught here rather than replaced."
+      "why": "Annual granularity puts an entire class of question out of reach. A single event needs a time series, which is Chapter [-@sec-timeseries], and this is precisely why the older approach is still taught here rather than replaced."
     }
   ]
 }

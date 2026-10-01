@@ -21,15 +21,15 @@ The embeddings explain about a third of the variation in GEDI biomass, and the e
 
 | # | Question | Why it is open | First experiment | Python needed for |
 |---|---|---|---|---|
-| 1 | How few labels does a province-scale land cover map need with embeddings? | Chapter 19 reached 0.83 agreement with 20 points per class on one delta; nobody has shown how that holds across Indonesian landscapes | repeat the learning curve in five provinces | learning curves, uncertainty |
-| 2 | Can embeddings detect smallholder deforestation that global loss maps miss? | Chapter 26 showed global maps confuse rubber replanting with forest loss | compare year-to-year embedding distance with Hansen loss [@hansen2013gfc] on known farms | change metrics, labels |
+| 1 | How few labels does a province-scale land cover map need with embeddings? | Chapter [-@sec-embeddings] reached 0.83 agreement with 20 points per class on one delta; nobody has shown how that holds across Indonesian landscapes | repeat the learning curve in five provinces | learning curves, uncertainty |
+| 2 | Can embeddings detect smallholder deforestation that global loss maps miss? | Chapter [-@sec-eudr] showed global maps confuse rubber replanting with forest loss | compare year-to-year embedding distance with Hansen loss [@hansen2013gfc] on known farms | change metrics, labels |
 | 3 | Do embeddings carry information about structure, not just cover? | the starter above: R² about 0.35 for GEDI biomass | add GEDI height (RH98) and test by block | model comparison, SHAP |
 
 ## Biomass and carbon
 
 | # | Question | Why it is open | First experiment | Python needed for |
 |---|---|---|---|---|
-| 4 | How much of mangrove biomass error is date and position mismatch? | Chapter 20: R² near 0 because 2020 predictors met plots with no survey dates [@murdiyarso2019swampbintuni] | re-match plots to imagery of their survey year | per-plot time matching |
+| 4 | How much of mangrove biomass error is date and position mismatch? | Chapter [-@sec-regression]: R² near 0 because 2020 predictors met plots with no survey dates [@murdiyarso2019swampbintuni] | re-match plots to imagery of their survey year | per-plot time matching |
 | 5 | Can biomass maps carry an honest uncertainty? | validation of global biomass products is still inconsistent [@duncanson2019validation] | quantile or conformal intervals, checked by block | the whole method |
 | 6 | Which allometry, and how wrong is the choice? | pantropical equations [@chave2014allometric] versus local ones for Indonesian mangrove and peat forest | propagate allometry choice through a map | Monte Carlo |
 
@@ -46,16 +46,16 @@ The embeddings explain about a third of the variation in GEDI biomass, and the e
 | # | Question | Why it is open | First experiment | Python needed for |
 |---|---|---|---|---|
 | 10 | Can a landslide model trained on one earthquake map the next? | multi-event inventories exist [@ferrario2019lombok; @xu2024caslandslide]; transfer between events is rarely tested | train on Lombok 2018, test on Palu or Cianjur | patch models, transfer |
-| 11 | How big is the exposure error from missing building footprints? | Chapter 24: two footprint layers differed a hundredfold in one district | compare footprint layers in 20 districts | spatial joins at scale |
+| 11 | How big is the exposure error from missing building footprints? | Chapter [-@sec-flood]: two footprint layers differed a hundredfold in one district | compare footprint layers in 20 districts | spatial joins at scale |
 | 12 | Can radar coherence warn of slope failure? | coherence needs SLC phase, which Earth Engine does not hold | coherence time series before known landslides | InSAR processing |
 
 ## Methods that change every result above
 
 | # | Question | Why it is open | First experiment | Python needed for |
 |---|---|---|---|---|
-| 13 | How much do published Indonesian accuracies drop under spatial validation? | random splits flatter models [@ploton2020spatial; @roberts2017cv]; Chapter 15 found folds scoring up to 0.35 below a random split | re-run ten published workflows with block CV | reproducible harness |
-| 14 | Where is a model allowed to predict? | area of applicability [@meyer2021aoa] is almost never mapped next to a result | add an applicability mask to Chapter 16's map | distance in feature space |
-| 15 | Are LST trends in the tropics real or orbital? | Chapter 30 found broad "cooling" that may come from Terra's drifting overpass | compare Terra, Aqua and Landsat trends | cross-sensor harmonisation |
+| 13 | How much do published Indonesian accuracies drop under spatial validation? | random splits flatter models [@ploton2020spatial; @roberts2017cv]; Chapter [-@sec-sampling] found folds scoring up to 0.35 below a random split | re-run ten published workflows with block CV | reproducible harness |
+| 14 | Where is a model allowed to predict? | area of applicability [@meyer2021aoa] is almost never mapped next to a result | add an applicability mask to Chapter [-@sec-supervised]'s map | distance in feature space |
+| 15 | Are LST trends in the tropics real or orbital? | Chapter [-@sec-statistics] found broad "cooling" that may come from Terra's drifting overpass | compare Terra, Aqua and Landsat trends | cross-sensor harmonisation |
 
 ::: {.callout-important}
 ## Before you commit to a topic

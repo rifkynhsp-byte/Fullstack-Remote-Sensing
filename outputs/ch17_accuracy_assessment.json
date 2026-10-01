@@ -8,7 +8,7 @@
  {
   "name": "ch17-per-class",
   "kind": "chart",
-  "caption": "Producer and user accuracy per class, random forest from Chapter 16.",
+  "caption": "Producer and user accuracy per class, random forest from chapter “Classical Supervised Learning”.",
   "image": "images/real/ch17-per-class.png",
   "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"class,producer_pct,user_pct,map_ha,adjusted_ha,ci95_ha\nmangrove,83.529,75.532,51370,39658,4510.9\nother forest,79.268,85.526,5955.5,8876,2610.8\nwater,94.444,100,2.4184e+05,2.4293e+05,1506.6\nbare or agriculture,67.797,68.966,2824.7,9928.9,3744.8\nurban,91.892,91.892,609.73,1204.2,1080.8\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_per_class(df):\n    \"\"\"Producer and user accuracy side by side. Which error matters for your decision?\"\"\"\n    x = np.arange(len(df))\n    fig, ax = plt.subplots(figsize=(7, 3.2))\n    ax.bar(x - 0.2, df[\"producer_pct\"], 0.4, label=\"producer (1 − omission)\", color=\"#2166ac\")\n    ax.bar(x + 0.2, df[\"user_pct\"], 0.4, label=\"user (1 − commission)\", color=\"#b35806\")\n    ax.set_xticks(x, df[\"class\"], fontsize=8)\n    ax.set_ylim(0, 105)\n    ax.set_ylabel(\"Accuracy (%)\")\n    ax.set_title(\"Per class accuracy on held-out points\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8, loc=\"lower left\")\n    return fig\n\nplot_per_class(df)\nplt.show()\n"
  },

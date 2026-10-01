@@ -7,7 +7,7 @@ You will move from default stretches to deliberate cartography: false colour com
 
 ## The last step, and the one that decides whether anyone acts
 
-Chapter 1 argued that a map nobody uses has failed. This is the chapter where that is decided.
+Chapter [-@sec-why] argued that a map nobody uses has failed. This is the chapter where that is decided.
 
 A classification with 91 percent accuracy, rendered with a default stretch and an unlabelled rainbow palette, will lose an argument to a worse map that someone can read. That is not an indictment of decision makers. It is what happens when the person who understands the data does not finish the job.
 
@@ -123,7 +123,7 @@ Order matters too: the last layer added draws on top. Put the classification abo
 
 ## Making a legend
 
-A categorical map without a legend is decoration. Earth Engine has no automatic legend, so you build one with the `ui` library. Chapter 23 covers this properly as part of application development, but the minimum is worth having now.
+A categorical map without a legend is decoration. Earth Engine has no automatic legend, so you build one with the `ui` library. Chapter [-@sec-apps] covers this properly as part of application development, but the minimum is worth having now.
 
 ```javascript
 var legend = ui.Panel({style: {position: 'bottom-left', padding: '8px'}});
@@ -217,5 +217,5 @@ A map shows one moment. Two tools show change. A chart is honest about every obs
 
 1. Render the same composite in true colour, false colour infrared and shortwave infrared. Which one makes the mangrove boundary clearest, and why?
 2. Compute the 2nd and 98th percentiles for B8 over your area and compare that stretch to your previous guess.
-3. Take a classification you made in Chapter 16 and render it in rainbow, then in viridis. Convert both to greyscale. Which survives?
+3. Take a classification you made in Chapter [-@sec-supervised] and render it in rainbow, then in viridis. Convert both to greyscale. Which survives?
 4. Build a legend for your land cover map and show it to someone outside the field. Ask them what the map says. Their answer is your real result.

@@ -13,9 +13,9 @@ Karena itu buku ini memulai dari tempat lain. Bagian I sama sekali tidak berisi 
 
 ## Untuk siapa buku ini
 
-**Ilmuwan lingkungan, rimbawan, dan praktisi kelautan.** Anda memahami ekosistemnya. Yang Anda butuhkan adalah komputasi berhenti menjadi penghambat. Tidak ada asumsi latar belakang pemrograman; Bab 6 mulai dari apa itu variabel.
+**Ilmuwan lingkungan, rimbawan, dan praktisi kelautan.** Anda memahami ekosistemnya. Yang Anda butuhkan adalah komputasi berhenti menjadi penghambat. Tidak ada asumsi latar belakang pemrograman; Bab [-@sec-javascript] mulai dari apa itu variabel.
 
-**Profesional SIG yang berpindah dari desktop ke awan.** Sebagian besar pengetahuan Anda tetap terpakai. Bagian yang tidak, terutama model eksekusi sisi server, ditangani di Bab 7 sebelum sempat memakan waktu seminggu.
+**Profesional SIG yang berpindah dari desktop ke awan.** Sebagian besar pengetahuan Anda tetap terpakai. Bagian yang tidak, terutama model eksekusi sisi server, ditangani di Bab [-@sec-server-side] sebelum sempat memakan waktu seminggu.
 
 **Pengembang dan data scientist yang masuk ke ranah geospasial.** Kemampuan koding bukan celah Anda. Bagian I adalah tempat bacaan Anda perlu melambat, karena model yang dilatih pada fitur tanpa makna fisik tetap akan melaporkan akurasi 94 persen.
 
@@ -36,11 +36,11 @@ Karena itu buku ini memulai dari tempat lain. Bagian I sama sekali tidak berisi 
 
 Tiga jalan pintas, tergantung alasan Anda datang ke sini.
 
-**Analis minimum yang layak.** Bab 2, 5, 8, 9, 15, 16, 17. Dari nol sampai peta tutupan lahan tervalidasi beserta matriks kekeliruan yang dapat dipertahankan, dalam satu akhir pekan.
+**Analis minimum yang layak.** Bab [-@sec-physics], [-@sec-ecosystem], [-@sec-optical], [-@sec-cloud], [-@sec-sampling], [-@sec-supervised], [-@sec-accuracy]. Dari nol sampai peta tutupan lahan tervalidasi beserta matriks kekeliruan yang dapat dipertahankan, dalam satu akhir pekan.
 
-**Skeptis GeoAI.** Bab 2, 15, 16, 19. Bangun klasifikasi dengan cara klasik, lalu bangun ulang dari satellite embeddings dengan seperlima puluh data latih, dan nilai sendiri selisihnya.
+**Skeptis GeoAI.** Bab [-@sec-physics], [-@sec-sampling], [-@sec-supervised], [-@sec-embeddings]. Bangun klasifikasi dengan cara klasik, lalu bangun ulang dari satellite embeddings dengan seperlima puluh data latih, dan nilai sendiri selisihnya.
 
-**Yang sedang dikejar tenggat.** Bab 23 dulu, lalu mundur ke apa pun yang menjadi prasyaratnya.
+**Yang sedang dikejar tenggat.** Bab [-@sec-apps] dulu, lalu mundur ke apa pun yang menjadi prasyaratnya.
 
 ## Cara kode di buku ini bekerja
 
@@ -50,7 +50,7 @@ Komentar di dalam skrip itu adalah bagian dari pengajaran, bukan hiasan. Ketika 
 
 ::: {.callout-tip}
 ## Menjalankan kode
-Buka [code.earthengine.google.com](https://code.earthengine.google.com), tempel, tekan **Run**. Akun non komersial gratis mencukupi untuk semua bab kecuali bagian ekspor berat di Bab 23. Lampiran A membahas pendaftaran dan alternatif Python.
+Buka [code.earthengine.google.com](https://code.earthengine.google.com), tempel, tekan **Run**. Akun non komersial gratis mencukupi untuk semua bab kecuali bagian ekspor berat di Bab [-@sec-apps]. Lampiran A membahas pendaftaran dan alternatif Python.
 :::
 
 

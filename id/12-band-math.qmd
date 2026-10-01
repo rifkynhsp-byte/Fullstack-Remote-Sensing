@@ -17,11 +17,11 @@ Ia **terbatas** antara -1 dan 1 berapa pun besaran masukannya, sehingga nilainya
 
 Dan ia **meniadakan efek multiplikatif**. Kalau sebuah lereng berada dalam bayangan sebagian, setiap band diperkecil oleh faktor yang kira kira sama. Faktor itu muncul di pembilang sekaligus penyebut lalu saling meniadakan. Karena itu rasio jauh lebih stabil terhadap kondisi pencahayaan dibanding band tunggal mana pun.
 
-Yang tidak diniadakannya adalah efek **penjumlahan**. Radiansi jalur atmosfer menambah nilai pada setiap band, dan tidak merata, dan tidak ada rasio yang menghilangkannya. Inilah alasan konkret Bab 8 bersikeras memakai reflektansi permukaan alih alih puncak atmosfer: koreksinya harus terjadi sebelum indeks dihitung, karena indeks tidak bisa membatalkannya.
+Yang tidak diniadakannya adalah efek **penjumlahan**. Radiansi jalur atmosfer menambah nilai pada setiap band, dan tidak merata, dan tidak ada rasio yang menghilangkannya. Inilah alasan konkret Bab [-@sec-optical] bersikeras memakai reflektansi permukaan alih alih puncak atmosfer: koreksinya harus terjadi sebelum indeks dihitung, karena indeks tidak bisa membatalkannya.
 
 ## Indeks vegetasi
 
-**NDVI**, $(NIR - Merah)/(NIR + Merah)$, mengikuti langsung dari fisika di Bab 2. Klorofil menyerap merah; mesofil daun menghamburkan inframerah dekat. Tajuk sehat yang rapat punya jarak besar di antara keduanya.
+**NDVI**, $(NIR - Merah)/(NIR + Merah)$, mengikuti langsung dari fisika di Bab [-@sec-physics]. Klorofil menyerap merah; mesofil daun menghamburkan inframerah dekat. Tajuk sehat yang rapat punya jarak besar di antara keduanya.
 
 Mode kegagalannya lebih penting daripada rumusnya. Begitu indeks luas daun melewati sekitar 3, daun tambahan berhenti menaikkan reflektansi inframerah dekat secara berarti, dan NDVI mendatar di sekitar 0,8 sampai 0,9. Inilah **kejenuhan**, dan hutan tropis hidup permanen di dalamnya.
 
@@ -55,7 +55,7 @@ Indeks umum memisahkan vegetasi dari air. Pemetaan mangrove perlu memisahkan veg
 ## Konsep: kenapa indeks yang dirancang khusus bisa mengalahkan yang umum
 NDVI menjawab "apakah ini berfotosintesis", dan setiap benda hijau menjawab ya. CMRI menjawab "apakah ini berfotosintesis *dan* basah", dan himpunan jawabannya jauh lebih kecil. Merancang indeks sebagian besar adalah latihan menemukan pertanyaan yang himpunan jawabannya mendekati kelas yang Anda inginkan.
 
-Meski begitu, indeks adalah fitur yang dirancang tangan, dan Bab 19 menunjukkan apa yang terjadi ketika sebuah model fondasi merancang enam puluh empat fitur untuk Anda. Memahami konstruksi indeks tetap sepadan, karena dari situlah Anda mendiagnosis apa yang sedang dilakukan embedding ketika ia keliru.
+Meski begitu, indeks adalah fitur yang dirancang tangan, dan Bab [-@sec-embeddings] menunjukkan apa yang terjadi ketika sebuah model fondasi merancang enam puluh empat fitur untuk Anda. Memahami konstruksi indeks tetap sepadan, karena dari situlah Anda mendiagnosis apa yang sedang dilakukan embedding ketika ia keliru.
 :::
 
 ## Alur kerja lengkap
@@ -84,7 +84,7 @@ Sebuah indeks tidak baik atau buruk secara umum. Ia baik atau buruk pada satu pe
 
 ```{python}
 #| label: fig-index-grid
-#| fig-cap: "Pemisahan yang dicapai setiap indeks pada setiap pasangan kelas, dari spektrum representatif di Bab 2. Makin gelap makin terpisah. Arahkan kursor ke sel mana pun untuk selisih persisnya. MVI dikeluarkan karena tidak terbatas dan akan mendominasi skalanya tanpa bisa dibandingkan. CMRI adalah selisih dari dua normalised difference, sehingga rentangnya dua kali yang lain dan terbaca lebih gelap sebagian karena itu saja; bandingkan ia dengan yang lain lewat peringkat, bukan lewat gelap terangnya."
+#| fig-cap: "Pemisahan yang dicapai setiap indeks pada setiap pasangan kelas, dari spektrum representatif di Bab [-@sec-physics]. Makin gelap makin terpisah. Arahkan kursor ke sel mana pun untuk selisih persisnya. MVI dikeluarkan karena tidak terbatas dan akan mendominasi skalanya tanpa bisa dibandingkan. CMRI adalah selisih dari dua normalised difference, sehingga rentangnya dua kali yang lain dan terbaca lebih gelap sebagian karena itu saja; bandingkan ia dengan yang lain lewat peringkat, bukan lewat gelap terangnya."
 import itertools
 import numpy as np
 import plotly.graph_objects as go
@@ -143,7 +143,7 @@ bk.table(df, caption=(
 ))
 ```
 
-Baca bagian atas tabel itu sebagai rencana kerja. Pasangan yang terdaftar di sana adalah pasangan yang membutuhkan radar, rupa bumi, atau tekstur untuk ditambahkan ke stack, dan itu Bab 10, 11, dan 14; tidak ada rekayasa indeks sebanyak apa pun yang bisa menggantikannya. Pasangan di bagian bawah sudah selesai, dan menghabiskan waktu di sana berarti menghabiskan waktu pada bagian yang sudah bekerja.
+Baca bagian atas tabel itu sebagai rencana kerja. Pasangan yang terdaftar di sana adalah pasangan yang membutuhkan radar, rupa bumi, atau tekstur untuk ditambahkan ke stack, dan itu Bab [-@sec-sar], [-@sec-terrain], dan 14; tidak ada rekayasa indeks sebanyak apa pun yang bisa menggantikannya. Pasangan di bagian bawah sudah selesai, dan menghabiskan waktu di sana berarti menghabiskan waktu pada bagian yang sudah bekerja.
 
 ::: {.callout-note}
 ## Apa arti 0,15, dan apa yang bukan

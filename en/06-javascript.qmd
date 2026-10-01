@@ -126,7 +126,7 @@ var result = ee.Algorithms.If(collection.size().gt(0), doThis, doThat);
 
 **String concatenation crosses the boundary badly.** Joining a client string to a server value requires `ee.String` and `.cat()`, not the `+` operator.
 
-**Reassignment inside a loop rarely does what you expect.** If you find yourself writing a `for` loop over images, stop and read Chapter 7. There is nearly always a `.map()` formulation, and it will be dramatically faster.
+**Reassignment inside a loop rarely does what you expect.** If you find yourself writing a `for` loop over images, stop and read Chapter [-@sec-server-side]. There is nearly always a `.map()` formulation, and it will be dramatically faster.
 
 **Multi line statements need care.** JavaScript inserts semicolons automatically in ways that can truncate a statement split across lines. Keep the dot at the end of the previous line, not the start of the next, when chaining:
 
@@ -182,6 +182,6 @@ var filtered = collection
 ## Exercises {.unnumbered}
 
 1. Write a dictionary of visualisation parameters for a false colour composite using Sentinel-2 bands B8, B4 and B3, with a stretch you would defend over vegetation.
-2. Write a function that takes an image and returns it with an NDWI band attached. Do not look at Chapter 9 first.
+2. Write a function that takes an image and returns it with an NDWI band attached. Do not look at Chapter [-@sec-cloud] first.
 3. Deliberately introduce a smart quote into a working script and read the error message carefully. Recognising it once saves an hour later.
 4. Print the size of a collection, then print the collection itself, and note the difference in what the Console does.

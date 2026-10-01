@@ -27,8 +27,8 @@ Tiga panel di bagian keluaran menampilkan pelabuhan Semarang pada 250 m (MODIS),
 
 Ada dua akibatnya:
 
-- **Piksel campuran.** Kalau satu piksel mencakup beberapa bahan (tepi sawah, jalan yang membelah hutan), nilainya adalah campuran. Makin besar piksel, makin banyak piksel campuran. Sebagian besar kesalahan klasifikasi di Bab 16 dan 17 terjadi di piksel campuran.
-- **Ukuran piksel bukan segalanya.** Optik mengaburkan, atmosfer menghamburkan, dan satelit bergerak selama perekaman. Dua sensor dengan ukuran piksel sama bisa berbeda ketajamannya. Mengubah ukuran piksel menjadi lebih kecil (resampling) tidak pernah menambah detail (Bab 3).
+- **Piksel campuran.** Kalau satu piksel mencakup beberapa bahan (tepi sawah, jalan yang membelah hutan), nilainya adalah campuran. Makin besar piksel, makin banyak piksel campuran. Sebagian besar kesalahan klasifikasi di Bab [-@sec-supervised] dan [-@sec-accuracy] terjadi di piksel campuran.
+- **Ukuran piksel bukan segalanya.** Optik mengaburkan, atmosfer menghamburkan, dan satelit bergerak selama perekaman. Dua sensor dengan ukuran piksel sama bisa berbeda ketajamannya. Mengubah ukuran piksel menjadi lebih kecil (resampling) tidak pernah menambah detail (Bab [-@sec-sensors]).
 
 ## Resolusi spektral
 
@@ -58,8 +58,8 @@ Resolusi temporal adalah seberapa sering tempat yang sama dipotret: waktu kunjun
 
 Ada dua catatan:
 
-- **Kunjung ulang tidak sama dengan pandangan cerah.** Grafik itu menghitung citra dalam segala kondisi awan. Di Indonesia yang tropis, sebagian besar koleksi setiap tahun berawan (Bab 9). Resolusi temporal efektif, yaitu jumlah pandangan cerah ke permukaan, jauh lebih rendah daripada angka nominalnya. Karena itu radar penting untuk pemantauan di daerah tropis (P5).
-- **Citra makin banyak, pekerjaan makin banyak.** Resolusi temporal baru berguna kalau bisa diolah: pembuatan komposit, deret waktu, deteksi perubahan (Bab 13, 21). Untuk itulah Earth Engine dibuat.
+- **Kunjung ulang tidak sama dengan pandangan cerah.** Grafik itu menghitung citra dalam segala kondisi awan. Di Indonesia yang tropis, sebagian besar koleksi setiap tahun berawan (Bab [-@sec-cloud]). Resolusi temporal efektif, yaitu jumlah pandangan cerah ke permukaan, jauh lebih rendah daripada angka nominalnya. Karena itu radar penting untuk pemantauan di daerah tropis (P5).
+- **Citra makin banyak, pekerjaan makin banyak.** Resolusi temporal baru berguna kalau bisa diolah: pembuatan komposit, deret waktu, deteksi perubahan (Bab [-@sec-visualisation], [-@sec-timeseries]). Untuk itulah Earth Engine dibuat.
 
 ## Melihat beberapa kanal sekaligus
 
@@ -79,7 +79,7 @@ Kelima sifat itu berebut sumber daya yang sama dan terbatas:
 - **Volume data.** Landsat 8 merekam sekitar 6.000 piksel di setiap baris dan satu baris baru setiap 4,4 ms. Artinya sekitar 1,4 juta piksel per detik per kanal. Dengan 11 kanal pada 12 bit, jumlahnya lebih dari 180 juta bit per detik, sebelum dikompresi. Semuanya harus muat melalui saluran kirim (P2).
 - **Geometri.** Lebar sapuan yang besar dari ketinggian yang sama butuh medan pandang yang lebar. Piksel kecil pada sapuan lebar berarti lebih banyak detektor, optik lebih besar, dan data lebih banyak.
 
-Gambar pertukaran menempatkan enam sensor menurut ukuran piksel dan lebar sapuannya. Keenamnya berjajar pada satu garis: WorldView-3 melihat piksel 0,31 m pada jalur selebar 13 km, MODIS melihat piksel 250 m pada 2.330 km, dan Himawari di orbit geostasioner melihat seluruh piringan bumi dengan piksel paling halus 500 m. Tidak ada sensor di pojok kiri atas, yang tajam *sekaligus* luas. Memilih sensor berarti memilih resolusi mana yang paling penting untuk pertanyaan Anda (Bab 3).
+Gambar pertukaran menempatkan enam sensor menurut ukuran piksel dan lebar sapuannya. Keenamnya berjajar pada satu garis: WorldView-3 melihat piksel 0,31 m pada jalur selebar 13 km, MODIS melihat piksel 250 m pada 2.330 km, dan Himawari di orbit geostasioner melihat seluruh piringan bumi dengan piksel paling halus 500 m. Tidak ada sensor di pojok kiri atas, yang tajam *sekaligus* luas. Memilih sensor berarti memilih resolusi mana yang paling penting untuk pertanyaan Anda (Bab [-@sec-sensors]).
 
 {{< include _snippets/ch00d_resolution.qmd >}}
 

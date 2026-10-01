@@ -12,7 +12,7 @@
  * Asset dependencies
  *   var aoi = ...
  *   var composite = ...   cloud free composite in physical reflectance, 0 to 1
- *                         from Chapter 9
+ *                         from chapter “Cloud Masking and Composites”
  */
 
 var aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60]);
@@ -50,7 +50,7 @@ var composite = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
 // band, and it is the reason the form dominates the field.
 //
 // What it does NOT cancel is an ADDITIVE effect. Atmospheric path radiance
-// adds to every band, unequally, which is why Chapter 8 insisted on surface
+// adds to every band, unequally, which is why chapter “Optical Stream Ingestion” insisted on surface
 // reflectance rather than top of atmosphere.
 
 // ===========================================================================
@@ -59,7 +59,7 @@ var composite = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
 
 // NDVI = (NIR - Red) / (NIR + Red)
 //
-// The physical logic, from Chapter 2: chlorophyll absorbs red for
+// The physical logic, from chapter “The Physics of Seeing”: chlorophyll absorbs red for
 // photosynthesis, and leaf mesophyll scatters near infrared. Dense healthy
 // canopy therefore has a large gap between the two. Water goes negative
 // because it absorbs NIR almost completely.

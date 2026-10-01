@@ -7,14 +7,14 @@ You will take an airborne LiDAR point cloud from raw points to a table of indivi
 
 ## Why this chapter leaves Earth Engine
 
-Everything so far lived in Earth Engine. LiDAR does not. An airborne survey gives you files of points, often tens of millions per square kilometre, each with x, y, z, a return number and a class (ground, vegetation, building). Earth Engine stores rasters and tables, not point clouds. So the point work runs on your own machine, and Earth Engine comes back in at the end, when you compare the plot with satellite canopy height and scale up (Chapter 33).
+Everything so far lived in Earth Engine. LiDAR does not. An airborne survey gives you files of points, often tens of millions per square kilometre, each with x, y, z, a return number and a class (ground, vegetation, building). Earth Engine stores rasters and tables, not point clouds. So the point work runs on your own machine, and Earth Engine comes back in at the end, when you compare the plot with satellite canopy height and scale up (Chapter [-@sec-height-scaling]).
 
 The data here are the three example files that ship with the lidR package [@roussel2020lidr]: `Megaplot`, `MixedConifer` and `Topography`. They are small, free (GPL-3) and already classified. They are also a conifer forest, not a tropical one. The steps are the same in a Sumatran plantation or a Papuan forest, but the numbers (tree height, crown size, window rules) are not. Tune them on your own forest.
 
 ## The chain
 
 1. **Check the points.** Density, gaps, and whether ground was classified at all. A bad file caught here saves a week later.
-2. **Ground and terrain (DTM).** Interpolate only the ground returns into a surface. This is the same DTM that feeds drainage and flood work in Chapter 24.
+2. **Ground and terrain (DTM).** Interpolate only the ground returns into a surface. This is the same DTM that feeds drainage and flood work in Chapter [-@sec-flood].
 3. **Normalise.** Subtract the terrain from every point, so z becomes *height above ground*. On a slope this matters more than anything else.
 4. **Canopy height model (CHM).** Keep the highest point in each small cell (0.5 m here).
 5. **Tree tops.** A tree top is a cell higher than everything in a window around it. Taller trees have wider crowns, so the window grows with height: here 0.07 × height + 2 m, the rule in the lidR examples.
@@ -81,4 +81,4 @@ The Python tab does the same work with `laspy`, SciPy and scikit-image. It is th
 
 ## Where this goes next
 
-A tree table is not biomass yet. Chapter 33 takes heights and crowns through allometry to above-ground biomass and compares the plot with the satellite layers in the JavaScript tab: GEDI footprints [@dubayah2020gedi] and a global canopy height map [@lang2023canopy]. That gap between one well-measured plot and the whole map is where most thesis topics in Chapter 36 live.
+A tree table is not biomass yet. Chapter [-@sec-height-scaling] takes heights and crowns through allometry to above-ground biomass and compares the plot with the satellite layers in the JavaScript tab: GEDI footprints [@dubayah2020gedi] and a global canopy height map [@lang2023canopy]. That gap between one well-measured plot and the whole map is where most thesis topics in Chapter [-@sec-thesisbank] live.

@@ -149,7 +149,7 @@ That last column is the one to take seriously, and to distrust. It says a full y
 
 ::: {.callout-important}
 ## The assumption is the lesson
-When your composite has holes and this arithmetic says it should not, the arithmetic is not wrong. Independence was. That is the point at which radar stops being an advanced topic and becomes the only option, which is Chapter 10.
+When your composite has holes and this arithmetic says it should not, the arithmetic is not wrong. Independence was. That is the point at which radar stops being an advanced topic and becomes the only option, which is Chapter [-@sec-sar].
 :::
 
 ### The same arithmetic as a map
@@ -194,7 +194,7 @@ In the very cloudiest places, chronically clouded mountain valleys, some equator
 
 Widen the window: a two or three year composite fills the holes at the cost of temporal precision, and it becomes indefensible in a change detection study where the whole point is knowing when something happened.
 
-Or change sensor. Radar sees through cloud entirely, because microwaves at Sentinel-1 wavelengths are unaffected by water droplets. That is Chapter 10.
+Or change sensor. Radar sees through cloud entirely, because microwaves at Sentinel-1 wavelengths are unaffected by water droplets. That is Chapter [-@sec-sar].
 
 
 <script type="application/json" class="lms-quiz">

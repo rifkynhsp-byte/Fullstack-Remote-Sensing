@@ -3,7 +3,7 @@
 
 """
 CHAPTER 38 | Look before you model, and draw so the reader does not have to
-ask. The data is the CHIRPS monthly rainfall table from Chapter 29 (six
+ask. The data is the CHIRPS monthly rainfall table from chapter “Data Visualisation That Decides Things” (six
 Indonesian cities, 1991-2024), fetched once from Earth Engine.
 
 Each rule below is a pair of panels: left, the graph people usually make;

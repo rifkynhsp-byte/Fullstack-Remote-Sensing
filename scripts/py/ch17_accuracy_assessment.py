@@ -5,7 +5,7 @@
 CHAPTER 17 | Confusion matrix, per class accuracy, and an area estimate
 adjusted for map error with a 95 % interval (Olofsson et al. 2014), in Python.
 
-Uses the random forest map and the held-out points from the Chapter 16 file.
+Uses the random forest map and the held-out points from the chapter “Classical Supervised Learning” file.
 """
 
 import ee
@@ -130,7 +130,7 @@ def products():
          "caption": "Confusion matrix: rows are the reference label (WorldCover 2021), "
                     "columns are the map."},
         {"kind": "chart", "name": "ch17-per-class", "data": df, "plot": plot_per_class,
-         "caption": "Producer and user accuracy per class, random forest from Chapter 16."},
+         "caption": "Producer and user accuracy per class, random forest from chapter “Classical Supervised Learning”."},
         {"kind": "chart", "name": "ch17-areas", "data": df, "plot": plot_areas,
          "caption": "Mapped area against the Olofsson error-adjusted estimate. The "
                     "interval is the part a report must carry."},

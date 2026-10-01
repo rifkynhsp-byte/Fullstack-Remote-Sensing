@@ -30,7 +30,7 @@ NASADEM (2000) dan Copernicus GLO-30 (2011 sampai 2015) sama sama merekam bagian
 
 ## Panas adalah gejala, bukan diagnosis
 
-Di musim kemarau lahan terbuka memang lebih panas daripada hutan, terbakar atau tidak, sehingga peta suhu mentah sebagian besar hanyalah peta lahan terbuka. Sinyal yang berguna adalah konsistensi: stockpile yang tetap lebih panas dari sekitarnya dari satu lintasan ke lintasan berikutnya. Alat deret waktu di Bab 21 bisa mengubah peta di atas menjadi uji tersebut. Konfirmasinya lewat terbang drone termal atau pengukuran langsung di lokasi.
+Di musim kemarau lahan terbuka memang lebih panas daripada hutan, terbakar atau tidak, sehingga peta suhu mentah sebagian besar hanyalah peta lahan terbuka. Sinyal yang berguna adalah konsistensi: stockpile yang tetap lebih panas dari sekitarnya dari satu lintasan ke lintasan berikutnya. Alat deret waktu di Bab [-@sec-timeseries] bisa mengubah peta di atas menjadi uji tersebut. Konfirmasinya lewat terbang drone termal atau pengukuran langsung di lokasi.
 
 ## Latihan {.unnumbered}
 

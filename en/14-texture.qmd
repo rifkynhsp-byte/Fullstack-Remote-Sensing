@@ -7,7 +7,7 @@ You will add pattern to spectrum. Grey level co-occurrence matrix features let a
 
 ## Two forests, one signature
 
-An oil palm plantation and a natural mangrove stand can have identical mean reflectance in every band. Both are dense broadleaf canopy, both photosynthesise vigorously, both hold similar leaf water. Chapter 12's indices, which are all functions of per pixel reflectance, cannot separate them because there is nothing in the per pixel reflectance to separate.
+An oil palm plantation and a natural mangrove stand can have identical mean reflectance in every band. Both are dense broadleaf canopy, both photosynthesise vigorously, both hold similar leaf water. Chapter [-@sec-indices]'s indices, which are all functions of per pixel reflectance, cannot separate them because there is nothing in the per pixel reflectance to separate.
 
 What differs is **arrangement**. Palm is planted on a regular grid with uniform crown size and uniform spacing. Natural mangrove has crowns of many sizes, irregular gaps, tidal creeks cutting through it and no repeating geometry at all.
 
@@ -42,7 +42,7 @@ The intuition is worth holding onto. A smooth uniform canopy produces co-occurre
 
 ::: {.callout-warning}
 ## Common failure: passing float input
-GLCM requires **integer** input. Pass a float band and you get nonsense rather than an exception. Since Chapter 9 rescaled reflectance to floats between 0 and 1, the band must be rescaled and cast before use.
+GLCM requires **integer** input. Pass a float band and you get nonsense rather than an exception. Since Chapter [-@sec-cloud] rescaled reflectance to floats between 0 and 1, the band must be rescaled and cast before use.
 :::
 
 ::: {.callout-warning}
@@ -86,9 +86,9 @@ Match it to crown diameter rather than to a default. Mangrove crowns run roughly
 
 Do not add texture bands on faith. They are expensive, and in some landscapes they contribute nothing.
 
-The test takes two minutes. Sample the texture bands at your training points from Chapter 15, then plot two of them against each other coloured by class. If the two classes that confuse each other separate along entropy, the bands have earned their place. If they overlap completely, you have added four bands of computation and no information, and you should drop them.
+The test takes two minutes. Sample the texture bands at your training points from Chapter [-@sec-sampling], then plot two of them against each other coloured by class. If the two classes that confuse each other separate along entropy, the bands have earned their place. If they overlap completely, you have added four bands of computation and no information, and you should drop them.
 
-This is the same discipline as the histogram test in Chapter 12, applied to a different feature family. The general principle: every predictor should be able to justify itself before it enters the stack, and after it enters, Chapter 16's feature importance chart should confirm it is still contributing.
+This is the same discipline as the histogram test in Chapter [-@sec-indices], applied to a different feature family. The general principle: every predictor should be able to justify itself before it enters the stack, and after it enters, Chapter [-@sec-supervised]'s feature importance chart should confirm it is still contributing.
 
 ::: {.callout-tip}
 ## From the field
@@ -99,13 +99,13 @@ If it is not, one of two things is true. Either your window size is wrong for th
 
 ## The relationship to object based analysis
 
-Chapter 18 reaches a similar place by a different route.
+Chapter [-@sec-obia] reaches a similar place by a different route.
 
 Texture measures variation within a moving window of fixed size and shape. Object based analysis segments the image into coherent regions first, then measures variation within each region, which adapts to the actual shape of things on the ground.
 
 The object based version is more principled: a standard deviation computed within a real stand means more than one computed within an arbitrary 70 metre square that may straddle two stands.
 
-Texture is cheaper, simpler, and works as an ordinary band in an ordinary pixel based workflow. Start here. Move to Chapter 18 when the fixed window becomes the limitation, which you will recognise when texture works in the interior of stands and fails at their edges.
+Texture is cheaper, simpler, and works as an ordinary band in an ordinary pixel based workflow. Start here. Move to Chapter [-@sec-obia] when the fixed window becomes the limitation, which you will recognise when texture works in the interior of stands and fails at their edges.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -164,7 +164,7 @@ Texture is cheaper, simpler, and works as an ordinary band in an ordinary pixel 
         "Quantisation was too coarse"
       ],
       "answer": 1,
-      "why": "A moving window of fixed shape cannot adapt to the shape of things on the ground. Chapter 18 segments first, then measures within real regions, which is the principled version of the same idea."
+      "why": "A moving window of fixed shape cannot adapt to the shape of things on the ground. Chapter [-@sec-obia] segments first, then measures within real regions, which is the principled version of the same idea."
     }
   ]
 }

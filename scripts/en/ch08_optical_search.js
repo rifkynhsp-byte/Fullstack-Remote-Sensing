@@ -51,7 +51,7 @@ var filtered = s2
 
   // Keep only scenes whose scene level cloud estimate is under 15 percent.
   // This is a metadata filter, not a pixel filter: it throws away whole
-  // scenes. Chapter 6 replaces it with per pixel masking, which is what you
+  // scenes. chapter “JavaScript for Earth Engine” replaces it with per pixel masking, which is what you
   // want for compositing. Scene level filtering is still useful here, where
   // the aim is to look at one good image.
   .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 15));
@@ -109,7 +109,7 @@ Map.addLayer(image, trueColour, 'Sentinel-2 true colour, Mahakam');
 // The filter above threw most of the year away. Plot what it saw: one point
 // per scene, cloud cover against date, with the 15 percent cut marked in
 // your head. Over the tropics most points sit high, and that is the argument
-// for Chapter 9.
+// for chapter “Cloud Masking and Composites”.
 var allScenes = s2.filterDate('2023-01-01', '2023-12-31').filterBounds(aoi);
 print(ui.Chart.feature.byFeature(allScenes, 'system:time_start',
     'CLOUDY_PIXEL_PERCENTAGE')
@@ -124,6 +124,6 @@ print(ui.Chart.feature.byFeature(allScenes, 'system:time_start',
 //    survive, and is the top ranked scene still usable?
 // 2. Swap .first() for .sort('CLOUDY_PIXEL_PERCENTAGE', false).first() to
 //    select the worst scene instead. Keep it on the map as a reminder of what
-//    the cloud masking in Chapter 6 has to remove.
+//    the cloud masking in chapter “JavaScript for Earth Engine” has to remove.
 // 3. Replace the point with your own study area and adjust min and max until
 //    the darkest land surface is still readable.

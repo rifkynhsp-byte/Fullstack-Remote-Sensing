@@ -70,7 +70,7 @@ frames = ee.ImageCollection(frame_list)
 # fails with "User memory limit exceeded": six medians are computed in one
 # request. Asking for each frame separately and stitching the GIF in Python
 # stays under the limit. That trade, one big request against many small
-# ones, comes up again in Chapter 30.
+# ones, comes up again in chapter “Statistics and Modelling You Actually Need”.
 
 
 def products():

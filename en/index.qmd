@@ -13,9 +13,9 @@ So this book starts somewhere else. Part I contains no code at all. It answers w
 
 ## Who this is for
 
-**Environmental scientists, foresters and marine practitioners.** You know the ecosystem. You need the computation to stop being the bottleneck. No programming background is assumed; Chapter 6 starts from what a variable is.
+**Environmental scientists, foresters and marine practitioners.** You know the ecosystem. You need the computation to stop being the bottleneck. No programming background is assumed; Chapter [-@sec-javascript] starts from what a variable is.
 
-**GIS professionals moving from desktop to cloud.** Most of what you know transfers. The parts that do not, chiefly the server side execution model, are handled in Chapter 7 before they can cost you a week.
+**GIS professionals moving from desktop to cloud.** Most of what you know transfers. The parts that do not, chiefly the server side execution model, are handled in Chapter [-@sec-server-side] before they can cost you a week.
 
 **Developers and data scientists entering the geospatial domain.** Your coding is not the gap. Part I is where your reading should slow down, because a model trained on physically meaningless features will still report 94 percent accuracy.
 
@@ -36,11 +36,11 @@ So this book starts somewhere else. Part I contains no code at all. It answers w
 
 Three shortcuts through the material, depending on why you came.
 
-**The minimum viable analyst.** Chapters 2, 5, 8, 9, 15, 16, 17. From nothing to a validated land cover map with a defensible confusion matrix, in one weekend. This route is written in full.
+**The minimum viable analyst.** Chapters [-@sec-physics], [-@sec-ecosystem], [-@sec-optical], [-@sec-cloud], [-@sec-sampling], [-@sec-supervised], [-@sec-accuracy]. From nothing to a validated land cover map with a defensible confusion matrix, in one weekend. This route is written in full.
 
-**The GeoAI sceptic.** Chapters 2, 15, 16, 19. Build a classifier the classical way, then rebuild it from satellite embeddings with a fiftieth of the training data, and judge the difference for yourself.
+**The GeoAI sceptic.** Chapters [-@sec-physics], [-@sec-sampling], [-@sec-supervised], [-@sec-embeddings]. Build a classifier the classical way, then rebuild it from satellite embeddings with a fiftieth of the training data, and judge the difference for yourself.
 
-**The person with a deadline.** Chapter 23 first, then work backwards through whatever it depends on.
+**The person with a deadline.** Chapter [-@sec-apps] first, then work backwards through whatever it depends on.
 
 ## How the code works
 
@@ -50,7 +50,7 @@ The comments inside those scripts are the teaching, not decoration. Where a line
 
 ::: {.callout-tip}
 ## Running the code
-Open [code.earthengine.google.com](https://code.earthengine.google.com), paste, press **Run**. A free non commercial account covers every chapter except the export heavy parts of Chapter 23. Appendix A covers registration and the Python alternative.
+Open [code.earthengine.google.com](https://code.earthengine.google.com), paste, press **Run**. A free non commercial account covers every chapter except the export heavy parts of Chapter [-@sec-apps]. Appendix A covers registration and the Python alternative.
 :::
 
 

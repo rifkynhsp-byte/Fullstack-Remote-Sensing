@@ -7,7 +7,7 @@ Anda akan menjelajahi sebuah dataset sebelum memodelkannya. Anda juga akan mempe
 
 ## Lihat dulu sebelum membuat model
 
-Analisis data eksploratif (EDA) adalah tahap untuk mengenali data yang sebenarnya, sebelum meminta data itu menjawab apa pun. Ada empat pertanyaan yang harus dijawab lebih dulu, dan tabel ringkasan di bawah menjawab semuanya untuk data curah hujan yang dipakai di Bab 29:
+Analisis data eksploratif (EDA) adalah tahap untuk mengenali data yang sebenarnya, sebelum meminta data itu menjawab apa pun. Ada empat pertanyaan yang harus dijawab lebih dulu, dan tabel ringkasan di bawah menjawab semuanya untuk data curah hujan yang dipakai di Bab [-@sec-dataviz]:
 
 1. Berapa banyak datanya, dan berapa yang hilang?
 2. Berapa nilai yang umum, dan seberapa lebar sebarannya?

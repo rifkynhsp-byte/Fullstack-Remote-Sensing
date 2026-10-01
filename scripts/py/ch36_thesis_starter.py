@@ -128,7 +128,7 @@ def products():
                     "An RMSE close to the SD column means the model does little better "
                     "than guessing the mean. The reference is GEDI's own modelled AGBD, "
                     "not field plots, so these numbers measure agreement with GEDI. Unlike "
-                    "Chapter 15, block and random folds agree here: 1,500 footprints "
+                    "chapter “Ground Truth and Sampling Design”, block and random folds agree here: 1,500 footprints "
                     "drawn from a 55 by 55 km box are seldom close neighbours, so "
                     "there was little leakage to remove."},
         {"kind": "map", "name": "ch36-agbd-map", "image": agbd_map, "region": aoi,

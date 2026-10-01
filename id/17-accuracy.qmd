@@ -145,17 +145,17 @@ Laporkan kalau jurnal atau metodologi mewajibkannya. Jangan menjadikannya sorota
 
 Perbedaan ini adalah inti bab ini.
 
-**Validasi internal** memakai bagian yang disisihkan dari Bab 15. Ia menjawab pertanyaan yang sempit: apakah model menggeneralisasi ke titik yang tidak dipakai melatihnya, digambar dengan cara yang sama, oleh orang yang sama, dari citra yang sama.
+**Validasi internal** memakai bagian yang disisihkan dari Bab [-@sec-sampling]. Ia menjawab pertanyaan yang sempit: apakah model menggeneralisasi ke titik yang tidak dipakai melatihnya, digambar dengan cara yang sama, oleh orang yang sama, dari citra yang sama.
 
 **Validasi independen** memakai data yang dikumpulkan lewat proses berbeda: plot lapangan, citra resolusi tinggi yang ditafsirkan orang lain, atau produk yang sudah ada sebagai pemeriksaan silang.
 
 Keduanya rutin berbeda lima sampai sepuluh poin, dan selisih itu bersifat diagnostik, bukan memalukan.
 
-Selisih beberapa poin itu normal dan memang diharapkan. Selisih dua puluh poin berarti data latih Anda tidak mewakili bentang lahannya, dan penyetelan sebanyak apa pun tidak akan menutupnya, karena masalahnya ada di hulu, di Bab 15.
+Selisih beberapa poin itu normal dan memang diharapkan. Selisih dua puluh poin berarti data latih Anda tidak mewakili bentang lahannya, dan penyetelan sebanyak apa pun tidak akan menutupnya, karena masalahnya ada di hulu, di Bab [-@sec-sampling].
 
 ::: {.callout-tip}
 ## Dari lapangan
-Belanjakan anggaran validasi lapangan Anda di tempat model model itu berselisih. Bab 16 menghasilkan layer yang menunjukkan di mana Random Forest, SVM, dan gradient boosting memberi jawaban berbeda. Mengambil titik validasi dari layer itu, alih alih secara acak, memberi tahu jauh lebih banyak per kunjungan lapangan, karena titik acak sebagian besar mendarat di tempat yang semua model sudah sepakat.
+Belanjakan anggaran validasi lapangan Anda di tempat model model itu berselisih. Bab [-@sec-supervised] menghasilkan layer yang menunjukkan di mana Random Forest, SVM, dan gradient boosting memberi jawaban berbeda. Mengambil titik validasi dari layer itu, alih alih secara acak, memberi tahu jauh lebih banyak per kunjungan lapangan, karena titik acak sebagian besar mendarat di tempat yang semua model sudah sepakat.
 :::
 
 ## Alur kerja lengkap
@@ -188,7 +188,7 @@ Versi terpendek yang lengkap dari apa yang dihasilkan bab ini:
 
 > Akurasi klasifikasi dinilai memakai 218 titik validasi yang disisihkan, terstratifikasi per kelas dan ditipiskan secara spasial ke jarak minimum 60 m. Akurasi keseluruhan 89,1 persen. Akurasi produsen untuk mangrove 83,5 persen dan akurasi pengguna 86,1 persen, dengan kekeliruan dominan terjadi antara mangrove dan hutan lain. Validasi independen terhadap 47 plot lapangan menghasilkan akurasi keseluruhan 84,0 persen. Luas diestimasi mengikuti Olofsson et al. (2014) pada skala 10 m, menghasilkan 41.200 ha mangrove dengan selang kepercayaan 95 persen 39.600 sampai 42.800 ha.
 
-Setiap anak kalimat di paragraf itu adalah keputusan yang diminta bab ini dan Bab 15 untuk Anda ambil secara sadar. Itulah tujuan kedua bab tersebut.
+Setiap anak kalimat di paragraf itu adalah keputusan yang diminta bab ini dan Bab [-@sec-sampling] untuk Anda ambil secara sadar. Itulah tujuan kedua bab tersebut.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -221,7 +221,7 @@ Setiap anak kalimat di paragraf itu adalah keputusan yang diminta bab ini dan Ba
       "options": [
         "Data lapangannya keliru",
         "Classifier-nya perlu lebih banyak pohon",
-        "Data latihnya tidak mewakili bentang lahan, dan itu masalah Bab 15, bukan masalah pemodelan",
+        "Data latihnya tidak mewakili bentang lahan, dan itu masalah Bab [-@sec-sampling], bukan masalah pemodelan",
         "Skala yang dipakai untuk validasi terlalu kasar"
       ],
       "answer": 2,

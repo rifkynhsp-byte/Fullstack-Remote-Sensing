@@ -143,17 +143,17 @@ Report it if a journal or a methodology requires it. Do not lead with it, and do
 
 This distinction is the heart of the chapter.
 
-**Internal validation** uses the held out split from Chapter 15. It answers a narrow question: does the model generalise to points it did not train on, drawn the same way, by the same person, from the same imagery.
+**Internal validation** uses the held out split from Chapter [-@sec-sampling]. It answers a narrow question: does the model generalise to points it did not train on, drawn the same way, by the same person, from the same imagery.
 
 **Independent validation** uses data collected by a different process: field plots, high resolution imagery interpreted by someone else, an existing product used as a cross check.
 
 They routinely differ by five to ten points, and the gap is diagnostic rather than embarrassing.
 
-A gap of a few points is normal and expected. A gap of twenty points means your training data does not represent the landscape, and no amount of tuning will close it, because the problem is upstream in Chapter 15.
+A gap of a few points is normal and expected. A gap of twenty points means your training data does not represent the landscape, and no amount of tuning will close it, because the problem is upstream in Chapter [-@sec-sampling].
 
 ::: {.callout-tip}
 ## From the field
-Spend your field validation budget where the models disagree. Chapter 16 produced a layer showing where Random Forest, SVM and gradient boosting gave different answers. Sampling validation points from that layer, rather than at random, tells you far more per site visit, because random points mostly land in places every model already agrees on.
+Spend your field validation budget where the models disagree. Chapter [-@sec-supervised] produced a layer showing where Random Forest, SVM and gradient boosting gave different answers. Sampling validation points from that layer, rather than at random, tells you far more per site visit, because random points mostly land in places every model already agrees on.
 :::
 
 ## The full workflow
@@ -186,7 +186,7 @@ The shortest complete version of what this chapter produces:
 
 > Classification accuracy was assessed using 218 held out validation points, stratified by class and spatially thinned to a minimum separation of 60 m. Overall accuracy was 89.1 percent. Producer accuracy for mangrove was 83.5 percent and user accuracy 86.1 percent, with the dominant confusion occurring between mangrove and other forest. Independent validation against 47 field plots returned an overall accuracy of 84.0 percent. Area was estimated following Olofsson et al. (2014) at 10 m scale, giving 41,200 ha of mangrove with a 95 percent confidence interval of 39,600 to 42,800 ha.
 
-Every clause in that paragraph is a decision this chapter and Chapter 15 asked you to make deliberately. That is the point of both chapters.
+Every clause in that paragraph is a decision this chapter and Chapter [-@sec-sampling] asked you to make deliberately. That is the point of both chapters.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -219,7 +219,7 @@ Every clause in that paragraph is a decision this chapter and Chapter 15 asked y
       "options": [
         "The field data is wrong",
         "The classifier needs more trees",
-        "The training data does not represent the landscape, which is a Chapter 15 problem rather than a modelling one",
+        "The training data does not represent the landscape, which is a Chapter [-@sec-sampling] problem rather than a modelling one",
         "The scale used for validation was too coarse"
       ],
       "answer": 2,

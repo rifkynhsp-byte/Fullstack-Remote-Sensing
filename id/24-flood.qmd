@@ -9,7 +9,7 @@ Anda akan membuat produk banjir seperti yang benar benar diserahkan di lapangan:
 
 Peta banjir dari radar saja hanya menjawab satu pertanyaan: di mana air berada pada hari satelit lewat? Tim tanggap darurat juga perlu tahu ke mana air kemungkinan mengalir berikutnya, dan apakah peta radar itu masuk akal secara fisik. Topografi menjawab keduanya.
 
-Layer topografi yang paling berguna di sini bukan ketinggian, melainkan **tinggi di atas saluran drainase terdekat**, biasa disingkat HAND. Rumah yang dua meter di atas sungainya akan kebanjiran lebih dulu daripada rumah yang sepuluh meter di atasnya, walaupun ketinggian keduanya dari permukaan laut sama. HAND dihitung dari model elevasi yang sudah dikondisikan secara hidrologi: cekungan diisi, arah aliran dihitung, dan jaringan drainase ditelusuri. MERIT Hydro menyediakannya secara global pada resolusi 90 m. Dengan model permukaan tanah dari LiDAR sendiri, HAND bisa dihitung pada 1 m menggunakan Python (lihat Bab 11 dan bagian LiDAR).
+Layer topografi yang paling berguna di sini bukan ketinggian, melainkan **tinggi di atas saluran drainase terdekat**, biasa disingkat HAND. Rumah yang dua meter di atas sungainya akan kebanjiran lebih dulu daripada rumah yang sepuluh meter di atasnya, walaupun ketinggian keduanya dari permukaan laut sama. HAND dihitung dari model elevasi yang sudah dikondisikan secara hidrologi: cekungan diisi, arah aliran dihitung, dan jaringan drainase ditelusuri. MERIT Hydro menyediakannya secara global pada resolusi 90 m. Dengan model permukaan tanah dari LiDAR sendiri, HAND bisa dihitung pada 1 m menggunakan Python (lihat Bab [-@sec-terrain] dan bagian LiDAR).
 
 ## Aturan radar, dan kenapa setiap bagiannya ada
 

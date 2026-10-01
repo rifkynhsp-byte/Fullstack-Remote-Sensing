@@ -126,7 +126,7 @@ var result = ee.Algorithms.If(collection.size().gt(0), doThis, doThat);
 
 **Penggabungan string melewati batas itu dengan buruk.** Menyambung string klien ke nilai server memerlukan `ee.String` dan `.cat()`, bukan operator `+`.
 
-**Penugasan ulang di dalam perulangan jarang berperilaku seperti yang Anda kira.** Kalau Anda mendapati diri menulis perulangan `for` di atas citra, berhenti dan baca Bab 7. Hampir selalu ada bentuk `.map()` yang setara, dan bentuk itu jauh lebih cepat.
+**Penugasan ulang di dalam perulangan jarang berperilaku seperti yang Anda kira.** Kalau Anda mendapati diri menulis perulangan `for` di atas citra, berhenti dan baca Bab [-@sec-server-side]. Hampir selalu ada bentuk `.map()` yang setara, dan bentuk itu jauh lebih cepat.
 
 **Pernyataan multi baris perlu kehati hatian.** JavaScript menyisipkan titik koma secara otomatis dengan cara yang bisa memotong pernyataan yang dipecah antar baris. Saat merangkai, taruh titiknya di akhir baris sebelumnya, bukan di awal baris berikutnya.
 
@@ -181,6 +181,6 @@ var filtered = collection
 ## Latihan {.unnumbered}
 
 1. Tulis satu dictionary parameter visualisasi untuk komposit warna semu memakai band Sentinel-2 B8, B4, dan B3, dengan peregangan yang bisa Anda pertahankan alasannya di atas vegetasi.
-2. Tulis sebuah fungsi yang menerima citra dan mengembalikannya dengan band NDWI. Jangan melihat Bab 9 lebih dulu.
+2. Tulis sebuah fungsi yang menerima citra dan mengembalikannya dengan band NDWI. Jangan melihat Bab [-@sec-cloud] lebih dulu.
 3. Sisipkan tanda kutip pintar ke skrip yang sudah jalan, dengan sengaja, lalu baca pesan galatnya baik baik. Mengenalinya sekali menghemat satu jam di kemudian hari.
 4. Cetak ukuran sebuah koleksi, lalu cetak koleksinya sendiri, dan perhatikan bedanya di Console.

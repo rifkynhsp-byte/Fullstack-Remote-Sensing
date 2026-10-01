@@ -156,7 +156,7 @@ var split = points.randomColumn('random');
 var training = split.filter(ee.Filter.lt('random', 0.7));
 var validation = split.filter(ee.Filter.gte('random', 0.7));
 ```
-The two versions produce results that look identical and differ by several accuracy points. Chapter 16 asks you to run both and measure the gap yourself.
+The two versions produce results that look identical and differ by several accuracy points. Chapter [-@sec-supervised] asks you to run both and measure the gap yourself.
 :::
 
 ## The full workflow
@@ -165,7 +165,7 @@ The two versions produce results that look identical and differ by several accur
 
 ## Two checks before you trust the samples
 
-**Spectral separability.** Plot two predictor bands against each other, coloured by class. If mangrove and other forest overlap completely on NDVI but separate along radar backscatter, you have just confirmed why Chapter 10 put radar in the stack. If two classes overlap on everything, no classifier will separate them, and you should either merge them or find another predictor.
+**Spectral separability.** Plot two predictor bands against each other, coloured by class. If mangrove and other forest overlap completely on NDVI but separate along radar backscatter, you have just confirmed why Chapter [-@sec-sar] put radar in the stack. If two classes overlap on everything, no classifier will separate them, and you should either merge them or find another predictor.
 
 **Where the samples are.** Map them. This catches clustering in one convenient corner, a class drawn only on one side of the river, and points that fell in the sea. Thirty seconds, and it has saved a lot of afternoons.
 
@@ -222,7 +222,7 @@ It cannot detect a systematic error in your labelling. If you consistently confu
 
 Independent validation uses data collected by a different process. Field plots, in this book's case CIFOR plot data from West Papua. High resolution commercial imagery interpreted by someone who did not draw the training polygons. An existing product such as Global Mangrove Watch, used as a cross check rather than as truth.
 
-The gap between internal and independent accuracy is the honest number, and Chapter 17 is about reporting it.
+The gap between internal and independent accuracy is the honest number, and Chapter [-@sec-accuracy] is about reporting it.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -301,6 +301,6 @@ The gap between internal and independent accuracy is the honest number, and Chap
 ## Exercises {.unnumbered}
 
 1. Set every class target to the same value and rerun. Which class becomes harder to model, and why does equal sampling not mean fair sampling?
-2. Disable thinning by setting the minimum separation to 10 metres, then run Chapter 16 with the result. Record how much reported accuracy rises. Keep the number.
+2. Disable thinning by setting the minimum separation to 10 metres, then run Chapter [-@sec-supervised] with the result. Record how much reported accuracy rises. Keep the number.
 3. Export the samples as CSV and check twenty at random against high resolution imagery. Your mislabel rate is the ceiling on your map's accuracy.
 4. Draw training polygons for a class you consider easy, then ask a colleague to draw them independently. Compare. The disagreement rate is more informative than most model tuning.

@@ -7,7 +7,7 @@ Anda akan beranjak dari peregangan baku ke kartografi yang disengaja: kombinasi 
 
 ## Langkah terakhir, dan langkah yang menentukan apakah ada yang bertindak
 
-Bab 1 berpendapat bahwa peta yang tidak dipakai siapa pun sudah gagal. Di bab inilah hal itu diputuskan.
+Bab [-@sec-why] berpendapat bahwa peta yang tidak dipakai siapa pun sudah gagal. Di bab inilah hal itu diputuskan.
 
 Klasifikasi dengan akurasi 91 persen, ditampilkan dengan peregangan baku dan palet pelangi tanpa legenda, akan kalah berdebat melawan peta yang lebih buruk yang bisa dibaca orang. Itu bukan tuduhan terhadap pengambil keputusan. Itu yang terjadi ketika orang yang memahami datanya tidak menyelesaikan pekerjaannya.
 
@@ -121,7 +121,7 @@ Urutan juga penting: layer yang ditambahkan terakhir digambar di atas. Taruh kla
 
 ## Membuat legenda
 
-Peta kategoris tanpa legenda adalah hiasan. Earth Engine tidak punya legenda otomatis, jadi Anda membangunnya dengan pustaka `ui`. Bab 23 membahasnya dengan benar sebagai bagian pengembangan aplikasi, tetapi versi minimalnya layak dimiliki sekarang.
+Peta kategoris tanpa legenda adalah hiasan. Earth Engine tidak punya legenda otomatis, jadi Anda membangunnya dengan pustaka `ui`. Bab [-@sec-apps] membahasnya dengan benar sebagai bagian pengembangan aplikasi, tetapi versi minimalnya layak dimiliki sekarang.
 
 ```javascript
 var legend = ui.Panel({style: {position: 'bottom-left', padding: '8px'}});
@@ -215,5 +215,5 @@ Peta hanya menunjukkan satu saat. Untuk menunjukkan perubahan ada dua alat. Graf
 
 1. Tampilkan composite yang sama dalam warna sejati, inframerah warna semu, dan inframerah gelombang pendek. Mana yang membuat batas mangrove paling jelas, dan mengapa?
 2. Hitung persentil ke-2 dan ke-98 untuk B8 di area Anda lalu bandingkan peregangan itu dengan tebakan Anda sebelumnya.
-3. Ambil klasifikasi yang Anda buat di Bab 16 lalu tampilkan dengan pelangi, kemudian dengan viridis. Ubah keduanya ke skala abu abu. Mana yang bertahan?
+3. Ambil klasifikasi yang Anda buat di Bab [-@sec-supervised] lalu tampilkan dengan pelangi, kemudian dengan viridis. Ubah keduanya ke skala abu abu. Mana yang bertahan?
 4. Buat legenda untuk peta tutupan lahan Anda lalu tunjukkan kepada orang di luar bidang ini. Tanyakan menurut mereka peta itu mengatakan apa. Jawaban mereka adalah hasil Anda yang sebenarnya.

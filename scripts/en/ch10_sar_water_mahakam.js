@@ -62,6 +62,6 @@ print(ui.Chart.feature.byFeature(monthly, 'month', ['water_km2'])
 // Exercise
 // ---------------------------------------------------------------------------
 // 1. Plot a histogram of filtered VV over the lakes in one wet-season scene.
-//    Is -13 dB in the valley between water and land? Chapter 12's Otsu idea
+//    Is -13 dB in the valley between water and land? chapter “Band Math and Spectral Indices”'s Otsu idea
 //    would pick the threshold for you.
 // 2. Switch to ASCENDING passes. Does the monthly series agree?

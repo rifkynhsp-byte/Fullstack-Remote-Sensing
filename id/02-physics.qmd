@@ -25,7 +25,7 @@ Empat hal terjadi antara matahari dan angka itu.
 
 **Interaksi di permukaan.** Energi yang datang dipantulkan, diserap atau diteruskan, dengan proporsi yang bergantung pada jenis materialnya. Bagian inilah yang membawa informasi.
 
-**Transmisi atmosfer, saat naik.** Gangguan yang sama, sekali lagi. Mengoreksinya adalah yang mengubah radiansi puncak atmosfer menjadi reflektansi permukaan, dan itulah sebabnya Bab 8 bersikeras memakai produk reflektansi permukaan untuk apa pun yang bersifat kuantitatif.
+**Transmisi atmosfer, saat naik.** Gangguan yang sama, sekali lagi. Mengoreksinya adalah yang mengubah radiansi puncak atmosfer menjadi reflektansi permukaan, dan itulah sebabnya Bab [-@sec-optical] bersikeras memakai produk reflektansi permukaan untuk apa pun yang bersifat kuantitatif.
 
 ::: {.callout-note}
 ## Konsep: reflektansi adalah rasio, bukan kuantitas
@@ -38,7 +38,7 @@ Plot reflektansi terhadap panjang gelombang untuk sebuah material dan Anda mempe
 
 **Vegetasi sehat** memiliki bentuk khas. Reflektansi rendah di biru dan merah, karena klorofil menyerap kuat di kedua ujung daerah tampak untuk fotosintesis. Ada tonjolan sedang di hijau, dan itulah sebabnya daun tampak hijau: hijau adalah panjang gelombang tampak yang paling banyak ditolak klorofil. Lalu, tepat setelah merah, reflektansi melompat naik lima kali lipat atau lebih. Itulah plateau inframerah dekat.
 
-**Air** adalah tanda tangan paling sederhana sekaligus paling berguna. Ia memantul sedikit di biru dan hijau, lebih sedikit di merah, dan praktis tidak sama sekali di inframerah dekat dan seterusnya. Air jernih dalam pada inframerah dekat mendekati hitam. Setiap indeks air di Bab 12 dibangun dari fakta ini.
+**Air** adalah tanda tangan paling sederhana sekaligus paling berguna. Ia memantul sedikit di biru dan hijau, lebih sedikit di merah, dan praktis tidak sama sekali di inframerah dekat dan seterusnya. Air jernih dalam pada inframerah dekat mendekati hitam. Setiap indeks air di Bab [-@sec-indices] dibangun dari fakta ini.
 
 **Tanah terbuka** naik perlahan dan mantap dari daerah tampak ke inframerah gelombang pendek, tanpa fitur dramatis. Kecerahannya sangat bergantung pada kelembapan: tanah basah lebih gelap secara menyeluruh, dan itu penting di atas hamparan pasang surut, karena lumpur yang sama terekam berbeda saat pasang dan surut.
 
@@ -63,7 +63,7 @@ Penjelajah di bawah ini memungkinkan Anda menguji klaim itu, bukan sekadar mener
 
 {{< include ../interactive/spectral-explorer.qmd >}}
 
-Coba mangrove lawan hutan lebat lain memakai NDVI. Kedua batangnya hampir bertumpuk, dan itulah seluruh alasan Bab 10, 11, dan 14 ada. Setelah itu coba CMRI.
+Coba mangrove lawan hutan lebat lain memakai NDVI. Kedua batangnya hampir bertumpuk, dan itulah seluruh alasan Bab [-@sec-sar], [-@sec-terrain], dan 14 ada. Setelah itu coba CMRI.
 
 ## Klaim yang sama, dalam kode
 
@@ -128,7 +128,7 @@ Tidak ada dari itu yang mengatakan MNDWI adalah indeks mangrove terbaik. Yang di
 
 ::: {.callout-note}
 ## Sampai mana argumen ini berlaku
-Selisih antara dua spektrum representatif adalah uji penyaring, bukan analisis separabilitas. Dengan data latih nyata Anda akan menghitung jarak Jeffries-Matusita, atau cukup menjalankan classifier lalu membaca confusion matrix-nya, dan itu Bab 17. Kegunaan aritmetika di atas adalah menentukan apa yang masuk ke dalam stack sebelum Anda menghabiskan sepekan mengumpulkan label.
+Selisih antara dua spektrum representatif adalah uji penyaring, bukan analisis separabilitas. Dengan data latih nyata Anda akan menghitung jarak Jeffries-Matusita, atau cukup menjalankan classifier lalu membaca confusion matrix-nya, dan itu Bab [-@sec-accuracy]. Kegunaan aritmetika di atas adalah menentukan apa yang masuk ke dalam stack sebelum Anda menghabiskan sepekan mengumpulkan label.
 :::
 
 ### Jalankan sendiri
@@ -174,7 +174,7 @@ Kemampuan sensor dijelaskan pada empat sumbu yang saling bebas, dan setiap satel
 
 ::: {.callout-note}
 ## Konsep: mengapa keempatnya tidak bisa dimiliki sekaligus
-Detektor mengumpulkan foton dalam jumlah terbatas. Persempit interval panjang gelombang dan lebih sedikit foton tiba, sehingga untuk menjaga sinyal di atas derau Anda harus memperlebar jejak di tanah atau memperpanjang waktu tinggal. Piksel lebih kecil dan band lebih sempit sama sama membuat detektor kelaparan. Setiap desain satelit adalah keputusan tentang ke mana anggaran foton yang tetap itu dibelanjakan, dan itulah sebabnya tidak ada sensor tunggal yang tepat untuk semua pertanyaan, dan mengapa Bab 3 berbicara tentang memilih, bukan tentang satu favorit.
+Detektor mengumpulkan foton dalam jumlah terbatas. Persempit interval panjang gelombang dan lebih sedikit foton tiba, sehingga untuk menjaga sinyal di atas derau Anda harus memperlebar jejak di tanah atau memperpanjang waktu tinggal. Piksel lebih kecil dan band lebih sempit sama sama membuat detektor kelaparan. Setiap desain satelit adalah keputusan tentang ke mana anggaran foton yang tetap itu dibelanjakan, dan itulah sebabnya tidak ada sensor tunggal yang tepat untuk semua pertanyaan, dan mengapa Bab [-@sec-sensors] berbicara tentang memilih, bukan tentang satu favorit.
 :::
 
 ## Red edge
@@ -200,7 +200,7 @@ Dan tanah yang sama dapat menghasilkan nilai berbeda pada tanggal berbeda, karen
 Periksa tabel pasang surut terhadap tanggal perekaman Anda sebelum menafsirkan deret waktu pesisir. Penurunan NDWI yang tampak seperti peristiwa drainase sering kali hanyalah surut purnama. Pemeriksaan ini tidak berbiaya dan sudah mempermalukan banyak pekerjaan yang sebenarnya cermat.
 :::
 
-Ada dua respons. Unmixing spektral linear memperkirakan fraksi tutupan tiap komponen di dalam piksel, bila diberi spektrum murni komponennya, yang disebut endmember. Earth Engine menyediakan `ee.Image.unmix()` untuk ini. Alternatifnya, naik satu tingkat dan klasifikasikan objek alih alih piksel, yaitu Bab 18.
+Ada dua respons. Unmixing spektral linear memperkirakan fraksi tutupan tiap komponen di dalam piksel, bila diberi spektrum murni komponennya, yang disebut endmember. Earth Engine menyediakan `ee.Image.unmix()` untuk ini. Alternatifnya, naik satu tingkat dan klasifikasikan objek alih alih piksel, yaitu Bab [-@sec-obia].
 
 ## Di luar optik
 
@@ -208,7 +208,7 @@ Semua di atas mengandaikan sinar matahari yang dipantulkan, artinya sensor optik
 
 **Termal.** Setiap benda di atas nol mutlak memancarkan radiasi inframerah sebanding dengan suhunya. Landsat membawa band termal dan Sentinel-2 tidak, dan itulah sebabnya pekerjaan pulau panas perkotaan dan suhu permukaan lahan adalah pekerjaan Landsat.
 
-**Gelombang mikro, aktif.** Alih alih menunggu sinar matahari, sensor memancarkan pulsa gelombang mikronya sendiri dan mengukur yang kembali. Karena gelombang mikro pada panjang gelombang ini menembus awan dan tidak memerlukan matahari, sensor bekerja pada malam hari dan menembus cuaca. Apa yang kembali bergantung pada kekasaran permukaan, geometri dan kelembapan, bukan pada pigmen, sehingga radar mengukur struktur sementara optik mengukur komposisi. Sifat saling melengkapi itulah seluruh argumen Bab 10.
+**Gelombang mikro, aktif.** Alih alih menunggu sinar matahari, sensor memancarkan pulsa gelombang mikronya sendiri dan mengukur yang kembali. Karena gelombang mikro pada panjang gelombang ini menembus awan dan tidak memerlukan matahari, sensor bekerja pada malam hari dan menembus cuaca. Apa yang kembali bergantung pada kekasaran permukaan, geometri dan kelembapan, bukan pada pigmen, sehingga radar mengukur struktur sementara optik mengukur komposisi. Sifat saling melengkapi itulah seluruh argumen Bab [-@sec-sar].
 
 
 <script type="application/json" class="lms-quiz">

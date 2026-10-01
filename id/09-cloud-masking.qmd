@@ -148,7 +148,7 @@ Kolom terakhir itulah yang perlu ditanggapi serius, dan sekaligus dicurigai. Ia 
 
 ::: {.callout-important}
 ## Asumsinya adalah pelajarannya
-Ketika composite Anda berlubang padahal aritmetika ini mengatakan seharusnya tidak, aritmetikanya tidak salah. Asumsi kebebasannya yang salah. Di titik itulah radar berhenti menjadi topik lanjutan dan menjadi satu satunya pilihan, dan itu Bab 10.
+Ketika composite Anda berlubang padahal aritmetika ini mengatakan seharusnya tidak, aritmetikanya tidak salah. Asumsi kebebasannya yang salah. Di titik itulah radar berhenti menjadi topik lanjutan dan menjadi satu satunya pilihan, dan itu Bab [-@sec-sar].
 :::
 
 ### Aritmetika yang sama sebagai peta
@@ -193,7 +193,7 @@ Di tempat yang paling berawan, misalnya lembah pegunungan yang tertutup awan kro
 
 Lebarkan jendelanya: composite dua atau tiga tahun menutup lubangnya dengan ongkos ketelitian temporal, dan itu menjadi tidak bisa dipertahankan dalam studi deteksi perubahan yang justru intinya adalah mengetahui kapan sesuatu terjadi.
 
-Atau ganti sensor. Radar menembus awan sepenuhnya, karena gelombang mikro pada panjang gelombang Sentinel-1 tidak terpengaruh butiran air. Itulah Bab 10.
+Atau ganti sensor. Radar menembus awan sepenuhnya, karena gelombang mikro pada panjang gelombang Sentinel-1 tidak terpengaruh butiran air. Itulah Bab [-@sec-sar].
 
 <script type="application/json" class="lms-quiz">
 {

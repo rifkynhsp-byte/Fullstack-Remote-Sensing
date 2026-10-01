@@ -22,7 +22,7 @@ Almost every optical analysis in environmental monitoring runs on one of two pro
 
 The decision rule is straightforward. If your question needs history before 2015, deforestation baselines, long term coastal change, urban growth over decades, you need Landsat, and there is no substitute. If your question needs spatial detail or vegetation stress sensitivity, smallholder plots, narrow mangrove fringes, crop condition, Sentinel-2 wins clearly. If your question needs land surface temperature, only Landsat carries a thermal sensor.
 
-Many serious projects use both: Landsat for the historical baseline, Sentinel-2 for the recent detail. Chapter 21 handles the harmonisation that makes joint use defensible.
+Many serious projects use both: Landsat for the historical baseline, Sentinel-2 for the recent detail. Chapter [-@sec-timeseries] handles the harmonisation that makes joint use defensible.
 
 ::: {.callout-note}
 ## Concept: the red edge
@@ -67,7 +67,7 @@ Four filters do the work, and they operate on different things.
 
 ::: {.callout-important}
 ## Scientific integrity: scene level cloud is a blunt instrument
-`CLOUDY_PIXEL_PERCENTAGE` describes an entire scene, roughly 110 kilometres square. A scene reported as 40 percent cloudy may be completely clear over your ten kilometre study area, and a scene reported as 5 percent cloudy may have its entire cloud burden sitting directly over your site. Filtering on this property is convenient for picking one image to look at. It is the wrong tool for building a composite, and Chapter 9 replaces it with per pixel masking.
+`CLOUDY_PIXEL_PERCENTAGE` describes an entire scene, roughly 110 kilometres square. A scene reported as 40 percent cloudy may be completely clear over your ten kilometre study area, and a scene reported as 5 percent cloudy may have its entire cloud burden sitting directly over your site. Filtering on this property is convenient for picking one image to look at. It is the wrong tool for building a composite, and Chapter [-@sec-cloud] replaces it with per pixel masking.
 :::
 
 ## Checking before proceeding

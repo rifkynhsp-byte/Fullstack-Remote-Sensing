@@ -143,7 +143,7 @@ def products():
                     "Normalising the change first trades some recall for far fewer "
                     "false alarms. Objects did not beat pixels here: many scars are "
                     "narrower than an 8-pixel SNIC object, so they merge into their "
-                    "surroundings. That is the case Chapter 18 warns about."},
+                    "surroundings. That is the case chapter “Object Based Image Analysis” warns about."},
     ]
 
 

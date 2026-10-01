@@ -38,11 +38,11 @@ Bacaan praktisnya: spesifikasi laptop Anda hampir tidak relevan terhadap seberap
 
 Nama teknis susunan ini adalah evaluasi malas. Akibat baiknya adalah efisiensi. Karena Earth Engine melihat seluruh resep sebelum menjalankan bagian mana pun, ia dapat merencanakan. Bila peta akhir Anda hanya mencakup satu delta, perencana tidak pernah menyentuh citra di luar delta itu, sekalipun skrip Anda menyebut koleksi global. Bila Anda memfilter ke 2023, arsip 2022 tidak pernah dibaca. Merangkai dua puluh operasi tidak lebih mahal disiapkan dibanding merangkai satu.
 
-Akibat canggungnya, galat datang terlambat dan di tempat yang keliru. Kesalahan yang ditulis di baris 12 sering muncul sebagai kegagalan di baris 90, pada saat sesuatu akhirnya memaksa evaluasi. Men-debug Earth Engine berarti belajar memaksa evaluasi secara sengaja dan lebih awal, dan itulah kebiasaan yang dibangun Bab 5 dan disistematisasi Lampiran B.
+Akibat canggungnya, galat datang terlambat dan di tempat yang keliru. Kesalahan yang ditulis di baris 12 sering muncul sebagai kegagalan di baris 90, pada saat sesuatu akhirnya memaksa evaluasi. Men-debug Earth Engine berarti belajar memaksa evaluasi secara sengaja dan lebih awal, dan itulah kebiasaan yang dibangun Bab [-@sec-ecosystem] dan disistematisasi Lampiran B.
 
 ::: {.callout-warning}
 ## Kesalahan umum: perulangan yang tak pernah selesai
-Perulangan `for` JavaScript berjalan di peramban Anda. Bila Anda menulisnya untuk melintasi seribu citra, peramban mencoba seribu perjalanan berurutan ke Google dan membeku. Padanan sisi servernya, `.map()`, mengirim satu instruksi yang menyebar ke ribuan mesin sekaligus. Bab 7 membahasnya dengan benar. Ini cara paling umum bagi pemrogram berpengalaman yang baru di Earth Engine untuk membuat platform cepat menjadi lambat.
+Perulangan `for` JavaScript berjalan di peramban Anda. Bila Anda menulisnya untuk melintasi seribu citra, peramban mencoba seribu perjalanan berurutan ke Google dan membeku. Padanan sisi servernya, `.map()`, mengirim satu instruksi yang menyebar ke ribuan mesin sekaligus. Bab [-@sec-server-side] membahasnya dengan benar. Ini cara paling umum bagi pemrogram berpengalaman yang baru di Earth Engine untuk membuat platform cepat menjadi lambat.
 :::
 
 ## Ubin, piramida dan skala
@@ -66,7 +66,7 @@ Kejujuran tentang pertukarannya, karena pertukarannya nyata dan muncul di setiap
 
 **Anda tidak dapat melihat mesinnya.** Ketika sesuatu lambat, tidak ada profiler yang memberi tahu operasi mana yang mahal. Diagnosisnya empiris: pangkas skrip sampai jalan, lalu tambahkan kembali.
 
-**Pustaka algoritmanya tetap.** Earth Engine menawarkan sekumpulan klasifikator dan reducer tertentu. Bila metode Anda memerlukan arsitektur deep learning khusus, platform ini akan menyiapkan data lalu menyerahkannya ke Vertex AI, SageMaker atau perangkat keras Anda sendiri. Bab 23 membahas serah terima itu.
+**Pustaka algoritmanya tetap.** Earth Engine menawarkan sekumpulan klasifikator dan reducer tertentu. Bila metode Anda memerlukan arsitektur deep learning khusus, platform ini akan menyiapkan data lalu menyerahkannya ke Vertex AI, SageMaker atau perangkat keras Anda sendiri. Bab [-@sec-apps] membahas serah terima itu.
 
 **Lisensi membatasi penggunaan komersial.** Akses gratis untuk riset, pendidikan dan kerja nirlaba. Penerapan komersial memerlukan paket berbayar.
 
@@ -117,5 +117,5 @@ Semua itu tidak mengubah kesimpulannya. Untuk kelas pertanyaan yang dibahas buku
 ## Latihan {.unnumbered}
 
 1. Perkirakan volume unduhan untuk proyek Anda yang terakhir: jumlah citra, ukuran rata rata, dan jam yang habis untuk transfer dan pembongkaran. Simpan angkanya. Itu garis dasar yang sedang Anda gantikan.
-2. Tulis satu kalimat berisi pertanyaan lingkungan yang akan Anda ajukan seandainya volume data bukan kendala. Kembalilah ke kalimat itu setelah Bab 17.
+2. Tulis satu kalimat berisi pertanyaan lingkungan yang akan Anda ajukan seandainya volume data bukan kendala. Kembalilah ke kalimat itu setelah Bab [-@sec-accuracy].
 3. Jelaskan perbedaan klien dan server kepada rekan yang tidak menulis kode. Bila penjelasannya lebih dari dua menit, model mentalnya belum mengendap.

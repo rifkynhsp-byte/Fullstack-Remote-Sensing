@@ -17,7 +17,7 @@ Remote sensing means measuring something without touching it. A satellite never 
 So the first question is always: **where did the energy come from?** There are only two answers.
 
 - **Passive** sensors record energy from a natural source. For optical sensors (Landsat, Sentinel-2, SPOT) the source is the Sun: they record sunlight reflected by the ground. Thermal sensors record energy the ground emits by itself because it is warm.
-- **Active** sensors bring their own source. A radar sends microwave pulses and records the echo (P5). A LiDAR sends laser pulses (Chapter 32).
+- **Active** sensors bring their own source. A radar sends microwave pulses and records the echo (P5). A LiDAR sends laser pulses (Chapter [-@sec-lidar-trees]).
 
 This one distinction explains a lot. Optical sensors need daylight and a clear sky. Radar works at night and through cloud, because it is its own torch and uses wavelengths that pass through cloud.
 
@@ -59,7 +59,7 @@ The Planck figure in the output block shows both curves on one chart. Look at wh
 
 Before energy reaches the sensor it passes through the atmosphere, sometimes twice (Sun to ground, ground to sensor). Two things can happen on the way.
 
-**Absorption.** Gases take energy out at particular wavelengths. Water vapour absorbs around 0.94, 1.14, 1.38, 1.87 and 2.7 µm, and much of the range beyond 5 to 8 µm. Carbon dioxide absorbs near 2.7, 4.3 and 15 µm, and ozone below 0.3 µm (this is what protects us from ultraviolet) and near 9.6 µm. The ranges where little is absorbed are called **atmospheric windows**: roughly 0.4 to 1.3 µm, around 1.6 and 2.2 µm, 3 to 5 µm, 8 to 14 µm, and nearly all of the microwave. Satellite bands are placed inside windows, because a band outside one would see only the atmosphere. There is one clever exception. Landsat 8's band 9 and Sentinel-2's band 10 sit at 1.38 µm, *inside* a strong water vapour absorption band. Water vapour in the lower atmosphere absorbs everything from the ground, so the only thing the band can see is high, thin cirrus cloud above most of the water vapour. That makes it a cirrus detector (Chapter 9).
+**Absorption.** Gases take energy out at particular wavelengths. Water vapour absorbs around 0.94, 1.14, 1.38, 1.87 and 2.7 µm, and much of the range beyond 5 to 8 µm. Carbon dioxide absorbs near 2.7, 4.3 and 15 µm, and ozone below 0.3 µm (this is what protects us from ultraviolet) and near 9.6 µm. The ranges where little is absorbed are called **atmospheric windows**: roughly 0.4 to 1.3 µm, around 1.6 and 2.2 µm, 3 to 5 µm, 8 to 14 µm, and nearly all of the microwave. Satellite bands are placed inside windows, because a band outside one would see only the atmosphere. There is one clever exception. Landsat 8's band 9 and Sentinel-2's band 10 sit at 1.38 µm, *inside* a strong water vapour absorption band. Water vapour in the lower atmosphere absorbs everything from the ground, so the only thing the band can see is high, thin cirrus cloud above most of the water vapour. That makes it a cirrus detector (Chapter [-@sec-cloud]).
 
 **Scattering.** Particles and molecules redirect energy without absorbing it. Which kind of scattering happens depends on the size of the particle compared with the wavelength:
 
@@ -79,7 +79,7 @@ The Code tabs show this with one Sentinel-2 overpass of Jakarta in July 2024, st
 
 The difference between them is the atmosphere, measured. In the coastal-aerosol and blue bands the atmosphere adds about 0.07 to 0.12 to the reflectance, which is more than the surface itself reflects in those bands. The added amount falls off quickly with wavelength, close to what Rayleigh's $\lambda^{-4}$ predicts. From the red edge onwards the sign flips: there the atmosphere mostly *removes* light (absorption and scattering out of the beam), so correction pushes the values up. Compare the two true-colour maps: the hazy, bluish city on the left is what the sensor saw; the one on the right is what the ground looks like.
 
-This is why Chapter 8 insists on surface reflectance for anything you compare across dates. The atmosphere changes from day to day. The ground, mostly, does not.
+This is why Chapter [-@sec-optical] insists on surface reflectance for anything you compare across dates. The atmosphere changes from day to day. The ground, mostly, does not.
 
 ## What the surface does with the energy
 
@@ -87,7 +87,7 @@ Energy that reaches the ground is split three ways, and the parts always add up 
 
 $$E_{incident} = E_{reflected} + E_{absorbed} + E_{transmitted}$$
 
-The proportions depend on the material *and* the wavelength. That dependence is the whole basis of optical remote sensing: plot reflectance against wavelength and each material draws its own curve, its **spectral signature** (Chapter 2). Healthy leaves absorb red and blue light for photosynthesis and reflect near infrared strongly. Clear water absorbs almost all NIR. Dry soil reflects more and more towards the SWIR.
+The proportions depend on the material *and* the wavelength. That dependence is the whole basis of optical remote sensing: plot reflectance against wavelength and each material draws its own curve, its **spectral signature** (Chapter [-@sec-physics]). Healthy leaves absorb red and blue light for photosynthesis and reflect near infrared strongly. Clear water absorbs almost all NIR. Dry soil reflects more and more towards the SWIR.
 
 How the reflected energy leaves the surface matters as much as how much of it there is:
 
@@ -104,7 +104,7 @@ A thermal sensor measures *radiant* temperature. What we usually want is *kineti
 
 $$T_{radiant} = \varepsilon^{1/4} \, T_{kinetic}$$
 
-The emissivity figure shows why this matters. At 27 °C, a surface with $\varepsilon = 0.92$ looks about 6 °C cooler than a blackbody at the same true temperature. Land surface temperature products (Chapter 30, Chapter 35) estimate emissivity from land cover before converting radiance to temperature. Errors in emissivity become errors in temperature.
+The emissivity figure shows why this matters. At 27 °C, a surface with $\varepsilon = 0.92$ looks about 6 °C cooler than a blackbody at the same true temperature. Land surface temperature products (Chapter [-@sec-statistics], Chapter [-@sec-urban-energy]) estimate emissivity from land cover before converting radiance to temperature. Errors in emissivity become errors in temperature.
 
 This also answers a classic question: **why does Landsat carry a thermal band while SPOT does not?** Landsat's telescope is built from mirrors (reflective optics), and a mirror reflects every wavelength from blue to thermal. SPOT's cameras are built around lenses (refractive optics). Optical glass passes visible and near-infrared light, and with the right glass some SWIR (SPOT 4 and 5 added a SWIR band), but it is opaque in the thermal infrared. Mirrors are also lighter than thick glass, which matters for anything launched into orbit. The choice of telescope limits the bands a satellite can have (P3).
 

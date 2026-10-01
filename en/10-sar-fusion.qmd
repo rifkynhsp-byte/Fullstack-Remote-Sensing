@@ -7,7 +7,7 @@ You will add a sensor that ignores cloud entirely, understand what radar is phys
 
 ## The sensor that does not need the sun
 
-Everything in Chapters 8 and 9 depended on reflected sunlight. That makes optical sensors blind at night and blind through cloud, and Chapter 9 spent its length working around the second limitation.
+Everything in Chapters [-@sec-optical] and [-@sec-cloud] depended on reflected sunlight. That makes optical sensors blind at night and blind through cloud, and Chapter [-@sec-cloud] spent its length working around the second limitation.
 
 Radar removes the limitation rather than working around it. Sentinel-1 emits its own microwave pulse and measures what comes back. Microwaves at these wavelengths pass through cloud with negligible loss, so a Sentinel-1 acquisition over the Mahakam Delta in February is exactly as usable as one in August.
 
@@ -45,7 +45,7 @@ Sentinel-1 is **C band**, about 5.6 cm. Those waves interact with leaves and sma
 
 ALOS PALSAR is **L band**, about 23 cm. Longer waves pass through foliage and interact with trunks and large branches. L band reaches further into and through the canopy, correlates better with total above ground biomass, and saturates less readily in dense forest.
 
-For mangroves the implication is direct. C band reports canopy condition; L band reports structure and biomass. Chapter 20 needs the second when it turns maps into carbon numbers.
+For mangroves the implication is direct. C band reports canopy condition; L band reports structure and biomass. Chapter [-@sec-regression] needs the second when it turns maps into carbon numbers.
 
 ## Speckle, and why it is not noise in the usual sense
 
@@ -77,7 +77,7 @@ The figure quantifies the trade rather than asserting it. Read the caption under
 
 ## The full workflow
 
-The script below is the one every later chapter depends on. It is written as `getAnalysisReadyData(year)` rather than as a linear script, and that single change is what turns a one off map into a monitoring system: Chapter 21 calls it in a loop to build a time series, Chapter 16 calls it once to train a classifier, and neither needs to know how it works.
+The script below is the one every later chapter depends on. It is written as `getAnalysisReadyData(year)` rather than as a linear script, and that single change is what turns a one off map into a monitoring system: Chapter [-@sec-timeseries] calls it in a loop to build a time series, Chapter [-@sec-supervised] calls it once to train a classifier, and neither needs to know how it works.
 
 {{< include _snippets/ch10_multisensor_stack.qmd >}}
 
@@ -106,7 +106,7 @@ For mangrove mapping it clearly does. The confusion capping accuracy is with oth
 
 For a broad forest and non forest map, it usually does not. Optical data already separates those classes cleanly, and the radar bands add computation, a maintenance burden and another failure mode for perhaps half an accuracy point.
 
-The test from Chapter 3 applies: run the classification on optical alone, read the confusion matrix, identify the specific class pair that is failing, and add the one data source that addresses that pair. Adding everything at once and observing that accuracy rose three points teaches you nothing about why.
+The test from Chapter [-@sec-sensors] applies: run the classification on optical alone, read the confusion matrix, identify the specific class pair that is failing, and add the one data source that addresses that pair. Adding everything at once and observing that accuracy rose three points teaches you nothing about why.
 
 <script type="application/json" class="lms-quiz">
 {

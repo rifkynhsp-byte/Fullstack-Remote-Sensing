@@ -9,7 +9,7 @@ Anda akan melatih, menyetel, dan membandingkan tiga classifier, membaca band pre
 
 Kupas nama nama algoritmanya dan klasifikasi terbimbing tinggal satu operasi: diberi tabel yang setiap barisnya sebuah lokasi, kolomnya pengukuran, dan satu kolomnya label, pelajari aturan yang memprediksi label dari pengukurannya, lalu terapkan aturan itu ke setiap piksel citra.
 
-Semua isi Bab 8 sampai 14 ada untuk membangun kolomnya. Bab 15 membangun labelnya. Bab ini adalah langkah terpendek dalam seluruh rantai dan justru yang paling banyak mendapat perhatian, dan itu kira kira kebalikan dari seberapa besar pengaruhnya.
+Semua isi Bab [-@sec-optical] sampai [-@sec-texture] ada untuk membangun kolomnya. Bab [-@sec-sampling] membangun labelnya. Bab ini adalah langkah terpendek dalam seluruh rantai dan justru yang paling banyak mendapat perhatian, dan itu kira kira kebalikan dari seberapa besar pengaruhnya.
 
 ## Sebelum ada label: klaster
 
@@ -25,23 +25,23 @@ Earth Engine menyediakan pustaka classifier yang tetap. Tiga di antaranya mencak
 
 Ia pilihan baku yang tepat untuk penginderaan jauh karena tiga alasan spesifik. Ia menangani band dengan skala yang sangat berbeda tanpa normalisasi, dan feature stack yang berisi reflektansi 0 sampai 1 berdampingan dengan elevasi dalam meter dan backscatter dalam desibel persis seperti itu. Ia toleran terhadap prediktor yang berkorelasi, dan NDVI, EVI, serta SAVI berkorelasi kuat menurut konstruksinya. Dan ia melaporkan kepentingan fitur, yang menjadi alat diagnosis di bagian berikutnya.
 
-Keterbatasan sejatinya muncul pada regresi, bukan klasifikasi: sebuah forest tidak bisa memprediksi nilai di luar rentang yang dilatihkan kepadanya. Bab 20 kembali ke soal ini.
+Keterbatasan sejatinya muncul pada regresi, bukan klasifikasi: sebuah forest tidak bisa memprediksi nilai di luar rentang yang dilatihkan kepadanya. Bab [-@sec-regression] kembali ke soal ini.
 
 **Support vector machine** mencari batas yang memisahkan kelas dengan margin selebar mungkin, di dalam ruang yang sudah ditransformasi kernel, sehingga batas yang tidak bisa digambar garis lurus menjadi bisa digambar. Dengan kernel radial basis, dua parameter penting. `gamma` mengatur seberapa lokal batasnya, dan nilai tinggi menghasilkan batas yang membungkus ketat titik latih satu per satu lalu overfitting. `cost` mengatur seberapa besar hukuman bagi titik latih yang salah klasifikasi, dan nilai tinggi juga mendorong ke arah overfitting.
 
-SVM berbasis jarak, dan ini punya konsekuensi yang terus menerus menjegal orang. Kalau satu band berkisar 0 sampai 1 dan band lain 0 sampai 10.000, band kedua sepenuhnya mendominasi perhitungan jaraknya dan band pertama menjadi tak terlihat oleh model. Persis inilah sebabnya Bab 10 mengonversi digital number PALSAR menjadi gamma nought dan membagi Sentinel-2 dengan 10.000. Langkah itu bukan kerapian. Itu bedanya antara SVM yang bekerja dan SVM yang mengabaikan sebagian besar stack Anda.
+SVM berbasis jarak, dan ini punya konsekuensi yang terus menerus menjegal orang. Kalau satu band berkisar 0 sampai 1 dan band lain 0 sampai 10.000, band kedua sepenuhnya mendominasi perhitungan jaraknya dan band pertama menjadi tak terlihat oleh model. Persis inilah sebabnya Bab [-@sec-sar] mengonversi digital number PALSAR menjadi gamma nought dan membagi Sentinel-2 dengan 10.000. Langkah itu bukan kerapian. Itu bedanya antara SVM yang bekerja dan SVM yang mengabaikan sebagian besar stack Anda.
 
 **Gradient tree boosting** membangun pohon secara berurutan, masing masing mencocokkan galat yang dibuat pohon pohon sebelumnya. Ia sering menjadi yang paling akurat di antara ketiganya pada data tabular, sekaligus yang paling bersedia overfitting kalau data latihnya berderau, karena mencocokkan residu pohon sebelumnya pada akhirnya berarti mencocokkan derau.
 
 ## Band mana yang benar benar berkontribusi
 
-`classifier.explain()` mengembalikan isi internal model yang sudah dilatih, termasuk kepentingan per band. Pada stack yang dibangun susah payah lewat Bab 10 sampai 14, grafik ini menjawab pertanyaan yang bernilai uang sungguhan: apakah band radar, tekstur, dan topografi sepadan dengan usahanya, atau NDVI sedang mengerjakan semuanya sendirian?
+`classifier.explain()` mengembalikan isi internal model yang sudah dilatih, termasuk kepentingan per band. Pada stack yang dibangun susah payah lewat Bab [-@sec-sar] sampai [-@sec-texture], grafik ini menjawab pertanyaan yang bernilai uang sungguhan: apakah band radar, tekstur, dan topografi sepadan dengan usahanya, atau NDVI sedang mengerjakan semuanya sendirian?
 
 Bacalah ke dua arah.
 
 **Band yang mendekati nol adalah beban mati.** Buang lalu latih ulang. Kalau akurasinya bertahan, model baru saja menjadi lebih murah dijalankan, lebih cepat diekspor, dan lebih stabil pada data baru. Pengurangan fitur adalah salah satu dari sedikit kemenangan gratis di bidang ini.
 
-**Band yang mendominasi segalanya layak dicurigai, bukan disyukuri.** Tanyakan apakah ia bisa jadi salinan label yang menyamar. Bab 22 membahas satu kasus nyata ketika jarak ke kompetitor terdekat ternyata persis begitu, dan menghasilkan model yang melaporkan akurasi 100 persen sambil tidak mempelajari apa apa.
+**Band yang mendominasi segalanya layak dicurigai, bukan disyukuri.** Tanyakan apakah ia bisa jadi salinan label yang menyamar. Bab [-@sec-vector] membahas satu kasus nyata ketika jarak ke kompetitor terdekat ternyata persis begitu, dan menghasilkan model yang melaporkan akurasi 100 persen sambil tidak mempelajari apa apa.
 
 ::: {.callout-tip}
 ## Dari lapangan
@@ -69,7 +69,7 @@ Tumpuk ketiga prediksi sebagai band lalu ambil mode per piksel. Di tempat ketiga
 
 Ini bekerja karena ketiga algoritmanya gagal dengan cara berbeda. Mengansambelkan tiga varian dari algoritma yang sama nyaris tidak menghasilkan apa apa; keragamannya adalah mekanismenya, bukan jumlahnya.
 
-Ada manfaat kedua yang lebih sunyi. Tempat tempat ketiganya berselisih membentuk sebuah peta, dan peta itu adalah produk ketidakpastian yang lebih baik daripada sebagian besar produk ketidakpastian formal. Piksel yang oleh Random Forest disebut mangrove, oleh SVM disebut hutan lain, dan oleh gradient boosting disebut mangrove adalah piksel yang layak didatangi orang. Bab 17 memakainya ketika memutuskan ke mana anggaran validasi lapangan yang terbatas sebaiknya dibelanjakan.
+Ada manfaat kedua yang lebih sunyi. Tempat tempat ketiganya berselisih membentuk sebuah peta, dan peta itu adalah produk ketidakpastian yang lebih baik daripada sebagian besar produk ketidakpastian formal. Piksel yang oleh Random Forest disebut mangrove, oleh SVM disebut hutan lain, dan oleh gradient boosting disebut mangrove adalah piksel yang layak didatangi orang. Bab [-@sec-accuracy] memakainya ketika memutuskan ke mana anggaran validasi lapangan yang terbatas sebaiknya dibelanjakan.
 
 ## Pasca pemrosesan tanpa menghapus subjeknya
 
@@ -101,7 +101,7 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
         "Nama bandnya tidak kompatibel"
       ],
       "answer": 1,
-      "why": "Inilah sebabnya Bab 10 mengonversi ke gamma nought dan membagi reflektansi dengan 10.000. Langkah itu bukan kerapian; itu yang membuat classifier berbasis jarak bisa dipakai."
+      "why": "Inilah sebabnya Bab [-@sec-sar] mengonversi ke gamma nought dan membagi reflektansi dengan 10.000. Langkah itu bukan kerapian; itu yang membuat classifier berbasis jarak bisa dipakai."
     },
     {
       "q": "Kurva penyetelan datar dari 50 pohon sampai 150. Angka mana yang sebaiknya dipakai?",
@@ -134,7 +134,7 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
         "Tambah jumlah pohonnya"
       ],
       "answer": 2,
-      "why": "Kepentingan yang mendominasi sama seringnya merupakan kebocoran ketimbang penemuan. Bab 22 membahas kasus nyata yang persis seperti ini dan menghasilkan model dengan akurasi sempurna yang tidak tahu apa apa."
+      "why": "Kepentingan yang mendominasi sama seringnya merupakan kebocoran ketimbang penemuan. Bab [-@sec-vector] membahas kasus nyata yang persis seperti ini dan menghasilkan model dengan akurasi sempurna yang tidak tahu apa apa."
     },
     {
       "q": "Apa risiko filter focal mode berjari jari besar di garis pantai mangrove?",
@@ -153,7 +153,7 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
 
 ## Latihan {.unnumbered}
 
-1. Berpindahlah antara ketiga klasifikasi individual di atas jalur mangrove. Tempat mereka berselisih adalah tempat peta Anda benar benar tidak pasti. Simpan layer ketidaksepakatan itu; Bab 17 memakainya.
+1. Berpindahlah antara ketiga klasifikasi individual di atas jalur mangrove. Tempat mereka berselisih adalah tempat peta Anda benar benar tidak pasti. Simpan layer ketidaksepakatan itu; Bab [-@sec-accuracy] memakainya.
 2. Dengan sengaja cuplik sebelum membagi alih alih sesudah, lalu catat berapa poin akurasi yang dilaporkan naik. Selisih itu adalah besarnya kebohongan.
 3. Buang tiga band dengan kepentingan terendah lalu latih ulang. Laporkan perubahan akurasinya dan putuskan apakah band itu tetap dipertahankan.
 4. Naikkan jari jari focal mode menjadi 6 piksel lalu temukan satu objek nyata yang dihapusnya.

@@ -38,11 +38,11 @@ None of that is achievable without measurement. A commitment to reduce emissions
 
 This is where the technical content of this book becomes policy relevant. Every MRV system needs the same three capabilities.
 
-**A baseline.** What was here at the start of the accounting period. Chapters 16 and 19 build this.
+**A baseline.** What was here at the start of the accounting period. Chapters [-@sec-supervised] and [-@sec-embeddings] build this.
 
-**Change detection.** What happened since, and when. Chapter 21 builds this.
+**Change detection.** What happened since, and when. Chapter [-@sec-timeseries] builds this.
 
-**Quantification with uncertainty.** How much carbon, plus or minus how much. Chapter 20 builds this.
+**Quantification with uncertainty.** How much carbon, plus or minus how much. Chapter [-@sec-regression] builds this.
 
 If a chapter in this book does not eventually feed one of those three, it is in the wrong book.
 
@@ -54,12 +54,12 @@ Blue carbon credits trade at a premium over terrestrial forestry credits, common
 
 ::: {.callout-important}
 ## Scientific integrity: this is why accuracy assessment is not optional
-When a map is the basis of a financial instrument, an overstated extent is not a technical shortcoming. It is a claim that somebody is paying for. Chapter 17 covers accuracy assessment in more detail than most readers will initially think necessary, and this is why. The honest number is the one from independent field validation, not the one your training data reports back to you.
+When a map is the basis of a financial instrument, an overstated extent is not a technical shortcoming. It is a claim that somebody is paying for. Chapter [-@sec-accuracy] covers accuracy assessment in more detail than most readers will initially think necessary, and this is why. The honest number is the one from independent field validation, not the one your training data reports back to you.
 :::
 
 ## The same logic, a different domain
 
-Nothing in the preceding sections is specific to conservation. Chapter 22 works through commercial site selection, choosing where to open a coffee shop in Malang, and the logic is structurally identical.
+Nothing in the preceding sections is specific to conservation. Chapter [-@sec-vector] works through commercial site selection, choosing where to open a coffee shop in Malang, and the logic is structurally identical.
 
 | | Mangrove monitoring | Site selection |
 |---|---|---|
@@ -83,7 +83,7 @@ A map that only a remote sensing specialist can read has failed at the last step
 
 **A carbon project developer** needs conformity with a specific methodology, a documented uncertainty estimate and a repeatable process.
 
-**A community** needs to be able to run the analysis themselves. This is the argument behind low code applications like Indraja Buana: a tool that requires an outside expert every time it is used creates dependency rather than capacity. The goal is to move from community based conservation to community owned conservation, and the software design in Chapter 23 follows from that goal.
+**A community** needs to be able to run the analysis themselves. This is the argument behind low code applications like Indraja Buana: a tool that requires an outside expert every time it is used creates dependency rather than capacity. The goal is to move from community based conservation to community owned conservation, and the software design in Chapter [-@sec-apps] follows from that goal.
 
 
 <script type="application/json" class="lms-quiz">
@@ -132,4 +132,4 @@ A map that only a remote sensing specialist can read has failed at the last step
 1. Write down, in one sentence, the decision your own map is meant to inform. If you cannot name a decision or a person, you have a visualisation rather than an analysis.
 2. Identify which of the three MRV capabilities your work currently provides and which it does not.
 3. Find the national or subnational commitment your study area falls under. Note the target, the baseline year and the reporting body.
-4. For your study area, name the single most likely reason a reviewer would reject your map. Keep the note. Chapter 17 will come back to it.
+4. For your study area, name the single most likely reason a reviewer would reject your map. Keep the note. Chapter [-@sec-accuracy] will come back to it.

@@ -17,7 +17,7 @@ Two consequences follow, and they are the reasons this chapter exists.
 
 ::: {.callout-warning}
 ## Common failure: smoothing instead of segmenting
-The obvious response to salt and pepper is a modal filter, and Chapter 16 used one. It works, and it is a blunt instrument: it removes noise and real small features indiscriminately, because it cannot tell them apart. A three pixel filter erases an isolated misclassified pixel and an isolated genuine 20 metre mangrove patch with equal enthusiasm. Segmentation addresses the cause; smoothing addresses the symptom.
+The obvious response to salt and pepper is a modal filter, and Chapter [-@sec-supervised] used one. It works, and it is a blunt instrument: it removes noise and real small features indiscriminately, because it cannot tell them apart. A three pixel filter erases an isolated misclassified pixel and an isolated genuine 20 metre mangrove patch with equal enthusiasm. Segmentation addresses the cause; smoothing addresses the symptom.
 :::
 
 ## What segmentation does
@@ -28,7 +28,7 @@ Two things change as a result.
 
 The unit of analysis becomes something that resembles a feature on the ground. Every pixel within an object gets the same class, so isolated errors are impossible by construction.
 
-And a new family of predictors becomes available. A pixel has a value. An object has a mean, a standard deviation, a size, a shape and a perimeter. Standard deviation within an object is the interesting one: a uniform plantation has low internal variance, a structurally complex natural stand has high variance, and the two may have identical means. That is the same insight as the GLCM texture of Chapter 14, arriving by a different route and often more cleanly.
+And a new family of predictors becomes available. A pixel has a value. An object has a mean, a standard deviation, a size, a shape and a perimeter. Standard deviation within an object is the interesting one: a uniform plantation has low internal variance, a structurally complex natural stand has high variance, and the two may have identical means. That is the same insight as the GLCM texture of Chapter [-@sec-texture], arriving by a different route and often more cleanly.
 
 ## SNIC, and its three real parameters
 
@@ -65,14 +65,14 @@ The practical rule: ask whether the thing you are mapping has edges. If it does,
 ## Scientific integrity: the minimum mapping unit belongs in the metadata
 Filtering out polygons below a threshold is standard cartographic practice and it changes your area statistics. A 0.5 hectare minimum mapping unit removes every fringing stand narrower than a few pixels, which over a delta can be a substantial share of the mangrove extent.
 
-State the minimum mapping unit alongside the scale and the confidence interval from Chapter 17. Two maps of the same coastline reporting different extents have sometimes differed by nothing more than this.
+State the minimum mapping unit alongside the scale and the confidence interval from Chapter [-@sec-accuracy]. Two maps of the same coastline reporting different extents have sometimes differed by nothing more than this.
 :::
 
 ## Vectors as the actual deliverable
 
 There is a practical argument for OBIA with nothing to do with accuracy.
 
-Object boundaries vectorise into clean polygons. A district planner can open them in QGIS, edit them, attach attributes, calculate areas per village, and put the result in a report. That is the form in which geospatial work usually has to arrive to be acted on, and it is worth remembering that Chapter 1 defined the whole purpose of the exercise as informing a decision.
+Object boundaries vectorise into clean polygons. A district planner can open them in QGIS, edit them, attach attributes, calculate areas per village, and put the result in a report. That is the form in which geospatial work usually has to arrive to be acted on, and it is worth remembering that Chapter [-@sec-why] defined the whole purpose of the exercise as informing a decision.
 
 A pixel based classification vectorises into a mess. If the deliverable is a shapefile that someone else will work with, segmentation earns its place on that ground alone, even in a landscape where the accuracy gain is zero.
 

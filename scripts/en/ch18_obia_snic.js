@@ -5,7 +5,7 @@
  * CHAPTER 18 | Classifying objects instead of pixels
  * ---------------------------------------------------------------------------
  * Goal
- *   Replace the noisy pixel by pixel classification of Chapter 16 with one
+ *   Replace the noisy pixel by pixel classification of chapter “Classical Supervised Learning” with one
  *   that classifies spatially coherent objects, then export the result as
  *   vectors that open cleanly in QGIS or ArcGIS.
  *
@@ -17,8 +17,8 @@
  *
  * Asset dependencies
  *   var aoi = ...
- *   var image2023 = getAnalysisReadyData(2023)   feature stack, Chapter 10
- *   var trainingPoints = ...                     from Chapter 15
+ *   var image2023 = getAnalysisReadyData(2023)   feature stack, chapter “Synthetic Aperture Radar Fusion”
+ *   var trainingPoints = ...                     from chapter “Ground Truth and Sampling Design”
  */
 
 var CLASS_PROPERTY = 'landcover';
@@ -93,7 +93,7 @@ print('SNIC output bands:', snic.bandNames());
 // reduceConnectedComponents does exactly this: for each connected group of
 // pixels sharing a cluster id, compute a statistic and write it back to every
 // pixel in that group. The output is still a raster, which keeps everything
-// downstream identical to Chapter 16.
+// downstream identical to chapter “Classical Supervised Learning”.
 var objectMeans = image2023
   .addBands(clusters)
   .reduceConnectedComponents({
@@ -106,7 +106,7 @@ var objectMeans = image2023
 // based classification cannot produce. A uniform plantation has low internal
 // variance; a structurally complex natural stand has high variance, even when
 // their means are identical. This is the same insight as the GLCM texture of
-// Chapter 14, arriving by a different route.
+// chapter “Spatial Texture Extraction”, arriving by a different route.
 var objectSD = image2023.select(['B8', 'NDVI'])
   .addBands(clusters)
   .reduceConnectedComponents({
@@ -126,7 +126,7 @@ print('Object level predictors:', objectStack.bandNames());
 // ===========================================================================
 // PART 4. Classify the objects
 // ===========================================================================
-// From here the workflow is identical to Chapter 16. The only change is what
+// From here the workflow is identical to chapter “Classical Supervised Learning”. The only change is what
 // the classifier is looking at: object statistics rather than raw pixels.
 var withRandom = trainingPoints.randomColumn('random', 42);
 var training = withRandom.filter(ee.Filter.lt('random', 0.7));

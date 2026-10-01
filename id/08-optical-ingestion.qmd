@@ -22,7 +22,7 @@ Hampir semua analisis optik di pemantauan lingkungan berjalan di atas salah satu
 
 Aturannya sederhana. Kalau pertanyaan Anda memerlukan riwayat sebelum 2015, misalnya garis dasar deforestasi, perubahan pesisir jangka panjang, atau pertumbuhan kota lintas dekade, Anda memerlukan Landsat dan tidak ada penggantinya. Kalau pertanyaan Anda memerlukan kerincian spasial atau kepekaan terhadap cekaman vegetasi, misalnya petak petani kecil, jalur mangrove sempit, atau kondisi tanaman, Sentinel-2 unggul jelas. Kalau pertanyaan Anda memerlukan suhu permukaan lahan, hanya Landsat yang membawa sensor termal.
 
-Banyak proyek serius memakai keduanya: Landsat untuk garis dasar historis, Sentinel-2 untuk kerincian masa kini. Bab 21 menangani harmonisasi yang membuat penggunaan bersama itu bisa dipertahankan.
+Banyak proyek serius memakai keduanya: Landsat untuk garis dasar historis, Sentinel-2 untuk kerincian masa kini. Bab [-@sec-timeseries] menangani harmonisasi yang membuat penggunaan bersama itu bisa dipertahankan.
 
 ::: {.callout-note}
 ## Konsep: red edge
@@ -66,7 +66,7 @@ Empat filter mengerjakan tugasnya, dan masing masing bekerja pada hal yang berbe
 
 ::: {.callout-important}
 ## Integritas ilmiah: awan tingkat citra adalah alat tumpul
-`CLOUDY_PIXEL_PERCENTAGE` menjelaskan satu citra utuh, kira kira 110 kilometer persegi. Citra yang dilaporkan 40 persen berawan bisa jadi sepenuhnya cerah di atas area studi Anda yang sepuluh kilometer, dan citra yang dilaporkan 5 persen berawan bisa jadi seluruh awannya duduk tepat di atas lokasi Anda. Memfilter properti ini praktis untuk memilih satu citra yang akan dilihat. Ia alat yang keliru untuk membangun composite, dan Bab 9 menggantinya dengan cloud masking per piksel.
+`CLOUDY_PIXEL_PERCENTAGE` menjelaskan satu citra utuh, kira kira 110 kilometer persegi. Citra yang dilaporkan 40 persen berawan bisa jadi sepenuhnya cerah di atas area studi Anda yang sepuluh kilometer, dan citra yang dilaporkan 5 persen berawan bisa jadi seluruh awannya duduk tepat di atas lokasi Anda. Memfilter properti ini praktis untuk memilih satu citra yang akan dilihat. Ia alat yang keliru untuk membangun composite, dan Bab [-@sec-cloud] menggantinya dengan cloud masking per piksel.
 :::
 
 ## Memeriksa sebelum melanjutkan

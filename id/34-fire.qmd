@@ -26,7 +26,7 @@ Kelas dNBR berasal dari protokol lapangan Key dan Benson untuk hutan di Amerika 
 
 ## Dari kebakaran ke gambut, lalu kembali lagi
 
-Di Indonesia, tiga pertanyaan yang sama berlaku untuk kebakaran gambut, dengan satu perbedaan: sebagian besar karbon terbakar di bawah permukaan, tempat yang tidak terlihat oleh sensor optis mana pun. Bab 37 (gambut) akan kembali membahasnya.
+Di Indonesia, tiga pertanyaan yang sama berlaku untuk kebakaran gambut, dengan satu perbedaan: sebagian besar karbon terbakar di bawah permukaan, tempat yang tidak terlihat oleh sensor optis mana pun. Bab [-@sec-peat] (gambut) akan kembali membahasnya.
 
 ## Latihan {.unnumbered}
 

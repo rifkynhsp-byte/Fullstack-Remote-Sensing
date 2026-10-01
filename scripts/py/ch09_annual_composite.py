@@ -116,7 +116,7 @@ def products():
          "title": "Annual NDVI",
          "caption": "NDVI from the same composite: the vegetated delta is green, the "
                     "sea and river plumes sit near zero. Inside the forest the colour "
-                    "barely changes, the saturation Chapter 12 takes on.",
+                    "barely changes, the saturation chapter “Band Math and Spectral Indices” takes on.",
          "source": "Sentinel-2 SR Harmonized, 2023."},
         {"kind": "map", "name": "ch09-ndwi", "image": annual_composite,
          "vis": vis_ndwi, "region": aoi, "legend": "NDWI",

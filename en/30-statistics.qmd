@@ -26,7 +26,7 @@ The Bandung pixel has a slope of −0.38 °C per decade, and it looks like a fin
 
 ## How far apart is independent?
 
-The semivariogram shows that NDVI samples closer than about 14 km in the Bandung basin share part of their information. This is the reason Chapter 15 splits training and test data by blocks and not by random points. It also tells you how many independent samples you really have. A thousand points within 5 km of each other are worth far fewer than a thousand.
+The semivariogram shows that NDVI samples closer than about 14 km in the Bandung basin share part of their information. This is the reason Chapter [-@sec-sampling] splits training and test data by blocks and not by random points. It also tells you how many independent samples you really have. A thousand points within 5 km of each other are worth far fewer than a thousand.
 
 ::: {.callout-tip}
 ## Where R is the better tool
@@ -42,4 +42,4 @@ fit <- fit.variogram(v, vgm("Sph"))   # range, sill, nugget
 
 1. Remove the QC "other quality" days and redo the monthly missing chart. What is left to analyse?
 2. Replace Sen's slope with an ordinary least squares slope. Which pixels change sign?
-3. Read the range off the semivariogram and use it as the block size in Chapter 15's cross-validation. Does the accuracy change?
+3. Read the range off the semivariogram and use it as the block size in Chapter [-@sec-sampling]'s cross-validation. Does the accuracy change?

@@ -12,7 +12,7 @@ Peta biomassa satu provinsi disusun dari rangkaian pengukuran. Setiap tingkat le
 | Tingkat | Yang diukur | Cakupan |
 |---|---|---|
 | Plot lapangan | diameter batang, tinggi, jenis (berat jenis kayu) | beberapa hektare |
-| LiDAR udara (Bab 32) | model tinggi kanopi 0,5 sampai 1 m | beberapa ribu hektare |
+| LiDAR udara (Bab [-@sec-lidar-trees]) | model tinggi kanopi 0,5 sampai 1 m | beberapa ribu hektare |
 | GEDI [@dubayah2020gedi] | tinggi dari laser, jejak 25 m, berjarak ratusan meter | sampel di seluruh tropis |
 | Peta tinggi [@lang2023canopy; @potapov2021canopy] | tinggi di setiap piksel 10 atau 30 m, dipelajari dari GEDI dan citra optik | di mana saja |
 
@@ -20,7 +20,7 @@ Setiap naik satu tingkat, ketelitian ditukar dengan cakupan. Kesalahannya juga i
 
 ## "Setinggi apa hutan ini?" punya lima jawaban
 
-Mulai dari plot di Bab 32. Point cloud yang sama bisa memberi tinggi 13, 22, 24, 25, atau 32 m, tergantung maksudnya. Rata-rata semua sel ikut menghitung celah di antara tajuk. Median puncak pohon adalah angka tingkat pohon. Persentil ke-98 dalam sel 10 m atau 25 m hanya menyimpan tajuk tertinggi di tiap sel, kira-kira sama dengan yang dicatat peta 10 m dan jejak GEDI rh98. Jadi kalau sebuah makalah membandingkan "tinggi" LiDAR-nya dengan GEDI, periksa dulu apakah keduanya berbicara tentang hal yang sama.
+Mulai dari plot di Bab [-@sec-lidar-trees]. Point cloud yang sama bisa memberi tinggi 13, 22, 24, 25, atau 32 m, tergantung maksudnya. Rata-rata semua sel ikut menghitung celah di antara tajuk. Median puncak pohon adalah angka tingkat pohon. Persentil ke-98 dalam sel 10 m atau 25 m hanya menyimpan tajuk tertinggi di tiap sel, kira-kira sama dengan yang dicatat peta 10 m dan jejak GEDI rh98. Jadi kalau sebuah makalah membandingkan "tinggi" LiDAR-nya dengan GEDI, periksa dulu apakah keduanya berbicara tentang hal yang sama.
 
 ## Peta dibandingkan dengan jejak GEDI
 
@@ -49,5 +49,5 @@ Grid biomassa 1 km milik GEDI sendiri (L4B) dibuat dari jejak laser dan model al
 
 ::: {.callout-note}
 ## Di sinilah topik tesis berada
-Setiap langkah di bab ini masih menyisakan pertanyaan terbuka untuk hutan Indonesia: alometri yang memakai lebar tajuk dari LiDAR sebagai pengganti diameter, peta tinggi yang biasnya sudah dikoreksi untuk rawa gambut dan kebun, serta ketidakpastian yang jujur dari plot sampai provinsi. Bab 36 mendaftarnya sebagai topik tesis.
+Setiap langkah di bab ini masih menyisakan pertanyaan terbuka untuk hutan Indonesia: alometri yang memakai lebar tajuk dari LiDAR sebagai pengganti diameter, peta tinggi yang biasnya sudah dikoreksi untuk rawa gambut dan kebun, serta ketidakpastian yang jujur dari plot sampai provinsi. Bab [-@sec-thesisbank] mendaftarnya sebagai topik tesis.
 :::

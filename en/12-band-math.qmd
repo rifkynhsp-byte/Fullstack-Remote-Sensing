@@ -17,11 +17,11 @@ It is **bounded** between -1 and 1 whatever the input magnitude, so values are c
 
 And it **cancels multiplicative effects**. If a hillside sits in partial shade, every band is scaled down by roughly the same factor. That factor appears in both numerator and denominator and divides out. A ratio is therefore far more stable across illumination conditions than any single band.
 
-What it does not cancel is an **additive** effect. Atmospheric path radiance adds to every band, unequally, and no ratio removes it. This is the concrete reason Chapter 8 insisted on surface reflectance rather than top of atmosphere: the correction has to happen before the index, because the index cannot undo it.
+What it does not cancel is an **additive** effect. Atmospheric path radiance adds to every band, unequally, and no ratio removes it. This is the concrete reason Chapter [-@sec-optical] insisted on surface reflectance rather than top of atmosphere: the correction has to happen before the index, because the index cannot undo it.
 
 ## The vegetation indices
 
-**NDVI**, $(NIR - Red)/(NIR + Red)$, follows directly from the physics in Chapter 2. Chlorophyll absorbs red; leaf mesophyll scatters near infrared. Dense healthy canopy has a large gap between the two.
+**NDVI**, $(NIR - Red)/(NIR + Red)$, follows directly from the physics in Chapter [-@sec-physics]. Chlorophyll absorbs red; leaf mesophyll scatters near infrared. Dense healthy canopy has a large gap between the two.
 
 Its failure mode matters more than its formula. Once leaf area index passes roughly 3, additional leaves stop increasing near infrared reflectance appreciably, and NDVI flattens near 0.8 to 0.9. This is **saturation**, and tropical forest lives permanently inside it.
 
@@ -57,7 +57,7 @@ Generic indices separate vegetation from water. Mangrove mapping needs to separa
 ## Concept: why a purpose built index can beat a general one
 NDVI answers "is this photosynthesising", which every green thing answers yes to. CMRI answers "is this photosynthesising *and* wet", which is a much smaller set. Designing an index is mostly the exercise of finding a question whose answer set is close to the class you want.
 
-That said, an index is a hand designed feature, and Chapter 19 shows what happens when a foundation model designs sixty four of them for you. Understanding index construction is still worth it, because it is how you diagnose what the embedding is doing when it goes wrong.
+That said, an index is a hand designed feature, and Chapter [-@sec-embeddings] shows what happens when a foundation model designs sixty four of them for you. Understanding index construction is still worth it, because it is how you diagnose what the embedding is doing when it goes wrong.
 :::
 
 ## The full workflow
@@ -86,7 +86,7 @@ An index is not good or bad in general. It is good or bad at a particular distin
 
 ```{python}
 #| label: fig-index-grid
-#| fig-cap: "Separation each index achieves between each pair of classes, from the representative spectra in Chapter 2. Darker is better separated. Hover any cell for the exact gap. MVI is excluded because it is unbounded and would dominate the scale without being comparable. CMRI is a difference of two normalised differences, so it spans twice the range of the rest and reads darker partly for that reason; compare it with the others by rank rather than by shade."
+#| fig-cap: "Separation each index achieves between each pair of classes, from the representative spectra in Chapter [-@sec-physics]. Darker is better separated. Hover any cell for the exact gap. MVI is excluded because it is unbounded and would dominate the scale without being comparable. CMRI is a difference of two normalised differences, so it spans twice the range of the rest and reads darker partly for that reason; compare it with the others by rank rather than by shade."
 import itertools
 import numpy as np
 import plotly.graph_objects as go
@@ -144,7 +144,7 @@ bk.table(df, caption=(
 ))
 ```
 
-Read the top of that table as a work plan. The pairs listed there are the ones that need radar, terrain or texture added to the stack, which is Chapters 10, 11 and 14, and no amount of index engineering will substitute. The pairs at the bottom are solved, and spending time on them is spending time on the part that already works.
+Read the top of that table as a work plan. The pairs listed there are the ones that need radar, terrain or texture added to the stack, which is Chapters [-@sec-sar], [-@sec-terrain] and [-@sec-texture], and no amount of index engineering will substitute. The pairs at the bottom are solved, and spending time on them is spending time on the part that already works.
 
 ::: {.callout-note}
 ## What 0.15 means, and what it does not

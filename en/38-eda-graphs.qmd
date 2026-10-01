@@ -7,7 +7,7 @@ You will explore a dataset before modelling it. You will also learn five rules t
 
 ## Look before you model
 
-Exploratory data analysis (EDA) is the step where you find out what the data really is, before you ask it to answer anything. Four questions come first, and the summary table below answers all of them for the rainfall data used in Chapter 29:
+Exploratory data analysis (EDA) is the step where you find out what the data really is, before you ask it to answer anything. Four questions come first, and the summary table below answers all of them for the rainfall data used in Chapter [-@sec-dataviz]:
 
 1. How much data is there, and how much is missing?
 2. What is the typical value, and how wide is the spread?

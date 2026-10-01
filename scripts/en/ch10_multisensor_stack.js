@@ -12,8 +12,8 @@
  * Why this is a function of year
  *   Writing the stack as getAnalysisReadyData(year) rather than as a linear
  *   script is the single change that turns a one off map into a monitoring
- *   system. Chapter 21 calls this same function in a loop to build a time
- *   series; Chapter 16 calls it once to train a classifier. Neither has to
+ *   system. chapter “Time Series and Change Detection” calls this same function in a loop to build a time
+ *   series; chapter “Classical Supervised Learning” calls it once to train a classifier. Neither has to
  *   know how it works.
  *
  * Asset dependencies
@@ -27,12 +27,12 @@
 // Nothing below this block should need editing to run over a new area.
 var CLOUD_THRESHOLD = 25;   // percent. Scene level pre filter, see note below.
 var SPECKLE_RADIUS  = 50;   // metres. Radar smoothing window.
-var GLCM_WINDOW     = 4;    // pixels. Texture neighbourhood, see Chapter 14.
+var GLCM_WINDOW     = 4;    // pixels. Texture neighbourhood, see chapter “Spatial Texture Extraction”.
 
 // ---------------------------------------------------------------------------
 // HELPER 1. Cloud masking for Sentinel-2 Level-2A
 // ---------------------------------------------------------------------------
-// Chapter 9 explains the SCL class codes in full. The short version: keep a
+// chapter “Cloud Masking and Composites” explains the SCL class codes in full. The short version: keep a
 // pixel only if it is not cloud shadow (3), medium or high probability cloud
 // (8, 9) or thin cirrus (10).
 //
@@ -57,7 +57,7 @@ function maskS2Clouds(image) {
 // ---------------------------------------------------------------------------
 // HELPER 2. Spectral indices
 // ---------------------------------------------------------------------------
-// Four indices, each earning its place for a different reason. Chapter 12
+// Four indices, each earning its place for a different reason. chapter “Band Math and Spectral Indices”
 // derives them; here we just apply them.
 function addIndices(image) {
 
@@ -117,7 +117,7 @@ function getAnalysisReadyData(year, aoi) {
   // worst scenes cheaply before any pixels are touched, and the SCL mask then
   // removes surviving cloud pixel by pixel. In an extremely cloudy year,
   // raise CLOUD_THRESHOLD or remove the metadata filter entirely and let the
-  // per pixel mask do all the work; see the discussion in Chapter 9.
+  // per pixel mask do all the work; see the discussion in chapter “Cloud Masking and Composites”.
   var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
     .filterDate(startDate, endDate)
     .filterBounds(aoi)
@@ -283,7 +283,7 @@ print(ui.Chart.feature.byFeature(pairs, 'NDVI', ['S1_VH'])
 // ---------------------------------------------------------------------------
 // 1. Toggle between the optical composite and the S1_VH layer over a stand of
 //    mangrove at high tide. The bright double bounce return is the structural
-//    signature Chapter 3 described. Find it.
+//    signature chapter “Choosing Your Eyes” described. Find it.
 // 2. Remove .divide(10000) from maskS2Clouds and rerun. The map will look
 //    almost unchanged and every index will be wrong. Explain why.
 // 3. Call getAnalysisReadyData for 2019 and check the Console for which

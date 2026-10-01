@@ -41,7 +41,7 @@ Gejalanya aneh dan mudah salah dibaca: peta Anda menemukan mangrove muda yang pe
 
 Ada tiga cara menanganinya, berurut dari yang paling disukai.
 
-**Jangan beri ambang batas sama sekali.** Serahkan elevasi ke classifier sebagai satu prediktor di antara prediktor lain dan biarkan ia mempelajari hubungannya, termasuk offset tajuknya. Inilah yang dilakukan feature stack Bab 10 dan biasanya inilah jawaban yang benar, karena model bisa menimbang elevasi terhadap bukti spektral alih alih dikalahkan oleh angka batas yang Anda pilih sendiri.
+**Jangan beri ambang batas sama sekali.** Serahkan elevasi ke classifier sebagai satu prediktor di antara prediktor lain dan biarkan ia mempelajari hubungannya, termasuk offset tajuknya. Inilah yang dilakukan feature stack Bab [-@sec-sar] dan biasanya inilah jawaban yang benar, karena model bisa menimbang elevasi terhadap bukti spektral alih alih dikalahkan oleh angka batas yang Anda pilih sendiri.
 
 **Beri ambang batas yang longgar.** Kalau memang perlu aturan, pakai 40 meter, bukan 10. Yang Anda kecualikan lalu adalah hutan lereng, dan itu memang tujuannya, alih alih berusaha mengisolasi zona pasang surut secara presisi, yang tidak bisa ditopang surface model.
 

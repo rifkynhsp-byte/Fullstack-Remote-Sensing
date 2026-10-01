@@ -15,7 +15,7 @@ from book_labels import CLASS_NAMES, LULC_PALETTE, worldcover_classes
 YEAR = 2023
 aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60])   # Mahakam Delta
 
-# PART 1. One line replaces the Chapter 10 stack
+# PART 1. One line replaces the chapter “Synthetic Aperture Radar Fusion” stack
 embeddings = (ee.ImageCollection("GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL")
               .filterDate(f"{YEAR}-01-01", f"{YEAR + 1}-01-01")
               .filterBounds(aoi).mosaic().clip(aoi))
@@ -92,7 +92,7 @@ def plot_learning_curve(df):
     ax.plot(df["points_per_class"], df["accuracy"], marker="o", color="#6a51a3",
             label="embeddings + random forest")
     ax.axhline(0.816, color="#1b7837", ls="--", lw=1,
-               label="Chapter 16 stack, ~200 points per class")
+               label="chapter “Classical Supervised Learning” stack, ~200 points per class")
     ax.set_xscale("log")
     ax.set_xticks(df["points_per_class"], [str(int(v)) for v in df["points_per_class"]])
     ax.set_xlabel("Training points per class (log scale)")
@@ -139,7 +139,7 @@ def products():
          "plot": plot_learning_curve,
          "caption": "Accuracy on a fixed set of 300 WorldCover-labelled points as the "
                     "training set grows from 5 to 100 points per class. The dashed line "
-                    "is the Chapter 16 stack on its own validation set, so compare the "
+                    "is the chapter “Classical Supervised Learning” stack on its own validation set, so compare the "
                     "level, not the decimals."},
         {"kind": "table", "name": "ch19-learning-table", "data": learning_curve,
          "columns": ["points_per_class", "accuracy", "kappa"],

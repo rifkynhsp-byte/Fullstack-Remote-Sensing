@@ -20,7 +20,7 @@ var inventory = ee.FeatureCollection('users/rifkynauvalhsp/IburiLandslideInvento
 // compared summer 2016 with autumn 2018; Hokkaido's forest browns in autumn,
 // and whole hillsides passed the landslide rule. Compare September-October
 // with September-October. Level-1C, because surface reflectance coverage is
-// patchy here before 2019. QA60 is still populated in these years (Chapter 9
+// patchy here before 2019. QA60 is still populated in these years (chapter “Cloud Masking and Composites”
 // explains why that changes after 2022).
 // ---------------------------------------------------------------------------
 var maskAndIndex = function (image) {

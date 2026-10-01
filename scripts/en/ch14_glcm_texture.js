@@ -129,10 +129,10 @@ var texture = glcm.select(
 // PART 5. Does it actually separate anything?
 // ===========================================================================
 // Do not add texture bands on faith. Test whether they separate the classes
-// you are confusing, using the training data from Chapter 15.
+// you are confusing, using the training data from chapter “Ground Truth and Sampling Design”.
 //
 // No training points yet? The block below takes labelled points from ESA
-// WorldCover 2021 (it has a mangrove class). Swap in your own Chapter 15
+// WorldCover 2021 (it has a mangrove class). Swap in your own chapter “Ground Truth and Sampling Design”
 // points when you have them. If two classes overlap completely on entropy,
 // the texture bands cost computation and add nothing: drop them.
 var trainingPoints = (typeof trainingPoints !== 'undefined') ? trainingPoints :

@@ -61,11 +61,11 @@ The practical reading of that diagram: your laptop's specification is nearly irr
 
 The technical name for this arrangement is lazy evaluation. The good consequence is efficiency. Because Earth Engine sees the whole recipe before running any of it, it can plan. If your final map covers one delta, the planner never touches imagery outside that delta, even though your script named a global collection. If you filter to 2023, the archive for 2022 is never read. Chaining twenty operations costs no more to set up than chaining one.
 
-The awkward consequence is that errors arrive late and in the wrong place. A mistake written on line 12 will often surface as a failure on line 90, at the moment something finally forces evaluation. Debugging Earth Engine means learning to force evaluation deliberately and early, which is the habit Chapter 5 builds and Appendix B systematises.
+The awkward consequence is that errors arrive late and in the wrong place. A mistake written on line 12 will often surface as a failure on line 90, at the moment something finally forces evaluation. Debugging Earth Engine means learning to force evaluation deliberately and early, which is the habit Chapter [-@sec-ecosystem] builds and Appendix B systematises.
 
 ::: {.callout-warning}
 ## Common failure: the loop that never finishes
-A JavaScript `for` loop runs in your browser. If you write one that iterates over a thousand images, your browser attempts a thousand sequential round trips to Google and freezes. The server side equivalent, `.map()`, sends one instruction that fans out across thousands of machines at once. Chapter 7 covers the distinction properly. It is the single most common way that experienced programmers new to Earth Engine make a fast platform slow.
+A JavaScript `for` loop runs in your browser. If you write one that iterates over a thousand images, your browser attempts a thousand sequential round trips to Google and freezes. The server side equivalent, `.map()`, sends one instruction that fans out across thousands of machines at once. Chapter [-@sec-server-side] covers the distinction properly. It is the single most common way that experienced programmers new to Earth Engine make a fast platform slow.
 :::
 
 ## Tiles, pyramids and scale
@@ -89,7 +89,7 @@ Honesty about the trade offs, because there are real ones and they surface in ev
 
 **You cannot see the machine.** When something is slow, there is no profiler that tells you which operation is expensive. Diagnosis is empirical: cut the script down until it works, then add back.
 
-**The algorithm library is fixed.** Earth Engine offers a specific set of classifiers and reducers. If your method needs a custom deep learning architecture, the platform will get your data ready and then hand off to Vertex AI, SageMaker or your own hardware. Chapter 23 covers that hand off.
+**The algorithm library is fixed.** Earth Engine offers a specific set of classifiers and reducers. If your method needs a custom deep learning architecture, the platform will get your data ready and then hand off to Vertex AI, SageMaker or your own hardware. Chapter [-@sec-apps] covers that hand off.
 
 **Licensing constrains commercial use.** Free access is for research, education and non profit work. Commercial deployment requires a paid plan.
 
@@ -97,7 +97,7 @@ None of this changes the conclusion. For the class of question this book address
 
 ## Where this is heading
 
-By Chapter 17 you will have a validated land cover classification with a confusion matrix you could defend to a reviewer. By Chapter 19 you will produce comparable accuracy from twenty training points instead of two thousand, using Google's satellite embeddings. By Chapter 23 that capability will be behind an interface someone with no technical background can operate.
+By Chapter [-@sec-accuracy] you will have a validated land cover classification with a confusion matrix you could defend to a reviewer. By Chapter [-@sec-embeddings] you will produce comparable accuracy from twenty training points instead of two thousand, using Google's satellite embeddings. By Chapter [-@sec-apps] that capability will be behind an interface someone with no technical background can operate.
 
 The next chapter opens the Code Editor and puts an image on a map.
 
@@ -146,5 +146,5 @@ The next chapter opens the Code Editor and puts an image on a map.
 ## Exercises {.unnumbered}
 
 1. Estimate the download volume for your own current or most recent project: number of scenes, average scene size, and the hours spent transferring and unpacking. Keep the figure. It is the baseline you are replacing.
-2. Write one sentence describing an environmental question you would ask if data volume were not a constraint. Return to it after Chapter 17 and assess how close you now are.
+2. Write one sentence describing an environmental question you would ask if data volume were not a constraint. Return to it after Chapter [-@sec-accuracy] and assess how close you now are.
 3. Explain the client and server distinction to a colleague who does not code. If the explanation takes more than two minutes, the mental model is not settled yet.

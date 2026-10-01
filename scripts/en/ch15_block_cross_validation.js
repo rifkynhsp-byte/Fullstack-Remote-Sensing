@@ -31,7 +31,7 @@
  *
  * Asset dependencies
  *   var aoi = ...                                 study area geometry
- *   var image2023 = getAnalysisReadyData(2023)    feature stack, Chapter 10
+ *   var image2023 = getAnalysisReadyData(2023)    feature stack, chapter “Synthetic Aperture Radar Fusion”
  *   var samples = ...                             labelled points, this chapter
  */
 

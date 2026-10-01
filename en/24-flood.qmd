@@ -9,7 +9,7 @@ You will build a flood product the way it is delivered in practice: terrain firs
 
 A flood map made from radar alone answers one question: where was the water on the day of the pass? Response teams also need to know where it is likely to go next, and whether the radar map makes physical sense. Terrain answers both.
 
-The most useful terrain layer for this is not elevation. It is **height above the nearest drainage**, usually shortened to HAND. A house two metres above its river floods before a house ten metres above it, even if both sit at the same elevation above sea level. HAND is computed from a hydrologically conditioned elevation model: sinks are filled, flow directions are solved, and the drainage network is traced. MERIT Hydro provides it globally at 90 m. With your own LiDAR ground model you can compute it at 1 m in Python (Chapter 11 and the LiDAR part show how).
+The most useful terrain layer for this is not elevation. It is **height above the nearest drainage**, usually shortened to HAND. A house two metres above its river floods before a house ten metres above it, even if both sit at the same elevation above sea level. HAND is computed from a hydrologically conditioned elevation model: sinks are filled, flow directions are solved, and the drainage network is traced. MERIT Hydro provides it globally at 90 m. With your own LiDAR ground model you can compute it at 1 m in Python (Chapter [-@sec-terrain] and the LiDAR part show how).
 
 ## The radar rule, and why each part is there
 

@@ -18,7 +18,7 @@
  *
  * Asset dependencies
  *   var aoi = ...                              study area geometry
- *   var image2023 = getAnalysisReadyData(2023) feature stack, Chapter 10
+ *   var image2023 = getAnalysisReadyData(2023) feature stack, chapter “Synthetic Aperture Radar Fusion”
  *   var trainingPolygons = ...                 hand drawn polygons, one per class,
  *                                              each with a 'landcover' property
  */
@@ -219,7 +219,7 @@ print(ui.Chart.feature.groups({
 
 // Read that scatter carefully. If mangrove and other forest overlap
 // completely on NDVI but separate along VH, you have just confirmed why
-// Chapter 10 put radar in the stack.
+// chapter “Synthetic Aperture Radar Fusion” put radar in the stack.
 
 // (b) Where the samples actually are. A map of the points, coloured by class,
 //     reveals clustering, classes drawn only in one corner, and points that
@@ -233,7 +233,7 @@ Map.addLayer(validation, {color: '#c8792b'}, 'Validation points');
 // PART 6. Export, and stop redrawing
 // ===========================================================================
 // Export both sets to assets. From this point on, every experiment in
-// Chapters 16 to 19 loads the same samples, which means an accuracy
+// chapters “Classical Supervised Learning” and “The GeoAI Paradigm” loads the same samples, which means an accuracy
 // difference between two models is a difference between the models rather
 // than between two different random draws.
 //
@@ -266,7 +266,7 @@ Export.table.toDrive({
 // 1. Set every class target to the same number and rerun. Which class becomes
 //    harder to model, and why does equal sampling not mean fair sampling?
 // 2. Set MIN_SEPARATION to 10 metres, effectively disabling thinning, and run
-//    Chapter 16 with the result. Record how much reported accuracy rises.
+//    chapter “Classical Supervised Learning” with the result. Record how much reported accuracy rises.
 // 3. Open the exported CSV and check twenty random points against high
 //    resolution basemap imagery. Count how many are mislabelled. That rate is
 //    the ceiling on your map's accuracy and nothing downstream can exceed it.

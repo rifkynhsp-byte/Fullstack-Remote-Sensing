@@ -9,13 +9,13 @@
  {
   "name": "ch16-rf",
   "kind": "map",
-  "caption": "One random forest, 100 trees, on the Chapter 10 stack.",
+  "caption": "One random forest, 100 trees, on the chapter “Synthetic Aperture Radar Fusion” stack.",
   "image": "images/real/ch16-rf.jpg"
  },
  {
   "name": "ch16-ensemble",
   "kind": "map",
-  "caption": "The majority vote of three models, with a 3 pixel mode filter. Smoothing tidies the map and also changes class areas (Chapter 16).",
+  "caption": "The majority vote of three models, with a 3 pixel mode filter. Smoothing tidies the map and also changes class areas (chapter “Classical Supervised Learning”).",
   "image": "images/real/ch16-ensemble.jpg"
  },
  {

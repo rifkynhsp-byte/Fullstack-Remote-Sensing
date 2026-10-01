@@ -58,4 +58,4 @@ print(ui.Chart.feature.byFeature(perYear, 'year', ['fire_days'])
 // ---------------------------------------------------------------------------
 // 1. Rank districts by raw total and by per 1000 km². Which ranking would
 //    you give a provincial fire agency, and why?
-// 2. Overlay the peat map (Chapter 11). What share of fire-days fell on peat?
+// 2. Overlay the peat map (chapter “Terrain and Hydrological Context”). What share of fire-days fell on peat?

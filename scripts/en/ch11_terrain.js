@@ -57,7 +57,7 @@ var dem = aw3d.select('DSM').filterBounds(aoi).mosaic()
 //
 //   1. Do not threshold. Hand elevation to the classifier as a predictor and
 //      let it learn the relationship, including the canopy offset. This is
-//      what Chapter 10's feature stack does and it is usually right.
+//      what chapter “Synthetic Aperture Radar Fusion”'s feature stack does and it is usually right.
 //   2. Threshold generously. If you must apply a rule, use 40 m rather than
 //      10 m, and understand you are excluding hillside forest rather than
 //      isolating the tidal zone precisely.

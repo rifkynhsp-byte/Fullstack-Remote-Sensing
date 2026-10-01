@@ -17,7 +17,7 @@ Ada dua konsekuensi, dan keduanya alasan bab ini ada.
 
 ::: {.callout-warning}
 ## Kesalahan umum: menghaluskan alih alih menyegmentasi
-Respons yang jelas terhadap garam merica adalah filter modal, dan Bab 16 memang memakainya. Ia bekerja, dan ia alat tumpul: ia menghapus derau dan objek kecil yang nyata tanpa membedakan, karena ia memang tidak bisa membedakan keduanya. Filter tiga piksel menghapus satu piksel salah klasifikasi yang terisolasi dan satu petak mangrove asli selebar 20 meter dengan semangat yang sama. Segmentasi menangani sebabnya; penghalusan menangani gejalanya.
+Respons yang jelas terhadap garam merica adalah filter modal, dan Bab [-@sec-supervised] memang memakainya. Ia bekerja, dan ia alat tumpul: ia menghapus derau dan objek kecil yang nyata tanpa membedakan, karena ia memang tidak bisa membedakan keduanya. Filter tiga piksel menghapus satu piksel salah klasifikasi yang terisolasi dan satu petak mangrove asli selebar 20 meter dengan semangat yang sama. Segmentasi menangani sebabnya; penghalusan menangani gejalanya.
 :::
 
 ## Apa yang dilakukan segmentasi
@@ -28,7 +28,7 @@ Dua hal berubah karenanya.
 
 Unit analisisnya menjadi sesuatu yang menyerupai objek di permukaan. Setiap piksel di dalam satu objek memperoleh kelas yang sama, sehingga galat terisolasi menjadi mustahil menurut konstruksinya.
 
-Dan satu keluarga prediktor baru menjadi tersedia. Piksel punya nilai. Objek punya rata rata, simpangan baku, ukuran, bentuk, dan keliling. Simpangan baku di dalam objek adalah yang menarik: perkebunan seragam punya varians internal rendah, tegakan alami berstruktur rumit punya varians tinggi, dan keduanya bisa punya rata rata yang identik. Itu wawasan yang sama dengan tekstur GLCM di Bab 14, tiba lewat jalan berbeda dan sering kali lebih bersih.
+Dan satu keluarga prediktor baru menjadi tersedia. Piksel punya nilai. Objek punya rata rata, simpangan baku, ukuran, bentuk, dan keliling. Simpangan baku di dalam objek adalah yang menarik: perkebunan seragam punya varians internal rendah, tegakan alami berstruktur rumit punya varians tinggi, dan keduanya bisa punya rata rata yang identik. Itu wawasan yang sama dengan tekstur GLCM di Bab [-@sec-texture], tiba lewat jalan berbeda dan sering kali lebih bersih.
 
 ## SNIC, dan tiga parameternya yang sesungguhnya
 
@@ -65,14 +65,14 @@ Aturan praktisnya: tanyakan apakah objek yang Anda petakan punya tepi. Kalau pun
 ## Integritas ilmiah: unit pemetaan minimum wajib masuk metadata
 Menyaring poligon di bawah suatu ambang adalah praktik kartografis yang baku dan ia mengubah angka luas Anda. Unit pemetaan minimum 0,5 hektar menghapus setiap jalur tepi yang lebarnya kurang dari beberapa piksel, dan di atas delta itu bisa berarti bagian besar dari luas mangrovenya.
 
-Sebutkan unit pemetaan minimumnya bersama skala dan selang kepercayaan dari Bab 17. Dua peta atas garis pantai yang sama yang melaporkan luas berbeda kadang berbeda hanya karena hal ini.
+Sebutkan unit pemetaan minimumnya bersama skala dan selang kepercayaan dari Bab [-@sec-accuracy]. Dua peta atas garis pantai yang sama yang melaporkan luas berbeda kadang berbeda hanya karena hal ini.
 :::
 
 ## Vektor sebagai produk yang sebenarnya diserahkan
 
 Ada satu argumen praktis untuk OBIA yang sama sekali tidak berkaitan dengan akurasi.
 
-Batas objek tervektorkan menjadi poligon yang bersih. Perencana kabupaten bisa membukanya di QGIS, menyuntingnya, menempelkan atribut, menghitung luas per desa, lalu memasukkan hasilnya ke laporan. Itulah bentuk yang biasanya harus dicapai pekerjaan geospasial supaya bisa ditindaklanjuti, dan perlu diingat bahwa Bab 1 mendefinisikan seluruh tujuan latihan ini sebagai menginformasikan sebuah keputusan.
+Batas objek tervektorkan menjadi poligon yang bersih. Perencana kabupaten bisa membukanya di QGIS, menyuntingnya, menempelkan atribut, menghitung luas per desa, lalu memasukkan hasilnya ke laporan. Itulah bentuk yang biasanya harus dicapai pekerjaan geospasial supaya bisa ditindaklanjuti, dan perlu diingat bahwa Bab [-@sec-why] mendefinisikan seluruh tujuan latihan ini sebagai menginformasikan sebuah keputusan.
 
 Klasifikasi berbasis piksel tervektorkan menjadi kekacauan. Kalau yang diserahkan adalah shapefile yang akan dikerjakan orang lain, segmentasi sudah membuktikan kelayakannya atas dasar itu saja, bahkan di bentang lahan yang peningkatan akurasinya nol.
 

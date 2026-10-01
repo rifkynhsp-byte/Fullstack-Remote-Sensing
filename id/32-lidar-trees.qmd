@@ -7,14 +7,14 @@ Anda akan mengolah point cloud LiDAR udara dari titik mentah sampai menjadi tabe
 
 ## Kenapa bab ini keluar dari Earth Engine
 
-Sampai bab sebelumnya, semua pekerjaan ada di Earth Engine. LiDAR lain ceritanya. Survei udara menghasilkan file berisi titik, sering puluhan juta per kilometer persegi. Setiap titik punya x, y, z, nomor pantulan (return), dan kelas (tanah, vegetasi, bangunan). Earth Engine menyimpan raster dan tabel, bukan point cloud. Jadi pengolahan titik dilakukan di komputer sendiri. Earth Engine baru dipakai lagi di akhir, saat plot dibandingkan dengan tinggi kanopi dari satelit dan hasilnya diperluas ke wilayah yang lebih besar (Bab 33).
+Sampai bab sebelumnya, semua pekerjaan ada di Earth Engine. LiDAR lain ceritanya. Survei udara menghasilkan file berisi titik, sering puluhan juta per kilometer persegi. Setiap titik punya x, y, z, nomor pantulan (return), dan kelas (tanah, vegetasi, bangunan). Earth Engine menyimpan raster dan tabel, bukan point cloud. Jadi pengolahan titik dilakukan di komputer sendiri. Earth Engine baru dipakai lagi di akhir, saat plot dibandingkan dengan tinggi kanopi dari satelit dan hasilnya diperluas ke wilayah yang lebih besar (Bab [-@sec-height-scaling]).
 
 Datanya adalah tiga file contoh bawaan paket lidR [@roussel2020lidr]: `Megaplot`, `MixedConifer`, dan `Topography`. Ukurannya kecil, gratis (GPL-3), dan sudah diklasifikasi. Hanya saja, ini hutan konifer, bukan hutan tropis. Langkahnya sama saja untuk kebun di Sumatra atau hutan di Papua, tetapi angkanya (tinggi pohon, lebar tajuk, aturan jendela) berbeda. Setel ulang di hutan Anda sendiri.
 
 ## Alur kerjanya
 
 1. **Periksa titik.** Kerapatan, bagian yang bolong, dan apakah tanah sudah diklasifikasi. File rusak yang ketahuan di sini menghemat seminggu kerja.
-2. **Tanah dan medan (DTM).** Interpolasikan hanya titik tanah menjadi sebuah permukaan. DTM ini sama dengan yang dipakai untuk analisis drainase dan banjir di Bab 24.
+2. **Tanah dan medan (DTM).** Interpolasikan hanya titik tanah menjadi sebuah permukaan. DTM ini sama dengan yang dipakai untuk analisis drainase dan banjir di Bab [-@sec-flood].
 3. **Normalisasi.** Kurangi setiap titik dengan ketinggian medan di bawahnya, sehingga z menjadi *tinggi di atas tanah*. Di lereng, langkah ini paling menentukan.
 4. **Model tinggi kanopi (CHM).** Ambil titik tertinggi di setiap sel kecil (di sini 0,5 m).
 5. **Puncak pohon.** Puncak pohon adalah sel yang lebih tinggi dari semua sel di sekitarnya dalam satu jendela. Pohon yang lebih tinggi biasanya bertajuk lebih lebar, jadi jendelanya ikut membesar: 0,07 × tinggi + 2 m, aturan yang dipakai di contoh lidR.
@@ -81,4 +81,4 @@ Tab Python mengerjakan hal yang sama dengan `laspy`, SciPy, dan scikit-image. Tu
 
 ## Langkah berikutnya
 
-Tabel pohon belum sama dengan biomassa. Bab 33 membawa tinggi dan tajuk melalui persamaan alometrik menjadi biomassa di atas tanah, lalu membandingkan plot dengan lapisan satelit di tab JavaScript: jejak GEDI [@dubayah2020gedi] dan peta tinggi kanopi global [@lang2023canopy]. Jarak antara satu plot yang terukur baik dan peta satu wilayah penuh itulah tempat sebagian besar topik tesis di Bab 36 berada.
+Tabel pohon belum sama dengan biomassa. Bab [-@sec-height-scaling] membawa tinggi dan tajuk melalui persamaan alometrik menjadi biomassa di atas tanah, lalu membandingkan plot dengan lapisan satelit di tab JavaScript: jejak GEDI [@dubayah2020gedi] dan peta tinggi kanopi global [@lang2023canopy]. Jarak antara satu plot yang terukur baik dan peta satu wilayah penuh itulah tempat sebagian besar topik tesis di Bab [-@sec-thesisbank] berada.

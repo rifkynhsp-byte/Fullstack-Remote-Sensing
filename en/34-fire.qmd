@@ -26,7 +26,7 @@ The dNBR classes come from Key and Benson's field protocol for North American fo
 
 ## From fire to peat and back
 
-In Indonesia the same three questions apply to peat fires, with one difference: most of the carbon burns below the surface, where no optical sensor sees it. Chapter 37 (peatland) returns to that.
+In Indonesia the same three questions apply to peat fires, with one difference: most of the carbon burns below the surface, where no optical sensor sees it. Chapter [-@sec-peat] (peatland) returns to that.
 
 ## Exercises {.unnumbered}
 

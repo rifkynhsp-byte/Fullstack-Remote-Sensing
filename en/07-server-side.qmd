@@ -19,7 +19,7 @@ Everything in Earth Engine is one of five things. Learning what each holds, and 
 
 : The Earth Engine type system in full {.striped}
 
-The distinction between `ee.Geometry` and `ee.Feature` is worth pausing on, because it causes recurring confusion. A geometry is only a shape. A feature is a shape carrying properties, which is what lets a training polygon say "this area is mangrove". When Chapter 15 assigns a `landcover` property to sample points, it is turning geometries into features so that a classifier has something to learn from.
+The distinction between `ee.Geometry` and `ee.Feature` is worth pausing on, because it causes recurring confusion. A geometry is only a shape. A feature is a shape carrying properties, which is what lets a training polygon say "this area is mangrove". When Chapter [-@sec-sampling] assigns a `landcover` property to sample points, it is turning geometries into features so that a classifier has something to learn from.
 
 ## Bands, and why band names matter so much
 
@@ -103,7 +103,7 @@ It cannot use JavaScript `if` statements on server values. Use `ee.Algorithms.If
 
 `.map()` transforms a collection into another collection of the same length. A **reducer** collapses many values into fewer, and it works along whichever axis you point it at.
 
-Along **time**, a reducer turns a stack of images into one image. This is compositing, and Chapter 9 uses it heavily.
+Along **time**, a reducer turns a stack of images into one image. This is compositing, and Chapter [-@sec-cloud] uses it heavily.
 
 ```javascript
 var annual = collection.median();       // one image, per pixel median
@@ -120,7 +120,7 @@ var meanNdvi = image.reduceRegion({
 });
 ```
 
-Along **bands**, a reducer combines several measurements at one location, which is how the ensemble vote in Chapter 16 works.
+Along **bands**, a reducer combines several measurements at one location, which is how the ensemble vote in Chapter [-@sec-supervised] works.
 
 ::: {.callout-important}
 ## Scientific integrity: `scale` is an analytical decision
@@ -150,7 +150,7 @@ var composite = processed.median().clip(aoi);
 Map.addLayer(composite, visualisation, 'Composite');
 ```
 
-Filter, map, reduce, act. Chapter 9 fills that skeleton in completely.
+Filter, map, reduce, act. Chapter [-@sec-cloud] fills that skeleton in completely.
 
 
 <script type="application/json" class="lms-quiz">
@@ -166,7 +166,7 @@ Filter, map, reduce, act. Chapter 9 fills that skeleton in completely.
         "Geometry is stored server side, Feature in the browser"
       ],
       "answer": 1,
-      "why": "This is why Chapter 15 attaches a landcover property to sample points: it turns geometries into features so the classifier has labels to learn from."
+      "why": "This is why Chapter [-@sec-sampling] attaches a landcover property to sample points: it turns geometries into features so the classifier has labels to learn from."
     },
     {
       "q": "Why does a for loop over seventy images freeze the browser when .map() does not?",

@@ -120,16 +120,16 @@ def plot_importance(df):
 def products():
     classes = [(n, "#" + c) for n, c in zip(CLASS_NAMES, LULC_PALETTE)]
     vis = {"min": 0, "max": 4, "palette": LULC_PALETTE}
-    src = "Stack: Chapter 10. Labels: ESA WorldCover 2021. GEE."
+    src = "Stack: chapter “Synthetic Aperture Radar Fusion”. Labels: ESA WorldCover 2021. GEE."
     return [
         {"kind": "map", "name": "ch16-rf", "image": classified["RF"], "vis": vis,
          "region": aoi, "classes": classes, "title": "Random forest alone", "source": src,
-         "caption": "One random forest, 100 trees, on the Chapter 10 stack."},
+         "caption": "One random forest, 100 trees, on the chapter “Synthetic Aperture Radar Fusion” stack."},
         {"kind": "map", "name": "ch16-ensemble", "image": ensemble_smooth, "vis": vis,
          "region": aoi, "classes": classes,
          "title": "RF, SVM and boosting vote, then smoothed", "source": src,
          "caption": "The majority vote of three models, with a 3 pixel mode filter. "
-                    "Smoothing tidies the map and also changes class areas (Chapter 16)."},
+                    "Smoothing tidies the map and also changes class areas (chapter “Classical Supervised Learning”)."},
         {"kind": "chart", "name": "ch16-tuning", "data": tuning, "plot": plot_tuning,
          "caption": "Accuracy flattens quickly: past a few dozen trees you are "
                     "paying compute for nothing."},

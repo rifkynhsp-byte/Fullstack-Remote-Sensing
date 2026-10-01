@@ -11,7 +11,7 @@ Earth Engine menyediakan dua cara masuk, dan memilih yang tepat sejak awal mengh
 
 **Explorer** adalah penjelajah katalog berbasis klik. Anda mencari dataset, menambahkannya ke peta, mengatur peregangan warna, lalu mengekspor. Tidak ada kode sama sekali. Untuk memastikan sebuah dataset benar benar meliput area Anda, atau untuk menunjukkan kepada rekan kerja seperti apa citra Sentinel-2 di atas kabupatennya, Explorer adalah alat tercepat yang tersedia. Ia juga tempat yang aman untuk ditinggalkan bersama pemangku kepentingan yang bukan orang teknis.
 
-**Code Editor** adalah tempat buku ini tinggal. Semua yang reproducible, semua yang bisa diotomasi, dan semua yang lebih rumit dari beberapa operasi terjadi di sini. Bayarannya adalah sebuah bahasa pemrograman, yang dibahas Bab 6 mulai dari nol.
+**Code Editor** adalah tempat buku ini tinggal. Semua yang reproducible, semua yang bisa diotomasi, dan semua yang lebih rumit dari beberapa operasi terjadi di sini. Bayarannya adalah sebuah bahasa pemrograman, yang dibahas Bab [-@sec-javascript] mulai dari nol.
 
 ::: {.callout-tip}
 ## Dari lapangan
@@ -28,7 +28,7 @@ Buka [code.earthengine.google.com](https://code.earthengine.google.com). Antarmu
 
 **Kanan, umpan balik.** Tiga tab, dan ke sinilah perhatian Anda seharusnya tertuju selama masih belajar. *Console* menerima semua yang Anda `print()`, termasuk grafik dan deskripsi objek yang lengkap. *Inspector* mengubah peta menjadi alat kueri: klik piksel mana pun dan Anda membaca nilainya di setiap band dari setiap layer yang tampil. *Tasks* menampung ekspor yang menunggu, ke Drive, Cloud Storage, atau Assets.
 
-**Bawah, peta.** Bukan sekadar keluaran. Alat gambar di pojok kiri atas membuat geometri secara langsung, dan geometri itu muncul di blok *Imports* di bagian atas skrip Anda. Begitulah poligon data latih digambar di Bab 15.
+**Bawah, peta.** Bukan sekadar keluaran. Alat gambar di pojok kiri atas membuat geometri secara langsung, dan geometri itu muncul di blok *Imports* di bagian atas skrip Anda. Begitulah poligon data latih digambar di Bab [-@sec-sampling].
 
 ::: {.callout-warning}
 ## Kesalahan umum: blok Imports yang tidak ikut pindah
@@ -49,7 +49,7 @@ Ketika Anda membentangkan objek yang tercetak, Anda melihat Earth Engine menjela
 
 **Nama band.** Di sini `elevation`, tetapi `B4` di Sentinel-2, `SR_B4` di Landsat Collection 2, `VV` di Sentinel-1. Menebak nama band adalah penyebab nomor satu munculnya kalimat "layer ini tidak ada" di Console Anda.
 
-**Tipe data.** Elevasi SRTM adalah bilangan bulat 16 bit bertanda. Itu penting begitu Anda membaginya, karena pembagian bilangan bulat memotong hasilnya. Bab 12 kembali ke soal ini ketika indeks mulai menghasilkan nol yang mencurigakan.
+**Tipe data.** Elevasi SRTM adalah bilangan bulat 16 bit bertanda. Itu penting begitu Anda membaginya, karena pembagian bilangan bulat memotong hasilnya. Bab [-@sec-indices] kembali ke soal ini ketika indeks mulai menghasilkan nol yang mencurigakan.
 
 **Proyeksi dan skala.** Setiap band membawa ukuran piksel aslinya. Ketika Anda menggabungkan band dengan ukuran berbeda, Earth Engine menyelesaikan konfliknya dengan aturan yang terdokumentasi tetapi mudah dilupakan, dan hasilnya bisa diam diam menyampel ulang data 10 meter Anda menjadi 90 meter.
 
@@ -119,5 +119,5 @@ Beri aset nama yang deskriptif, karena `projects/proyek-anda/assets/mangrove_tra
 
 1. Jalankan skripnya, lalu pakai Inspector untuk menemukan elevasi titik tertinggi di dalam batas negara Anda. Bandingkan dengan angka resmi dan jelaskan selisihnya.
 2. Ubah `max` dari 1200 menjadi 3000, jalankan ulang, dan tulis satu kalimat tentang informasi apa yang didapat peta dan apa yang hilang.
-3. Cari `ee.Terrain.slope` di tab Docs. Tambahkan layer slope ke skrip tanpa melihat Bab 11 lebih dulu.
+3. Cari `ee.Terrain.slope` di tab Docs. Tambahkan layer slope ke skrip tanpa melihat Bab [-@sec-terrain] lebih dulu.
 4. Simpan skripnya ke sebuah repositori lalu buat URL lewat **Get Link**. Buka di jendela penyamaran untuk memastikan ia benar benar bisa direproduksi.

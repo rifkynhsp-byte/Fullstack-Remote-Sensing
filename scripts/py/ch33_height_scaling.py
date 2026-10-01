@@ -4,7 +4,7 @@
 """
 CHAPTER 33 | Scaling up from a LiDAR plot.
 
-    1. Scale: the Chapter 32 canopy height model, summarised the way a 10 m
+    1. Scale: the chapter “Airborne LiDAR: From Points to Trees” canopy height model, summarised the way a 10 m
        map and a 25 m GEDI footprint summarise it.
     2. Agreement: GEDI rh98 footprints against two satellite height maps,
        ETH 10 m (Lang et al. 2023) and GLAD 30 m (Potapov et al. 2021).
@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from ch32_lidar_trees import CELL, trees     # the 0.5 m CHM from Chapter 32
+from ch32_lidar_trees import CELL, trees     # the 0.5 m CHM from chapter “Airborne LiDAR: From Points to Trees”
 
 aoi = ee.Geometry.Rectangle([102.45, -2.15, 102.90, -1.75], None, False)  # Jambi lowland
 

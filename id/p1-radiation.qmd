@@ -17,7 +17,7 @@ Penginderaan jauh berarti mengukur sesuatu tanpa menyentuhnya. Satelit tidak per
 Jadi pertanyaan pertama selalu: **energinya berasal dari mana?** Jawabannya hanya dua.
 
 - Sensor **pasif** merekam energi dari sumber alami. Untuk sensor optis (Landsat, Sentinel-2, SPOT), sumbernya matahari: sensor merekam sinar matahari yang dipantulkan permukaan bumi. Sensor termal merekam energi yang dipancarkan permukaan itu sendiri karena permukaannya hangat.
-- Sensor **aktif** membawa sumber energinya sendiri. Radar mengirim pulsa gelombang mikro lalu merekam pantulannya (P5). LiDAR mengirim pulsa laser (Bab 32).
+- Sensor **aktif** membawa sumber energinya sendiri. Radar mengirim pulsa gelombang mikro lalu merekam pantulannya (P5). LiDAR mengirim pulsa laser (Bab [-@sec-lidar-trees]).
 
 Pembedaan sederhana ini menjelaskan banyak hal. Sensor optis butuh siang hari dan langit cerah. Radar bisa bekerja malam hari dan menembus awan, karena radar membawa "senter" sendiri dan memakai panjang gelombang yang lolos melewati awan.
 
@@ -59,7 +59,7 @@ Gambar Planck di bagian keluaran menampilkan kedua kurva dalam satu grafik. Perh
 
 Sebelum sampai ke sensor, energi melewati atmosfer, kadang dua kali (dari matahari ke tanah, lalu dari tanah ke sensor). Ada dua hal yang bisa terjadi di perjalanan.
 
-**Serapan (absorpsi).** Gas-gas di atmosfer menyerap energi pada panjang gelombang tertentu. Uap air menyerap di sekitar 0,94, 1,14, 1,38, 1,87, dan 2,7 µm, serta sebagian besar rentang di atas 5 sampai 8 µm. Karbon dioksida menyerap di dekat 2,7, 4,3, dan 15 µm. Ozon menyerap di bawah 0,3 µm (inilah yang melindungi kita dari ultraviolet) dan di dekat 9,6 µm. Rentang yang sedikit diserap disebut **jendela atmosfer**: kira-kira 0,4 sampai 1,3 µm, sekitar 1,6 dan 2,2 µm, 3 sampai 5 µm, 8 sampai 14 µm, dan hampir seluruh gelombang mikro. Kanal satelit sengaja diletakkan di dalam jendela, karena kanal di luar jendela hanya akan melihat atmosfer. Ada satu pengecualian yang cerdik. Kanal 9 Landsat 8 dan kanal 10 Sentinel-2 berada di 1,38 µm, justru *di dalam* pita serapan uap air yang kuat. Uap air di atmosfer bawah menyerap semua energi dari permukaan, sehingga satu-satunya yang bisa dilihat kanal ini adalah awan sirus tipis yang tinggi, di atas sebagian besar uap air. Jadilah kanal ini pendeteksi awan sirus (Bab 9).
+**Serapan (absorpsi).** Gas-gas di atmosfer menyerap energi pada panjang gelombang tertentu. Uap air menyerap di sekitar 0,94, 1,14, 1,38, 1,87, dan 2,7 µm, serta sebagian besar rentang di atas 5 sampai 8 µm. Karbon dioksida menyerap di dekat 2,7, 4,3, dan 15 µm. Ozon menyerap di bawah 0,3 µm (inilah yang melindungi kita dari ultraviolet) dan di dekat 9,6 µm. Rentang yang sedikit diserap disebut **jendela atmosfer**: kira-kira 0,4 sampai 1,3 µm, sekitar 1,6 dan 2,2 µm, 3 sampai 5 µm, 8 sampai 14 µm, dan hampir seluruh gelombang mikro. Kanal satelit sengaja diletakkan di dalam jendela, karena kanal di luar jendela hanya akan melihat atmosfer. Ada satu pengecualian yang cerdik. Kanal 9 Landsat 8 dan kanal 10 Sentinel-2 berada di 1,38 µm, justru *di dalam* pita serapan uap air yang kuat. Uap air di atmosfer bawah menyerap semua energi dari permukaan, sehingga satu-satunya yang bisa dilihat kanal ini adalah awan sirus tipis yang tinggi, di atas sebagian besar uap air. Jadilah kanal ini pendeteksi awan sirus (Bab [-@sec-cloud]).
 
 **Hamburan.** Partikel dan molekul membelokkan arah energi tanpa menyerapnya. Jenis hamburannya bergantung pada ukuran partikel dibandingkan panjang gelombang:
 
@@ -79,7 +79,7 @@ Tab kode memperlihatkannya dengan satu lintasan Sentinel-2 di atas Jakarta pada 
 
 Selisih keduanya adalah atmosfer itu sendiri, terukur. Di kanal aerosol pesisir dan kanal biru, atmosfer menambah reflektansi sekitar 0,07 sampai 0,12, lebih besar daripada pantulan permukaannya sendiri di kanal-kanal itu. Tambahannya cepat mengecil seiring bertambahnya panjang gelombang, mendekati ramalan $\lambda^{-4}$ dari Rayleigh. Mulai dari tepi merah (red edge), tandanya berbalik: di sana atmosfer justru lebih banyak *mengurangi* cahaya (menyerap dan menghamburkannya keluar dari berkas), sehingga koreksi menaikkan nilainya. Bandingkan dua peta warna asli: kota yang berkabut kebiruan di kiri adalah yang dilihat sensor; yang di kanan adalah wujud permukaannya.
 
-Inilah sebabnya Bab 8 menekankan reflektansi permukaan untuk apa pun yang dibandingkan antartanggal. Atmosfer berubah dari hari ke hari. Permukaan bumi, umumnya, tidak.
+Inilah sebabnya Bab [-@sec-optical] menekankan reflektansi permukaan untuk apa pun yang dibandingkan antartanggal. Atmosfer berubah dari hari ke hari. Permukaan bumi, umumnya, tidak.
 
 ## Apa yang dilakukan permukaan terhadap energi
 
@@ -87,7 +87,7 @@ Energi yang sampai di permukaan terbagi tiga, dan jumlahnya selalu sama dengan e
 
 $$E_{datang} = E_{dipantulkan} + E_{diserap} + E_{diteruskan}$$
 
-Perbandingannya bergantung pada bahan *dan* panjang gelombang. Ketergantungan inilah dasar seluruh penginderaan jauh optis: buat grafik reflektansi terhadap panjang gelombang, dan setiap bahan akan menggambar kurvanya sendiri, yaitu **tanda spektral** (spectral signature, Bab 2). Daun sehat menyerap cahaya merah dan biru untuk fotosintesis dan memantulkan inframerah dekat dengan kuat. Air jernih menyerap hampir semua NIR. Tanah kering memantulkan makin banyak ke arah SWIR.
+Perbandingannya bergantung pada bahan *dan* panjang gelombang. Ketergantungan inilah dasar seluruh penginderaan jauh optis: buat grafik reflektansi terhadap panjang gelombang, dan setiap bahan akan menggambar kurvanya sendiri, yaitu **tanda spektral** (spectral signature, Bab [-@sec-physics]). Daun sehat menyerap cahaya merah dan biru untuk fotosintesis dan memantulkan inframerah dekat dengan kuat. Air jernih menyerap hampir semua NIR. Tanah kering memantulkan makin banyak ke arah SWIR.
 
 Cara energi dipantulkan sama pentingnya dengan jumlahnya:
 
@@ -104,7 +104,7 @@ Sensor termal mengukur suhu *radian*. Yang biasanya kita inginkan adalah suhu *k
 
 $$T_{radian} = \varepsilon^{1/4} \, T_{kinetik}$$
 
-Gambar emisivitas memperlihatkan kenapa ini penting. Pada 27 °C, permukaan dengan $\varepsilon = 0,92$ tampak sekitar 6 °C lebih dingin daripada benda hitam bersuhu sama. Produk suhu permukaan tanah (Bab 30, Bab 35) menaksir emisivitas dari tutupan lahan sebelum mengubah radiansi menjadi suhu. Kesalahan emisivitas menjadi kesalahan suhu.
+Gambar emisivitas memperlihatkan kenapa ini penting. Pada 27 °C, permukaan dengan $\varepsilon = 0,92$ tampak sekitar 6 °C lebih dingin daripada benda hitam bersuhu sama. Produk suhu permukaan tanah (Bab [-@sec-statistics], Bab [-@sec-urban-energy]) menaksir emisivitas dari tutupan lahan sebelum mengubah radiansi menjadi suhu. Kesalahan emisivitas menjadi kesalahan suhu.
 
 Ini juga menjawab pertanyaan klasik: **kenapa Landsat punya kanal termal sedangkan SPOT tidak?** Teleskop Landsat tersusun dari cermin (optik reflektif), dan cermin memantulkan semua panjang gelombang dari biru sampai termal. Kamera SPOT dibangun dengan lensa (optik refraktif). Kaca optik meloloskan cahaya tampak dan inframerah dekat, dan dengan jenis kaca yang tepat sebagian SWIR (SPOT 4 dan 5 menambah kanal SWIR), tetapi kaca tidak tembus inframerah termal. Cermin juga lebih ringan daripada kaca tebal, hal penting untuk apa pun yang diluncurkan ke orbit. Pilihan teleskop membatasi kanal apa saja yang bisa dimiliki sebuah satelit (P3).
 

@@ -39,7 +39,7 @@
  {
   "name": "ch19-learning-curve",
   "kind": "chart",
-  "caption": "Accuracy on a fixed set of 300 WorldCover-labelled points as the training set grows from 5 to 100 points per class. The dashed line is the Chapter 16 stack on its own validation set, so compare the level, not the decimals.",
+  "caption": "Accuracy on a fixed set of 300 WorldCover-labelled points as the training set grows from 5 to 100 points per class. The dashed line is the chapter “Classical Supervised Learning” stack on its own validation set, so compare the level, not the decimals.",
   "image": "images/real/ch19-learning-curve.png",
   "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"accuracy,kappa,points_per_class\n0.76,0.69825,5\n0.79636,0.74397,10\n0.82909,0.7844,20\n0.82545,0.77991,50\n0.85455,0.81651,100\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_learning_curve(df):\n    \"\"\"Accuracy against labelled points per class. Where is 'enough'?\"\"\"\n    df = df.sort_values(\"points_per_class\")\n    fig, ax = plt.subplots(figsize=(6, 3.2))\n    ax.plot(df[\"points_per_class\"], df[\"accuracy\"], marker=\"o\", color=\"#6a51a3\",\n            label=\"embeddings + random forest\")\n    ax.axhline(0.816, color=\"#1b7837\", ls=\"--\", lw=1,\n               label=\"Chapter 16 stack, ~200 points per class\")\n    ax.set_xscale(\"log\")\n    ax.set_xticks(df[\"points_per_class\"], [str(int(v)) for v in df[\"points_per_class\"]])\n    ax.set_xlabel(\"Training points per class (log scale)\")\n    ax.set_ylabel(\"Overall accuracy\")\n    ax.set_title(\"How low can 'low shot' go?\", loc=\"left\")\n    ax.legend(frameon=False, fontsize=8, loc=\"lower right\")\n    return fig\n\nplot_learning_curve(df)\nplt.show()\n"
  },

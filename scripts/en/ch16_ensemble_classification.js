@@ -5,8 +5,8 @@
  * CHAPTER 16 | Ensemble supervised classification
  * ---------------------------------------------------------------------------
  * Goal
- *   Turn the feature stack from Chapter 10 and the training points from
- *   Chapter 15 into a five class land cover map, using three different
+ *   Turn the feature stack from chapter “Synthetic Aperture Radar Fusion” and the training points from
+ *   chapter “Ground Truth and Sampling Design” into a five class land cover map, using three different
  *   classifiers and a majority vote between them.
  *
  * Class schema
@@ -15,11 +15,11 @@
  *
  * Asset dependencies
  *   var aoi = ...                                 study area geometry
- *   var trainingDataGeometries = ...              labelled points, Chapter 15
- *   var image2023 = getAnalysisReadyData(2023)    feature stack, Chapter 10
+ *   var trainingDataGeometries = ...              labelled points, chapter “Ground Truth and Sampling Design”
+ *   var image2023 = getAnalysisReadyData(2023)    feature stack, chapter “Synthetic Aperture Radar Fusion”
  *
  * Run order
- *   This script assumes Chapters 10 and 15 have already run in the same
+ *   This script assumes chapters “Synthetic Aperture Radar Fusion” and “Ground Truth and Sampling Design” have already run in the same
  *   editor session, or that their outputs have been exported to assets and
  *   imported here. Exporting the stack to an asset first is strongly
  *   recommended: it turns a computation that reruns on every pan and zoom
@@ -147,7 +147,7 @@ print('Best number of trees:', bestNumTrees);
 // ===========================================================================
 // classifier.explain() returns the internal structure of a trained model,
 // including per band importance. This is the diagnostic that tells you
-// whether the expensive radar and texture bands from Chapter 10 are earning
+// whether the expensive radar and texture bands from chapter “Synthetic Aperture Radar Fusion” are earning
 // their place, or whether NDVI is doing all the work on its own.
 var explainer = ee.Classifier.smileRandomForest(100)
   .train(trainingSamples, 'landcover', bands);
@@ -168,7 +168,7 @@ print(ui.Chart.feature.byProperty(importance)
 //   the model just got cheaper and more stable.
 //   A band that dominates everything else deserves suspicion rather than
 //   satisfaction. Ask whether it could be a disguised copy of the label.
-//   Chapter 22 works through a real case where exactly that happened.
+//   chapter “Vector GeoAI and Site Selection” works through a real case where exactly that happened.
 
 // ===========================================================================
 // PART 4. Three classifiers, three sets of blind spots
@@ -186,7 +186,7 @@ var rf = ee.Classifier.smileRandomForest(bestNumTrees).train({
 // Support vector machine with a radial basis kernel. Finds a boundary in a
 // transformed space, so it can separate classes no straight line divides.
 // It is distance based, which means unscaled bands wreck it: this is exactly
-// why the PALSAR conversion in Chapter 10 mattered. gamma controls how local
+// why the PALSAR conversion in chapter “Synthetic Aperture Radar Fusion” mattered. gamma controls how local
 // the boundary is and cost controls tolerance of misclassified training
 // points. Both need tuning for a real deployment; these are starting values.
 var svm = ee.Classifier.libsvm({

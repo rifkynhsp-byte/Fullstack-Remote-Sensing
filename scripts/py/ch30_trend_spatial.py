@@ -136,7 +136,7 @@ def products():
          "caption": "Semivariogram of Landsat NDVI from 900 random points in the Bandung "
                     "basin. Where the curve levels off, samples stop sharing information: "
                     "that distance is a sensible minimum spacing for training data and "
-                    "for cross-validation blocks (Chapter 15)."},
+                    "for cross-validation blocks (chapter “Ground Truth and Sampling Design”)."},
     ]
 
 

@@ -38,11 +38,11 @@ Semua itu mustahil tanpa pengukuran. Komitmen menurunkan emisi hanya kredibel bi
 
 Di titik inilah muatan teknis buku ini menjadi relevan bagi kebijakan. Setiap sistem MRV memerlukan tiga kemampuan yang sama.
 
-**Garis dasar.** Apa yang ada di awal periode perhitungan. Bab 16 dan 19 membangun ini.
+**Garis dasar.** Apa yang ada di awal periode perhitungan. Bab [-@sec-supervised] dan [-@sec-embeddings] membangun ini.
 
-**Deteksi perubahan.** Apa yang terjadi sejak itu, dan kapan. Bab 21 membangun ini.
+**Deteksi perubahan.** Apa yang terjadi sejak itu, dan kapan. Bab [-@sec-timeseries] membangun ini.
 
-**Kuantifikasi beserta ketidakpastian.** Berapa banyak karbon, plus minus berapa. Bab 20 membangun ini.
+**Kuantifikasi beserta ketidakpastian.** Berapa banyak karbon, plus minus berapa. Bab [-@sec-regression] membangun ini.
 
 Bila sebuah bab dalam buku ini pada akhirnya tidak memasok salah satu dari ketiganya, bab itu salah tempat.
 
@@ -54,12 +54,12 @@ Kredit blue carbon diperdagangkan dengan premi di atas kredit kehutanan daratan,
 
 ::: {.callout-important}
 ## Integritas ilmiah: inilah sebabnya penilaian akurasi tidak opsional
-Ketika sebuah peta menjadi dasar instrumen keuangan, luas yang dilebihkan bukan sekadar kekurangan teknis. Itu klaim yang dibayar seseorang. Bab 17 membahas penilaian akurasi lebih rinci daripada yang mungkin dikira perlu oleh sebagian besar pembaca, dan inilah alasannya. Angka yang jujur adalah angka dari validasi lapangan independen, bukan angka yang dipantulkan kembali oleh data latih Anda sendiri.
+Ketika sebuah peta menjadi dasar instrumen keuangan, luas yang dilebihkan bukan sekadar kekurangan teknis. Itu klaim yang dibayar seseorang. Bab [-@sec-accuracy] membahas penilaian akurasi lebih rinci daripada yang mungkin dikira perlu oleh sebagian besar pembaca, dan inilah alasannya. Angka yang jujur adalah angka dari validasi lapangan independen, bukan angka yang dipantulkan kembali oleh data latih Anda sendiri.
 :::
 
 ## Logika yang sama, ranah yang berbeda
 
-Tidak ada satu pun bagian di atas yang khas konservasi. Bab 22 mengerjakan pemilihan lokasi komersial, menentukan di mana membuka kedai kopi di Kota Malang, dan logikanya identik secara struktural.
+Tidak ada satu pun bagian di atas yang khas konservasi. Bab [-@sec-vector] mengerjakan pemilihan lokasi komersial, menentukan di mana membuka kedai kopi di Kota Malang, dan logikanya identik secara struktural.
 
 | | Pemantauan mangrove | Pemilihan lokasi |
 |---|---|---|
@@ -83,7 +83,7 @@ Peta yang hanya bisa dibaca spesialis penginderaan jauh sudah gagal di langkah t
 
 **Pengembang proyek karbon** perlu kesesuaian dengan metodologi tertentu, estimasi ketidakpastian yang terdokumentasi, dan proses yang dapat diulang.
 
-**Masyarakat** perlu mampu menjalankan analisisnya sendiri. Inilah argumen di balik aplikasi low code seperti Indraja Buana: alat yang menuntut ahli dari luar setiap kali dipakai menciptakan ketergantungan, bukan kapasitas. Tujuannya bergerak dari konservasi berbasis masyarakat menjadi konservasi yang dimiliki masyarakat, dan rancangan perangkat lunak di Bab 23 mengikuti tujuan itu.
+**Masyarakat** perlu mampu menjalankan analisisnya sendiri. Inilah argumen di balik aplikasi low code seperti Indraja Buana: alat yang menuntut ahli dari luar setiap kali dipakai menciptakan ketergantungan, bukan kapasitas. Tujuannya bergerak dari konservasi berbasis masyarakat menjadi konservasi yang dimiliki masyarakat, dan rancangan perangkat lunak di Bab [-@sec-apps] mengikuti tujuan itu.
 
 
 <script type="application/json" class="lms-quiz">
@@ -132,4 +132,4 @@ Peta yang hanya bisa dibaca spesialis penginderaan jauh sudah gagal di langkah t
 1. Tuliskan, dalam satu kalimat, keputusan apa yang hendak diinformasikan peta Anda. Bila Anda tidak bisa menyebut sebuah keputusan atau seseorang, yang Anda punya adalah visualisasi, bukan analisis.
 2. Identifikasi mana dari tiga kemampuan MRV yang sudah disediakan pekerjaan Anda dan mana yang belum.
 3. Cari komitmen nasional atau subnasional yang menaungi area studi Anda. Catat targetnya, tahun dasarnya, dan lembaga pelapornya.
-4. Untuk area studi Anda, sebutkan satu alasan paling mungkin seorang penelaah menolak peta Anda. Simpan catatan itu. Bab 17 akan kembali kepadanya.
+4. Untuk area studi Anda, sebutkan satu alasan paling mungkin seorang penelaah menolak peta Anda. Simpan catatan itu. Bab [-@sec-accuracy] akan kembali kepadanya.

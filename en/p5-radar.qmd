@@ -13,7 +13,7 @@ Radar (RAdio Detection And Ranging) is an **active** sensor. It sends its own mi
 - It sees **through cloud, smoke and most rain**, because microwaves (centimetres long) pass through droplets that block light.
 - It measures **distance** very precisely, by timing the echo. That makes elevation models and millimetre-scale deformation measurements possible (interferometry, below).
 
-For tropical Indonesia, where some places are cloud-covered for most of the wet season, the first two decide whether you can monitor floods, rice planting or deforestation at all (Chapters 10, 21, 24).
+For tropical Indonesia, where some places are cloud-covered for most of the wet season, the first two decide whether you can monitor floods, rice planting or deforestation at all (Chapters [-@sec-sar], [-@sec-timeseries], [-@sec-flood]).
 
 The price: a radar image is not a photograph. Its brightness comes from geometry, roughness and moisture, not colour, and its geometry follows distances, not map positions. It takes practice to read one.
 
@@ -80,7 +80,7 @@ Radar places every echo in the image according to its **distance from the antenn
 
 A short way to remember: **foreshortening and layover belong to fore-slopes and are worse at near range; shadow belongs to back-slopes and is worse at far range.** Ground-range resolution is also worse at near range.
 
-The two Sentinel-1 maps of Mount Rinjani in Lombok show this on a real volcano. On an **ascending** pass Sentinel-1 flies north and looks east: the west-facing slopes face the radar and are bright and compressed, the east-facing slopes are darker. On a **descending** pass it flies south and looks west, and the pattern flips. Using both passes is the standard way to fill in what one geometry hides, and it is why terrain correction (Chapter 10) needs a good elevation model.
+The two Sentinel-1 maps of Mount Rinjani in Lombok show this on a real volcano. On an **ascending** pass Sentinel-1 flies north and looks east: the west-facing slopes face the radar and are bright and compressed, the east-facing slopes are darker. On a **descending** pass it flies south and looks west, and the pattern flips. Using both passes is the standard way to fill in what one geometry hides, and it is why terrain correction (Chapter [-@sec-sar]) needs a good elevation model.
 
 ## What makes a pixel bright: backscatter
 
@@ -96,7 +96,7 @@ The value of a radar pixel is its **backscatter**, the share of the transmitted 
 
 **Moisture.** Water greatly raises the *dielectric constant* of soil and vegetation, which makes them reflect microwaves more strongly. Wet soil is brighter than dry soil of the same roughness. This is how radar maps soil moisture.
 
-A flood shows all three. Calm floodwater is a smooth mirror: specular reflection, almost no return, a **black** pixel. If the wind roughens it, it becomes greyer, which is why flood mapping is harder on windy days. Trees standing in floodwater form trunk-and-water corners: double bounce, **very bright** pixels. So the same flood is dark in open fields and bright under forest (Chapter 24).
+A flood shows all three. Calm floodwater is a smooth mirror: specular reflection, almost no return, a **black** pixel. If the wind roughens it, it becomes greyer, which is why flood mapping is harder on windy days. Trees standing in floodwater form trunk-and-water corners: double bounce, **very bright** pixels. So the same flood is dark in open fields and bright under forest (Chapter [-@sec-flood]).
 
 The backscatter chart and table in the output block measure this around the Jatiluhur reservoir. Calm water is darkest (median VV −18.8 dB). Crops and trees are in between. Built-up areas are brightest in VV (−6.5 dB), from double bounce. In VH, trees (−13.8 dB) catch up with buildings (−13.9 dB), because volume scattering converts much of the signal into the cross-polarisation.
 

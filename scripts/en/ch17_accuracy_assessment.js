@@ -5,7 +5,7 @@
  * CHAPTER 17 | Proving the map is worth trusting
  * ---------------------------------------------------------------------------
  * Goal
- *   Take the classification from Chapter 16 and produce the numbers a
+ *   Take the classification from chapter “Classical Supervised Learning” and produce the numbers a
  *   reviewer will ask for: a confusion matrix, producer and user accuracy per
  *   class, an independent field validation score, and an area estimate with a
  *   confidence interval rather than a bare figure.
@@ -17,8 +17,8 @@
  *   points apart. Report both.
  *
  * Asset dependencies
- *   var classified = ...       classification from Chapter 16
- *   var validationSet = ...    held out points from Chapter 15
+ *   var classified = ...       classification from chapter “Classical Supervised Learning”
+ *   var validationSet = ...    held out points from chapter “Ground Truth and Sampling Design”
  *   var fieldPlots = ...       independently collected reference data
  *   var aoi = ...
  */
@@ -96,7 +96,7 @@ print(ui.Chart.feature.byFeature(perClass, 'class', ['producer', 'user'])
 // skipped. Cell [0][1] is mangrove that the map called other forest. If that
 // cell holds most of your error, the fix is not a better classifier: it is
 // more training data along the mangrove and upland forest boundary, or a
-// predictor that separates them, which Chapter 3 argued is elevation and
+// predictor that separates them, which chapter “Choosing Your Eyes” argued is elevation and
 // radar rather than anything spectral.
 var array = matrix.array();
 print('Mangrove misread as other forest:', array.get([0, 1]));

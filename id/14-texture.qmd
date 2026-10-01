@@ -7,7 +7,7 @@ Anda akan menambahkan pola ke spektrum. Fitur grey level co-occurrence matrix me
 
 ## Dua hutan, satu tanda tangan
 
-Perkebunan kelapa sawit dan tegakan mangrove alami bisa punya reflektansi rata rata yang identik di setiap band. Keduanya tajuk berdaun lebar yang rapat, keduanya berfotosintesis kuat, keduanya menyimpan air daun serupa. Indeks di Bab 12, yang semuanya fungsi dari reflektansi per piksel, tidak bisa memisahkannya karena memang tidak ada yang bisa dipisahkan di dalam reflektansi per piksel.
+Perkebunan kelapa sawit dan tegakan mangrove alami bisa punya reflektansi rata rata yang identik di setiap band. Keduanya tajuk berdaun lebar yang rapat, keduanya berfotosintesis kuat, keduanya menyimpan air daun serupa. Indeks di Bab [-@sec-indices], yang semuanya fungsi dari reflektansi per piksel, tidak bisa memisahkannya karena memang tidak ada yang bisa dipisahkan di dalam reflektansi per piksel.
 
 Yang berbeda adalah **susunannya**. Sawit ditanam pada grid teratur dengan ukuran tajuk dan jarak tanam seragam. Mangrove alami punya tajuk beragam ukuran, celah tak beraturan, alur pasang surut yang memotongnya, dan sama sekali tidak ada geometri berulang.
 
@@ -46,7 +46,7 @@ Rata rata pada @fig-texture disamakan dengan sengaja. Setiap indeks spektral yan
 
 ::: {.callout-warning}
 ## Kesalahan umum: memberi masukan float
-GLCM memerlukan masukan **bilangan bulat**. Berikan band float dan Anda mendapat hasil ngawur, bukan sebuah exception. Karena Bab 9 sudah menskalakan reflektansi menjadi float antara 0 dan 1, bandnya harus diskalakan ulang dan dicor tipenya sebelum dipakai.
+GLCM memerlukan masukan **bilangan bulat**. Berikan band float dan Anda mendapat hasil ngawur, bukan sebuah exception. Karena Bab [-@sec-cloud] sudah menskalakan reflektansi menjadi float antara 0 dan 1, bandnya harus diskalakan ulang dan dicor tipenya sebelum dipakai.
 :::
 
 ::: {.callout-warning}
@@ -86,9 +86,9 @@ Sesuaikan dengan diameter tajuk, bukan dengan nilai baku. Tajuk mangrove berkisa
 
 Jangan menambahkan band tekstur atas dasar keyakinan. Band itu mahal, dan di sebagian bentang lahan ia tidak menyumbang apa pun.
 
-Ujinya perlu dua menit. Cuplik band tekstur pada titik data latih Anda dari Bab 15, lalu plot dua di antaranya saling berhadapan dengan warna per kelas. Kalau dua kelas yang selama ini saling mengacaukan memisah sepanjang entropy, band itu sudah membuktikan kelayakannya. Kalau keduanya bertumpuk sepenuhnya, Anda menambahkan empat band komputasi tanpa informasi, dan sebaiknya band itu dibuang.
+Ujinya perlu dua menit. Cuplik band tekstur pada titik data latih Anda dari Bab [-@sec-sampling], lalu plot dua di antaranya saling berhadapan dengan warna per kelas. Kalau dua kelas yang selama ini saling mengacaukan memisah sepanjang entropy, band itu sudah membuktikan kelayakannya. Kalau keduanya bertumpuk sepenuhnya, Anda menambahkan empat band komputasi tanpa informasi, dan sebaiknya band itu dibuang.
 
-Ini disiplin yang sama dengan uji histogram di Bab 12, diterapkan pada keluarga fitur yang berbeda. Prinsip umumnya: setiap prediktor harus bisa membuktikan kelayakannya sebelum masuk ke stack, dan setelah masuk, grafik kepentingan fitur di Bab 16 harus memastikan ia masih menyumbang.
+Ini disiplin yang sama dengan uji histogram di Bab [-@sec-indices], diterapkan pada keluarga fitur yang berbeda. Prinsip umumnya: setiap prediktor harus bisa membuktikan kelayakannya sebelum masuk ke stack, dan setelah masuk, grafik kepentingan fitur di Bab [-@sec-supervised] harus memastikan ia masih menyumbang.
 
 ::: {.callout-tip}
 ## Dari lapangan
@@ -99,13 +99,13 @@ Kalau ternyata tidak, ada dua kemungkinan. Ukuran jendela Anda keliru untuk ukur
 
 ## Hubungannya dengan analisis berbasis objek
 
-Bab 18 sampai ke tempat yang mirip lewat jalan yang berbeda.
+Bab [-@sec-obia] sampai ke tempat yang mirip lewat jalan yang berbeda.
 
 Tekstur mengukur variasi di dalam jendela bergerak berukuran dan berbentuk tetap. Analisis berbasis objek menyegmentasi citra menjadi wilayah yang koheren lebih dulu, lalu mengukur variasi di dalam setiap wilayah, sehingga ia menyesuaikan diri dengan bentuk objek yang sebenarnya ada di permukaan.
 
 Versi berbasis objek lebih berprinsip: simpangan baku yang dihitung di dalam tegakan nyata lebih bermakna daripada yang dihitung di dalam kotak 70 meter sembarang yang mungkin melintasi dua tegakan.
 
-Tekstur lebih murah, lebih sederhana, dan bekerja sebagai band biasa dalam alur kerja berbasis piksel yang biasa. Mulailah di sini. Pindah ke Bab 18 ketika jendela tetap menjadi keterbatasannya, dan Anda akan mengenali saatnya ketika tekstur bekerja di bagian dalam tegakan dan gagal di tepinya.
+Tekstur lebih murah, lebih sederhana, dan bekerja sebagai band biasa dalam alur kerja berbasis piksel yang biasa. Mulailah di sini. Pindah ke Bab [-@sec-obia] ketika jendela tetap menjadi keterbatasannya, dan Anda akan mengenali saatnya ketika tekstur bekerja di bagian dalam tegakan dan gagal di tepinya.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -164,7 +164,7 @@ Tekstur lebih murah, lebih sederhana, dan bekerja sebagai band biasa dalam alur 
         "Kuantisasinya terlalu kasar"
       ],
       "answer": 1,
-      "why": "Jendela bergerak berbentuk tetap tidak bisa menyesuaikan diri dengan bentuk objek di permukaan. Bab 18 menyegmentasi lebih dulu lalu mengukur di dalam wilayah nyata, dan itu versi berprinsip dari gagasan yang sama."
+      "why": "Jendela bergerak berbentuk tetap tidak bisa menyesuaikan diri dengan bentuk objek di permukaan. Bab [-@sec-obia] menyegmentasi lebih dulu lalu mengukur di dalam wilayah nyata, dan itu versi berprinsip dari gagasan yang sama."
     }
   ]
 }

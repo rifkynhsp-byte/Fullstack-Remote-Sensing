@@ -104,7 +104,7 @@ var maskCloudsAndAddIndices = function (image) {
 // ---------------------------------------------------------------------------
 // map() applies the function to every image in parallel across Google's
 // infrastructure. A JavaScript for loop would try to do this on your browser,
-// one scene at a time, and would fail on a collection of this size. Chapter 4
+// one scene at a time, and would fail on a collection of this size. chapter “The Paradigm Shift”
 // explains why in detail.
 var processed = s2.map(maskCloudsAndAddIndices);
 
@@ -208,4 +208,4 @@ print('Clear observations per pixel (min, median, max):',
 // 2. Swap median() for qualityMosaic('NDVI'). Where do the two composites
 //    disagree most, and which would you defend in a monitoring report?
 // 3. Split the year into wet season and dry season composites and difference
-//    the NDWI bands. That difference map is the seed of Chapter 19.
+//    the NDWI bands. That difference map is the seed of chapter “The GeoAI Paradigm”.

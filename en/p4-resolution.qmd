@@ -27,8 +27,8 @@ The three panels in the output block show Semarang harbour at 250 m (MODIS), 30 
 
 Two consequences:
 
-- **Mixed pixels.** Where a pixel covers several materials (the edge of a field, a road through a forest), its value is a mixture. The larger the pixel, the more pixels are mixed. Much of the classification error in Chapters 16 and 17 happens at mixed pixels.
-- **Pixel size is not the whole story.** Optics blur, atmosphere scatters and a satellite moves during exposure. Two sensors with the same pixel size can differ in sharpness. Resampling an image to smaller pixels never adds detail (Chapter 3).
+- **Mixed pixels.** Where a pixel covers several materials (the edge of a field, a road through a forest), its value is a mixture. The larger the pixel, the more pixels are mixed. Much of the classification error in Chapters [-@sec-supervised] and [-@sec-accuracy] happens at mixed pixels.
+- **Pixel size is not the whole story.** Optics blur, atmosphere scatters and a satellite moves during exposure. Two sensors with the same pixel size can differ in sharpness. Resampling an image to smaller pixels never adds detail (Chapter [-@sec-sensors]).
 
 ## Spectral resolution
 
@@ -58,8 +58,8 @@ Temporal resolution is how often the same place is imaged: the revisit time (P2)
 
 Two cautions:
 
-- **Revisit is not the same as clear views.** The chart counts images in all cloud conditions. Over tropical Indonesia, much of each year's collection is cloudy (Chapter 9). Effective temporal resolution, clear views of the ground, is much lower than the nominal one. This is why radar matters for monitoring in the tropics (P5).
-- **More images, more work.** Temporal resolution is only useful if you can process it: compositing, time series, change detection (Chapters 13, 21). This is exactly what Earth Engine was built for.
+- **Revisit is not the same as clear views.** The chart counts images in all cloud conditions. Over tropical Indonesia, much of each year's collection is cloudy (Chapter [-@sec-cloud]). Effective temporal resolution, clear views of the ground, is much lower than the nominal one. This is why radar matters for monitoring in the tropics (P5).
+- **More images, more work.** Temporal resolution is only useful if you can process it: compositing, time series, change detection (Chapters [-@sec-visualisation], [-@sec-timeseries]). This is exactly what Earth Engine was built for.
 
 ## Seeing several bands at once
 
@@ -79,7 +79,7 @@ The five properties compete for the same limited resources:
 - **Data volume.** Landsat 8 records about 6,000 pixels across each row and a new row every 4.4 ms. That is about 1.4 million pixels per second per band. With 11 bands at 12 bits, it adds up to more than 180 million bits per second, before any compression. Everything must fit through the downlink (P2).
 - **Geometry.** A wide swath from the same altitude needs a wide field of view. A small pixel over a wide swath means more detectors, larger optics, more data.
 
-The trade-off figure places six sensors by pixel size and swath. They fall along a line: WorldView-3 sees 0.31 m pixels over a 13 km strip, MODIS sees 250 m pixels over 2,330 km, and Himawari in geostationary orbit sees the whole disk of the Earth with 500 m pixels at best. No sensor sits in the top-left corner, sharp *and* wide. Choosing a sensor means choosing which resolution matters most for your question (Chapter 3).
+The trade-off figure places six sensors by pixel size and swath. They fall along a line: WorldView-3 sees 0.31 m pixels over a 13 km strip, MODIS sees 250 m pixels over 2,330 km, and Himawari in geostationary orbit sees the whole disk of the Earth with 500 m pixels at best. No sensor sits in the top-left corner, sharp *and* wide. Choosing a sensor means choosing which resolution matters most for your question (Chapter [-@sec-sensors]).
 
 {{< include _snippets/ch00d_resolution.qmd >}}
 

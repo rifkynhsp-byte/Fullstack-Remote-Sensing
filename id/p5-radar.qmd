@@ -13,7 +13,7 @@ Radar (RAdio Detection And Ranging) adalah sensor **aktif**. Radar mengirim puls
 - Melihat **menembus awan, asap, dan sebagian besar hujan**, karena gelombang mikro (sepanjang beberapa sentimeter) lolos melewati butir air yang menghalangi cahaya.
 - Mengukur **jarak** dengan sangat teliti, dengan menghitung waktu tempuh gemanya. Inilah yang memungkinkan model elevasi dan pengukuran deformasi skala milimeter (interferometri, di bawah).
 
-Bagi Indonesia yang tropis, dengan tempat-tempat yang tertutup awan hampir sepanjang musim hujan, dua keunggulan pertama menentukan apakah banjir, tanam padi, atau deforestasi bisa dipantau sama sekali (Bab 10, 21, 24).
+Bagi Indonesia yang tropis, dengan tempat-tempat yang tertutup awan hampir sepanjang musim hujan, dua keunggulan pertama menentukan apakah banjir, tanam padi, atau deforestasi bisa dipantau sama sekali (Bab [-@sec-sar], [-@sec-timeseries], [-@sec-flood]).
 
 Harganya: citra radar bukan foto. Kecerahannya berasal dari geometri, kekasaran, dan kelembapan, bukan warna, dan geometrinya mengikuti jarak, bukan posisi di peta. Butuh latihan untuk membacanya.
 
@@ -80,7 +80,7 @@ Radar menempatkan setiap gema di citra menurut **jaraknya dari antena**, bukan m
 
 Cara singkat mengingatnya: **foreshortening dan layover milik lereng depan dan lebih parah di range dekat; bayangan milik lereng belakang dan lebih parah di range jauh.** Resolusi permukaan juga lebih buruk di range dekat.
 
-Dua peta Sentinel-1 Gunung Rinjani di Lombok memperlihatkannya pada gunung api sungguhan. Pada lintasan **naik**, Sentinel-1 terbang ke utara dan melihat ke timur: lereng yang menghadap barat menghadap radar, sehingga terang dan termampatkan, sedangkan lereng yang menghadap timur lebih gelap. Pada lintasan **turun**, Sentinel-1 terbang ke selatan dan melihat ke barat, dan polanya berbalik. Memakai kedua lintasan adalah cara baku untuk mengisi bagian yang disembunyikan oleh satu geometri, dan itulah sebabnya koreksi medan (Bab 10) butuh model elevasi yang baik.
+Dua peta Sentinel-1 Gunung Rinjani di Lombok memperlihatkannya pada gunung api sungguhan. Pada lintasan **naik**, Sentinel-1 terbang ke utara dan melihat ke timur: lereng yang menghadap barat menghadap radar, sehingga terang dan termampatkan, sedangkan lereng yang menghadap timur lebih gelap. Pada lintasan **turun**, Sentinel-1 terbang ke selatan dan melihat ke barat, dan polanya berbalik. Memakai kedua lintasan adalah cara baku untuk mengisi bagian yang disembunyikan oleh satu geometri, dan itulah sebabnya koreksi medan (Bab [-@sec-sar]) butuh model elevasi yang baik.
 
 ## Apa yang membuat piksel terang: hamburan balik
 
@@ -96,7 +96,7 @@ Nilai piksel radar adalah **hamburan baliknya** (backscatter), yaitu bagian ener
 
 **Kelembapan.** Air sangat menaikkan *konstanta dielektrik* tanah dan vegetasi, sehingga keduanya memantulkan gelombang mikro lebih kuat. Tanah basah lebih terang daripada tanah kering dengan kekasaran yang sama. Dengan cara inilah radar memetakan kelembapan tanah.
 
-Banjir memperlihatkan ketiganya. Air banjir yang tenang adalah cermin yang halus: pantulan spekular, hampir tidak ada yang kembali, piksel **hitam**. Kalau angin membuat permukaannya beriak, pikselnya menjadi lebih abu-abu, itulah sebabnya pemetaan banjir lebih sulit saat berangin. Pohon yang berdiri di air banjir membentuk sudut batang-dan-air: pantulan ganda, piksel **sangat terang**. Jadi banjir yang sama tampak gelap di lahan terbuka dan terang di bawah hutan (Bab 24).
+Banjir memperlihatkan ketiganya. Air banjir yang tenang adalah cermin yang halus: pantulan spekular, hampir tidak ada yang kembali, piksel **hitam**. Kalau angin membuat permukaannya beriak, pikselnya menjadi lebih abu-abu, itulah sebabnya pemetaan banjir lebih sulit saat berangin. Pohon yang berdiri di air banjir membentuk sudut batang-dan-air: pantulan ganda, piksel **sangat terang**. Jadi banjir yang sama tampak gelap di lahan terbuka dan terang di bawah hutan (Bab [-@sec-flood]).
 
 Grafik dan tabel hamburan balik di bagian keluaran mengukurnya di sekitar Waduk Jatiluhur. Air yang tenang paling gelap (median VV −18,8 dB). Lahan pertanian dan pepohonan di tengah-tengah. Kawasan terbangun paling terang di VV (−6,5 dB), karena pantulan ganda. Di VH, pepohonan (−13,8 dB) menyusul bangunan (−13,9 dB), karena hamburan volume mengubah sebagian besar sinyal menjadi polarisasi silang.
 

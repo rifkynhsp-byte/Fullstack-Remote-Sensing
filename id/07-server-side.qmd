@@ -19,7 +19,7 @@ Segala sesuatu di Earth Engine adalah salah satu dari lima hal. Memahami apa yan
 
 : Sistem tipe Earth Engine, lengkap {.striped}
 
-Perbedaan antara `ee.Geometry` dan `ee.Feature` layak dijeda sebentar, karena inilah sumber kebingungan yang berulang. Geometry hanya bentuk. Feature adalah bentuk yang membawa properti, dan properti itulah yang memungkinkan sebuah poligon data latih menyatakan "area ini mangrove". Ketika Bab 15 memberikan properti `landcover` pada titik sampel, yang sebenarnya terjadi adalah mengubah geometry menjadi feature supaya classifier punya sesuatu untuk dipelajari.
+Perbedaan antara `ee.Geometry` dan `ee.Feature` layak dijeda sebentar, karena inilah sumber kebingungan yang berulang. Geometry hanya bentuk. Feature adalah bentuk yang membawa properti, dan properti itulah yang memungkinkan sebuah poligon data latih menyatakan "area ini mangrove". Ketika Bab [-@sec-sampling] memberikan properti `landcover` pada titik sampel, yang sebenarnya terjadi adalah mengubah geometry menjadi feature supaya classifier punya sesuatu untuk dipelajari.
 
 ## Band, dan kenapa namanya begitu penting
 
@@ -82,7 +82,7 @@ Fungsi tidak boleh memakai pernyataan `if` JavaScript pada nilai server. Pakai `
 
 `.map()` mengubah koleksi menjadi koleksi lain dengan panjang yang sama. **Reducer** meringkas banyak nilai menjadi lebih sedikit, dan ia bekerja pada sumbu mana pun yang Anda tunjuk.
 
-Sepanjang **waktu**, reducer mengubah tumpukan citra menjadi satu citra. Inilah compositing, dan Bab 9 memakainya secara intensif.
+Sepanjang **waktu**, reducer mengubah tumpukan citra menjadi satu citra. Inilah compositing, dan Bab [-@sec-cloud] memakainya secara intensif.
 
 ```javascript
 var annual = collection.median();       // satu citra, median per piksel
@@ -99,7 +99,7 @@ var meanNdvi = image.reduceRegion({
 });
 ```
 
-Sepanjang **band**, reducer menggabungkan beberapa pengukuran pada satu lokasi, dan begitulah cara kerja voting ansambel di Bab 16.
+Sepanjang **band**, reducer menggabungkan beberapa pengukuran pada satu lokasi, dan begitulah cara kerja voting ansambel di Bab [-@sec-supervised].
 
 ::: {.callout-important}
 ## Integritas ilmiah: `scale` adalah keputusan analisis
@@ -129,7 +129,7 @@ var composite = processed.median().clip(aoi);
 Map.addLayer(composite, visualisation, 'Komposit');
 ```
 
-Filter, map, reduce, act. Bab 9 mengisi kerangka itu sampai penuh.
+Filter, map, reduce, act. Bab [-@sec-cloud] mengisi kerangka itu sampai penuh.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -144,7 +144,7 @@ Filter, map, reduce, act. Bab 9 mengisi kerangka itu sampai penuh.
         "Geometry disimpan di server, Feature di peramban"
       ],
       "answer": 1,
-      "why": "Inilah sebabnya Bab 15 memberi properti landcover pada titik sampel: langkah itu mengubah geometry menjadi feature agar classifier punya label untuk dipelajari."
+      "why": "Inilah sebabnya Bab [-@sec-sampling] memberi properti landcover pada titik sampel: langkah itu mengubah geometry menjadi feature agar classifier punya label untuk dipelajari."
     },
     {
       "q": "Kenapa perulangan for di atas tujuh puluh citra membekukan peramban, sementara .map() tidak?",

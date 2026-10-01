@@ -16,7 +16,7 @@
  {
   "name": "ch36-scores",
   "kind": "table",
-  "caption": "Scores for the same 1,500 footprints under the two test designs. An RMSE close to the SD column means the model does little better than guessing the mean. The reference is GEDI's own modelled AGBD, not field plots, so these numbers measure agreement with GEDI. Unlike Chapter 15, block and random folds agree here: 1,500 footprints drawn from a 55 by 55 km box are seldom close neighbours, so there was little leakage to remove.",
+  "caption": "Scores for the same 1,500 footprints under the two test designs. An RMSE close to the SD column means the model does little better than guessing the mean. The reference is GEDI's own modelled AGBD, not field plots, so these numbers measure agreement with GEDI. Unlike chapter “Ground Truth and Sampling Design”, block and random folds agree here: 1,500 footprints drawn from a 55 by 55 km box are seldom close neighbours, so there was little leakage to remove.",
   "markdown": "| test design       |   points |   r2 |   rmse_Mg_ha |   bias_Mg_ha |   sd_of_gedi_agbd |\n|:------------------|---------:|-----:|-------------:|-------------:|------------------:|\n| random 5-fold     |     1500 | 0.36 |         56.7 |          1.1 |              71.0 |\n| 5 km block 5-fold |     1500 | 0.35 |         57.0 |          1.3 |              71.0 |"
  },
  {

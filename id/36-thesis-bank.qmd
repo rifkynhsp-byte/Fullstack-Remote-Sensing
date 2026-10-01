@@ -21,15 +21,15 @@ Embeddings menjelaskan sekitar sepertiga variasi biomassa GEDI, dan galatnya men
 
 | # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
 |---|---|---|---|---|
-| 1 | Berapa sedikit label yang dibutuhkan peta tutupan lahan tingkat provinsi dengan embeddings? | Bab 19 mencapai kecocokan 0,83 dengan 20 titik per kelas di satu delta; belum ada yang menunjukkan apakah ini bertahan di berbagai bentang lahan Indonesia | ulangi kurva belajar di lima provinsi | kurva belajar, ketidakpastian |
-| 2 | Bisakah embeddings mendeteksi deforestasi skala petani yang terlewat oleh peta global? | Bab 26 menunjukkan peta global keliru membaca peremajaan karet sebagai kehilangan hutan | bandingkan jarak embedding antar tahun dengan kehilangan Hansen [@hansen2013gfc] di kebun yang sudah diketahui | metrik perubahan, label |
+| 1 | Berapa sedikit label yang dibutuhkan peta tutupan lahan tingkat provinsi dengan embeddings? | Bab [-@sec-embeddings] mencapai kecocokan 0,83 dengan 20 titik per kelas di satu delta; belum ada yang menunjukkan apakah ini bertahan di berbagai bentang lahan Indonesia | ulangi kurva belajar di lima provinsi | kurva belajar, ketidakpastian |
+| 2 | Bisakah embeddings mendeteksi deforestasi skala petani yang terlewat oleh peta global? | Bab [-@sec-eudr] menunjukkan peta global keliru membaca peremajaan karet sebagai kehilangan hutan | bandingkan jarak embedding antar tahun dengan kehilangan Hansen [@hansen2013gfc] di kebun yang sudah diketahui | metrik perubahan, label |
 | 3 | Apakah embeddings membawa informasi struktur, bukan hanya tutupan? | skrip pemula di atas: R² sekitar 0,35 untuk biomassa GEDI | tambahkan tinggi GEDI (RH98) dan uji per blok | perbandingan model, SHAP |
 
 ## Biomassa dan karbon
 
 | # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
 |---|---|---|---|---|
-| 4 | Seberapa besar galat biomassa mangrove berasal dari ketidakcocokan tanggal dan posisi? | Bab 20: R² hampir nol karena prediktor 2020 dipasangkan dengan plot tanpa tanggal survei [@murdiyarso2019swampbintuni] | cocokkan ulang plot dengan citra pada tahun surveinya | pencocokan waktu per plot |
+| 4 | Seberapa besar galat biomassa mangrove berasal dari ketidakcocokan tanggal dan posisi? | Bab [-@sec-regression]: R² hampir nol karena prediktor 2020 dipasangkan dengan plot tanpa tanggal survei [@murdiyarso2019swampbintuni] | cocokkan ulang plot dengan citra pada tahun surveinya | pencocokan waktu per plot |
 | 5 | Bisakah peta biomassa membawa ketidakpastian yang jujur? | validasi produk biomassa global masih belum konsisten [@duncanson2019validation] | selang kuantil atau konformal, dicek per blok | seluruh metodenya |
 | 6 | Allometri mana, dan seberapa salah kalau keliru memilih? | persamaan pantropis [@chave2014allometric] dibandingkan persamaan lokal untuk mangrove dan hutan gambut Indonesia | telusuri dampak pilihan allometri pada peta | Monte Carlo |
 
@@ -46,16 +46,16 @@ Embeddings menjelaskan sekitar sepertiga variasi biomassa GEDI, dan galatnya men
 | # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
 |---|---|---|---|---|
 | 10 | Bisakah model longsor yang dilatih dari satu gempa memetakan gempa berikutnya? | inventaris dari banyak kejadian sudah ada [@ferrario2019lombok; @xu2024caslandslide]; perpindahan antar kejadian jarang diuji | latih dengan Lombok 2018, uji di Palu atau Cianjur | model patch, transfer |
-| 11 | Seberapa besar galat keterpaparan akibat jejak bangunan yang hilang? | Bab 24: dua layer jejak bangunan berbeda seratus kali lipat di satu kabupaten | bandingkan layer jejak bangunan di 20 kabupaten | penggabungan spasial skala besar |
+| 11 | Seberapa besar galat keterpaparan akibat jejak bangunan yang hilang? | Bab [-@sec-flood]: dua layer jejak bangunan berbeda seratus kali lipat di satu kabupaten | bandingkan layer jejak bangunan di 20 kabupaten | penggabungan spasial skala besar |
 | 12 | Bisakah koherensi radar memberi peringatan sebelum lereng runtuh? | koherensi butuh fase SLC, yang tidak ada di Earth Engine | deret waktu koherensi sebelum longsor yang sudah diketahui | pemrosesan InSAR |
 
 ## Metode yang mengubah semua hasil di atas
 
 | # | Pertanyaan | Kenapa masih terbuka | Eksperimen pertama | Python dibutuhkan untuk |
 |---|---|---|---|---|
-| 13 | Seberapa turun akurasi penelitian Indonesia yang sudah terbit kalau divalidasi secara spasial? | pembagian acak membuat model terlihat lebih baik [@ploton2020spatial; @roberts2017cv]; Bab 15 menemukan fold yang skornya sampai 0,35 di bawah pembagian acak | jalankan ulang sepuluh alur kerja yang sudah terbit dengan validasi silang blok | kerangka yang bisa diulang |
-| 14 | Di mana sebuah model boleh memprediksi? | area of applicability [@meyer2021aoa] hampir tidak pernah dipetakan di samping hasil | tambahkan masker applicability ke peta Bab 16 | jarak di ruang fitur |
-| 15 | Apakah tren LST di tropis nyata atau akibat orbit? | Bab 30 menemukan "pendinginan" luas yang mungkin berasal dari waktu lintas Terra yang bergeser | bandingkan tren Terra, Aqua, dan Landsat | harmonisasi antar sensor |
+| 13 | Seberapa turun akurasi penelitian Indonesia yang sudah terbit kalau divalidasi secara spasial? | pembagian acak membuat model terlihat lebih baik [@ploton2020spatial; @roberts2017cv]; Bab [-@sec-sampling] menemukan fold yang skornya sampai 0,35 di bawah pembagian acak | jalankan ulang sepuluh alur kerja yang sudah terbit dengan validasi silang blok | kerangka yang bisa diulang |
+| 14 | Di mana sebuah model boleh memprediksi? | area of applicability [@meyer2021aoa] hampir tidak pernah dipetakan di samping hasil | tambahkan masker applicability ke peta Bab [-@sec-supervised] | jarak di ruang fitur |
+| 15 | Apakah tren LST di tropis nyata atau akibat orbit? | Bab [-@sec-statistics] menemukan "pendinginan" luas yang mungkin berasal dari waktu lintas Terra yang bergeser | bandingkan tren Terra, Aqua, dan Landsat | harmonisasi antar sensor |
 
 ::: {.callout-important}
 ## Sebelum memutuskan satu topik

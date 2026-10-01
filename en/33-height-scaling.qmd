@@ -12,7 +12,7 @@ A biomass map of a province is built from a chain of measurements, each one wide
 | Level | What it measures | Covers |
 |---|---|---|
 | Field plot | stem diameter, height, species (wood density) | a few hectares |
-| Airborne LiDAR (Chapter 32) | a canopy height model at 0.5 to 1 m | a few thousand hectares |
+| Airborne LiDAR (Chapter [-@sec-lidar-trees]) | a canopy height model at 0.5 to 1 m | a few thousand hectares |
 | GEDI [@dubayah2020gedi] | laser height in 25 m footprints, hundreds of metres apart | samples across the tropics |
 | Height maps [@lang2023canopy; @potapov2021canopy] | height at every 10 or 30 m pixel, learned from GEDI and optical images | everywhere |
 
@@ -20,7 +20,7 @@ Each step up trades precision for coverage. Errors carry upward too: a map can o
 
 ## "How tall is this forest?" has five answers
 
-Start with the plot from Chapter 32. The same point cloud gives a height of 13, 22, 24, 25 or 32 m, depending on what you mean. The mean of every cell includes the gaps between crowns. The median tree top is a tree-level number. A 98th percentile over a 10 m or 25 m cell keeps the tallest crowns in each cell, which is roughly what a 10 m map and a GEDI rh98 footprint record. So when a paper compares its LiDAR "height" with GEDI, first check that both mean the same thing.
+Start with the plot from Chapter [-@sec-lidar-trees]. The same point cloud gives a height of 13, 22, 24, 25 or 32 m, depending on what you mean. The mean of every cell includes the gaps between crowns. The median tree top is a tree-level number. A 98th percentile over a 10 m or 25 m cell keeps the tallest crowns in each cell, which is roughly what a 10 m map and a GEDI rh98 footprint record. So when a paper compares its LiDAR "height" with GEDI, first check that both mean the same thing.
 
 ## Maps against footprints
 
@@ -49,5 +49,5 @@ GEDI's own 1 km biomass grid (L4B) is made from footprints and GEDI's allometric
 
 ::: {.callout-note}
 ## Where the thesis topics are
-Every step in this chapter has an open question for Indonesian forests: allometry that uses LiDAR crown size instead of diameter, bias-corrected height maps for peat swamp and plantations, and honest uncertainty from plot to province. Chapter 36 lists them as thesis topics.
+Every step in this chapter has an open question for Indonesian forests: allometry that uses LiDAR crown size instead of diameter, bias-corrected height maps for peat swamp and plantations, and honest uncertainty from plot to province. Chapter [-@sec-thesisbank] lists them as thesis topics.
 :::

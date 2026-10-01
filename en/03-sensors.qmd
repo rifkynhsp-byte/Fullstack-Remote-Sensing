@@ -55,10 +55,10 @@ Sentinel-1 is C band, around 5.6 centimetres. That interacts mainly with leaves 
 
 ALOS PALSAR is L band, around 23 centimetres. Longer waves pass through foliage and interact with trunks and large branches, so L band reaches further into and through the canopy and correlates better with total above ground biomass. It is also less prone to saturating in dense forest.
 
-The practical implication for mangroves: C band tells you about canopy condition, L band tells you about structure and biomass, and using both is not redundancy. Chapter 10 stacks them together.
+The practical implication for mangroves: C band tells you about canopy condition, L band tells you about structure and biomass, and using both is not redundancy. Chapter [-@sec-sar] stacks them together.
 :::
 
-Radar carries one cost that optical does not: speckle. Because the return is the coherent sum of many scatterers within a resolution cell, the signal has a grainy multiplicative noise that is inherent to the physics rather than a sensor defect. It must be filtered, and Chapter 10 covers how without destroying the edges you care about.
+Radar carries one cost that optical does not: speckle. Because the return is the coherent sum of many scatterers within a resolution cell, the signal has a grainy multiplicative noise that is inherent to the physics rather than a sensor defect. It must be filtered, and Chapter [-@sec-sar] covers how without destroying the edges you care about.
 
 ## The supporting cast
 
@@ -66,9 +66,9 @@ Radar carries one cost that optical does not: speckle. Because the return is the
 
 **SRTM, 90 and 30 metre.** The long standing global default, acquired in 2000. Still perfectly usable, and its age matters only if your terrain has changed.
 
-**GEDI.** Spaceborne LiDAR from the International Space Station, sampling canopy height in footprints rather than wall to wall coverage. You cannot map with it directly. You calibrate against it, which is what Chapter 20 does.
+**GEDI.** Spaceborne LiDAR from the International Space Station, sampling canopy height in footprints rather than wall to wall coverage. You cannot map with it directly. You calibrate against it, which is what Chapter [-@sec-regression] does.
 
-**Google satellite embeddings.** Not a sensor. A learned representation derived from many sensors, 64 dimensions per 10 metre pixel per year. Chapter 19.
+**Google satellite embeddings.** Not a sensor. A learned representation derived from many sensors, 64 dimensions per 10 metre pixel per year. Chapter [-@sec-embeddings].
 
 ## Try the trade yourself
 
@@ -99,7 +99,7 @@ Combining sensors nearly always improves accuracy, and it always increases compl
 
 The case where fusion is clearly justified is mangrove mapping, because the confusion that limits accuracy is between mangrove and other dense broadleaf forest, and optical data alone cannot resolve it. The separating information is physical rather than spectral: mangroves sit within a narrow elevation band above sea level, and they stand in water, which produces a double bounce radar signature that terrestrial forest does not have. Adding elevation and radar does not marginally improve the map. It fixes the specific error that was capping its accuracy.
 
-The case where fusion is not justified is adding bands because they exist. Every band you add costs computation, adds a failure mode, and dilutes the classifier's attention. Chapter 16 covers reading feature importance to find out which bands are earning their place, and Chapter 15 covers what to do about the ones that are not.
+The case where fusion is not justified is adding bands because they exist. Every band you add costs computation, adds a failure mode, and dilutes the classifier's attention. Chapter [-@sec-supervised] covers reading feature importance to find out which bands are earning their place, and Chapter [-@sec-sampling] covers what to do about the ones that are not.
 
 ::: {.callout-tip}
 ## From the field

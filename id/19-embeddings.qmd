@@ -64,7 +64,7 @@ Ditulis bersamaan dengan naskah babnya.
         "Ia tidak bisa digabungkan dengan data lain"
       ],
       "answer": 1,
-      "why": "Granularitas tahunan menempatkan satu kelas pertanyaan di luar jangkauan. Peristiwa tunggal memerlukan time series, dan itu Bab 21, dan justru karena itulah pendekatan yang lebih lama tetap diajarkan di sini alih alih diganti."
+      "why": "Granularitas tahunan menempatkan satu kelas pertanyaan di luar jangkauan. Peristiwa tunggal memerlukan time series, dan itu Bab [-@sec-timeseries], dan justru karena itulah pendekatan yang lebih lama tetap diajarkan di sini alih alih diganti."
     }
   ]
 }

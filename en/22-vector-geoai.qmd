@@ -7,7 +7,7 @@ The same workflow you have been running on satellite imagery, applied to a comme
 
 ## Why this chapter is in a remote sensing book
 
-Everything up to here used raster features derived from satellites. Notice, though, that nothing in Chapters 15 to 18 actually cared about that. The sampling design, the train and validate split, the classifier, the confusion matrix: none of it knows or needs to know that the numbers came from an orbiting sensor.
+Everything up to here used raster features derived from satellites. Notice, though, that nothing in Chapters [-@sec-sampling] to [-@sec-obia] actually cared about that. The sampling design, the train and validate split, the classifier, the confusion matrix: none of it knows or needs to know that the numbers came from an orbiting sensor.
 
 Swap reflectance for distance to the nearest school. Swap pixel for hexagon. Swap ground truth polygons for the locations of businesses that already exist. The machine is identical and the question becomes commercial.
 
@@ -144,4 +144,4 @@ Use it to reduce a thousand candidate locations to ten. Then send someone to sta
 2. Redefine pseudo absence as cells more than one kilometre from any existing cafe. Argue for or against that being a better definition than random sampling.
 3. Add one feature of your own and use SHAP to decide whether it earned its place.
 4. Take the ten highest scoring cells and inspect each on street level imagery. Count how many are plausible. That count is your real accuracy.
-5. Map this chapter's workflow onto Chapter 16 line by line. Write down which step in each corresponds to which step in the other.
+5. Map this chapter's workflow onto Chapter [-@sec-supervised] line by line. Write down which step in each corresponds to which step in the other.

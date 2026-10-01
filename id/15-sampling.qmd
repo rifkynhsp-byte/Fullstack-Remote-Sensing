@@ -156,7 +156,7 @@ var split = points.randomColumn('random');
 var training = split.filter(ee.Filter.lt('random', 0.7));
 var validation = split.filter(ee.Filter.gte('random', 0.7));
 ```
-Kedua versi menghasilkan keluaran yang terlihat identik dan berbeda beberapa poin akurasi. Bab 16 meminta Anda menjalankan keduanya dan mengukur sendiri selisihnya.
+Kedua versi menghasilkan keluaran yang terlihat identik dan berbeda beberapa poin akurasi. Bab [-@sec-supervised] meminta Anda menjalankan keduanya dan mengukur sendiri selisihnya.
 :::
 
 ## Alur kerja lengkap
@@ -209,7 +209,7 @@ Variasikan ukuran blok dari 1 km sampai 20 km lalu plot akurasi terhadapnya. Aku
 
 ## Dua pemeriksaan sebelum memercayai sampelnya
 
-**Keterpisahan spektral.** Plot dua band prediktor saling berhadapan, diwarnai per kelas. Kalau mangrove dan hutan lain bertumpuk sepenuhnya pada NDVI tetapi memisah sepanjang backscatter radar, Anda baru saja memastikan alasan Bab 10 memasukkan radar ke dalam stack. Kalau dua kelas bertumpuk pada segalanya, tidak ada classifier yang akan memisahkannya, dan sebaiknya keduanya digabung atau Anda mencari prediktor lain.
+**Keterpisahan spektral.** Plot dua band prediktor saling berhadapan, diwarnai per kelas. Kalau mangrove dan hutan lain bertumpuk sepenuhnya pada NDVI tetapi memisah sepanjang backscatter radar, Anda baru saja memastikan alasan Bab [-@sec-sar] memasukkan radar ke dalam stack. Kalau dua kelas bertumpuk pada segalanya, tidak ada classifier yang akan memisahkannya, dan sebaiknya keduanya digabung atau Anda mencari prediktor lain.
 
 **Di mana sampelnya berada.** Petakan. Ini menangkap pengelompokan di satu sudut yang kebetulan mudah dijangkau, kelas yang hanya digambar di satu sisi sungai, dan titik yang jatuh ke laut. Tiga puluh detik, dan sudah menyelamatkan banyak sore.
 
@@ -221,7 +221,7 @@ Ia tidak bisa mendeteksi galat pelabelan yang sistematis. Kalau Anda secara kons
 
 Validasi independen memakai data yang dikumpulkan lewat proses berbeda. Plot lapangan, dalam kasus buku ini data plot CIFOR dari Papua Barat. Citra komersial resolusi tinggi yang ditafsirkan orang yang tidak menggambar poligon latihnya. Produk yang sudah ada seperti Global Mangrove Watch, dipakai sebagai pemeriksaan silang dan bukan sebagai kebenaran.
 
-Selisih antara akurasi internal dan akurasi independen adalah angka yang jujur, dan Bab 17 membahas cara melaporkannya.
+Selisih antara akurasi internal dan akurasi independen adalah angka yang jujur, dan Bab [-@sec-accuracy] membahas cara melaporkannya.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -300,7 +300,7 @@ Selisih antara akurasi internal dan akurasi independen adalah angka yang jujur, 
 ## Latihan {.unnumbered}
 
 1. Atur setiap target kelas ke angka yang sama lalu jalankan ulang. Kelas mana yang menjadi lebih sulit dimodelkan, dan mengapa sampling yang sama rata tidak berarti sampling yang adil?
-2. Matikan penipisan dengan mengatur jarak minimum ke 10 meter, lalu jalankan Bab 16 dengan hasilnya. Catat berapa poin akurasi yang dilaporkan naik. Simpan angkanya.
+2. Matikan penipisan dengan mengatur jarak minimum ke 10 meter, lalu jalankan Bab [-@sec-supervised] dengan hasilnya. Catat berapa poin akurasi yang dilaporkan naik. Simpan angkanya.
 3. Ekspor sampelnya sebagai CSV lalu periksa dua puluh di antaranya secara acak terhadap citra resolusi tinggi. Tingkat salah label Anda adalah batas atas akurasi peta Anda.
 4. Jalankan validasi silang blok pada ukuran blok 1 km, 5 km, dan 20 km. Plot akurasi terhadap ukuran blok dan tentukan rentang autokorelasi data Anda.
 5. Gambar poligon latih untuk satu kelas yang Anda anggap mudah, lalu minta rekan kerja menggambarnya secara terpisah. Bandingkan. Tingkat ketidaksepakatannya lebih informatif daripada sebagian besar penyetelan model.

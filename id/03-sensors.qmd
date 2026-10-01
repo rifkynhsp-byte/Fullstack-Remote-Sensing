@@ -55,10 +55,10 @@ Sentinel-1 adalah C band, sekitar 5,6 sentimeter. Itu berinteraksi terutama deng
 
 ALOS PALSAR adalah L band, sekitar 23 sentimeter. Gelombang yang lebih panjang menembus dedaunan dan berinteraksi dengan batang serta cabang besar, sehingga L band menjangkau lebih dalam dan lebih menembus tajuk serta berkorelasi lebih baik dengan total biomassa di atas permukaan. Ia juga lebih tahan jenuh pada hutan rapat.
 
-Implikasi praktisnya untuk mangrove: C band memberi tahu kondisi tajuk, L band memberi tahu struktur dan biomassa, dan memakai keduanya bukan pengulangan. Bab 10 menumpuk keduanya.
+Implikasi praktisnya untuk mangrove: C band memberi tahu kondisi tajuk, L band memberi tahu struktur dan biomassa, dan memakai keduanya bukan pengulangan. Bab [-@sec-sar] menumpuk keduanya.
 :::
 
-Radar membawa satu ongkos yang tidak dimiliki optik: speckle. Karena pantulan adalah jumlah koheren dari banyak penghambur di dalam satu sel resolusi, sinyalnya memuat derau multiplikatif berbutir yang melekat pada fisikanya, bukan cacat sensor. Ia harus difilter, dan Bab 10 membahas caranya tanpa merusak tepi yang Anda pedulikan.
+Radar membawa satu ongkos yang tidak dimiliki optik: speckle. Karena pantulan adalah jumlah koheren dari banyak penghambur di dalam satu sel resolusi, sinyalnya memuat derau multiplikatif berbutir yang melekat pada fisikanya, bukan cacat sensor. Ia harus difilter, dan Bab [-@sec-sar] membahas caranya tanpa merusak tepi yang Anda pedulikan.
 
 ## Pemeran pendukung
 
@@ -66,9 +66,9 @@ Radar membawa satu ongkos yang tidak dimiliki optik: speckle. Karena pantulan ad
 
 **SRTM, 90 dan 30 meter.** Pilihan global lama, direkam pada tahun 2000. Masih sangat layak pakai, dan usianya baru menjadi masalah bila topografi Anda berubah.
 
-**GEDI.** LiDAR antariksa dari Stasiun Luar Angkasa Internasional, mencuplik tinggi tajuk pada jejak titik, bukan liputan penuh. Anda tidak dapat memetakan langsung dengannya. Anda mengalibrasi terhadapnya, dan itulah yang dikerjakan Bab 20.
+**GEDI.** LiDAR antariksa dari Stasiun Luar Angkasa Internasional, mencuplik tinggi tajuk pada jejak titik, bukan liputan penuh. Anda tidak dapat memetakan langsung dengannya. Anda mengalibrasi terhadapnya, dan itulah yang dikerjakan Bab [-@sec-regression].
 
-**Google satellite embeddings.** Bukan sensor. Sebuah representasi terpelajar yang diturunkan dari banyak sensor, 64 dimensi per piksel 10 meter per tahun. Bab 19.
+**Google satellite embeddings.** Bukan sensor. Sebuah representasi terpelajar yang diturunkan dari banyak sensor, 64 dimensi per piksel 10 meter per tahun. Bab [-@sec-embeddings].
 
 ## Coba sendiri pertukarannya
 
@@ -99,7 +99,7 @@ Menggabungkan sensor hampir selalu meningkatkan akurasi, dan selalu menambah ker
 
 Kasus yang jelas membenarkan fusi adalah pemetaan mangrove, karena kekeliruan yang membatasi akurasi adalah antara mangrove dan hutan berdaun lebar rapat lainnya, dan data optik saja tidak dapat menyelesaikannya. Informasi pemisahnya bersifat fisik, bukan spektral: mangrove berada dalam sabuk elevasi sempit di atas muka laut, dan ia berdiri di air, yang menghasilkan tanda tangan pantulan ganda radar yang tidak dimiliki hutan daratan. Menambahkan elevasi dan radar bukan sekadar memperbaiki peta sedikit. Ia memperbaiki galat spesifik yang selama ini membatasi akurasinya.
 
-Kasus yang tidak membenarkan fusi adalah menambah band hanya karena band itu ada. Setiap band yang ditambahkan memakan komputasi, menambah mode kegagalan, dan mengencerkan perhatian klasifikator. Bab 16 membahas cara membaca kepentingan fitur untuk mengetahui band mana yang benar benar berkontribusi, dan Bab 15 membahas apa yang harus dilakukan pada yang tidak.
+Kasus yang tidak membenarkan fusi adalah menambah band hanya karena band itu ada. Setiap band yang ditambahkan memakan komputasi, menambah mode kegagalan, dan mengencerkan perhatian klasifikator. Bab [-@sec-supervised] membahas cara membaca kepentingan fitur untuk mengetahui band mana yang benar benar berkontribusi, dan Bab [-@sec-sampling] membahas apa yang harus dilakukan pada yang tidak.
 
 ::: {.callout-tip}
 ## Dari lapangan

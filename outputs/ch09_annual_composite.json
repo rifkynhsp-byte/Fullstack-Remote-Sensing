@@ -15,7 +15,7 @@
  {
   "name": "ch09-ndvi",
   "kind": "map",
-  "caption": "NDVI from the same composite: the vegetated delta is green, the sea and river plumes sit near zero. Inside the forest the colour barely changes, the saturation Chapter 12 takes on.",
+  "caption": "NDVI from the same composite: the vegetated delta is green, the sea and river plumes sit near zero. Inside the forest the colour barely changes, the saturation chapter “Band Math and Spectral Indices” takes on.",
   "image": "images/real/ch09-ndvi.jpg"
  },
  {

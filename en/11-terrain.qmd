@@ -43,7 +43,7 @@ The symptom is peculiar and easy to misread: your map finds young, short, regene
 
 Three ways to handle it, in order of preference.
 
-**Do not threshold at all.** Hand elevation to the classifier as one predictor among many and let it learn the relationship, canopy offset included. This is what Chapter 10's feature stack does and it is usually the right answer, because the model can weigh elevation against spectral evidence rather than being overruled by a cutoff you chose.
+**Do not threshold at all.** Hand elevation to the classifier as one predictor among many and let it learn the relationship, canopy offset included. This is what Chapter [-@sec-sar]'s feature stack does and it is usually the right answer, because the model can weigh elevation against spectral evidence rather than being overruled by a cutoff you chose.
 
 **Threshold generously.** If a rule is required, use 40 metres rather than 10. You are then excluding hillside forest, which is the actual goal, rather than attempting to isolate the tidal zone precisely, which a surface model cannot support.
 
