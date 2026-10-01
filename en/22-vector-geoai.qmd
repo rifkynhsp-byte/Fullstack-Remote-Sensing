@@ -2,7 +2,7 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-The same workflow you have been running on satellite imagery, applied to a commercial question with no imagery in it at all. You will build a suitability surface for opening a coffee shop, discover a data leak that produces a near-perfect and worthless model, and interpret the result with SHAP.
+The same workflow you have been running on satellite imagery, applied to a commercial question with no imagery in it at all. You will build a suitability surface for opening a coffee shop, discover a data leak that produces a perfect and worthless model, and interpret the result with SHAP.
 :::
 
 ## Why this chapter is in a remote sensing book
@@ -59,11 +59,11 @@ Every conclusion from this model inherits the assumption above. When presenting 
 
 ## The perfect model that means nothing
 
-Run the model with every feature and it reports a test accuracy of 0.975, an f1 of 0.976 and an out-of-bag score of 0.98, on 100 hexagons that have a cafe and 100 that do not, out of 1,159 hexagons in Kota Malang. In a textbook that is success. In real work it is an alarm.
+Run the model with every feature and it reports a test accuracy of 1.00, an f1 of 1.00 and an out-of-bag score of 0.99, on 200 hexagons that have a cafe and 200 that do not, out of 1,599 hexagons in Kota Bandung. In a textbook that is success. In real work it is an alarm.
 
 The leak is obvious once seen. A presence hexagon contains a cafe. Therefore its distance to the nearest competitor is close to zero *by construction*. The model has not learned what makes a location good. It has learned to recognise a hexagon with a cafe in it, which is the label restated as a feature.
 
-Remove that one variable and the scores fall: test accuracy 0.875, out-of-bag 0.79. Lower, and a real number about a real relationship. (With only 40 test hexagons, the test accuracy is itself uncertain by several points; the out-of-bag score, computed on every training hexagon, is the steadier of the two.)
+Remove that one variable and the scores fall: out-of-bag 0.86, test accuracy 0.79. Lower, and a real number about a real relationship. (With only 80 test hexagons, the test accuracy is itself uncertain by several points; the out-of-bag score, computed on every training hexagon, is the steadier of the two.)
 
 ::: {.callout-tip}
 ## From the field
@@ -76,11 +76,11 @@ Note which competitor feature survives. Distance to the nearest competitor leaks
 
 Random Forest feature importance tells you which variables the model used. It does not tell you in which direction, and for a business decision the direction is the entire value.
 
-SHAP decomposes each individual prediction into per feature contributions, so you learn not only that competitor density mattered but that more competitors pushed the prediction upward. In Malang the count of cafes within 500 m carries almost half of the model's weight (46 %), far ahead of anything else.
+SHAP decomposes each individual prediction into per feature contributions, so you learn not only that competitor density mattered but that more competitors pushed the prediction upward. In Bandung the count of cafes within 500 m carries half of the model's weight (50 %), far ahead of anything else.
 
 That last finding is the commercially interesting one and it contradicts intuition. Clustering attracts rather than repels: a street known for cafes draws people who are looking for a cafe, and the agglomeration effect outweighs the competition effect at this scale. A consultant charging for a location study would be earning their fee on that sentence alone.
 
-The other effects are smaller and mostly as expected. More people in the hexagon (WorldPop) pushes the score up; being far from a main road pushes it down; more tourist attractions nearby push it up, and being far from them pushes it down. One effect is counterintuitive: being *farther* from the nearest school slightly raises the score. Schools in Malang are spread through residential neighbourhoods, while cafes cluster along commercial streets and around the campuses, so "near a school" partly means "in a quiet residential street". That is a plausible explanation, not a finding: the model has generated a hypothesis, and it should be tested before anyone acts on it. (An earlier draft of this chapter, written before the script was run here, said tourism pushed the score down. The real run says the opposite; always trust the output over the draft.)
+The other effects are smaller. Being near a main road and near tourist attractions raises the score, and so does having more schools and campuses close by. One effect is counterintuitive: more residents in the hexagon (WorldPop) *slightly lowers* the score. Bandung's cafes cluster on commercial streets in the centre and around the campuses, where fewer people actually live, while the densest residential neighbourhoods have many people and few cafes. That is a plausible explanation, not a finding: the model has generated a hypothesis, and it should be tested before anyone acts on it. The weights are also local: the same script run for another Indonesian city gave tourism, schools and population different weights and, for schools, a different direction. Never carry one city's weights to another without rerunning.
 
 ## From classification to a score
 
@@ -88,13 +88,13 @@ The classifier answers a binary question about a few hundred labelled cells. The
 
 You could predict class probability directly. This chapter instead uses the SHAP weights to build an explicit weighted sum, for one practical reason: a client can see exactly why a cell scored what it did, and can override a weight they disagree with on business grounds they have and you do not. An interpretable model that a decision maker will actually use beats a marginally better model they will not.
 
-Two mechanical points matter in that calculation. Features must be normalised to a common 0 to 1 scale before weighting, or a variable measured in thousands of people per square kilometre will dominate one measured in counts. And features whose effect is negative must be inverted, so that a high normalised value always means "better". The script takes the direction from SHAP rather than assuming it: distance to the road and to tourism are inverted, distance to schools is not, because the model found the opposite. Getting a direction wrong produces a map that looks entirely plausible and recommends precisely the wrong locations.
+Two mechanical points matter in that calculation. Features must be normalised to a common 0 to 1 scale before weighting, or a variable measured in thousands of people per square kilometre will dominate one measured in counts. And features whose effect is negative must be inverted, so that a high normalised value always means "better". The script takes the direction from SHAP rather than assuming it: distance to the road, to tourism and to schools are inverted, and so is population, because the model found that more residents slightly lowered the score. Getting a direction wrong produces a map that looks entirely plausible and recommends precisely the wrong locations.
 
 ## What the score is not
 
 It is a structured, reproducible, interpretable ranking of locations by measurable characteristics, and it is a substantial improvement on walking around and forming an impression.
 
-It is not a prediction of profit. It contains no rent, no lease availability, no parking, no local regulation, no competitor quality, and no knowledge of who actually walks down which street at eight in the morning. Its highest scoring cell may well be a cemetery.
+It is not a prediction of profit. It contains no rent, no lease availability, no parking, no local regulation, no competitor quality, and no knowledge of who actually walks down which street at eight in the morning. Its highest scoring cell may well be a cemetery: in Bandung, one of the ten best-scoring hexagons has no residents at all.
 
 Use it to reduce a thousand candidate locations to ten. Then send someone to stand on the corner for an hour. The model narrows the search; it does not make the decision.
 
@@ -104,7 +104,7 @@ Use it to reduce a thousand candidate locations to ten. Then send someone to sta
   "id": "ch22-leakage",
   "questions": [
     {
-      "q": "With every feature included, the model reports a near-perfect 0.98. What is the correct first reaction?",
+      "q": "With every feature included, the model reports a perfect 1.00 on the test set. What is the correct first reaction?",
       "options": [
         "Publish it, the features were well chosen",
         "Assume a feature is leaking the label and go looking for it",

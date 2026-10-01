@@ -1,5 +1,5 @@
 #| title: Vector GeoAI site selection (Python)
-#| description: Coffee-shop suitability in Kota Malang on an H3 hexagon grid. OpenStreetMap proximity and density features, WorldPop population from Earth Engine, a manufactured presence/pseudo-absence label, the leakage trap, a Random Forest read with SHAP, and a transparent weighted score.
+#| description: Coffee-shop suitability in Kota Bandung on an H3 hexagon grid. OpenStreetMap proximity and density features, WorldPop population from Earth Engine, a manufactured presence/pseudo-absence label, the leakage trap, a Random Forest read with SHAP, and a transparent weighted score.
 
 """
 CHAPTER 22 | The same machine, a commercial question
@@ -27,11 +27,11 @@ import osmnx as ox
 import pandas as pd
 from shapely.geometry import Polygon
 
-PLACE = "Kota Malang, Jawa Timur, Indonesia"
+PLACE = "Kota Bandung, Jawa Barat, Indonesia"
 # H3 resolution 9: hexagons about 175 m across, a two-minute walk, the right
 # unit for a coffee shop catchment. Resolution 8 (~460 m) suits a supermarket.
 H3_RESOLUTION = 9
-CRS_METRIC = "EPSG:32749"       # UTM 49S: distances in metres, never in degrees
+CRS_METRIC = "EPSG:32748"       # UTM 48S: distances in metres, never in degrees
 CRS_GEO = "EPSG:4326"
 DENSITY_RADIUS_M = 500          # about a five-minute walk
 
@@ -194,7 +194,7 @@ def score_figure():
     g.plot(column="score", cmap="YlOrRd", linewidth=0.1, edgecolor="#555555", legend=True,
            legend_kwds={"label": "Suitability score (0 to 1)", "shrink": 0.6}, ax=ax)
     g[g.label == 1].boundary.plot(ax=ax, color="#1f2933", linewidth=0.6)
-    ax.set_title("Coffee-shop suitability, Kota Malang (outlined: hexagons with a cafe today)",
+    ax.set_title("Coffee-shop suitability, Kota Bandung (outlined: a cafe today)",
                  loc="left", fontsize=10)
     ax.set_axis_off()
     return fig

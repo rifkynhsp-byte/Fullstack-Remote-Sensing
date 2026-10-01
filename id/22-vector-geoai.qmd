@@ -2,7 +2,7 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Alur kerja yang selama ini Anda jalankan pada citra satelit, kini diterapkan pada pertanyaan komersial tanpa satu pun citra di dalamnya. Anda akan membangun permukaan kesesuaian lokasi untuk membuka kedai kopi, menemukan kebocoran data yang menghasilkan model nyaris sempurna namun tak berguna, dan menafsirkan hasilnya dengan SHAP.
+Alur kerja yang selama ini Anda jalankan pada citra satelit, kini diterapkan pada pertanyaan komersial tanpa satu pun citra di dalamnya. Anda akan membangun permukaan kesesuaian lokasi untuk membuka kedai kopi, menemukan kebocoran data yang menghasilkan model sempurna namun tak berguna, dan menafsirkan hasilnya dengan SHAP.
 :::
 
 ## Kenapa bab ini ada di buku penginderaan jauh
@@ -59,11 +59,11 @@ Setiap kesimpulan dari model ini mewarisi asumsi di atas. Saat menyajikan hasiln
 
 ## Model sempurna yang tidak berarti apa-apa
 
-Jalankan model dengan semua fitur dan ia melaporkan akurasi uji 0,975, f1 0,976, dan skor out-of-bag 0,98, pada 100 heksagon yang punya kedai kopi dan 100 yang tidak, dari 1.159 heksagon di Kota Malang. Di buku teks itu keberhasilan. Dalam pekerjaan nyata itu alarm.
+Jalankan model dengan semua fitur dan ia melaporkan akurasi uji 1,00, f1 1,00, dan skor out-of-bag 0,99, pada 200 heksagon yang punya kedai kopi dan 200 yang tidak, dari 1.599 heksagon di Kota Bandung. Di buku teks itu keberhasilan. Dalam pekerjaan nyata itu alarm.
 
 Kebocorannya jelas begitu terlihat. Heksagon berlabel 1 berisi kedai kopi. Karena itu jaraknya ke pesaing terdekat mendekati nol *akibat cara labelnya dibuat*. Model tidak belajar apa yang membuat lokasi bagus. Model belajar mengenali heksagon yang berisi kedai kopi, yaitu labelnya sendiri yang dinyatakan ulang sebagai fitur.
 
-Buang satu variabel itu dan nilainya turun: akurasi uji 0,875, out-of-bag 0,79. Lebih rendah, dan merupakan angka nyata tentang hubungan yang nyata. (Dengan hanya 40 heksagon uji, akurasi uji itu sendiri tidak pasti sampai beberapa poin; skor out-of-bag, yang dihitung pada setiap heksagon latih, adalah yang lebih stabil dari keduanya.)
+Buang satu variabel itu dan nilainya turun: out-of-bag 0,86, akurasi uji 0,79. Lebih rendah, dan merupakan angka nyata tentang hubungan yang nyata. (Dengan hanya 80 heksagon uji, akurasi uji itu sendiri tidak pasti sampai beberapa poin; skor out-of-bag, yang dihitung pada setiap heksagon latih, adalah yang lebih stabil dari keduanya.)
 
 ::: {.callout-tip}
 ## Dari lapangan
@@ -76,25 +76,25 @@ Perhatikan fitur pesaing mana yang bertahan. Jarak ke pesaing terdekat bocor; ju
 
 Kepentingan fitur Random Forest memberi tahu variabel mana yang dipakai model. Ia tidak memberi tahu arahnya, padahal untuk keputusan bisnis arah itulah seluruh nilainya.
 
-SHAP menguraikan setiap prediksi menjadi sumbangan per fitur, sehingga Anda tahu bukan hanya bahwa kerapatan pesaing penting, tetapi juga bahwa makin banyak pesaing mendorong prediksi naik. Di Malang, jumlah kedai kopi dalam 500 m memikul hampir separuh bobot model (46 %), jauh di depan fitur lain.
+SHAP menguraikan setiap prediksi menjadi sumbangan per fitur, sehingga Anda tahu bukan hanya bahwa kerapatan pesaing penting, tetapi juga bahwa makin banyak pesaing mendorong prediksi naik. Di Bandung, jumlah kedai kopi dalam 500 m memikul separuh bobot model (50 %), jauh di depan fitur lain.
 
 Temuan terakhir itulah yang menarik secara komersial, dan bertentangan dengan intuisi. Pengelompokan justru menarik, bukan menolak: jalan yang dikenal sebagai tempat ngopi mendatangkan orang yang mencari kopi, dan efek aglomerasi mengalahkan efek persaingan pada skala ini.
 
-Efek lainnya lebih kecil dan sebagian besar sesuai dugaan. Makin banyak penduduk di heksagon (WorldPop) menaikkan skor; jauh dari jalan utama menurunkannya; makin banyak objek wisata di sekitar menaikkannya, dan jauh darinya menurunkannya. Satu efek bertentangan dengan intuisi: makin *jauh* dari sekolah terdekat, skornya sedikit naik. Sekolah di Malang tersebar di lingkungan permukiman, sementara kedai kopi mengelompok di jalan-jalan komersial dan sekitar kampus, sehingga "dekat sekolah" sebagian berarti "di jalan permukiman yang sepi". Itu penjelasan yang masuk akal, bukan temuan: model menghasilkan hipotesis, dan hipotesis itu perlu diuji sebelum ada yang bertindak. (Draf awal bab ini, yang ditulis sebelum skripnya dijalankan di sini, menyebut wisata menurunkan skor. Hasil sebenarnya berkata sebaliknya; selalu percayai keluaran, bukan draf.)
+Efek lainnya lebih kecil. Dekat jalan utama dan dekat objek wisata menaikkan skor, begitu pula banyaknya sekolah dan kampus di sekitar. Satu efek bertentangan dengan intuisi: makin banyak penduduk di heksagon (WorldPop) justru *sedikit menurunkan* skor. Kedai kopi di Bandung mengelompok di jalan-jalan komersial di pusat kota dan di sekitar kampus, tempat yang penghuninya justru sedikit, sementara permukiman terpadat punya banyak penduduk tetapi sedikit kedai kopi. Itu penjelasan yang masuk akal, bukan temuan: model menghasilkan hipotesis, dan hipotesis itu perlu diuji sebelum ada yang bertindak. Bobotnya juga bersifat lokal: skrip yang sama, dijalankan untuk kota lain di Indonesia, memberi wisata, sekolah, dan penduduk bobot yang berbeda, dan untuk sekolah bahkan arah yang berbeda. Jangan pernah membawa bobot satu kota ke kota lain tanpa menjalankan ulang.
 
 ## Dari klasifikasi menjadi skor
 
-Classifier menjawab pertanyaan biner tentang 200 sel berlabel. Bisnis membutuhkan peringkat berkelanjutan untuk seluruh 1.159 sel.
+Classifier menjawab pertanyaan biner tentang 400 sel berlabel. Bisnis membutuhkan peringkat berkelanjutan untuk seluruh 1.599 sel.
 
 Anda bisa langsung memprediksi probabilitas kelas. Bab ini memakai bobot SHAP untuk membangun jumlah berbobot yang eksplisit, karena satu alasan praktis: klien bisa melihat persis kenapa sebuah sel mendapat skornya, dan bisa mengubah bobot yang tidak ia setujui berdasarkan pertimbangan bisnis yang ia punya dan Anda tidak. Model yang bisa ditafsirkan dan benar-benar dipakai pengambil keputusan mengalahkan model yang sedikit lebih baik tetapi tidak dipakai.
 
-Dua hal teknis penting dalam perhitungan itu. Fitur harus dinormalisasi ke skala 0 sampai 1 sebelum diberi bobot, kalau tidak variabel yang diukur dalam ribuan orang akan mendominasi variabel berupa hitungan. Dan fitur yang efeknya negatif harus dibalik, sehingga nilai ternormalisasi yang tinggi selalu berarti "lebih baik". Skrip mengambil arah ini dari SHAP, bukan dari asumsi: jarak ke jalan dan ke wisata dibalik, jarak ke sekolah tidak, karena model menemukan sebaliknya. Arah yang salah menghasilkan peta yang tampak sepenuhnya masuk akal dan merekomendasikan tepat lokasi yang salah.
+Dua hal teknis penting dalam perhitungan itu. Fitur harus dinormalisasi ke skala 0 sampai 1 sebelum diberi bobot, kalau tidak variabel yang diukur dalam ribuan orang akan mendominasi variabel berupa hitungan. Dan fitur yang efeknya negatif harus dibalik, sehingga nilai ternormalisasi yang tinggi selalu berarti "lebih baik". Skrip mengambil arah ini dari SHAP, bukan dari asumsi: jarak ke jalan, ke wisata, dan ke sekolah dibalik, begitu pula penduduk, karena model menemukan bahwa makin banyak penghuni sedikit menurunkan skor. Arah yang salah menghasilkan peta yang tampak sepenuhnya masuk akal dan merekomendasikan tepat lokasi yang salah.
 
 ## Yang bukan merupakan arti skor ini
 
 Skor ini adalah peringkat lokasi yang terstruktur, bisa diulang, dan bisa ditafsirkan berdasarkan ciri yang terukur, dan merupakan kemajuan besar dibanding berjalan-jalan lalu membentuk kesan.
 
-Skor ini bukan prediksi keuntungan. Di dalamnya tidak ada harga sewa, ketersediaan tempat, parkir, aturan setempat, mutu pesaing, dan pengetahuan tentang siapa yang benar-benar lewat di jalan mana pada pukul delapan pagi. Sel dengan skor tertinggi bisa saja sebuah pemakaman.
+Skor ini bukan prediksi keuntungan. Di dalamnya tidak ada harga sewa, ketersediaan tempat, parkir, aturan setempat, mutu pesaing, dan pengetahuan tentang siapa yang benar-benar lewat di jalan mana pada pukul delapan pagi. Sel dengan skor tertinggi bisa saja sebuah pemakaman: di Bandung, salah satu dari sepuluh heksagon dengan skor tertinggi sama sekali tidak berpenghuni.
 
 Pakai skor ini untuk menyaring seribu kandidat lokasi menjadi sepuluh. Lalu kirim seseorang untuk berdiri di sudut jalan itu selama satu jam. Model mempersempit pencarian; model tidak membuat keputusan.
 
@@ -103,7 +103,7 @@ Pakai skor ini untuk menyaring seribu kandidat lokasi menjadi sepuluh. Lalu kiri
   "id": "ch22-leakage",
   "questions": [
     {
-      "q": "Dengan semua fitur, model melaporkan nilai nyaris sempurna 0,98. Apa reaksi pertama yang benar?",
+      "q": "Dengan semua fitur, model melaporkan nilai sempurna 1,00 pada data uji. Apa reaksi pertama yang benar?",
       "options": [
         "Terbitkan, fiturnya dipilih dengan baik",
         "Anggap ada fitur yang membocorkan label dan cari fitur itu",
