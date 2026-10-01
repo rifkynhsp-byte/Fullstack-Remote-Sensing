@@ -1,0 +1,44 @@
+# Sawit dari Umur ke Biomassa, Kesehatan, dan Buah {#sec-oil-palm-yield}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan melanjutkan peta umur tanam dari Bab [-@sec-oil-palm-age]: tinggi sawit menurut umur dari GEDI, biomassa dari persamaan alometrik sawit, kesehatan tajuk dibandingkan dengan kelompok umurnya sendiri, dan perkiraan tandan buah segar (TBS) tahunan dan bulanan untuk bentang perkebunan di Kotawaringin Timur. Bagian biomassa memberi hasil yang tidak nyaman: persamaan sawit yang diterbitkan, bila diterapkan apa adanya, berbeda satu sama lain dan dengan data lapangan sampai ratusan kali lipat. Mengetahui hal itu sebelum melaporkan stok karbon adalah hal paling berguna di bab ini.
+:::
+
+## Kenapa sawit butuh persamaannya sendiri
+
+Persamaan biomassa yang dipakai untuk hutan (Bab [-@sec-height-scaling]) dibuat untuk pohon. Pohon menambah satu lapisan kayu setiap tahun, sehingga diameter batangnya (DBH) bertambah seiring umur dan memberi tahu biomassanya. **Sawit tidak punya pertumbuhan sekunder.** Setelah batangnya terbentuk, diameternya hampir tidak berubah: sawit berumur 35 tahun di Gabon yang diukur secara destruktif hanya punya DBH 48 sampai 58 cm [@migolet2020biomass]. Biomassa sawit bertambah terutama lewat *tinggi*, dan karena itu persamaan sawit langsung memakai tinggi; rantai "tinggi ke DBH ke biomassa" tidak menambah apa pun.
+
+Dua persamaan berbasis tinggi baru-baru ini dibandingkan untuk sawit Indonesia, dengan data tinggi kanopi global dan peta sawit yang sama dengan buku ini [@hardiyanti2026alometrik]:
+
+- Khalid (1999): AGB = 725 + 197 × H, dalam kg per pohon, dikonversi dengan 136 pohon per hektare.
+- Dewi dkk. (2009): AGB = 0,0976 × H + 0,076, dilaporkan langsung per hektare.
+
+H adalah tinggi total. Di sini nilainya berasal dari GEDI rh98 pada jejak yang sama dengan bab umur. Produk biomassa GEDI sendiri (L4A) memakai model alometrik *global* yang dibuat untuk hutan, bukan sawit; produk itu hanya ditampilkan sebagai pembanding.
+
+## Kesehatan dan buah
+
+**Kesehatan.** Sawit dengan umur berbeda punya kehijauan berbeda, sehingga perbandingan yang adil adalah dengan sawit yang *seumur*. NDVI musim kemarau setiap piksel (Sentinel-2, 2023) dibandingkan dengan median kelompok umurnya lalu dimasukkan ke salah satu dari tiga kelas: sesuai harapan (di atas, atau kurang dari 0,05 di bawahnya), di bawah (0,05 sampai 0,15 di bawahnya), dan jauh di bawah (lebih dari 0,15 di bawahnya). Sebelumnya, piksel yang bukan tajuk sawit dibuang: apa pun yang disebut Dynamic World sebagai air, lahan terbangun, atau tanah terbuka, dan apa pun yang disebut model tutupan lahan 10 kelas milik penulis sebagai lahan terbuka atau air.
+
+**Buah.** Dua perkiraan yang transparan, keduanya diskalakan dengan patokan terbitan yang sama: potensi puncak 34,5 t TBS per hektare per tahun pada umur 9 sampai 10 tahun (standar lembaga riset sawit Indonesia, sebagaimana dilaporkan Daud dkk. [-@daud2026revitalizing]) dan rasio capaian 0,42, yaitu rata-rata bagian hasil yang bisa dicapai pekebun rakyat Indonesia [@monzon2023agronomy]:
+
+- **Kurva umur**: potensi naik dari umur 3 sampai puncak pada umur 9, mendatar sampai 18, lalu turun menjadi 70 % dari puncak pada umur 25.
+- **Proporsi biomassa**: puncak yang sama, diskalakan dengan biomassa setiap pohon dibanding median sawit usia prima. Rasio menghapus satuan, sehingga perkiraan ini tidak bergantung pada satuan persamaan mana yang benar.
+
+{{< include _snippets/ch60_oil_palm_yield.qmd >}}
+
+## Membaca hasilnya
+
+**Tinggi bertambah seiring umur, sebagaimana mestinya.** Median tinggi GEDI naik dari sekitar 6 m pada umur 7 sampai 9 tahun menjadi sekitar 14 sampai 16 m pada umur 17 sampai 23 tahun. Beberapa kelas umur menyimpang dari pola (umur 24, 25, dan 28 tahun kembali lebih rendah); kemungkinan besar itu blok yang sudah ditanam ulang, atau salah ditentukan umurnya ketika lembah terdalam di arsip bukanlah saat penanaman.
+
+**Biomassa: tiga metode, berselisih tiga ratus kali lipat.** Untuk sawit usia prima (9 sampai 18 tahun), persamaan Khalid sebagaimana diterapkan memberi sekitar **360 Mg/ha**, persamaan Dewi sebagaimana dilaporkan sekitar **1 t/ha**, dan model global GEDI sekitar **40 Mg/ha**. Studi lapangan dan destruktif menempatkan sawit dewasa antara sekitar 41 dan 105 Mg/ha [@asari2013oilpalm; @sunaryathy2016oilpalm; @lewis2020oilpalm]. Tidak satu pun persamaan sawit, sebagaimana diterbitkan dalam perbandingan itu, jatuh di rentang tersebut. Penyebab yang paling mungkin adalah satuan (kg atau ton, per pohon atau per hektare, berat basah atau kering) dan definisi tinggi (tinggi batang atau tinggi total sampai ujung pelepah). Laporan aslinya tidak bisa diakses untuk diperiksa di sini. **Sampai persamaan aslinya diperiksa dan diuji dengan plot lapangan, biomassa sawit absolut dari tinggi bukanlah angka untuk dilaporkan.** Model global GEDI kebetulan jatuh dekat rentang lapangan, tetapi tidak ada bagian darinya yang dibuat atau divalidasi untuk sawit: itu kebetulan, bukan bukti.
+
+**Kesehatan: sebagian besar "sawit sakit" ternyata jalan.** Kedua peta tutupan lahan hanya membuang 0,4 % peta sawit (sekitar 320 ha kolam dan petak terbuka). Jalan kebun dan parit selebar 5 sampai 8 m terlalu sempit untuk terlihat oleh kedua peta itu pada 10 m, dan pada peta kesehatan pertama keduanya menggambar jaring garis merah yang rapat di setiap kebun: sekitar **17 % luas sawit tampak di bawah kelompok umurnya**. Jalan dan parit tampak sebagai garis NDVI rendah selebar satu atau dua piksel, sehingga *opening* morfologi (erosi lalu dilasi) pada piksel "di bawah" membuang garis-garis itu dan mempertahankan blok lemah selebar tiga piksel atau lebih. Setelah garisnya hilang, hanya sekitar **3 % sawit usia prima dan dewasa** yang di bawah kelompok umurnya, dan 4 % sawit muda. Kira-kira lima dari enam piksel "tidak sehat" adalah infrastruktur. Yang tersisa adalah segelintir blok padat, beberapa di bagian tengah wilayah dan satu di tenggara: itulah tempat yang perlu dikunjungi. Beberapa ruas merah lurus yang pendek masih tersisa: jalan utama yang lebih lebar, tiga piksel atau lebih, yang dipertahankan oleh opening. Lapisan jalan akan ikut membuangnya.
+
+**Buah.** Untuk sawit usia prima kedua perkiraan memberi sekitar 15 t TBS per hektare per tahun (14,5 dari kurva umur, 15,0 dari proporsi biomassa), di dalam rentang 8,5 sampai 15,4 t/ha yang dilaporkan untuk hasil aktual di Indonesia [@takeuchi2020oilpalm]. Keduanya berbeda justru di bagian yang paling penting: untuk sawit berumur 19 sampai 24 tahun, proporsi biomassa memberi 17,1 t/ha dibanding 13,1 dari kurva umur, dan untuk umur 25 tahun ke atas 15,1 dibanding 10,1. **Biomassa terus bertambah seiring umur, sementara hasil buah menurun.** Jadi biomassa saja menaksir terlalu tinggi sawit tua, dan piksel demi piksel kedua perkiraan tidak berkorelasi. Di seluruh 84.000 ha yang dipetakan, kurva umur memberi rata-rata sekitar 13,7 t/ha per tahun, sekitar 96.000 t TBS per bulan. Batang bulanan tampak datar karena musim tidak dimodelkan: hasil sebenarnya naik turun sepanjang tahun, dan hanya catatan pabrik kelapa sawit yang bisa menunjukkan seberapa besar.
+
+## Latihan {.unnumbered}
+
+1. Terapkan persamaan Khalid dengan tinggi batang, bukan tinggi total (anggap pelepah menambah 5 m). Apakah hasilnya masuk ke rentang lapangan?
+2. Ganti rasio capaian 0,42 dengan 0,8 untuk kebun yang dikelola dengan baik. Bagaimana total bentang lahannya berubah?
+3. Bandingkan peta kesehatan dengan peta umur. Apakah blok-blok yang lemah berumur muda, prima, atau tua?

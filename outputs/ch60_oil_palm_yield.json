@@ -1,0 +1,59 @@
+[
+ {
+  "name": "ch60_oil_palm_yield-webmap",
+  "kind": "html",
+  "html": "images/real/ch60_oil_palm_yield-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch60-by-age",
+  "kind": "chart",
+  "caption": "Median GEDI height by planting age (left) and the biomass that two published oil palm equations and the global GEDI L4A model give for the same palms, with field measurements (stars). Log scale.",
+  "image": "images/real/ch60-by-age.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"age_years,shots,height_median_m,agb_khalid_mg_ha,agb_dewi_as_reported,agb_gedi_l4a_global\n7,18,6.155,263.5,0.67673,18.902\n8,70,6.155,263.5,0.67673,18.786\n9,76,6.005,259.49,0.66209,18.511\n10,130,7.54,300.61,0.8119,25.899\n11,532,7.96,311.86,0.8529,27.998\n12,215,8.87,336.25,0.94171,33.757\n13,311,9.02,340.26,0.95635,34.994\n14,446,9.885,363.44,1.0408,41.02\n15,205,11.42,404.56,1.1906,50.841\n16,371,12.21,425.73,1.2677,56.974\n17,191,14.08,475.83,1.4502,73.929\n18,42,11.095,395.86,1.1589,49.199\n19,393,11.12,396.53,1.1613,47.715\n20,173,13.29,454.67,1.3731,64.459\n21,31,11.53,407.51,1.2013,50.852\n22,62,14.695,492.31,1.5102,76.557\n23,115,15.87,523.79,1.6249,88.026\n24,23,7.9,310.26,0.84704,30.539\n25,386,9.45,351.78,0.99832,37.082\n26,26,14.75,493.78,1.5156,79.556\n28,23,9.81,361.43,1.0335,39.135\n29,12,11.36,402.96,1.1847,50.018\n31,103,11.49,406.44,1.1974,49.997\n32,13,12.06,421.71,1.2531,54.65\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_by_age(df):\n    fig, (a, b) = plt.subplots(1, 2, figsize=(10, 3.8))\n    a.plot(df.age_years, df.height_median_m, color=\"#1a9850\", marker=\"o\", ms=3)\n    a.set_xlabel(\"Palm age (years)\"); a.set_ylabel(\"GEDI rh98, median (m)\")\n    a.set_title(\"Height grows with age\", loc=\"left\", fontsize=10)\n    b.plot(df.age_years, df.agb_khalid_mg_ha, color=\"#d7301f\", marker=\"o\", ms=3,\n           label=\"Khalid (1999), palm equation\")\n    b.plot(df.age_years, df.agb_dewi_as_reported, color=\"#4575b4\", marker=\"s\", ms=3,\n           label=\"Dewi (2009), as reported\")\n    b.plot(df.age_years, df.agb_gedi_l4a_global, color=\"#7f7f7f\", ls=\"--\",\n           label=\"GEDI L4A (global, not for palms)\")\n    for x, y, _ in BENCH:\n        b.scatter(x, y, marker=\"*\", s=90, color=\"black\", zorder=5)\n    b.scatter([], [], marker=\"*\", s=90, color=\"black\", label=\"field studies\")\n    b.set_yscale(\"log\")\n    b.set_xlabel(\"Palm age (years)\"); b.set_ylabel(\"AGB (Mg/ha, log scale)\")\n    b.set_title(\"Same heights, three equations, 300-fold apart\", loc=\"left\", fontsize=10)\n    b.legend(frameon=False, fontsize=7, loc=\"lower right\")\n    fig.tight_layout()\n    return fig\n\nplot_by_age(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch60-by-age-table",
+  "kind": "table",
+  "caption": "GEDI footprints by palm age (ages with at least 10 shots): height and biomass from each method.",
+  "markdown": "|   age_years |   shots |   height_median_m |   agb_khalid_mg_ha |   agb_dewi_as_reported |   agb_gedi_l4a_global |\n|------------:|--------:|------------------:|-------------------:|-----------------------:|----------------------:|\n|         7.0 |      18 |               6.2 |                264 |                   0.68 |                    19 |\n|         8.0 |      70 |               6.2 |                264 |                   0.68 |                    19 |\n|         9.0 |      76 |               6.0 |                259 |                   0.66 |                    19 |\n|        10.0 |     130 |               7.5 |                301 |                   0.81 |                    26 |\n|        11.0 |     532 |               8.0 |                312 |                   0.85 |                    28 |\n|        12.0 |     215 |               8.9 |                336 |                   0.94 |                    34 |\n|        13.0 |     311 |               9.0 |                340 |                   0.96 |                    35 |\n|        14.0 |     446 |               9.9 |                363 |                   1.04 |                    41 |\n|        15.0 |     205 |              11.4 |                405 |                   1.19 |                    51 |\n|        16.0 |     371 |              12.2 |                426 |                   1.27 |                    57 |\n|        17.0 |     191 |              14.1 |                476 |                   1.45 |                    74 |\n|        18.0 |      42 |              11.1 |                396 |                   1.16 |                    49 |\n|        19.0 |     393 |              11.1 |                397 |                   1.16 |                    48 |\n|        20.0 |     173 |              13.3 |                455 |                   1.37 |                    64 |\n|        21.0 |      31 |              11.5 |                408 |                   1.20 |                    51 |\n|        22.0 |      62 |              14.7 |                492 |                   1.51 |                    77 |\n|        23.0 |     115 |              15.9 |                524 |                   1.62 |                    88 |\n|        24.0 |      23 |               7.9 |                310 |                   0.85 |                    31 |\n|        25.0 |     386 |               9.4 |                352 |                   1.00 |                    37 |\n|        26.0 |      26 |              14.8 |                494 |                   1.52 |                    80 |\n|        28.0 |      23 |               9.8 |                361 |                   1.03 |                    39 |\n|        29.0 |      12 |              11.4 |                403 |                   1.18 |                    50 |\n|        31.0 |     103 |              11.5 |                406 |                   1.20 |                    50 |\n|        32.0 |      13 |              12.1 |                422 |                   1.25 |                    55 |"
+ },
+ {
+  "name": "ch60-equations",
+  "kind": "table",
+  "caption": "The equations side by side, at 10 m and 15 m and for prime-age palms (9-18 years), against the range found in field studies.",
+  "markdown": "| equation                                      | units            |   agb_at_10m |   agb_at_15m |   prime_age_median |\n|:----------------------------------------------|:-----------------|-------------:|-------------:|-------------------:|\n| Khalid (1999): (725 + 197 H) kg/palm x 136/ha | Mg/ha            |        366.5 |        500.5 |              360.4 |\n| Dewi (2009): 0.0976 H + 0.076                 | t/ha as reported |          1.1 |          1.5 |                1.0 |\n| GEDI L4A (global allometry)                   | Mg/ha            |        nan   |        nan   |               39.5 |\n| Field studies, mature palms (range)           | 41-105 Mg/ha     |        nan   |        nan   |              nan   |"
+ },
+ {
+  "name": "ch60-health",
+  "kind": "map",
+  "caption": "Each palm pixel's dry-season NDVI against the median of palms of the same age, in three classes. Estate roads and drains are masked out.",
+  "image": "images/real/ch60-health.jpg"
+ },
+ {
+  "name": "ch60-mask",
+  "kind": "table",
+  "caption": "Palm-map pixels removed before health scoring because they are not palm canopy, by each map.",
+  "markdown": "| layer                             |     ha |   share_of_palm_map |\n|:----------------------------------|-------:|--------------------:|\n| oil palm map (age known)          | 84,021 |              100.0% |\n| Dynamic World: water, built, bare |    207 |                0.2% |\n| author's model: open land, water  |    165 |                0.2% |\n| removed by either                 |    323 |                0.4% |\n| kept for health scoring           | 80,682 |               96.0% |"
+ },
+ {
+  "name": "ch60-health-table",
+  "kind": "table",
+  "caption": "Palm area more than 0.05 NDVI below the median of its age group, by life stage.",
+  "markdown": "| life stage              |   palm_ha |   below_age_group_ha |   share_below |\n|:------------------------|----------:|---------------------:|--------------:|\n| immature (0-2 yr)       |        37 |                    7 |           19% |\n| young (3-8 yr)          |     1,408 |                   62 |            4% |\n| prime (9-18 yr)         |    50,294 |                1,433 |            3% |\n| mature (19-24 yr)       |     9,493 |                  251 |            3% |\n| replanting due (25+ yr) |     7,873 |                  242 |            3% |"
+ },
+ {
+  "name": "ch60-fruit",
+  "kind": "table",
+  "caption": "Modelled FFB (t/ha/yr) at GEDI footprints by age class, from the age curve and from the biomass proportion.",
+  "markdown": "| age class   |   shots |   ffb_age_curve_t_ha |   ffb_biomass_prop_t_ha |   prime_age_median_agb_khalid |   corr_between_methods |\n|:------------|--------:|---------------------:|------------------------:|------------------------------:|-----------------------:|\n| 3-8         |      90 |                 11.5 |                    12.1 |                           360 |                  -0.06 |\n| 9-18        |    2519 |                 14.5 |                    15.0 |                           360 |                  -0.06 |\n| 19-24       |     797 |                 13.1 |                    17.1 |                           360 |                  -0.06 |\n| 25+         |     573 |                 10.1 |                    15.1 |                           360 |                  -0.06 |"
+ },
+ {
+  "name": "ch60-monthly",
+  "kind": "chart",
+  "caption": "Modelled landscape FFB per month from the age curve.",
+  "image": "images/real/ch60-monthly.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"month,ffb_tonnes_model,palm_ha_mapped,mean_t_ha_yr\n2024-01,96059,84021,13.719\n2024-02,96059,84021,13.719\n2024-03,96059,84021,13.719\n2024-04,96059,84021,13.719\n2024-05,96059,84021,13.719\n2024-06,96059,84021,13.719\n2024-07,96059,84021,13.719\n2024-08,96059,84021,13.719\n2024-09,96059,84021,13.719\n2024-10,96059,84021,13.719\n2024-11,96059,84021,13.719\n2024-12,96059,84021,13.719\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_monthly(df):\n    fig, ax = plt.subplots(figsize=(6.8, 3.0))\n    ax.bar(df.month.str[5:], df.ffb_tonnes_model / 1000, color=\"#e6550d\")\n    ax.set_ylabel(\"FFB (thousand t)\")\n    ax.set_xlabel(\"Month of 2024\")\n    ax.set_title(\"Modelled fresh fruit bunches per month (flat: seasonality not modelled)\",\n                 loc=\"left\", fontsize=9)\n    return fig\n\nplot_monthly(df)\nplt.show()\n"
+ }
+]

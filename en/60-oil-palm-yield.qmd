@@ -1,0 +1,44 @@
+# Oil Palm from Age to Biomass, Health and Fruit {#sec-oil-palm-yield}
+
+::: {.chapter-goal}
+#### In this chapter
+You will take the planting-age map of Chapter [-@sec-oil-palm-age] further: palm height by age from GEDI, biomass from oil palm allometric equations, canopy health against each palm's own age group, and a fresh-fruit-bunch (FFB) estimate with annual and monthly totals for a plantation landscape in Kotawaringin Timur. The biomass part delivers an uncomfortable result: published palm equations, applied as reported, disagree with each other and with the field by orders of magnitude. Knowing that before you report a carbon stock is the most useful thing in the chapter.
+:::
+
+## Why palms need their own equations
+
+The tree biomass equations used for forests (Chapter [-@sec-height-scaling]) are built for trees. A tree adds a new layer of wood every year, so its trunk diameter (DBH) grows with age and tells you its biomass. **A palm has no secondary growth.** Once the trunk has formed, its diameter barely changes: destructively measured 35-year-old palms in Gabon still had a DBH of only 48 to 58 cm [@migolet2020biomass]. Palm biomass grows mainly by *height*, which is why oil palm equations use height directly and a "height to DBH to biomass" chain adds nothing.
+
+Two height-based equations were recently compared for Indonesian oil palm, using the same global canopy height and oil palm map as this book [@hardiyanti2026alometrik]:
+
+- Khalid (1999): AGB = 725 + 197 × H, in kg per palm, converted with 136 palms per hectare.
+- Dewi et al. (2009): AGB = 0.0976 × H + 0.076, reported directly per hectare.
+
+H is total height. Here it comes from GEDI rh98 at the same footprints used in the age chapter. GEDI's own biomass product (L4A) uses *global* allometric models built for forests, not palms; it is shown only for comparison.
+
+## Health and fruit
+
+**Health.** Palms of different ages have different greenness, so a fair comparison is with palms of the *same* age. Each pixel's dry-season NDVI (Sentinel-2, 2023) is compared with the median of its age group and put in one of three classes: as expected (above, or less than 0.05 below), below (0.05 to 0.15 below) and well below (more than 0.15 below). Before that, pixels that are not palm canopy are removed: whatever Dynamic World calls water, built or bare, and whatever the author's 10-class land-cover model calls open land or water.
+
+**Fruit.** Two transparent estimates, both scaled by the same published anchors: a peak potential of 34.5 t FFB per hectare per year at age 9 to 10 (the Indonesian research institute standard, as reported by Daud et al. [-@daud2026revitalizing]) and an achievement ratio of 0.42, the share of attainable yield that Indonesian smallholders reach on average [@monzon2023agronomy]:
+
+- **Age curve**: potential rises from age 3 to a peak at 9, stays flat to 18, and falls to 70 % of the peak at 25.
+- **Biomass proportion**: the same peak, scaled by each palm's biomass relative to the median of prime-age palms. A ratio cancels the units, so this estimate does not depend on which equation's units are right.
+
+{{< include _snippets/ch60_oil_palm_yield.qmd >}}
+
+## Reading the results
+
+**Height grows with age, as it should.** Median GEDI height rises from about 6 m at 7 to 9 years to about 14 to 16 m at 17 to 23 years. A few age classes break the pattern (24, 25 and 28 years are lower again); these are most likely blocks that were replanted, or mis-dated where the deepest dip in the archive was not the planting.
+
+**Biomass: three methods, three hundred-fold apart.** For prime-age palms (9 to 18 years), the Khalid equation as applied gives about **360 Mg/ha**, the Dewi equation as reported about **1 t/ha**, and GEDI's global model about **40 Mg/ha**. Field and destructive studies put mature palms between about 41 and 105 Mg/ha [@asari2013oilpalm; @sunaryathy2016oilpalm; @lewis2020oilpalm]. Neither palm equation, as published in the comparison, lands in that range. The likely causes are units (kg or tonnes, per palm or per hectare, fresh or dry weight) and the definition of height (trunk height or total height to the top of the fronds). The original reports were not accessible for checking here. **Until the original equations are checked and tested against field plots, absolute oil palm biomass from height is not a number to report.** GEDI's global model happens to fall near the field range, but nothing in it was built or validated for palms: that is coincidence, not evidence.
+
+**Health: most of the "sick palms" were roads.** The two land-cover maps removed only 0.4 % of the oil palm map (about 320 ha of ponds and bare patches). Estate roads and drains are 5 to 8 m wide, too narrow for either map to see at 10 m, and on the first health map they drew a dense grid of red lines across every estate: about **17 % of the palm area looked below its age group**. They appear as low-NDVI lines one or two pixels wide, so a morphological opening (erode, then dilate) of the "below" pixels removes the lines and keeps any weak block three or more pixels across. With the lines gone, only about **3 % of prime and mature palm** is below its age group, and 4 % of young palm. Roughly five out of six "unhealthy" pixels were infrastructure. What remains is a handful of compact blocks, several in the centre of the area and one in the south-east: those are the places to visit. A few short straight red segments remain: wider main roads, three pixels or more, which the opening keeps. A road layer would remove them too.
+
+**Fruit.** For prime-age palms both estimates give about 15 t FFB per hectare per year (14.5 from the age curve, 15.0 from the biomass proportion), inside the 8.5 to 15.4 t/ha range reported for actual Indonesian yields [@takeuchi2020oilpalm]. They disagree where it matters most: for palms aged 19 to 24, the biomass proportion gives 17.1 t/ha against 13.1 from the age curve, and for 25+ it gives 15.1 against 10.1. **Biomass keeps rising as palms age, while yield falls.** So biomass alone overestimates old palms, and pixel by pixel the two estimates are uncorrelated. Over the 84,000 ha mapped, the age curve gives about 13.7 t/ha a year on average, about 96,000 t of FFB a month. The monthly bars are flat because seasonality is not modelled: real yields peak and dip through the year, and only mill records can show by how much.
+
+## Exercises {.unnumbered}
+
+1. Apply Khalid's equation with trunk height instead of total height (assume the fronds add 5 m). Does the result move into the field range?
+2. Replace the 0.42 achievement ratio with 0.8 for a well-managed estate. How does the landscape total change?
+3. Compare the health map with the age map. Are the weak blocks young, prime or old?
