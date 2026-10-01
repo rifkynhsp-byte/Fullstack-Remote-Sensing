@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this book, please cite it as below. Each released version has its own DOI on Zenodo."
+type: book
+title: "Planetary-Scale Cloud GIS: Earth Engine and GeoAI, taught the way it is actually practised"
+authors:
+  - family-names: Hendrawan
+    given-names: Rifky Nauval
+    email: rifky.nhsp@gmail.com
+languages: [en, id]
+url: "https://rifkynhsp-byte.github.io/Fullstack-Remote-Sensing/"
+repository-code: "https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing"
+license: CC-BY-4.0
+keywords:
+  - remote sensing
+  - Google Earth Engine
+  - GeoAI
+  - Indonesia
+  - LiDAR
+  - land cover
+  - MRV
+  - open educational resource
+abstract: >-
+  A free, bilingual (English and Bahasa Indonesia) book on Earth observation in
+  the cloud: from the physics of sensing to Earth Engine, machine learning,
+  LiDAR and GeoAI, with real outputs from Indonesian landscapes (flood, fire,
+  peat, oil palm, paddy, mangrove, mining, solar, policy enforcement). Prose and
+  figures CC BY 4.0; code MIT.
