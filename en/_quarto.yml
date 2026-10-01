@@ -123,6 +123,7 @@ book:
         - 42-carbon-balance.qmd
         - 41-mrv.qmd
         - 43-ecosystem-services.qmd
+        - 52-bathymetry.qmd
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:
         - 28-map-production.qmd

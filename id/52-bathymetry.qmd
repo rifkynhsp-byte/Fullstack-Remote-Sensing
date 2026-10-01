@@ -1,0 +1,42 @@
+# Batimetri dari Satelit: Kedalaman dari Warna {#sec-bathymetry}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menaksir kedalaman air di sekitar terumbu Kepulauan Seribu dari warna Sentinel-2, dengan metode rasio logaritma Stumpf. Anda akan melihat kenapa mengkalibrasinya dengan peta kedalaman global yang kasar gagal, dan bagaimana tetap mengujinya dengan zona-zona terumbu yang sudah dipetakan. Hasilnya peta kedalaman relatif, disertai penjelasan jujur tentang apa yang dibutuhkan untuk kedalaman absolut.
+:::
+
+## Kenapa kedalaman dari antariksa
+
+Indonesia punya garis pantai dan terumbu karang yang termasuk paling luas di dunia, dan sebagian besar perairan dangkalnya belum pernah disurvei dengan kapal. Kedalaman penting untuk pelayaran, rekayasa pantai, pemantauan terumbu dan lamun, serta perencanaan di sekitar pulau-pulau kecil. Di perairan dangkal yang jernih, satelit bisa menaksirnya hanya dari warna.
+
+## Fisikanya
+
+Sinar matahari yang masuk ke air melemah seiring kedalaman, dan setiap warna melemah dengan laju berbeda: merah hilang dalam beberapa meter, hijau lebih jauh, biru paling jauh. Di atas dasar yang seragam, makin dalam airnya, makin banyak cahaya yang kembali berwarna biru dibandingkan hijau. @stumpf2003bathymetry mengubah gagasan ini menjadi indeks yang sederhana dan tangguh:
+
+$$\text{rasio} = \frac{\ln(n \cdot R_{biru})}{\ln(n \cdot R_{hijau})}$$
+
+dengan $R$ reflektansi dan $n$ konstanta (1.000) yang menjaga kedua logaritma tetap positif. Mengambil rasio menghapus sebagian besar pengaruh kecerahan dasar: pasir terang dan lamun gelap pada kedalaman yang sama memberi rasio yang mirip. Rasio itu lalu naik kurang lebih linear seiring kedalaman, sehingga dua angka yang dicocokkan dengan kedalaman yang diketahui bisa mengubahnya menjadi meter:
+
+$$\text{kedalaman} = m_1 \cdot \text{rasio} - m_0$$
+
+Metode ini hanya bekerja di tempat cahaya sampai ke dasar lalu kembali: air jernih, kira-kira 0 sampai 20 m, permukaan tenang, tanpa kilau matahari. Di air keruh dekat muara sungai, yang terukur adalah sedimen, bukan kedalaman.
+
+{{< include _snippets/ch52_bathymetry.qmd >}}
+
+## Kalibrasi: kegagalan yang layak ditunjukkan
+
+Rujukan kedalaman publik yang paling jelas adalah GEBCO, peta kedalaman global berbentuk grid dengan sel sekitar 450 m. Mencocokkan rasio Stumpf, yang dirata-ratakan ke sel GEBCO, dengan kedalaman GEBCO antara 0,5 dan 20 m menghasilkan R² = 0,03: sama sekali tidak ada hubungan. Penyebabnya skala. Di sekitar Kepulauan Seribu, satu sel 450 m bisa berisi satu pulau, rataan terumbunya, lereng terumbu, dan sebagian alur yang dalam; satu nilai kedalamannya tidak mungkin mengkalibrasi taksiran 10 m. GEBCO sangat baik untuk cekungan samudra dan tidak berguna untuk perairan dangkal setingkat terumbu.
+
+Batimetri satelit yang sungguhan dikalibrasi dengan kedalaman yang diukur pada skala yang sama: jalur echosounder dari perahu kecil, atau foton laser ICESat-2 yang merekam dasar laut di air jernih sepanjang jalur sempit. Keduanya belum ada di katalog Earth Engine saat buku ini ditulis.
+
+## Uji yang berhasil: zona terumbu
+
+Tanpa kedalaman yang baik, rasio tetap bisa diuji sebagai indeks kedalaman *relatif*. Allen Coral Atlas memetakan zona geomorfologi terumbu dari citra dan pengetahuan lapangan, dan zona-zona itu punya urutan kedalaman yang alami: rataan terumbu paling dangkal, lalu puncak terumbu dan laguna dangkal, lalu lereng terumbu, lalu laguna dalam dan dataran tinggi bawah laut.
+
+Rasio mengikuti urutan itu. Mediannya naik dari sekitar 0,97 di rataan terumbu dalam dan luar, 0,975 di puncak terumbu, sekitar 0,99 di laguna dangkal, sekitar 1,0 di lereng terumbu, sampai 1,01 di laguna dalam dan 1,07 di dataran tinggi bawah laut. Urutannya bertahan meskipun kalibrasi kedalaman tidak mungkin dilakukan. Karena itu petanya adalah peta kedalaman relatif yang baik: makin terang makin dangkal. Untuk mengubahnya menjadi meter, dibutuhkan beberapa puluh kedalaman hasil pengukuran.
+
+## Latihan {.unnumbered}
+
+1. Pakai satu scene yang jernih dan tenang sebagai pengganti median. Apakah rasio memisahkan zona-zona dengan lebih baik atau lebih buruk?
+2. Saring rasio di tempat airnya keruh (reflektansi merah tinggi). Bagian mana yang masih bisa dipakai?
+3. Kalau Anda bisa mengumpulkan 30 saja titik kedalaman berkoordinat GPS dengan echosounder genggam, cocokkan $m_1$ dan $m_0$ lalu buat peta kedalaman dalam meter.

@@ -1,0 +1,42 @@
+# Satellite-Derived Bathymetry: Depth from Colour {#sec-bathymetry}
+
+::: {.chapter-goal}
+#### In this chapter
+You will estimate water depth around the reefs of Kepulauan Seribu from Sentinel-2 colour, using the Stumpf log-ratio method. You will see why calibrating it against a coarse global chart fails, and how to check it anyway against mapped reef zones. The result is a relative depth map, with an honest statement of what absolute depth would need.
+:::
+
+## Why depth from space
+
+Indonesia has more coastline and reef than almost any country, and most shallow water has never been surveyed by boat. Depth matters for navigation, coastal engineering, reef and seagrass monitoring, and planning around small islands. In clear, shallow water a satellite can estimate it from colour alone.
+
+## The physics
+
+Sunlight entering water weakens with depth, and different colours weaken at different rates: red disappears within a few metres, green goes further, blue furthest. Over a uniform bottom, the deeper the water, the more the light that comes back is blue rather than green. @stumpf2003bathymetry turned this into a simple, robust index:
+
+$$\text{ratio} = \frac{\ln(n \cdot R_{blue})}{\ln(n \cdot R_{green})}$$
+
+where $R$ is reflectance and $n$ a constant (1,000) that keeps both logarithms positive. Taking the ratio cancels much of the effect of bottom brightness: bright sand and dark seagrass at the same depth give similar ratios. The ratio then rises roughly linearly with depth, so two numbers fitted against known depths convert it to metres:
+
+$$\text{depth} = m_1 \cdot \text{ratio} - m_0$$
+
+It works only where light reaches the bottom and comes back: clear water, roughly 0 to 20 m, calm surface, no sun glint. In turbid water near river mouths it measures sediment, not depth.
+
+{{< include _snippets/ch52_bathymetry.qmd >}}
+
+## Calibration: a failure worth showing
+
+The obvious public depth reference is GEBCO, a global gridded chart with cells of about 450 m. Fitting the Stumpf ratio, averaged to GEBCO's cells, against GEBCO depth between 0.5 and 20 m gives R² = 0.03: no relationship at all. The reason is scale. Around Kepulauan Seribu a 450 m cell contains an island, its reef flat, the reef slope and part of a deep channel; its single depth value cannot calibrate a 10 m estimate. GEBCO is excellent for ocean basins and useless for reef-scale shallows.
+
+Real satellite bathymetry is calibrated against depths measured at the same scale: echo-sounder tracks from a small boat, or the photons of ICESat-2's laser, which record the seafloor in clear water along narrow tracks. Neither is in Earth Engine's catalogue at the time of writing.
+
+## A check that works: reef zones
+
+Without good depths, the ratio can still be tested as a *relative* depth index. The Allen Coral Atlas maps reef geomorphic zones from imagery and field knowledge, and the zones have a natural depth order: reef flats are the shallowest, then the reef crest and shallow lagoons, then reef slopes, then deep lagoons and submerged plateaus.
+
+The ratio follows that order. Its median rises from about 0.97 on inner and outer reef flats, through 0.975 on the reef crest, about 0.99 in shallow lagoons and about 1.0 on reef slopes, to 1.01 in the deep lagoon and 1.07 on the submerged plateau. The ordering holds even though no depth calibration was possible. The map is therefore a good relative depth map: lighter is shallower. Turning it into metres needs a few dozen measured depths.
+
+## Exercises {.unnumbered}
+
+1. Use a single clear, calm scene instead of the median. Does the ratio separate the zones better or worse?
+2. Mask the ratio where water is turbid (high red reflectance). Which parts of the area remain usable?
+3. If you can collect even 30 GPS-located depths with a handheld sounder, fit $m_1$ and $m_0$ and produce a depth map in metres.
