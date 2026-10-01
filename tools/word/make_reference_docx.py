@@ -94,7 +94,9 @@ def main(quarto="quarto"):
         s.paragraph_format.space_before = Pt(18 if level == 1 else 12)
         s.paragraph_format.space_after = Pt(6)
         s.paragraph_format.keep_with_next = True
-    st["Heading 1"].paragraph_format.page_break_before = True
+    # Page breaks before chapters are inserted explicitly by word.lua: many viewers
+    # ignore a style-level "page break before".
+    st["Heading 1"].paragraph_format.page_break_before = False
 
     for name in ("Title",):
         font(st[name], HEAD, 30, bold=True, colour=TEAL)

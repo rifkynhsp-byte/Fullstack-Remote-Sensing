@@ -79,7 +79,17 @@ local function list_blocks(items, label)
   return out
 end
 
+-- An explicit page break before every chapter title. A "page break before"
+-- setting in the Heading 1 style alone is ignored by many viewers.
+local PAGE_BREAK = pandoc.RawBlock("openxml",
+  '<w:p><w:r><w:br w:type="page"/></w:r></w:p>')
+
 function Pandoc(doc)
+  doc = doc:walk({
+    Header = function(el)
+      if el.level == 1 then return { PAGE_BREAK, el } end
+    end,
+  })
   -- 1. strip web-only blocks
   doc = doc:walk({
     Div = function(el) if web_only(el) then return {} end end,
