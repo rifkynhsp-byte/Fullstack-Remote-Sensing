@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_8d9f5675df31658ef8f24314ca9d223c {
+                #map_747608a370a1f7e8c9fc2b687c438679 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -65,6 +65,36 @@
                 </style>
             
         
+    
+            
+                <style>
+                    .leaflet-image-layer {
+                        /* old android/safari*/
+                        image-rendering: -webkit-optimize-contrast;
+                        image-rendering: crisp-edges; /* safari */
+                        image-rendering: pixelated; /* chrome */
+                        image-rendering: -moz-crisp-edges; /* firefox */
+                        image-rendering: -o-crisp-edges; /* opera */
+                        -ms-interpolation-mode: nearest-neighbor; /* ie */
+                    }
+                </style>
+            
+        
+    
+            
+                <style>
+                    .leaflet-image-layer {
+                        /* old android/safari*/
+                        image-rendering: -webkit-optimize-contrast;
+                        image-rendering: crisp-edges; /* safari */
+                        image-rendering: pixelated; /* chrome */
+                        image-rendering: -moz-crisp-edges; /* firefox */
+                        image-rendering: -o-crisp-edges; /* opera */
+                        -ms-interpolation-mode: nearest-neighbor; /* ie */
+                    }
+                </style>
+            
+        
     <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
 </head>
@@ -72,14 +102,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_8d9f5675df31658ef8f24314ca9d223c" ></div>
+            <div class="folium-map" id="map_747608a370a1f7e8c9fc2b687c438679" ></div>
         
 </body>
 <script>
     
     
-            var map_8d9f5675df31658ef8f24314ca9d223c = L.map(
-                "map_8d9f5675df31658ef8f24314ca9d223c",
+            var map_747608a370a1f7e8c9fc2b687c438679 = L.map(
+                "map_747608a370a1f7e8c9fc2b687c438679",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -91,13 +121,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_8d9f5675df31658ef8f24314ca9d223c);
+            L.control.scale().addTo(map_747608a370a1f7e8c9fc2b687c438679);
 
             
 
         
     
-            var tile_layer_141119e72da5a67bd7f857e3fba57183 = L.tileLayer(
+            var tile_layer_f7c1b4b15fe6e6ed43f17418b9f9875f = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -114,10 +144,10 @@
             );
         
     
-            tile_layer_141119e72da5a67bd7f857e3fba57183.addTo(map_8d9f5675df31658ef8f24314ca9d223c);
+            tile_layer_f7c1b4b15fe6e6ed43f17418b9f9875f.addTo(map_747608a370a1f7e8c9fc2b687c438679);
         
     
-            var tile_layer_77f02942977cace683164397f202d267 = L.tileLayer(
+            var tile_layer_5c55b808471296899ec775ab12e02270 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -134,12 +164,12 @@
             );
         
     
-            tile_layer_77f02942977cace683164397f202d267.addTo(map_8d9f5675df31658ef8f24314ca9d223c);
+            tile_layer_5c55b808471296899ec775ab12e02270.addTo(map_747608a370a1f7e8c9fc2b687c438679);
         
     
-            var image_overlay_d3c4e33dc1cc95eda1ba2414f8cfe8b2 = L.imageOverlay(
-                "raw/ch15-design.png",
-                [[-1.0500120916719264, 117.30000000000003], [-0.5999999999999746, 117.85]],
+            var image_overlay_e4361463e8e5eefaedfd4b99dcca6ee1 = L.imageOverlay(
+                "raw/ch55-before.png",
+                [[3.857259954180479, 98.1138087398298], [3.8828808479650316, 98.14349677545589]],
                 {
   "opacity": 0.85,
   "interactive": false,
@@ -148,27 +178,51 @@
             );
         
     
-            image_overlay_d3c4e33dc1cc95eda1ba2414f8cfe8b2.addTo(map_8d9f5675df31658ef8f24314ca9d223c);
+            image_overlay_e4361463e8e5eefaedfd4b99dcca6ee1.addTo(map_747608a370a1f7e8c9fc2b687c438679);
         
     
-            var layer_control_ee9fd644e77e6ade08bd254e21978a76_layers = {
+            var image_overlay_7abac46ced86bf3add8f883aeb7c1892 = L.imageOverlay(
+                "raw/ch55-after.png",
+                [[3.857259954180479, 98.1138087398298], [3.8828808479650316, 98.14349677545589]],
+                {
+  "opacity": 0.85,
+  "interactive": false,
+  "zindex": 11,
+}
+            );
+        
+    
+            var image_overlay_8a0fcc67ec474a4c21619a925f24078e = L.imageOverlay(
+                "raw/ch55-river.png",
+                [[-2.45, 101.9], [-1.95, 102.7]],
+                {
+  "opacity": 0.85,
+  "interactive": false,
+  "zindex": 12,
+}
+            );
+        
+    
+            var layer_control_b9eb066122e9a613c7df60069a813d9e_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_141119e72da5a67bd7f857e3fba57183,
-                    "Satellite basemap" : tile_layer_77f02942977cace683164397f202d267,
+                    "Street map" : tile_layer_f7c1b4b15fe6e6ed43f17418b9f9875f,
+                    "Satellite basemap" : tile_layer_5c55b808471296899ec775ab12e02270,
                 },
                 overlays :  {
-                    "Stratified, thinned, split" : image_overlay_d3c4e33dc1cc95eda1ba2414f8cfe8b2,
+                    "Case 1, the year before" : image_overlay_e4361463e8e5eefaedfd4b99dcca6ee1,
+                    "Case 1, the year after" : image_overlay_7abac46ced86bf3add8f883aeb7c1892,
+                    "New riverside bare ground, Merangin, 2019-2024" : image_overlay_8a0fcc67ec474a4c21619a925f24078e,
                 },
             };
-            let layer_control_ee9fd644e77e6ade08bd254e21978a76 = L.control.layers(
-                layer_control_ee9fd644e77e6ade08bd254e21978a76_layers.base_layers,
-                layer_control_ee9fd644e77e6ade08bd254e21978a76_layers.overlays,
+            let layer_control_b9eb066122e9a613c7df60069a813d9e = L.control.layers(
+                layer_control_b9eb066122e9a613c7df60069a813d9e_layers.base_layers,
+                layer_control_b9eb066122e9a613c7df60069a813d9e_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_8d9f5675df31658ef8f24314ca9d223c);
+            ).addTo(map_747608a370a1f7e8c9fc2b687c438679);
 
         
     
@@ -179,11 +233,11 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_8d9f5675df31658ef8f24314ca9d223c);
+            ).addTo(map_747608a370a1f7e8c9fc2b687c438679);
         
     
-            map_8d9f5675df31658ef8f24314ca9d223c.fitBounds(
-                [[-1.0500120916719264, 117.30000000000003], [-0.5999999999999746, 117.85]],
+            map_747608a370a1f7e8c9fc2b687c438679.fitBounds(
+                [[-2.45, 98.1138087398298], [3.8828808479650316, 102.7]],
                 {}
             );
         

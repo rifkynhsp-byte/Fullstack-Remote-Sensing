@@ -124,6 +124,7 @@ book:
         - 41-mrv.qmd
         - 43-ecosystem-services.qmd
         - 53-biodiversity.qmd
+        - 55-enforcement.qmd
         - 52-bathymetry.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:

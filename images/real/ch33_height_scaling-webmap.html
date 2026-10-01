@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_3462e8768827c5ad80818f9e54be7704 {
+                #map_1c0a17a272f1d9f3b96033011538c461 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -87,14 +87,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_3462e8768827c5ad80818f9e54be7704" ></div>
+            <div class="folium-map" id="map_1c0a17a272f1d9f3b96033011538c461" ></div>
         
 </body>
 <script>
     
     
-            var map_3462e8768827c5ad80818f9e54be7704 = L.map(
-                "map_3462e8768827c5ad80818f9e54be7704",
+            var map_1c0a17a272f1d9f3b96033011538c461 = L.map(
+                "map_1c0a17a272f1d9f3b96033011538c461",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -106,13 +106,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_3462e8768827c5ad80818f9e54be7704);
+            L.control.scale().addTo(map_1c0a17a272f1d9f3b96033011538c461);
 
             
 
         
     
-            var tile_layer_6c813c407c0c42689a95df42f8681dc0 = L.tileLayer(
+            var tile_layer_4a99c058a2e6f144a08a57692a81d7da = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -129,10 +129,10 @@
             );
         
     
-            tile_layer_6c813c407c0c42689a95df42f8681dc0.addTo(map_3462e8768827c5ad80818f9e54be7704);
+            tile_layer_4a99c058a2e6f144a08a57692a81d7da.addTo(map_1c0a17a272f1d9f3b96033011538c461);
         
     
-            var tile_layer_0e12b543d7369708f4f6df145cb5cd47 = L.tileLayer(
+            var tile_layer_f82f9ebd2ef51f85cabe5fd9e8a9c564 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -149,10 +149,10 @@
             );
         
     
-            tile_layer_0e12b543d7369708f4f6df145cb5cd47.addTo(map_3462e8768827c5ad80818f9e54be7704);
+            tile_layer_f82f9ebd2ef51f85cabe5fd9e8a9c564.addTo(map_1c0a17a272f1d9f3b96033011538c461);
         
     
-            var image_overlay_923aee45972fa6bc0c70e0e1c68cd931 = L.imageOverlay(
+            var image_overlay_ed775d19f54dffc28fd638c1398d0da0 = L.imageOverlay(
                 "raw/ch33-eth-map.png",
                 [[-2.15, 102.45], [-1.75, 102.9]],
                 {
@@ -163,10 +163,10 @@
             );
         
     
-            image_overlay_923aee45972fa6bc0c70e0e1c68cd931.addTo(map_3462e8768827c5ad80818f9e54be7704);
+            image_overlay_ed775d19f54dffc28fd638c1398d0da0.addTo(map_1c0a17a272f1d9f3b96033011538c461);
         
     
-            var image_overlay_80382bc22e94a839b76a10bf9d2f0ad1 = L.imageOverlay(
+            var image_overlay_e497678485d650053f079fb934a88549 = L.imageOverlay(
                 "raw/ch33-l4b-map.png",
                 [[-2.15, 102.45], [-1.75, 102.9]],
                 {
@@ -177,25 +177,25 @@
             );
         
     
-            var layer_control_5288ebd7a86fa228fce578de6a6bfee7_layers = {
+            var layer_control_408e97f3a6e5eb3c03f22f6e30cf6672_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_6c813c407c0c42689a95df42f8681dc0,
-                    "Satellite basemap" : tile_layer_0e12b543d7369708f4f6df145cb5cd47,
+                    "Street map" : tile_layer_4a99c058a2e6f144a08a57692a81d7da,
+                    "Satellite basemap" : tile_layer_f82f9ebd2ef51f85cabe5fd9e8a9c564,
                 },
                 overlays :  {
-                    "Canopy height, Jambi lowland" : image_overlay_923aee45972fa6bc0c70e0e1c68cd931,
-                    "GEDI L4B biomass, 1 km" : image_overlay_80382bc22e94a839b76a10bf9d2f0ad1,
+                    "Canopy height, Jambi lowland" : image_overlay_ed775d19f54dffc28fd638c1398d0da0,
+                    "GEDI L4B biomass, 1 km" : image_overlay_e497678485d650053f079fb934a88549,
                 },
             };
-            let layer_control_5288ebd7a86fa228fce578de6a6bfee7 = L.control.layers(
-                layer_control_5288ebd7a86fa228fce578de6a6bfee7_layers.base_layers,
-                layer_control_5288ebd7a86fa228fce578de6a6bfee7_layers.overlays,
+            let layer_control_408e97f3a6e5eb3c03f22f6e30cf6672 = L.control.layers(
+                layer_control_408e97f3a6e5eb3c03f22f6e30cf6672_layers.base_layers,
+                layer_control_408e97f3a6e5eb3c03f22f6e30cf6672_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_3462e8768827c5ad80818f9e54be7704);
+            ).addTo(map_1c0a17a272f1d9f3b96033011538c461);
 
         
     
@@ -206,10 +206,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_3462e8768827c5ad80818f9e54be7704);
+            ).addTo(map_1c0a17a272f1d9f3b96033011538c461);
         
     
-            map_3462e8768827c5ad80818f9e54be7704.fitBounds(
+            map_1c0a17a272f1d9f3b96033011538c461.fitBounds(
                 [[-2.15, 102.45], [-1.75, 102.9]],
                 {}
             );

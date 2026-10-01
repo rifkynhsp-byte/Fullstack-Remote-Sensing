@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_91fdede8e03d59f5077ae267afaee754 {
+                #map_0633585b1550f2f3f05f16fef58af0cd {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -87,14 +87,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_91fdede8e03d59f5077ae267afaee754" ></div>
+            <div class="folium-map" id="map_0633585b1550f2f3f05f16fef58af0cd" ></div>
         
 </body>
 <script>
     
     
-            var map_91fdede8e03d59f5077ae267afaee754 = L.map(
-                "map_91fdede8e03d59f5077ae267afaee754",
+            var map_0633585b1550f2f3f05f16fef58af0cd = L.map(
+                "map_0633585b1550f2f3f05f16fef58af0cd",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -106,13 +106,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_91fdede8e03d59f5077ae267afaee754);
+            L.control.scale().addTo(map_0633585b1550f2f3f05f16fef58af0cd);
 
             
 
         
     
-            var tile_layer_45d6fdb45e5a8e44769b10ce967d0432 = L.tileLayer(
+            var tile_layer_4eeb0fe4310e312b5292e6d8dfa21798 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -129,10 +129,10 @@
             );
         
     
-            tile_layer_45d6fdb45e5a8e44769b10ce967d0432.addTo(map_91fdede8e03d59f5077ae267afaee754);
+            tile_layer_4eeb0fe4310e312b5292e6d8dfa21798.addTo(map_0633585b1550f2f3f05f16fef58af0cd);
         
     
-            var tile_layer_0966fd3bfff266778b1ff688db25de85 = L.tileLayer(
+            var tile_layer_345aa7cb816bbf98cb5bab8e0d6d26f9 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -149,10 +149,10 @@
             );
         
     
-            tile_layer_0966fd3bfff266778b1ff688db25de85.addTo(map_91fdede8e03d59f5077ae267afaee754);
+            tile_layer_345aa7cb816bbf98cb5bab8e0d6d26f9.addTo(map_0633585b1550f2f3f05f16fef58af0cd);
         
     
-            var image_overlay_c61afed3ddc14a28e99a15f0608315aa = L.imageOverlay(
+            var image_overlay_41483d3b73c4a36e0c9ba70da64343be = L.imageOverlay(
                 "raw/ch47-classes.png",
                 [[-2.15, 102.45], [-1.75, 102.9]],
                 {
@@ -163,10 +163,10 @@
             );
         
     
-            image_overlay_c61afed3ddc14a28e99a15f0608315aa.addTo(map_91fdede8e03d59f5077ae267afaee754);
+            image_overlay_41483d3b73c4a36e0c9ba70da64343be.addTo(map_0633585b1550f2f3f05f16fef58af0cd);
         
     
-            var image_overlay_c343e59b77fbda88ddb44726c5c1cead = L.imageOverlay(
+            var image_overlay_ef1dc1a43e42af61a96d173d250dfd16 = L.imageOverlay(
                 "raw/ch47-fhd.png",
                 [[-2.15, 102.45], [-1.75, 102.9]],
                 {
@@ -177,25 +177,25 @@
             );
         
     
-            var layer_control_257dd3b0fe68eb61223ce6fb912aed28_layers = {
+            var layer_control_26e59902c49bb71de908de03af011ace_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_45d6fdb45e5a8e44769b10ce967d0432,
-                    "Satellite basemap" : tile_layer_0966fd3bfff266778b1ff688db25de85,
+                    "Street map" : tile_layer_4eeb0fe4310e312b5292e6d8dfa21798,
+                    "Satellite basemap" : tile_layer_345aa7cb816bbf98cb5bab8e0d6d26f9,
                 },
                 overlays :  {
-                    "Four kinds of tree cover, Jambi" : image_overlay_c61afed3ddc14a28e99a15f0608315aa,
-                    "Structural complexity" : image_overlay_c343e59b77fbda88ddb44726c5c1cead,
+                    "Four kinds of tree cover, Jambi" : image_overlay_41483d3b73c4a36e0c9ba70da64343be,
+                    "Structural complexity" : image_overlay_ef1dc1a43e42af61a96d173d250dfd16,
                 },
             };
-            let layer_control_257dd3b0fe68eb61223ce6fb912aed28 = L.control.layers(
-                layer_control_257dd3b0fe68eb61223ce6fb912aed28_layers.base_layers,
-                layer_control_257dd3b0fe68eb61223ce6fb912aed28_layers.overlays,
+            let layer_control_26e59902c49bb71de908de03af011ace = L.control.layers(
+                layer_control_26e59902c49bb71de908de03af011ace_layers.base_layers,
+                layer_control_26e59902c49bb71de908de03af011ace_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_91fdede8e03d59f5077ae267afaee754);
+            ).addTo(map_0633585b1550f2f3f05f16fef58af0cd);
 
         
     
@@ -206,10 +206,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_91fdede8e03d59f5077ae267afaee754);
+            ).addTo(map_0633585b1550f2f3f05f16fef58af0cd);
         
     
-            map_91fdede8e03d59f5077ae267afaee754.fitBounds(
+            map_0633585b1550f2f3f05f16fef58af0cd.fitBounds(
                 [[-2.15, 102.45], [-1.75, 102.9]],
                 {}
             );

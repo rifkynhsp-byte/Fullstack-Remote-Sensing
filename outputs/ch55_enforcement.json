@@ -1,0 +1,47 @@
+[
+ {
+  "name": "ch55_enforcement-webmap",
+  "kind": "html",
+  "html": "images/real/ch55_enforcement-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch55-park-loss",
+  "kind": "chart",
+  "caption": "Forest cleared per year inside Gunung Leuser National Park and in a 5 km band around it (Hansen GFC v1.13, tree cover 2000 at least 30 %).",
+  "image": "images/real/ch55-park-loss.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,5 km band outside,inside the park\n2001,1919.4,1057.4\n2002,1115.8,715.64\n2003,1921.1,1595.4\n2004,1518.6,846.25\n2005,1326.1,1129.7\n2006,1459.6,1118.9\n2007,2513.9,1342.3\n2008,3404.3,968.36\n2009,4196,2421.9\n2010,4404.2,2992.5\n2011,2915.7,719.67\n2012,3965.7,1196\n2013,2287,563.28\n2014,5259.5,2738.4\n2015,2281.4,735.87\n2016,4129.6,1633.8\n2017,3369.7,975.97\n2018,4347.9,1479.1\n2019,2454.6,1092.2\n2020,3026,1278.8\n2021,3900.5,1080.8\n2022,4276.7,752.54\n2023,4302.9,776.62\n2024,4591,1460.6\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_loss(df):\n    fig, ax = plt.subplots(figsize=(7.2, 3.4))\n    ax.plot(df.year, df[\"inside the park\"], color=\"#b2182b\", lw=2, marker=\"o\", ms=3,\n            label=\"inside the park\")\n    ax.plot(df.year, df[\"5 km band outside\"], color=\"#878787\", lw=1.5, ls=\"--\",\n            label=\"5 km band outside\")\n    ax.set_ylabel(\"Forest cleared (ha per year)\")\n    ax.set_title(\"Forest clearing inside Gunung Leuser National Park\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_loss(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch55-cases",
+  "kind": "table",
+  "caption": "The ten largest clearings of 2021-2024 inside the park: the start of a case file. Year is the most common loss year within the patch.",
+  "markdown": "|   case |   loss_year |   area_ha |     lon |    lat |\n|-------:|------------:|----------:|--------:|-------:|\n|    1.0 |      2023.0 |     128.9 | 98.1272 | 3.8716 |\n|    2.0 |      2023.0 |     103.4 | 98.0395 | 4.0111 |\n|    3.0 |      2024.0 |      59.9 | 98.1210 | 3.9230 |\n|    4.0 |      2024.0 |      57.6 | 98.0340 | 3.9557 |\n|    5.0 |      2024.0 |      49.8 | 98.1200 | 3.8951 |\n|    6.0 |      2024.0 |      47.3 | 98.0832 | 3.4745 |\n|    7.0 |      2024.0 |      45.0 | 98.6581 | 3.2058 |\n|    8.0 |      2024.0 |      41.4 | 98.0151 | 3.9495 |\n|    9.0 |      2024.0 |      34.5 | 98.0514 | 3.4630 |\n|   10.0 |      2024.0 |      34.4 | 97.9753 | 3.4581 |"
+ },
+ {
+  "name": "ch55-before",
+  "kind": "map",
+  "caption": "Case 1, Sentinel-2 median of the year before the clearing. Yellow: the patch Hansen flags as lost.",
+  "image": "images/real/ch55-before.jpg"
+ },
+ {
+  "name": "ch55-after",
+  "kind": "map",
+  "caption": "The same patch, Sentinel-2 median of the year after. Two dated images bracket when the clearing happened.",
+  "image": "images/real/ch55-after.jpg"
+ },
+ {
+  "name": "ch55-river",
+  "kind": "map",
+  "caption": "Magenta: vegetation in the 2019 dry season that was bare ground or muddy water in 2024, within 1 km of a river, outside settlements. Leads to inspect, not proof of illegal mining.",
+  "image": "images/real/ch55-river.jpg"
+ },
+ {
+  "name": "ch55-river-series",
+  "kind": "chart",
+  "caption": "Bare ground or turbid water within 1 km of rivers, each dry season.",
+  "image": "images/real/ch55-river-series.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,bare_or_turbid_near_rivers_ha\n2019,2909\n2020,3310.7\n2021,3783\n2022,3621.9\n2023,3541\n2024,3959.6\nnew since 2019 (map),395.18\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_river(df):\n    d = df[pd.to_numeric(df.year, errors=\"coerce\").notna()]      # drop the summary row\n    fig, ax = plt.subplots(figsize=(6.8, 3.2))\n    ax.bar(d.year.astype(str), d.bare_or_turbid_near_rivers_ha, color=\"#a6611a\")\n    ax.set_ylabel(\"Bare ground or turbid water\\nwithin 1 km of rivers (ha)\")\n    ax.set_title(\"Riverside bare ground, Merangin (dry season)\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_river(df)\nplt.show()\n"
+ }
+]

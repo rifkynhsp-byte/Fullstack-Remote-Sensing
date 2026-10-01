@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_29bf96ddce64f298bdadf90f297760fe {
+                #map_edb873b904a67d5ab3cad77b97c7d505 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -102,14 +102,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_29bf96ddce64f298bdadf90f297760fe" ></div>
+            <div class="folium-map" id="map_edb873b904a67d5ab3cad77b97c7d505" ></div>
         
 </body>
 <script>
     
     
-            var map_29bf96ddce64f298bdadf90f297760fe = L.map(
-                "map_29bf96ddce64f298bdadf90f297760fe",
+            var map_edb873b904a67d5ab3cad77b97c7d505 = L.map(
+                "map_edb873b904a67d5ab3cad77b97c7d505",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -121,13 +121,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_29bf96ddce64f298bdadf90f297760fe);
+            L.control.scale().addTo(map_edb873b904a67d5ab3cad77b97c7d505);
 
             
 
         
     
-            var tile_layer_23d91c2550156095f9a218b108725f6b = L.tileLayer(
+            var tile_layer_33e682359729a18f0e72804a06dccb4d = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -144,10 +144,10 @@
             );
         
     
-            tile_layer_23d91c2550156095f9a218b108725f6b.addTo(map_29bf96ddce64f298bdadf90f297760fe);
+            tile_layer_33e682359729a18f0e72804a06dccb4d.addTo(map_edb873b904a67d5ab3cad77b97c7d505);
         
     
-            var tile_layer_f36d20912cef73327226d60753288334 = L.tileLayer(
+            var tile_layer_39b14e7d77a8ff5733150cfef05b46af = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -164,12 +164,12 @@
             );
         
     
-            tile_layer_f36d20912cef73327226d60753288334.addTo(map_29bf96ddce64f298bdadf90f297760fe);
+            tile_layer_39b14e7d77a8ff5733150cfef05b46af.addTo(map_edb873b904a67d5ab3cad77b97c7d505);
         
     
-            var image_overlay_224f8048ac78270872fe472736cefe34 = L.imageOverlay(
+            var image_overlay_9ad50152039a1f4f0ecb18a011808602 = L.imageOverlay(
                 "raw/ch14-window-rgb.png",
-                [[-0.7800000742413923, 117.45], [-0.7299999999999744, 117.5]],
+                [[-0.7800000742413923, 117.45], [-0.7299999999999746, 117.5]],
                 {
   "opacity": 0.85,
   "interactive": false,
@@ -178,10 +178,10 @@
             );
         
     
-            image_overlay_224f8048ac78270872fe472736cefe34.addTo(map_29bf96ddce64f298bdadf90f297760fe);
+            image_overlay_9ad50152039a1f4f0ecb18a011808602.addTo(map_edb873b904a67d5ab3cad77b97c7d505);
         
     
-            var image_overlay_1c7524106f90e5f2bfd343863074c90f = L.imageOverlay(
+            var image_overlay_e72639abe901123da16d5ac5d8e710db = L.imageOverlay(
                 "raw/ch14-entropy.png",
                 [[-0.7800000742413923, 117.45], [-0.7299999999999744, 117.5]],
                 {
@@ -192,9 +192,9 @@
             );
         
     
-            var image_overlay_2eb0070521702860b0f2be35e4e26908 = L.imageOverlay(
+            var image_overlay_5d4c7c80334b13dbb340d1631ab7c467 = L.imageOverlay(
                 "raw/ch14-contrast.png",
-                [[-0.7800000742413923, 117.45], [-0.7299999999999746, 117.5]],
+                [[-0.7800000742413923, 117.45], [-0.7299999999999744, 117.5]],
                 {
   "opacity": 0.85,
   "interactive": false,
@@ -203,26 +203,26 @@
             );
         
     
-            var layer_control_b66e278c0bbdfa52473bc8c6a3e0a538_layers = {
+            var layer_control_be46f4c4c993fb3cbb6831ab8ec292d3_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_23d91c2550156095f9a218b108725f6b,
-                    "Satellite basemap" : tile_layer_f36d20912cef73327226d60753288334,
+                    "Street map" : tile_layer_33e682359729a18f0e72804a06dccb4d,
+                    "Satellite basemap" : tile_layer_39b14e7d77a8ff5733150cfef05b46af,
                 },
                 overlays :  {
-                    "True colour, 5 km window" : image_overlay_224f8048ac78270872fe472736cefe34,
-                    "Entropy" : image_overlay_1c7524106f90e5f2bfd343863074c90f,
-                    "Contrast" : image_overlay_2eb0070521702860b0f2be35e4e26908,
+                    "True colour, 5 km window" : image_overlay_9ad50152039a1f4f0ecb18a011808602,
+                    "Entropy" : image_overlay_e72639abe901123da16d5ac5d8e710db,
+                    "Contrast" : image_overlay_5d4c7c80334b13dbb340d1631ab7c467,
                 },
             };
-            let layer_control_b66e278c0bbdfa52473bc8c6a3e0a538 = L.control.layers(
-                layer_control_b66e278c0bbdfa52473bc8c6a3e0a538_layers.base_layers,
-                layer_control_b66e278c0bbdfa52473bc8c6a3e0a538_layers.overlays,
+            let layer_control_be46f4c4c993fb3cbb6831ab8ec292d3 = L.control.layers(
+                layer_control_be46f4c4c993fb3cbb6831ab8ec292d3_layers.base_layers,
+                layer_control_be46f4c4c993fb3cbb6831ab8ec292d3_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_29bf96ddce64f298bdadf90f297760fe);
+            ).addTo(map_edb873b904a67d5ab3cad77b97c7d505);
 
         
     
@@ -233,10 +233,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_29bf96ddce64f298bdadf90f297760fe);
+            ).addTo(map_edb873b904a67d5ab3cad77b97c7d505);
         
     
-            map_29bf96ddce64f298bdadf90f297760fe.fitBounds(
+            map_edb873b904a67d5ab3cad77b97c7d505.fitBounds(
                 [[-0.7800000742413923, 117.45], [-0.7299999999999744, 117.5]],
                 {}
             );

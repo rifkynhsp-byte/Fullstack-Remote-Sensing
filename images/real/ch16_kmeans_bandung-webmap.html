@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_418644d76533d46dbc586f56b8f698c2 {
+                #map_656938e37b91123811c967e3a995c21f {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -87,14 +87,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_418644d76533d46dbc586f56b8f698c2" ></div>
+            <div class="folium-map" id="map_656938e37b91123811c967e3a995c21f" ></div>
         
 </body>
 <script>
     
     
-            var map_418644d76533d46dbc586f56b8f698c2 = L.map(
-                "map_418644d76533d46dbc586f56b8f698c2",
+            var map_656938e37b91123811c967e3a995c21f = L.map(
+                "map_656938e37b91123811c967e3a995c21f",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -106,13 +106,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_418644d76533d46dbc586f56b8f698c2);
+            L.control.scale().addTo(map_656938e37b91123811c967e3a995c21f);
 
             
 
         
     
-            var tile_layer_a5c4c958261350eedc1758093a169078 = L.tileLayer(
+            var tile_layer_829ab3c20d491c5be1660460345e592b = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -129,10 +129,10 @@
             );
         
     
-            tile_layer_a5c4c958261350eedc1758093a169078.addTo(map_418644d76533d46dbc586f56b8f698c2);
+            tile_layer_829ab3c20d491c5be1660460345e592b.addTo(map_656938e37b91123811c967e3a995c21f);
         
     
-            var tile_layer_76b32946b67530f14add14ad19344a5b = L.tileLayer(
+            var tile_layer_620259d8ce832ccc42fe63dc7c67cf96 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -149,10 +149,10 @@
             );
         
     
-            tile_layer_76b32946b67530f14add14ad19344a5b.addTo(map_418644d76533d46dbc586f56b8f698c2);
+            tile_layer_620259d8ce832ccc42fe63dc7c67cf96.addTo(map_656938e37b91123811c967e3a995c21f);
         
     
-            var image_overlay_6daf87bac723478723904544659ed95b = L.imageOverlay(
+            var image_overlay_c8f9c63a6b31be1151ccec50b143355f = L.imageOverlay(
                 "raw/ch16-bandung-rgb.png",
                 [[-7.070044142586892, 107.39400000000002], [-6.807999999999974, 107.80100000000002]],
                 {
@@ -163,10 +163,10 @@
             );
         
     
-            image_overlay_6daf87bac723478723904544659ed95b.addTo(map_418644d76533d46dbc586f56b8f698c2);
+            image_overlay_c8f9c63a6b31be1151ccec50b143355f.addTo(map_656938e37b91123811c967e3a995c21f);
         
     
-            var image_overlay_2b2d45905cbece2ca82c627543aac718 = L.imageOverlay(
+            var image_overlay_2f4c2706973bf7cbbabb6d7e2c1a4d73 = L.imageOverlay(
                 "raw/ch16-bandung-kmeans.png",
                 [[-7.070044142586892, 107.39400000000002], [-6.807999999999974, 107.80100000000002]],
                 {
@@ -177,25 +177,25 @@
             );
         
     
-            var layer_control_87b62b9d3ef9d5d984f446bc713021e1_layers = {
+            var layer_control_8dbbd5f94b3957f54eda81ef0dac3302_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_a5c4c958261350eedc1758093a169078,
-                    "Satellite basemap" : tile_layer_76b32946b67530f14add14ad19344a5b,
+                    "Street map" : tile_layer_829ab3c20d491c5be1660460345e592b,
+                    "Satellite basemap" : tile_layer_620259d8ce832ccc42fe63dc7c67cf96,
                 },
                 overlays :  {
-                    "Bandung basin, 2024 composite" : image_overlay_6daf87bac723478723904544659ed95b,
-                    "k-means, 10 clusters, no labels" : image_overlay_2b2d45905cbece2ca82c627543aac718,
+                    "Bandung basin, 2024 composite" : image_overlay_c8f9c63a6b31be1151ccec50b143355f,
+                    "k-means, 10 clusters, no labels" : image_overlay_2f4c2706973bf7cbbabb6d7e2c1a4d73,
                 },
             };
-            let layer_control_87b62b9d3ef9d5d984f446bc713021e1 = L.control.layers(
-                layer_control_87b62b9d3ef9d5d984f446bc713021e1_layers.base_layers,
-                layer_control_87b62b9d3ef9d5d984f446bc713021e1_layers.overlays,
+            let layer_control_8dbbd5f94b3957f54eda81ef0dac3302 = L.control.layers(
+                layer_control_8dbbd5f94b3957f54eda81ef0dac3302_layers.base_layers,
+                layer_control_8dbbd5f94b3957f54eda81ef0dac3302_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_418644d76533d46dbc586f56b8f698c2);
+            ).addTo(map_656938e37b91123811c967e3a995c21f);
 
         
     
@@ -206,10 +206,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_418644d76533d46dbc586f56b8f698c2);
+            ).addTo(map_656938e37b91123811c967e3a995c21f);
         
     
-            map_418644d76533d46dbc586f56b8f698c2.fitBounds(
+            map_656938e37b91123811c967e3a995c21f.fitBounds(
                 [[-7.070044142586892, 107.39400000000002], [-6.807999999999974, 107.80100000000002]],
                 {}
             );

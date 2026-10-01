@@ -1,0 +1,58 @@
+# Bukti Satelit untuk Penegakan Kebijakan {#sec-enforcement}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengubah data satelit publik menjadi awal sebuah berkas kasus penegakan: di mana, kapan, seberapa luas, dan bagaimana kita tahu. Dua kasus Indonesia: pembukaan hutan di dalam Taman Nasional Gunung Leuser, dan lahan terbuka baru di sepanjang sungai di Merangin, Jambi, jejak khas penambangan emas tanpa izin. Anda juga akan melihat bagaimana tahun pembanding yang dipilih sembarangan hampir menggandakan sebuah tren.
+:::
+
+## Dari peta ke berkas kasus
+
+Di atas kertas, aturan Indonesia sudah kuat: taman nasional, moratorium hutan, larangan membakar, rencana tata ruang (RTRW), izin tambang. Menegakkannya sulit karena tempatnya terpencil dan luas. Satelit tidak menggantikan petugas lapangan, tetapi satelit memberi tahu petugas **ke mana harus pergi lebih dulu**.
+
+Petugas tidak butuh peta yang indah. Sebuah berkas kasus butuh empat hal:
+
+- **Di mana**: koordinat dan batas, bukan "di suatu tempat di sisi timur taman".
+- **Kapan**: rentang waktu yang diapit dua citra bertanggal, satu sebelum dan satu sesudah.
+- **Seberapa luas**: luasan, beserta metode yang menghasilkannya.
+- **Bagaimana kita tahu**: metode yang bisa dijalankan ulang siapa pun dengan hasil yang sama. Skrip adalah catatan metode terbaik yang ada.
+
+Satelit tidak bisa mengatakan apakah sesuatu **melanggar hukum**. Itu bergantung pada izin, batas, dan klaim lahan yang hanya dipegang pihak berwenang. Yang dihasilkan satelit adalah daftar **petunjuk** yang sudah diurutkan.
+
+## Kasus A: pembukaan hutan di dalam taman nasional
+
+Taman Nasional Gunung Leuser, yang membentang di Aceh dan Sumatra Utara, adalah salah satu tempat terakhir di mana harimau, gajah, badak, dan orangutan Sumatra hidup berdampingan. Skrip ini membandingkan pembukaan hutan (Hansen Global Forest Change, Bab [-@sec-eudr]) di dalam batas taman nasional dari World Database on Protected Areas dengan sabuk selebar 5 km tepat di luarnya. Lalu bukaan tahun 2021–2024 diubah menjadi poligon dan diurutkan menurut luas: halaman pertama sebuah berkas kasus.
+
+## Kasus B: tambang emas di sepanjang sungai
+
+Penambangan emas tanpa izin (PETI) di sepanjang sungai-sungai Sumatra meninggalkan jejak yang jelas: vegetasi di tepi sungai berganti pasir, kerikil, dan kolam berlumpur, dan sungainya berubah cokelat. Skrip ini mencari piksel dalam jarak 1 km dari sungai (JRC Global Surface Water) yang bervegetasi pada satu musim kemarau lalu terbuka atau berlumpur pada musim kemarau berikutnya, di luar permukiman (ESA WorldCover).
+
+{{< include _snippets/ch55_enforcement.qmd >}}
+
+## Membaca hasilnya
+
+**Pembukaan hutan di dalam taman nasional tidak pernah berhenti.** Sekitar 30.700 ha hutan dibuka di dalam taman nasional antara 2001 dan 2024: tidak pernah kurang dari sekitar 560 ha per tahun, dan sampai 3.000 ha pada tahun-tahun terburuk (2009–2010 dan 2014). Setelah dua tahun yang lebih tenang (sekitar 750 ha pada 2022 dan 2023), angkanya naik lagi menjadi sekitar 1.460 ha pada 2024. Sabuk 5 km di luarnya kehilangan lebih banyak, sekitar 75.000 ha, dan pembukaannya cenderung naik. Batas di atas peta memperlambat pembukaan hutan; batas itu tidak menghentikannya.
+
+**Tabel kasus adalah titik awal penegakan.** Sepuluh bukaan terbesar tahun 2021–2024 masing-masing seluas 34 sampai 129 ha, dan sebagian besar mengelompok di sisi timur taman nasional, sekitar 98,0–98,1° BT. Sepuluh koordinat adalah rencana lapangan untuk satu tim dalam satu minggu.
+
+**Pasangan citra bukti menunjukkan kenapa rentang waktu lebih baik daripada satu tanggal.** Hansen mencatat bukaan terbesar pada 2023, padahal citra Sentinel-2 tahun 2022 sudah memperlihatkan tanah terbuka di sebagian poligonnya. Bukaan itu meluas selama dua musim. Tuliskan rentangnya ("dibuka antara awal 2022 dan akhir 2024, sebagian besar pada 2023"), bukan satu tanggal yang mudah dibantah pengacara.
+
+**Lahan terbuka di tepi sungai terus bertambah.** Dalam jarak 1 km dari sungai, tanah terbuka dan air berlumpur bertambah dari sekitar 2.900 ha pada musim kemarau 2019 menjadi sekitar 3.960 ha pada 2024, naik kira-kira sepertiga. Hanya sekitar 395 ha di antaranya adalah lahan yang bervegetasi rapat pada 2019 (magenta di peta); sisanya meluas ke semak, kebun, dan tepi sungai yang sudah sebagian terbuka. Koridor pucat panjang di sepanjang sungai di bagian barat sudah terbuka sebelum 2019, sehingga peta perubahan tidak menandainya. Ini pengingat bahwa peta perubahan menunjukkan kerusakan *baru*, bukan *seluruh* kerusakan. Semua ini belum membuktikan adanya tambang: gosong pasir, ladang baru, dan pekerjaan jalan tampak serupa. Petak magenta adalah daftar yang perlu diperiksa lebih dulu.
+
+**Jebakan tahun pembanding.** Versi pertama analisis ini memakai 2018 sebagai pembanding dan mendapati lahan terbuka di tepi sungai *berlipat dua*. Lalu jumlah citranya diperiksa: reflektansi permukaan Sentinel-2 hanya punya **satu** citra musim kemarau di wilayah ini pada 2018, yang menutupi separuh wilayahnya, dibandingkan 70–76 citra pada setiap tahun sesudahnya. Separuh wilayah memang tidak terekam pada 2018. Memindahkan pembanding ke 2019 memberi kenaikan yang lebih kecil dan benar. Selalu hitung jumlah citra di balik setiap tahun sebelum membandingkan antartahun (Bab [-@sec-cloud]).
+
+## Standar bukti
+
+Kalau sebuah peta mungkin berakhir di pengadilan atau kementerian, tuntut standar yang lebih tinggi daripada gambar untuk riset:
+
+1. **Simpan skrip dan versi datasetnya** (Hansen v1.13, WDPA bulan tertentu). Menjalankan ulang skrip yang sama harus memberi angka yang sama.
+2. **Pakai dua citra bertanggal** untuk setiap kasus, dan sebutkan tanggal citranya, bukan hanya tahunnya.
+3. **Laporkan unit pemetaan minimum** dan ambang yang dipakai. Di sini, petak di bawah 0,1 ha dibuang dari peta sungai.
+4. **Sebutkan apa lagi yang bisa tampak sama.** Sungai yang berpindah alur, longsor, atau kebakaran alami juga tampak sebagai kehilangan hutan; gosong pasir pada musim kemarau mirip tambang.
+5. **Verifikasi sebagian di lapangan atau dengan citra resolusi tinggi** sebelum ada tindakan, dan laporkan berapa petunjuk yang terkonfirmasi.
+6. **Lindungi orang.** Petunjuk bukan putusan. Koordinat kebun kecil di situs web publik bisa merugikan orang yang mungkin punya hak adat atas lahan itu. Bagikan daftar kasus kepada pihak berwenang, bukan ke internet.
+
+## Latihan {.unnumbered}
+
+1. Ulangi Kasus A untuk taman nasional lain (misalnya Kerinci Seblat atau Way Kambas). Apakah pembukaan di dalam batasnya naik atau turun?
+2. Untuk Kasus B, ubah sabuk sungai dari 1 km menjadi 300 m. Berapa bagian lahan terbuka yang berada tepat di tepi sungai?
+3. Pilih satu kasus dari tabel dan buat lembar kasus satu halaman: koordinat, dua citra bertanggal, luas, metode, dan kemungkinan penjelasan lain.

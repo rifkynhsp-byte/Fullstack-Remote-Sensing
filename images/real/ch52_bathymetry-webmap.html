@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_ac02ee98ebfbc4ac6e83a92d6f72979e {
+                #map_37fe15c42b28f5d85c8ce8c3082a55d3 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -102,14 +102,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_ac02ee98ebfbc4ac6e83a92d6f72979e" ></div>
+            <div class="folium-map" id="map_37fe15c42b28f5d85c8ce8c3082a55d3" ></div>
         
 </body>
 <script>
     
     
-            var map_ac02ee98ebfbc4ac6e83a92d6f72979e = L.map(
-                "map_ac02ee98ebfbc4ac6e83a92d6f72979e",
+            var map_37fe15c42b28f5d85c8ce8c3082a55d3 = L.map(
+                "map_37fe15c42b28f5d85c8ce8c3082a55d3",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -121,13 +121,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_ac02ee98ebfbc4ac6e83a92d6f72979e);
+            L.control.scale().addTo(map_37fe15c42b28f5d85c8ce8c3082a55d3);
 
             
 
         
     
-            var tile_layer_39444271750c21545e551db5af3a58d4 = L.tileLayer(
+            var tile_layer_110a7c55247633af3b572af395961887 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -144,10 +144,10 @@
             );
         
     
-            tile_layer_39444271750c21545e551db5af3a58d4.addTo(map_ac02ee98ebfbc4ac6e83a92d6f72979e);
+            tile_layer_110a7c55247633af3b572af395961887.addTo(map_37fe15c42b28f5d85c8ce8c3082a55d3);
         
     
-            var tile_layer_f77f8f7e0b966a0b40f4a8e4a4a7ee22 = L.tileLayer(
+            var tile_layer_cc56bfbc832b66aef0c45ef056ca2605 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -164,10 +164,10 @@
             );
         
     
-            tile_layer_f77f8f7e0b966a0b40f4a8e4a4a7ee22.addTo(map_ac02ee98ebfbc4ac6e83a92d6f72979e);
+            tile_layer_cc56bfbc832b66aef0c45ef056ca2605.addTo(map_37fe15c42b28f5d85c8ce8c3082a55d3);
         
     
-            var image_overlay_181a464c2dfdef14d16c098f4e9a3cb5 = L.imageOverlay(
+            var image_overlay_ea2e1ac4b849a4f51ff90c474a8b09d2 = L.imageOverlay(
                 "raw/ch52-truecolour.png",
                 [[-5.8, 106.45], [-5.5, 106.75]],
                 {
@@ -178,10 +178,10 @@
             );
         
     
-            image_overlay_181a464c2dfdef14d16c098f4e9a3cb5.addTo(map_ac02ee98ebfbc4ac6e83a92d6f72979e);
+            image_overlay_ea2e1ac4b849a4f51ff90c474a8b09d2.addTo(map_37fe15c42b28f5d85c8ce8c3082a55d3);
         
     
-            var image_overlay_b739201e609ff20b7f53579331bb8966 = L.imageOverlay(
+            var image_overlay_4cb7d87a788773fa44726d5d90b84487 = L.imageOverlay(
                 "raw/ch52-ratio.png",
                 [[-5.8, 106.45], [-5.5, 106.75]],
                 {
@@ -192,7 +192,7 @@
             );
         
     
-            var image_overlay_880274f5b93e1717deed99ce0eaf6ba8 = L.imageOverlay(
+            var image_overlay_1c12d918271880138bdc6a1f92a1faf4 = L.imageOverlay(
                 "raw/ch52-reefs.png",
                 [[-5.8, 106.45], [-5.5, 106.75]],
                 {
@@ -203,26 +203,26 @@
             );
         
     
-            var layer_control_ec9e55e14ada4570d8102847aa3f8de5_layers = {
+            var layer_control_f2c69987b683f536dd3cb2600de5226e_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_39444271750c21545e551db5af3a58d4,
-                    "Satellite basemap" : tile_layer_f77f8f7e0b966a0b40f4a8e4a4a7ee22,
+                    "Street map" : tile_layer_110a7c55247633af3b572af395961887,
+                    "Satellite basemap" : tile_layer_cc56bfbc832b66aef0c45ef056ca2605,
                 },
                 overlays :  {
-                    "Kepulauan Seribu, water pixels only" : image_overlay_181a464c2dfdef14d16c098f4e9a3cb5,
-                    "Relative depth from colour, Kepulauan Seribu" : image_overlay_b739201e609ff20b7f53579331bb8966,
-                    "Reef zones (Allen Coral Atlas)" : image_overlay_880274f5b93e1717deed99ce0eaf6ba8,
+                    "Kepulauan Seribu, water pixels only" : image_overlay_ea2e1ac4b849a4f51ff90c474a8b09d2,
+                    "Relative depth from colour, Kepulauan Seribu" : image_overlay_4cb7d87a788773fa44726d5d90b84487,
+                    "Reef zones (Allen Coral Atlas)" : image_overlay_1c12d918271880138bdc6a1f92a1faf4,
                 },
             };
-            let layer_control_ec9e55e14ada4570d8102847aa3f8de5 = L.control.layers(
-                layer_control_ec9e55e14ada4570d8102847aa3f8de5_layers.base_layers,
-                layer_control_ec9e55e14ada4570d8102847aa3f8de5_layers.overlays,
+            let layer_control_f2c69987b683f536dd3cb2600de5226e = L.control.layers(
+                layer_control_f2c69987b683f536dd3cb2600de5226e_layers.base_layers,
+                layer_control_f2c69987b683f536dd3cb2600de5226e_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_ac02ee98ebfbc4ac6e83a92d6f72979e);
+            ).addTo(map_37fe15c42b28f5d85c8ce8c3082a55d3);
 
         
     
@@ -233,10 +233,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_ac02ee98ebfbc4ac6e83a92d6f72979e);
+            ).addTo(map_37fe15c42b28f5d85c8ce8c3082a55d3);
         
     
-            map_ac02ee98ebfbc4ac6e83a92d6f72979e.fitBounds(
+            map_37fe15c42b28f5d85c8ce8c3082a55d3.fitBounds(
                 [[-5.8, 106.45], [-5.5, 106.75]],
                 {}
             );

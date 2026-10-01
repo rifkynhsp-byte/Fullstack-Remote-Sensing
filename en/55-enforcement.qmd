@@ -1,0 +1,58 @@
+# Satellite Evidence for Policy Enforcement {#sec-enforcement}
+
+::: {.chapter-goal}
+#### In this chapter
+You will turn public satellite data into the start of an enforcement case: where, when, how much and how we know. Two Indonesian cases: forest clearing inside Gunung Leuser National Park, and new bare ground along rivers in Merangin, Jambi, the signature of unlicensed gold mining. You will also see how a careless baseline year almost doubled a trend.
+:::
+
+## From a map to a case file
+
+Indonesia has strong rules on paper: national parks, the forest moratorium, the burning ban, spatial plans (RTRW), mining permits. Enforcing them is hard because the places are remote and large. Satellites do not replace inspectors, but they tell inspectors **where to go first**.
+
+An officer does not need a beautiful map. A case file needs four things:
+
+- **Where**: coordinates and a boundary, not "somewhere in the east of the park".
+- **When**: a time window bracketed by two dated images, one before and one after.
+- **How much**: an area, with the method that produced it.
+- **How we know**: a method anyone can rerun and get the same answer. A script is the best record of method there is.
+
+A satellite cannot say whether something is **illegal**. That depends on permits, boundaries and land claims that only the authorities hold. What a satellite produces is a ranked list of **leads**.
+
+## Case A: clearing inside a national park
+
+Gunung Leuser National Park, spanning Aceh and North Sumatra, is one of the last places where Sumatran tigers, elephants, rhinos and orangutans live together. The script compares forest clearing (Hansen Global Forest Change, Chapter [-@sec-eudr]) inside the park boundary from the World Database on Protected Areas with a 5 km band just outside it. It then turns the clearings of 2021–2024 into polygons and ranks them by area: the first page of a case file.
+
+## Case B: gold mining along rivers
+
+Unlicensed gold mining (*penambangan emas tanpa izin*, PETI) along Sumatra's rivers leaves a clear mark: vegetation on the banks is replaced by bare sand, gravel and muddy ponds, and the river turns brown. The script looks for pixels within 1 km of a river (JRC Global Surface Water) that were vegetated in one dry season and bare or muddy in a later one, outside settlements (ESA WorldCover).
+
+{{< include _snippets/ch55_enforcement.qmd >}}
+
+## Reading the results
+
+**Clearing inside the park never stopped.** About 30,700 ha of forest were cleared inside the park between 2001 and 2024: never fewer than about 560 ha a year, and up to 3,000 ha in the worst years (2009–2010 and 2014). After two quieter years (about 750 ha in 2022 and 2023), 2024 rose again to about 1,460 ha. The 5 km band outside lost more, about 75,000 ha, and its clearing has been rising. A boundary on a map slows clearing; it does not stop it.
+
+**The case table is where enforcement starts.** The ten largest clearings of 2021–2024 are 34 to 129 ha each, and most cluster on the eastern side of the park around 98.0–98.1°E. Ten coordinates are a field plan for one team in one week.
+
+**The evidence pair shows why a date window is better than a date.** Hansen dates the largest clearing to 2023, yet the Sentinel-2 image of 2022 already shows bare soil in part of the outline. The clearing grew over two seasons. Write the window ("cleared between early 2022 and late 2024, mostly in 2023"), not a single date that a lawyer can easily dispute.
+
+**Riverside bare ground keeps growing.** Within 1 km of the rivers, bare ground and muddy water grew from about 2,900 ha in the 2019 dry season to about 3,960 ha in 2024, an increase of roughly a third. Only about 395 ha of that is land that was dense vegetation in 2019 (magenta on the map); the rest spread over shrub, gardens and banks that were already partly open. The long pale corridors along the rivers in the west were bare before 2019, so the change map does not flag them, which is a reminder that a change map shows *new* damage, not *all* damage. None of this proves mining: sand bars, new fields and road works look similar. The magenta patches are the list to check first.
+
+**The baseline trap.** The first version of this analysis used 2018 as the baseline and found that riverside bare ground had *doubled*. Then the scene count was checked: Sentinel-2 surface reflectance has only **one** dry-season scene over this area in 2018, covering half of it, against 70–76 in every later year. Half the area was simply missing in 2018. Moving the baseline to 2019 gives a smaller, true increase. Always count the images behind each year before comparing years (Chapter [-@sec-cloud]).
+
+## Evidence standards
+
+If a map may end up in a court or a ministry, hold it to a higher standard than a research figure:
+
+1. **Keep the script and the dataset versions** (Hansen v1.13, WDPA of a stated month). Rerunning the same script must give the same numbers.
+2. **Use two dated images** for every case, and state the dates of the images, not only the year.
+3. **Report the minimum mapping unit** and the threshold you used. Here, patches under 0.1 ha were removed from the river map.
+4. **Say what else could look the same.** A river that moved, a landslide or a natural fire also shows as loss; a sand bar in the dry season looks like a mine.
+5. **Verify a sample in the field or with high-resolution imagery** before anyone acts, and report how many leads were confirmed.
+6. **Protect people.** A lead is not a verdict. Coordinates of small farms on a public website can harm people who may have customary rights to that land. Share case lists with the authority, not the internet.
+
+## Exercises {.unnumbered}
+
+1. Repeat Case A for another national park (for example Kerinci Seblat or Way Kambas). Is clearing inside the boundary rising or falling?
+2. For Case B, change the river buffer from 1 km to 300 m. How much of the bare ground is on the banks themselves?
+3. Pick one case from the table and make a one-page case sheet: coordinates, the two dated images, area, method, and what else it could be.
