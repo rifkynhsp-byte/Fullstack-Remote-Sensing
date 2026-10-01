@@ -6,6 +6,11 @@ Hampir semua tutorial Google Earth Engine gratis membuka Code Editor di halaman 
 
 Karena itu buku ini memulai dari tempat lain. Buku ini dibuka dengan enam bab Prinsip, berangkat dari kuliah universitas, tentang cara sensor benar-benar melihat: radiasi, orbit, pemindai, resolusi, dan radar, lalu tur aplikasi IJB tanpa kode bagi pembaca yang ingin hasil sebelum kode. Bagian I sama sekali tidak berisi kode. Bagian ini menjawab mengapa kita memandang Bumi dari orbit, apa sebenarnya yang diukur satelit ketika merekam satu piksel, dan mengapa pengukuran itu berperilaku berbeda di atas daun, lumpur pasang surut, dan permukaan air. Baru setelah itu kita membuka Code Editor, di Bagian II. Urutan ini bukan pilihan gaya. Ini urutan yang, setelah enam tahun mengajarkan materi ini, terbukti menghasilkan analis yang mampu men-debug petanya sendiri, bukan yang bertanya mengapa klasifikasinya salah.
 
+::: {.callout-tip}
+## Edisi baca (Word)
+Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode dan hasil setiap bab: [unduh (.docx)](../downloads/planetary-scale-cloud-gis-id.docx).
+:::
+
 ::: {.callout-note}
 ## Baca ini berikutnya
 [Apa bedanya buku ini](00-different.qmd) menjelaskan apa yang ada di sini dan tidak ada di materi gratis, sekaligus, sama pentingnya, apa yang justru lebih baik pada materi gratis.

@@ -6,6 +6,11 @@ Almost every free Google Earth Engine tutorial opens the Code Editor on page one
 
 So this book starts somewhere else. It opens with six Principles chapters, drawn from university lectures, on how a sensor actually sees: radiation, orbits, scanners, resolution and radar, then a point-and-click tour of the IJB app for readers who want results before code. Part I contains no code at all. It answers why we look at the Earth from orbit in the first place, what a satellite is actually measuring when it records a pixel, and how that measurement behaves differently over a leaf, a mudflat and a sheet of water. Only after that do we open the Code Editor, in Part II. That sequence is not a stylistic choice. It is the sequence that six years of teaching this material has shown produces analysts who can debug their own maps instead of asking why the classifier is wrong.
 
+::: {.callout-tip}
+## Reading edition (Word)
+The text and discussion of the whole book as one Word document, with a link to the code and results of every chapter: [download (.docx)](../downloads/planetary-scale-cloud-gis-en.docx).
+:::
+
 ::: {.callout-note}
 ## Read this next
 [How this book differs](00-different.qmd) explains what is here that the free material does not have, and, just as importantly, what the free material does better.

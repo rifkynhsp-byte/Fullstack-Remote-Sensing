@@ -126,6 +126,12 @@ cp landing/offline.html docs/offline.html
 # begins with an underscore. Quarto emits several. This file disables Jekyll.
 touch docs/.nojekyll
 
+# The reading edition in Word, both languages, into docs/downloads/: text and
+# discussion only, with each listing and its outputs replaced by links to the
+# online chapter and the script. Runs after docs/ is assembled.
+echo "==> Building the Word reading editions"
+python3 tools/build_docx.py
+
 # Uncomment and set your domain if you use one.
 # echo "gee.example.com" > docs/CNAME
 
