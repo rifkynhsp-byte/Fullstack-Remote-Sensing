@@ -1,0 +1,54 @@
+# Train Once, Apply Anywhere: Saving an Earth Engine Model {#sec-save-model}
+
+::: {.chapter-goal}
+#### In this chapter
+You will train a land-cover model once, save it as an Earth Engine asset, load it in another script, and apply it in four other parts of Indonesia. You will also find that one common way of saving a model changed its answers in our tests, and learn the check that catches this: a reloaded model must reproduce the original's results.
+:::
+
+## Why save a model
+
+Training takes samples, time and judgement. Once a model works, you want to reuse it: in another district, next year, in an app such as IJB (P6), or hand it to a colleague. Earth Engine lets you store a trained classifier as an asset and call it from any script. The author's IJB app does exactly this with its 10-class model: trained once on embeddings and terrain, applied wherever a user draws an area.
+
+## Two ways to save
+
+**Route A, the built-in way.** `Export.classifier.toAsset(classifier, description, assetId)` runs a batch task that stores the classifier; `ee.Classifier.load(assetId)` brings it back.
+
+**Route B, the trees as text.** A Random Forest is a set of decision trees, and Earth Engine can print each tree as text (`classifier.explain()` → `trees`). Save those strings in a table asset; rebuild the forest anywhere with `ee.Classifier.decisionTreeEnsemble(trees)`.
+
+In the Code Editor, route B looks like this:
+
+```javascript
+// Save: one feature per tree, the tree as a text property.
+var trees = ee.List(trainedRf.explain().get('trees'));
+var table = ee.FeatureCollection(trees.map(function (t) {
+  return ee.Feature(ee.Geometry.Point([0, 0]), {tree: t});
+}));
+Export.table.toAsset(table, 'rf_trees', 'projects/YOUR-PROJECT/assets/rf_trees');
+
+// Load, in any other script, any day:
+var model = ee.Classifier.decisionTreeEnsemble(
+  ee.FeatureCollection('projects/YOUR-PROJECT/assets/rf_trees').aggregate_array('tree'));
+var map = image.classify(model);
+```
+
+Two habits make either route reliable. **Save the training samples first** as a table asset (with geometries, or the export fails), and train from that table, so every run uses exactly the same samples. And **keep the input bands identical**: the same bands, the same names, the same scaling as in training.
+
+{{< include _snippets/ch51_save_apply_model.qmd >}}
+
+## The round-trip test
+
+The first table scores the same model three times on the same 500 test points near Bandung: in memory just after training, after route A, and after route B. Route B reproduces the original exactly (0.848). In our tests route A did not: the reloaded model agreed with WorldCover on only 0.426 of the points, and it mostly predicted trees and grass. We did not find the cause. Scaling the inputs and training from a saved table did not fix it, and it may be specific to this model or a platform issue that changes over time.
+
+The lesson does not depend on the cause: **after saving any model, score it again on the same test points and confirm it gives the same answers.** It takes one line and catches a silent error that would otherwise travel into every map made with the model.
+
+## Applying it elsewhere
+
+The second table applies the saved model, unchanged, in five places. Near home it agrees with WorldCover at 0.85. In Garut, 60 km away, 0.73. In Lampung and Pontianak, around 0.7. In Makassar, 1,300 km away, 0.85 again.
+
+Distance is not what matters most. Makassar's surroundings (city, rice fields, coast) resemble Bandung's mix of classes; Pontianak's peat, rivers and plantations do not. A model transfers to places that *look like* where it learned, which is exactly what the area-of-applicability test in Chapter [-@sec-thesisbank] (T14) measures. Before reusing a model somewhere new, check that the new place lies inside its applicability, and test it on a few local points.
+
+## Exercises {.unnumbered}
+
+1. Save a model trained on Sentinel-2 bands instead of embeddings, by route A, and run the round-trip test. Does the drop happen there too?
+2. Add 50 local samples from Pontianak to the training table, retrain, save by route B, and see how much the Pontianak agreement improves.
+3. Apply the model to the same place in 2023 embeddings. Does a model trained on 2021 still agree with WorldCover 2021 there?

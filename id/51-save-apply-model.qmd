@@ -1,0 +1,54 @@
+# Latih Sekali, Terapkan di Mana Saja: Menyimpan Model Earth Engine {#sec-save-model}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan melatih model tutupan lahan sekali, menyimpannya sebagai aset Earth Engine, memuatnya di skrip lain, lalu menerapkannya di empat wilayah lain di Indonesia. Anda juga akan menemukan bahwa salah satu cara menyimpan model yang umum dipakai mengubah jawaban model itu dalam uji kami, dan mempelajari pengecekan yang bisa menangkapnya: model yang dimuat ulang harus menghasilkan jawaban yang sama dengan aslinya.
+:::
+
+## Kenapa menyimpan model
+
+Melatih model butuh sampel, waktu, dan pertimbangan. Begitu modelnya berhasil, Anda ingin memakainya lagi: di kabupaten lain, tahun depan, di aplikasi seperti IJB (P6), atau diberikan kepada rekan. Earth Engine memungkinkan classifier yang sudah dilatih disimpan sebagai aset lalu dipanggil dari skrip mana pun. Aplikasi IJB milik penulis melakukan persis hal ini dengan model 10 kelasnya: dilatih sekali di atas embedding dan data medan, lalu diterapkan di mana pun pengguna menggambar wilayah.
+
+## Dua cara menyimpan
+
+**Rute A, cara bawaan.** `Export.classifier.toAsset(classifier, description, assetId)` menjalankan tugas batch yang menyimpan classifier; `ee.Classifier.load(assetId)` memanggilnya kembali.
+
+**Rute B, pohon sebagai teks.** Random Forest adalah kumpulan pohon keputusan, dan Earth Engine bisa mencetak setiap pohon sebagai teks (`classifier.explain()` → `trees`). Simpan teks-teks itu dalam aset tabel; bangun kembali hutannya di mana saja dengan `ee.Classifier.decisionTreeEnsemble(trees)`.
+
+Di Code Editor, rute B tampak seperti ini:
+
+```javascript
+// Simpan: satu fitur per pohon, pohonnya sebagai properti teks.
+var trees = ee.List(trainedRf.explain().get('trees'));
+var table = ee.FeatureCollection(trees.map(function (t) {
+  return ee.Feature(ee.Geometry.Point([0, 0]), {tree: t});
+}));
+Export.table.toAsset(table, 'rf_trees', 'projects/YOUR-PROJECT/assets/rf_trees');
+
+// Muat, di skrip lain mana pun, kapan pun:
+var model = ee.Classifier.decisionTreeEnsemble(
+  ee.FeatureCollection('projects/YOUR-PROJECT/assets/rf_trees').aggregate_array('tree'));
+var map = image.classify(model);
+```
+
+Dua kebiasaan membuat kedua rute bisa diandalkan. **Simpan sampel latih lebih dulu** sebagai aset tabel (lengkap dengan geometri, kalau tidak ekspornya gagal), lalu latih dari tabel itu, sehingga setiap kali dijalankan sampelnya persis sama. Dan **jaga kanal masukan tetap identik**: kanal yang sama, nama yang sama, skala yang sama seperti saat pelatihan.
+
+{{< include _snippets/ch51_save_apply_model.qmd >}}
+
+## Uji bolak-balik
+
+Tabel pertama menilai model yang sama tiga kali pada 500 titik uji yang sama di sekitar Bandung: di memori sesaat setelah dilatih, setelah rute A, dan setelah rute B. Rute B mereproduksi aslinya persis (0,848). Dalam uji kami, rute A tidak: model yang dimuat ulang hanya cocok dengan WorldCover di 0,426 titik, dan kebanyakan menebak pohon dan rumput. Kami tidak menemukan penyebabnya. Mengubah skala masukan dan melatih dari tabel yang disimpan tidak memperbaikinya, dan bisa jadi masalah ini khusus untuk model ini atau masalah platform yang berubah dari waktu ke waktu.
+
+Pelajarannya tidak bergantung pada penyebabnya: **setiap kali menyimpan model, nilai lagi model itu pada titik uji yang sama dan pastikan jawabannya sama.** Hanya butuh satu baris, dan bisa menangkap kesalahan diam-diam yang kalau tidak akan terbawa ke setiap peta yang dibuat dengan model itu.
+
+## Menerapkannya di tempat lain
+
+Tabel kedua menerapkan model yang disimpan, tanpa diubah, di lima tempat. Di dekat asalnya kecocokannya dengan WorldCover 0,85. Di Garut, 60 km jauhnya, 0,73. Di Lampung dan Pontianak, sekitar 0,7. Di Makassar, 1.300 km jauhnya, kembali 0,85.
+
+Jarak bukanlah hal yang paling menentukan. Sekitar Makassar (kota, sawah, pesisir) mirip dengan campuran kelas di Bandung; gambut, sungai, dan kebun di Pontianak tidak. Model berpindah dengan baik ke tempat yang *mirip* dengan tempat model itu belajar, persis yang diukur oleh uji wilayah keberlakuan di Bab [-@sec-thesisbank] (T14). Sebelum memakai model di tempat baru, pastikan tempat itu berada di dalam wilayah keberlakuannya, dan uji dengan beberapa titik setempat.
+
+## Latihan {.unnumbered}
+
+1. Simpan model yang dilatih dengan kanal Sentinel-2, bukan embedding, lewat rute A, lalu jalankan uji bolak-balik. Apakah penurunannya juga terjadi?
+2. Tambahkan 50 sampel lokal dari Pontianak ke tabel latih, latih ulang, simpan lewat rute B, lalu lihat seberapa besar kecocokan di Pontianak membaik.
+3. Terapkan model di tempat yang sama dengan embedding 2023. Apakah model yang dilatih dengan data 2021 masih cocok dengan WorldCover 2021 di sana?

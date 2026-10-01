@@ -96,6 +96,7 @@ book:
     - part: "Bagian VI: GeoAI dan Dampak"
       chapters:
         - 19-embeddings.qmd
+        - 51-save-apply-model.qmd
         - 20-regression-biomass.qmd
         - 21-time-series.qmd
         - 22-vector-geoai.qmd

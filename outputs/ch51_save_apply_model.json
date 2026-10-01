@@ -1,0 +1,34 @@
+[
+ {
+  "name": "ch51_save_apply_model-webmap",
+  "kind": "html",
+  "html": "images/real/ch51_save_apply_model-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch51-roundtrip",
+  "kind": "table",
+  "caption": "The same model before and after saving, scored on the same 500 home test points. A saved model must give the same answers as the one you trained; here only route B does.",
+  "markdown": "| model                                                       |   agreement_home_test |\n|:------------------------------------------------------------|----------------------:|\n| in memory, just trained                                     |                 0.848 |\n| route A: Export.classifier.toAsset, then ee.Classifier.load |                 0.426 |\n| route B: trees saved as text, then decisionTreeEnsemble     |                 0.848 |"
+ },
+ {
+  "name": "ch51-transfer",
+  "kind": "table",
+  "caption": "The Bandung model, saved and reloaded, applied in five places. Agreement is with WorldCover, itself a map, so it measures consistency, not truth.",
+  "markdown": "| place                          |   agreement_with_WorldCover |   kappa |\n|:-------------------------------|----------------------------:|--------:|\n| Bandung (home, new points)     |                        0.85 |    0.81 |\n| Garut, West Java (60 km)       |                        0.73 |    0.66 |\n| Lampung, Sumatra (400 km)      |                        0.71 |    0.64 |\n| Pontianak, Kalimantan (800 km) |                        0.68 |    0.60 |\n| Makassar, Sulawesi (1,300 km)  |                        0.85 |    0.81 |"
+ },
+ {
+  "name": "ch51-transfer-chart",
+  "kind": "chart",
+  "caption": "Agreement by place.",
+  "image": "images/real/ch51-transfer-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"place,agreement_with_WorldCover,kappa\n\"Bandung (home, new points)\",0.848,0.81\n\"Garut, West Java (60 km)\",0.728,0.66\n\"Lampung, Sumatra (400 km)\",0.712,0.64\n\"Pontianak, Kalimantan (800 km)\",0.678,0.5975\n\"Makassar, Sulawesi (1,300 km)\",0.848,0.81\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_transfer(df):\n    fig, ax = plt.subplots(figsize=(7.4, 3.4))\n    ax.barh(df.place[::-1], df.agreement_with_WorldCover[::-1], color=\"#2a78d6\")\n    for y, v in enumerate(df.agreement_with_WorldCover[::-1]):\n        ax.text(v, y, f\" {v:.2f}\", va=\"center\", fontsize=8)\n    ax.set_xlim(0, 1)\n    ax.set_xlabel(\"Agreement with WorldCover 2021 (500 test points per place)\")\n    ax.set_title(\"One saved model, five places\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_transfer(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch51-makassar",
+  "kind": "map",
+  "caption": "A model trained 1,300 km away, used without retraining.",
+  "image": "images/real/ch51-makassar.jpg"
+ }
+]
