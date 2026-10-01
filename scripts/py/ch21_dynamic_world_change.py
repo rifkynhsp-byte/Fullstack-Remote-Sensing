@@ -8,6 +8,7 @@ year by year, and where new built-up land appeared since 2017.
 
 import ee
 import matplotlib.pyplot as plt
+import pandas as pd
 
 area = ee.Geometry.Rectangle([105.16, -4.10, 105.28, -4.02])   # GEE101 Lampung area
 CLASSES = ["water", "trees", "grass", "flooded_vegetation", "crops",
@@ -28,7 +29,10 @@ def year_composite(year):
 
 y2024 = year_composite(2024)
 shaded = (y2024.select("label").visualize(min=0, max=8, palette=PALETTE).divide(255)
-          .multiply(ee.Terrain.hillshade(y2024.select("confidence").multiply(100)).divide(255)))
+          .multiply(ee.Terrain.hillshade(
+              # a composite has no fixed grid; terrain operators need one (10 m UTM 48S)
+              y2024.select("confidence").multiply(100)
+              .setDefaultProjection(ee.Projection("EPSG:32748").atScale(10))).divide(255)))
 
 
 def built_km2(year):
@@ -46,7 +50,16 @@ def built_km2(year):
                              "scenes": yr.size()})
 
 
-series = ee.FeatureCollection([built_km2(y) for y in range(2016, 2025)])
+_series = []
+
+
+def series():
+    """One year per request: asking for all nine years at once overloads Earth Engine
+    ("Too many concurrent aggregations")."""
+    if not _series:
+        for y in range(2016, 2025):
+            _series.append(built_km2(y).getInfo()["properties"])
+    return pd.DataFrame(_series)
 new_built = (year_composite(2024).select("label").eq(BUILT)
              .And(year_composite(2017).select("label").neq(BUILT)))
 change_map = (ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterBounds(area)
@@ -103,4 +116,4 @@ def products():
 
 if __name__ == "__main__":
     ee.Initialize()
-    print(series.getInfo())
+    print(series())
