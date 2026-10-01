@@ -4,7 +4,7 @@ Buku ini mengajarkan penginderaan jauh dalam urutan yang memang harus dipelajari
 
 Hampir semua tutorial Google Earth Engine gratis membuka Code Editor di halaman pertama. Anda menempel skrip, peta hijau muncul, dan rasanya sudah belajar sesuatu. Dua minggu kemudian ada yang bertanya mengapa peta mangrove Anda menempatkan hutan di lereng bukit dua puluh meter di atas garis pasang, dan tidak ada satu pun bagian tutorial itu yang menolong, karena tutorial tersebut tidak pernah menjelaskan angka di dalam citra itu sebenarnya besaran fisik apa.
 
-Karena itu buku ini memulai dari tempat lain. Bagian I sama sekali tidak berisi kode. Bagian ini menjawab mengapa kita memandang Bumi dari orbit, apa sebenarnya yang diukur satelit ketika merekam satu piksel, dan mengapa pengukuran itu berperilaku berbeda di atas daun, lumpur pasang surut, dan permukaan air. Baru setelah itu kita membuka Code Editor, di Bagian II. Urutan ini bukan pilihan gaya. Ini urutan yang, setelah enam tahun mengajarkan materi ini, terbukti menghasilkan analis yang mampu men-debug petanya sendiri, bukan yang bertanya mengapa klasifikasinya salah.
+Karena itu buku ini memulai dari tempat lain. Buku ini dibuka dengan enam bab Prinsip, berangkat dari kuliah universitas, tentang cara sensor benar-benar melihat: radiasi, orbit, pemindai, resolusi, dan radar, lalu tur aplikasi IJB tanpa kode bagi pembaca yang ingin hasil sebelum kode. Bagian I sama sekali tidak berisi kode. Bagian ini menjawab mengapa kita memandang Bumi dari orbit, apa sebenarnya yang diukur satelit ketika merekam satu piksel, dan mengapa pengukuran itu berperilaku berbeda di atas daun, lumpur pasang surut, dan permukaan air. Baru setelah itu kita membuka Code Editor, di Bagian II. Urutan ini bukan pilihan gaya. Ini urutan yang, setelah enam tahun mengajarkan materi ini, terbukti menghasilkan analis yang mampu men-debug petanya sendiri, bukan yang bertanya mengapa klasifikasinya salah.
 
 ::: {.callout-note}
 ## Baca ini berikutnya
@@ -19,18 +19,24 @@ Karena itu buku ini memulai dari tempat lain. Bagian I sama sekali tidak berisi 
 
 **Pengembang dan data scientist yang masuk ke ranah geospasial.** Kemampuan koding bukan celah Anda. Bagian I adalah tempat bacaan Anda perlu melambat, karena model yang dilatih pada fitur tanpa makna fisik tetap akan melaporkan akurasi 94 persen.
 
-**Mahasiswa dan pengajar.** Setiap bab diakhiri latihan, dan setiap bagian dapat dipetakan menjadi blok pengajaran. Lampiran E memberi rancangan kelas untuk bootcamp lima minggu dan pelatihan intensif tiga hari.
+**Mahasiswa dan pengajar.** Setiap bab diakhiri latihan, dan setiap bagian dapat dipetakan menjadi blok pengajaran. [Catatan pengajar](instructor.qmd) memberi rancangan kelas untuk bootcamp lima minggu dan pelatihan intensif tiga hari.
 
 ## Rute membaca
 
 | Bagian | Bab | Setelah selesai Anda mampu |
 |--------|-----|----------------------------|
+| Prinsip | P1 sampai P6 | Menjelaskan cara sensor optik, termal, dan radar membentuk citra, dan memakai aplikasi IJB tanpa kode |
 | I. Fondasi, tujuan dan fisika | 1 sampai 4 | Menjelaskan apa yang diukur satu piksel dan memilih sensor yang tepat |
 | II. Platform | 5 sampai 7 | Menulis dan men-debug skrip Earth Engine dengan percaya diri |
 | III. Data siap analisis | 8 sampai 11 | Membangun komposit dari data optik, radar dan topografi |
 | IV. Rekayasa fitur | 12 sampai 15 | Mengubah reflektansi menjadi prediktor yang bermakna secara ekologis |
 | V. Pembelajaran mesin | 16 sampai 18 | Melatih, memvalidasi dan mempertahankan sebuah klasifikasi |
-| VI. GeoAI dan dampak | 19 sampai 23 | Memakai embedding model fondasi dan merilis aplikasi yang benar benar jalan |
+| VI. GeoAI dan dampak | 19 sampai 24 | Memakai embedding model fondasi dan merilis aplikasi yang benar benar jalan |
+| VII. Aplikasi industri | — | Memetakan banjir, tambang, kebun, sawah, kebakaran, badai, dan longsor, serta menyatakan seberapa yakin Anda |
+| Ilmu lingkungan | — | Melacak air, karbon, jasa ekosistem, habitat, dan kedalaman perairan dangkal |
+| VIII. Keterampilan data scientist | — | Membuat laporan peta, menjelajah data, menguji klaim secara statistik, dan mencoba deep learning |
+| IX. LiDAR untuk kehutanan | — | Mengklasifikasi point cloud, menemukan pohon, dan menskalakan biomassa plot dengan GEDI |
+| X. Garda depan riset | — | Memulai tesis dari baseline yang bisa dijalankan dan jujur |
 
 : Jalur membaca {.striped}
 

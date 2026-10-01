@@ -20,7 +20,7 @@ Four things came out of that which are hard to get from a tutorial.
 
 **The failures are documented, not just the successes.** A tutorial shows the path that worked. This book shows the mangrove classification that put forest on a hillside because elevation was left out of the stack, the composite that was full of cloud because it used a QA band that stopped being populated in 2022, and the model that reported perfect accuracy because a predictor variable was a disguised copy of the target. Every one of those is a real error from real work, and each is now a named failure mode you can recognise before it costs you a week.
 
-**The physics comes first, because the debugging depends on it.** Part I has no code. That is deliberate and it is the single biggest structural difference between this book and the free material. When a classifier confuses mangrove with oil palm, the fix is not a better classifier. The fix is knowing that both are dense broadleaf canopy with nearly identical spectral signatures, and that what separates them is texture, elevation and radar structure. That reasoning is unavailable to someone who learned the API but not the instrument.
+**The physics comes first, because the debugging depends on it.** The book opens with six Principles chapters on how sensors see (their only code is the short Python that draws their figures, and P6 teaches a point-and-click app), and Part I has no code at all. That is deliberate and it is the single biggest structural difference between this book and the free material. When a classifier confuses mangrove with oil palm, the fix is not a better classifier. The fix is knowing that both are dense broadleaf canopy with nearly identical spectral signatures, and that what separates them is texture, elevation and radar structure. That reasoning is unavailable to someone who learned the API but not the instrument.
 
 **The tropical case is the default case, not the exception.** Most teaching material assumes you can find a clear scene. Across equatorial Indonesia, the Congo basin and much of the Amazon, you frequently cannot, in any given year. Cloud masking is treated here as a prerequisite rather than an optional refinement, radar arrives early rather than as an advanced topic, and every worked example runs over places where the sky is genuinely a problem.
 
@@ -30,7 +30,7 @@ Four things came out of that which are hard to get from a tutorial.
 
 Currency. The official documentation is updated the day a feature ships; a book is a snapshot. Where a dataset identifier or an API signature has changed since publication, the documentation is right and this book is wrong. Check it.
 
-Breadth of dataset coverage. The Earth Engine catalogue holds hundreds of collections. This book uses perhaps fifteen, chosen because they carry the teaching. If you need hydrology, atmospheric chemistry or nighttime lights, the catalogue documentation is where to go.
+Breadth of dataset coverage. The Earth Engine catalogue holds hundreds of collections. This book uses a few dozen, chosen because they carry the teaching: Landsat, Sentinel-1 and -2, GEDI, GRACE, CHIRPS, the Hansen and tropical moist forest change maps, WorldCover and a handful more. If you need atmospheric chemistry, ocean colour or anything the chapters do not touch, the catalogue documentation is where to go.
 
 Community answers. When you hit an error message nobody anticipated, the Earth Engine developers forum and Stack Exchange will usually have it. Appendix B covers the errors that recur; it does not attempt to cover all of them.
 
@@ -52,16 +52,16 @@ Six years is long enough in this field to have watched a methodology become obso
 
 It will not make you a remote sensing scientist in a weekend. The physics in Part I is a working foundation, not a degree.
 
-It will not cover deep learning architectures in depth. Earth Engine is a data preparation and classical machine learning environment; when a problem genuinely needs a custom neural network, Chapter [-@sec-apps] covers the hand off to Vertex AI or SageMaker rather than pretending the platform can do it.
+It will not make you a deep learning engineer. Earth Engine is a data preparation and classical machine learning environment. Chapter [-@sec-deeplearning] trains a small U-Net outside it, on a Colab GPU, and compares it honestly with a random forest; Chapter [-@sec-apps] covers the hand off to Vertex AI or SageMaker. Designing new network architectures is beyond this book.
 
-It will not give you field data. Every classification in this book is validated against ground truth that someone collected by boat, on foot, in mud. That work has no shortcut, and any tool that claims otherwise is selling something.
+It will not give you field data. The book validates against the best reference it can find (field plots, published inventories, official statistics, other agencies' maps), and says plainly when that reference is weak. Real ground truth is still collected by boat, on foot, in mud. That work has no shortcut, and any tool that claims otherwise is selling something.
 
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch00-orientation",
   "questions": [
     {
-      "q": "Part I contains no code at all. What is the stated reason?",
+      "q": "Part I contains no code at all, and the book opens with physics before any Earth Engine script. What is the stated reason?",
       "options": [
         "To keep the book shorter",
         "Because debugging a classification depends on knowing the instrument, not the API",
@@ -91,7 +91,7 @@ It will not give you field data. Every classification in this book is validated 
         "Cover machine learning"
       ],
       "answer": 2,
-      "why": "Every classification in the book is validated against ground truth somebody collected by boat, on foot, in mud. That work has no shortcut, and any tool claiming otherwise is selling something."
+      "why": "The book validates against the best reference it can find and says when that reference is weak, but real ground truth is still collected by boat, on foot, in mud. That work has no shortcut, and any tool claiming otherwise is selling something."
     }
   ]
 }

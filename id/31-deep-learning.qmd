@@ -1,4 +1,4 @@
-# Deep Learning untuk Observasi Bumi: Yang Tidak Bisa Dilatih di Earth Engine {#sec-deep-learning}
+# Deep Learning untuk Observasi Bumi: Yang Tidak Bisa Dilatih di Earth Engine {#sec-deeplearning}
 
 ::: {.chapter-goal}
 #### Di bab ini

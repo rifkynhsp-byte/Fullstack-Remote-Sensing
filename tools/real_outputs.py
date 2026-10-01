@@ -205,7 +205,8 @@ def render_map(p: dict, out: Path) -> None:
     # Engine's side at full size. Step down the size before giving up.
     for width in (p.get("width", MAP_WIDTH), 900, 600):
         url = p["image"].visualize(**vis).getThumbURL(
-            {"region": region, "dimensions": width, "format": "png"})
+            {"region": region, "dimensions": width, "format": "png",
+             "crs": "EPSG:4326"})          # UTM-south images come back flipped otherwise
         reply = requests.get(url, timeout=600)
         if reply.headers.get("content-type", "").startswith("image/"):
             img = Image.open(io.BytesIO(reply.content))

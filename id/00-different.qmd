@@ -20,7 +20,7 @@ Empat hal keluar dari proses itu, dan empat hal itu sulit didapat dari tutorial.
 
 **Kegagalannya didokumentasikan, bukan hanya keberhasilannya.** Tutorial menunjukkan jalur yang berhasil. Buku ini menunjukkan klasifikasi mangrove yang menaruh hutan di lereng bukit karena elevasi tertinggal dari feature stack, komposit yang penuh awan karena memakai band QA yang berhenti diisi sejak 2022, dan model yang melaporkan akurasi sempurna karena satu variabel prediktornya adalah salinan target yang menyamar. Semuanya kesalahan nyata dari pekerjaan nyata, dan kini masing masing menjadi mode kegagalan bernama yang bisa Anda kenali sebelum memakan waktu seminggu.
 
-**Fisika lebih dulu, karena proses debug bergantung padanya.** Bagian I tanpa kode. Itu disengaja, dan itulah perbedaan struktural terbesar antara buku ini dan materi gratis. Ketika sebuah klasifikasi mengacaukan mangrove dengan kelapa sawit, solusinya bukan klasifikator yang lebih canggih. Solusinya adalah tahu bahwa keduanya tajuk berdaun lebar yang rapat dengan tanda tangan spektral nyaris identik, dan bahwa yang memisahkan keduanya adalah tekstur, elevasi, dan struktur yang terbaca radar. Penalaran itu tidak tersedia bagi orang yang belajar API tanpa belajar instrumennya.
+**Fisika lebih dulu, karena proses debug bergantung padanya.** Buku ini dibuka dengan enam bab Prinsip tentang cara sensor melihat (kodenya hanya Python pendek untuk menggambar ilustrasinya, dan P6 mengajarkan aplikasi tanpa kode), lalu Bagian I sama sekali tanpa kode. Itu disengaja, dan itulah perbedaan struktural terbesar antara buku ini dan materi gratis. Ketika sebuah klasifikasi mengacaukan mangrove dengan kelapa sawit, solusinya bukan klasifikator yang lebih canggih. Solusinya adalah tahu bahwa keduanya tajuk berdaun lebar yang rapat dengan tanda tangan spektral nyaris identik, dan bahwa yang memisahkan keduanya adalah tekstur, elevasi, dan struktur yang terbaca radar. Penalaran itu tidak tersedia bagi orang yang belajar API tanpa belajar instrumennya.
 
 **Kasus tropis adalah kasus baku, bukan pengecualian.** Sebagian besar materi pengajaran mengandaikan Anda bisa menemukan citra bebas awan. Di Indonesia ekuatorial, cekungan Kongo, dan sebagian besar Amazon, dalam satu tahun tertentu sering kali Anda memang tidak bisa. Cloud masking di sini diperlakukan sebagai prasyarat, bukan penyempurnaan opsional; radar datang lebih awal, bukan sebagai topik lanjutan; dan setiap contoh kerja berjalan di tempat yang langitnya benar benar menjadi masalah.
 
@@ -30,7 +30,7 @@ Empat hal keluar dari proses itu, dan empat hal itu sulit didapat dari tutorial.
 
 Kemutakhiran. Dokumentasi resmi diperbarui pada hari sebuah fitur dirilis; buku adalah potret sesaat. Bila sebuah pengenal dataset atau tanda tangan API berubah setelah buku ini terbit, dokumentasilah yang benar dan buku ini yang salah. Periksa ke sana.
 
-Keluasan cakupan dataset. Katalog Earth Engine memuat ratusan koleksi. Buku ini memakai mungkin lima belas, dipilih karena membawa muatan ajar. Bila Anda memerlukan hidrologi, kimia atmosfer, atau cahaya malam, dokumentasi katalog adalah tujuannya.
+Keluasan cakupan dataset. Katalog Earth Engine memuat ratusan koleksi. Buku ini memakai beberapa lusin, dipilih karena membawa muatan ajar: Landsat, Sentinel-1 dan -2, GEDI, GRACE, CHIRPS, peta perubahan hutan Hansen dan hutan lembap tropis, WorldCover, dan beberapa lainnya. Bila Anda memerlukan kimia atmosfer, warna laut, atau hal lain yang tidak disentuh bab-bab di sini, dokumentasi katalog adalah tujuannya.
 
 Jawaban komunitas. Ketika Anda menabrak pesan galat yang tak terduga siapa pun, forum pengembang Earth Engine dan Stack Exchange biasanya sudah memuatnya. Lampiran B mencakup galat yang berulang; ia tidak berpretensi mencakup semuanya.
 
@@ -52,16 +52,16 @@ Enam tahun cukup panjang di bidang ini untuk menyaksikan sebuah metodologi menja
 
 Ia tidak akan menjadikan Anda ilmuwan penginderaan jauh dalam satu akhir pekan. Fisika di Bagian I adalah fondasi kerja, bukan gelar.
 
-Ia tidak membahas arsitektur deep learning secara mendalam. Earth Engine adalah lingkungan penyiapan data dan pembelajaran mesin klasik; ketika sebuah masalah benar benar memerlukan jaringan saraf khusus, Bab [-@sec-apps] membahas serah terima ke Vertex AI atau SageMaker alih alih berpura pura platform ini sanggup.
+Ia tidak akan menjadikan Anda insinyur deep learning. Earth Engine adalah lingkungan penyiapan data dan pembelajaran mesin klasik. Bab [-@sec-deeplearning] melatih U-Net kecil di luarnya, dengan GPU Colab, dan membandingkannya secara jujur dengan random forest; Bab [-@sec-apps] membahas serah terima ke Vertex AI atau SageMaker. Merancang arsitektur jaringan baru berada di luar cakupan buku ini.
 
-Ia tidak memberi Anda data lapangan. Setiap klasifikasi di buku ini divalidasi terhadap data lapangan yang dikumpulkan seseorang dengan perahu, berjalan kaki, di lumpur. Pekerjaan itu tidak punya jalan pintas, dan alat apa pun yang mengklaim sebaliknya sedang berjualan.
+Ia tidak memberi Anda data lapangan. Buku ini memvalidasi dengan rujukan terbaik yang bisa ditemukan (plot lapangan, inventaris terbitan, statistik resmi, peta lembaga lain) dan mengatakan terus terang ketika rujukan itu lemah. Data lapangan yang sesungguhnya tetap dikumpulkan dengan perahu, berjalan kaki, di lumpur. Pekerjaan itu tidak punya jalan pintas, dan alat apa pun yang mengklaim sebaliknya sedang berjualan.
 
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch00-orientation",
   "questions": [
     {
-      "q": "Bagian I sama sekali tidak memuat kode. Apa alasan yang dinyatakan?",
+      "q": "Bagian I sama sekali tidak memuat kode, dan buku ini membahas fisika sebelum skrip Earth Engine mana pun. Apa alasan yang dinyatakan?",
       "options": [
         "Supaya bukunya lebih ringkas",
         "Karena menelusuri galat sebuah klasifikasi bergantung pada pemahaman instrumennya, bukan pada API-nya",
@@ -91,7 +91,7 @@ Ia tidak memberi Anda data lapangan. Setiap klasifikasi di buku ini divalidasi t
         "Membahas machine learning"
       ],
       "answer": 2,
-      "why": "Setiap klasifikasi dalam buku ini divalidasi terhadap ground truth yang dikumpulkan seseorang dengan perahu, berjalan kaki, di dalam lumpur. Pekerjaan itu tidak punya jalan pintas, dan alat apa pun yang mengaku sebaliknya sedang menjual sesuatu."
+      "why": "Buku ini memvalidasi dengan rujukan terbaik yang ada dan mengatakan ketika rujukan itu lemah, tetapi ground truth yang sesungguhnya tetap dikumpulkan dengan perahu, berjalan kaki, di dalam lumpur. Pekerjaan itu tidak punya jalan pintas, dan alat apa pun yang mengaku sebaliknya sedang menjual sesuatu."
     }
   ]
 }
