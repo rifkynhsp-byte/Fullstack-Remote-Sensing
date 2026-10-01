@@ -1,74 +1,140 @@
 [
  {
-  "name": "p6-layout",
-  "kind": "figure",
-  "caption": "The IJB screen, drawn from the app's structure: area, reporting unit and module on the left, the map on the right.",
-  "image": "images/real/p6-layout.png"
- },
- {
   "name": "p6-guide",
   "kind": "table",
   "caption": "Which module to open for which question.",
   "markdown": "| question                                                                    | module   | what it does                                                                                         |\n|:----------------------------------------------------------------------------|:---------|:-----------------------------------------------------------------------------------------------------|\n| I need a basic layer (rainfall, buildings, peat, population...) for my area | Data     | 43 public datasets in 13 groups, statistics per reporting unit                                       |\n| I need a clean satellite image without clouds                               | Citra    | five ways to build a Sentinel-2 composite, band combinations and indices                             |\n| What is the land cover here, by my own classes?                             | Tutupan  | mark examples, choose an algorithm, get a map with accuracy and areas                                |\n| I want a ready-made land-cover map or a canopy height map                   | Model    | the author's 10-class model, Dynamic World, or canopy height trained on GEDI                         |\n| When did this place change, or how old is this plantation?                  | Deret    | harmonics, LandTrendr, stand age, CCDC breakpoints                                                   |\n| What changed between two dates?                                             | Ubah     | index difference, Dynamic World transitions, double classification, trend                            |\n| Where did it flood, and who was affected?                                   | Banjir   | Sentinel-1 change with Otsu threshold, HAND, slope and permanent-water filters; people and buildings |\n| What burned, how badly, and on peat?                                        | Api      | dNBR in four severity classes, hotspots, burned peat and its thickness                               |\n| Where is landslide or flood risk highest?                                   | Rawan    | random forest on embeddings and terrain, from your points or the NASA landslide catalog              |\n| I need to combine steps: threshold, clean up, vectorise, summarise          | Toolbox  | expression calculator, Otsu, raster ↔ vector, zonal statistics, SNIC, morphology                     |"
  },
  {
-  "name": "p6-chain",
+  "name": "p6-layout-en",
   "kind": "figure",
-  "caption": "Chaining tools: every result becomes the active layer for the next one.",
-  "image": "images/real/p6-chain.png"
+  "caption": "The IJB screen.",
+  "image": "images/real/p6-layout-en.png"
  },
  {
-  "name": "p6-click-data",
+  "name": "p6-chain-en",
   "kind": "figure",
-  "caption": "IJB Data: the buttons to press, in order.",
-  "image": "images/real/p6-click-data.png"
+  "caption": "Chaining Toolbox operations.",
+  "image": "images/real/p6-chain-en.png"
  },
  {
-  "name": "p6-click-citra",
+  "name": "p6-click-data-en",
   "kind": "figure",
-  "caption": "IJB Citra: the buttons to press, in order.",
-  "image": "images/real/p6-click-citra.png"
+  "caption": "IJB Data: before and after pressing the button.",
+  "image": "images/real/p6-click-data-en.png"
  },
  {
-  "name": "p6-click-tutupan",
+  "name": "p6-click-citra-en",
   "kind": "figure",
-  "caption": "IJB Tutupan: the buttons to press, in order.",
-  "image": "images/real/p6-click-tutupan.png"
+  "caption": "IJB Citra: before and after pressing the button.",
+  "image": "images/real/p6-click-citra-en.png"
  },
  {
-  "name": "p6-click-model",
+  "name": "p6-click-model-en",
   "kind": "figure",
-  "caption": "IJB Model: the buttons to press, in order.",
-  "image": "images/real/p6-click-model.png"
+  "caption": "IJB Model: before and after pressing the button.",
+  "image": "images/real/p6-click-model-en.png"
  },
  {
-  "name": "p6-click-deret",
+  "name": "p6-click-tutupan-en",
   "kind": "figure",
-  "caption": "IJB Deret: the buttons to press, in order.",
-  "image": "images/real/p6-click-deret.png"
+  "caption": "IJB Tutupan: before and after pressing the button.",
+  "image": "images/real/p6-click-tutupan-en.png"
  },
  {
-  "name": "p6-click-ubah",
+  "name": "p6-click-deret-en",
   "kind": "figure",
-  "caption": "IJB Ubah: the buttons to press, in order.",
-  "image": "images/real/p6-click-ubah.png"
+  "caption": "IJB Deret: before and after pressing the button.",
+  "image": "images/real/p6-click-deret-en.png"
  },
  {
-  "name": "p6-click-banjir",
+  "name": "p6-click-ubah-en",
   "kind": "figure",
-  "caption": "IJB Banjir: the buttons to press, in order.",
-  "image": "images/real/p6-click-banjir.png"
+  "caption": "IJB Ubah: before and after pressing the button.",
+  "image": "images/real/p6-click-ubah-en.png"
  },
  {
-  "name": "p6-click-api",
+  "name": "p6-click-banjir-en",
   "kind": "figure",
-  "caption": "IJB Api: the buttons to press, in order.",
-  "image": "images/real/p6-click-api.png"
+  "caption": "IJB Banjir: before and after pressing the button.",
+  "image": "images/real/p6-click-banjir-en.png"
  },
  {
-  "name": "p6-click-rawan",
+  "name": "p6-click-api-en",
   "kind": "figure",
-  "caption": "IJB Rawan: the buttons to press, in order.",
-  "image": "images/real/p6-click-rawan.png"
+  "caption": "IJB Api: before and after pressing the button.",
+  "image": "images/real/p6-click-api-en.png"
+ },
+ {
+  "name": "p6-click-rawan-en",
+  "kind": "figure",
+  "caption": "IJB Rawan: before and after pressing the button.",
+  "image": "images/real/p6-click-rawan-en.png"
+ },
+ {
+  "name": "p6-layout-id",
+  "kind": "figure",
+  "caption": "The IJB screen.",
+  "image": "images/real/p6-layout-id.png"
+ },
+ {
+  "name": "p6-chain-id",
+  "kind": "figure",
+  "caption": "Chaining Toolbox operations.",
+  "image": "images/real/p6-chain-id.png"
+ },
+ {
+  "name": "p6-click-data-id",
+  "kind": "figure",
+  "caption": "IJB Data: before and after pressing the button.",
+  "image": "images/real/p6-click-data-id.png"
+ },
+ {
+  "name": "p6-click-citra-id",
+  "kind": "figure",
+  "caption": "IJB Citra: before and after pressing the button.",
+  "image": "images/real/p6-click-citra-id.png"
+ },
+ {
+  "name": "p6-click-model-id",
+  "kind": "figure",
+  "caption": "IJB Model: before and after pressing the button.",
+  "image": "images/real/p6-click-model-id.png"
+ },
+ {
+  "name": "p6-click-tutupan-id",
+  "kind": "figure",
+  "caption": "IJB Tutupan: before and after pressing the button.",
+  "image": "images/real/p6-click-tutupan-id.png"
+ },
+ {
+  "name": "p6-click-deret-id",
+  "kind": "figure",
+  "caption": "IJB Deret: before and after pressing the button.",
+  "image": "images/real/p6-click-deret-id.png"
+ },
+ {
+  "name": "p6-click-ubah-id",
+  "kind": "figure",
+  "caption": "IJB Ubah: before and after pressing the button.",
+  "image": "images/real/p6-click-ubah-id.png"
+ },
+ {
+  "name": "p6-click-banjir-id",
+  "kind": "figure",
+  "caption": "IJB Banjir: before and after pressing the button.",
+  "image": "images/real/p6-click-banjir-id.png"
+ },
+ {
+  "name": "p6-click-api-id",
+  "kind": "figure",
+  "caption": "IJB Api: before and after pressing the button.",
+  "image": "images/real/p6-click-api-id.png"
+ },
+ {
+  "name": "p6-click-rawan-id",
+  "kind": "figure",
+  "caption": "IJB Rawan: before and after pressing the button.",
+  "image": "images/real/p6-click-rawan-id.png"
  }
 ]

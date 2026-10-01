@@ -1,196 +1,291 @@
 #| title: IJB at a glance (Python)
-#| description: Drawings of the IJB application: its layout, the three steps every analysis follows, and which module answers which question. No Earth Engine code is needed to use the app; this script only draws the guide figures.
+#| description: Drawings of the IJB application for the click-by-click guide: the screen, and for every module the card before you press its button and what appears after. No code is needed to use the app; this script only draws the guide figures.
 
 """
 PRINCIPLES P6 | A map of the app, drawn for the guide.
 
-IJB is used by clicking, not by coding. These figures are drawn from the
-app's actual structure: the side panel with its three steps, the ten module
-buttons, and the map with its legend and status bar.
+IJB is used by clicking, not by coding. The screens below copy the app's real
+labels (the app is in Bahasa Indonesia), its card layout, default values and
+result cards. Buttons to press are outlined in red and numbered in order.
+The map on each "after" screen is a real result made in this book with the
+same method, not a screenshot of the app.
 """
+
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.patches import FancyBboxPatch
 
+IMAGES = Path(__file__).resolve().parents[2] / "images" / "real"
 MODULES = ["Data", "Citra", "Model", "Tutupan", "Deret",
            "Ubah", "Banjir", "Api", "Rawan", "Toolbox"]
+TEAL, INK, GREY, LINE, FILL = "#0f8b78", "#1f2933", "#7b8794", "#cbd2d9", "#f1f3f5"
+RED = "#d62728"
 
 
-def box(ax, x, y, w, h, text="", fc="#ffffff", ec="#9aa5b1", fs=8, weight="normal",
-        color="#1f2933", ha="left"):
-    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.08",
-                                fc=fc, ec=ec, lw=1))
+def box(ax, x, y, w, h, text="", fc="#ffffff", ec=LINE, fs=8, weight="normal",
+        color=INK, ha="center", lw=1):
+    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.01,rounding_size=0.06",
+                                fc=fc, ec=ec, lw=lw))
     if text:
-        tx = x + 0.12 if ha == "left" else x + w / 2
+        tx = x + 0.15 if ha == "left" else x + w / 2
         ax.text(tx, y + h / 2, text, fontsize=fs, va="center", ha=ha, weight=weight,
                 color=color)
 
 
-def layout_figure():
-    fig, ax = plt.subplots(figsize=(11, 6.2))
-    ax.set_xlim(0, 16); ax.set_ylim(0, 10); ax.set_axis_off()
-    # side panel
-    box(ax, 0.2, 0.2, 5.4, 9.6, fc="#f7f8fa")
-    box(ax, 0.4, 8.6, 5.0, 1.0, "IJB  ·  disasters, land cover, time series",
-        fc="#ffffff", fs=8, weight="bold")
-    box(ax, 0.4, 6.7, 5.0, 1.7, fc="#ffffff")
-    ax.text(0.55, 8.15, "STEP 1  ·  Area of interest", fontsize=8, weight="bold", color="#2a78d6")
-    for i, t in enumerate(["Draw", "Admin", "Paste", "Asset"]):
-        box(ax, 0.55 + i * 1.2, 7.0, 1.1, 0.6, t, fc="#eef4fb", fs=6.5, ha="center")
-    box(ax, 0.4, 5.4, 5.0, 1.1, fc="#ffffff")
-    ax.text(0.55, 6.2, "STEP 2  ·  Reporting unit", fontsize=8, weight="bold", color="#2a78d6")
-    box(ax, 0.55, 5.55, 4.7, 0.45, "Province · Regency · Subdistrict · Village ▾",
-        fc="#eef4fb", fs=6.5)
-    box(ax, 0.4, 3.3, 5.0, 1.9, fc="#ffffff")
-    ax.text(0.55, 4.9, "STEP 3  ·  Analysis modules", fontsize=8, weight="bold", color="#2a78d6")
-    for i, m in enumerate(MODULES):
-        r, c = divmod(i, 5)
-        box(ax, 0.55 + c * 0.96, 4.15 - r * 0.6, 0.9, 0.45, m,
-            fc="#1b7837" if m == "Banjir" else "#ffffff",
-            color="#ffffff" if m == "Banjir" else "#1f2933", fs=6.5, ha="center")
-    box(ax, 0.4, 0.4, 5.0, 2.7, fc="#ffffff")
-    ax.text(0.55, 2.8, "Module card (here: Banjir / flood)", fontsize=8, weight="bold")
-    for k, t in enumerate(["Before period   2024-12-01 → 2024-12-31",
-                           "After period    2025-01-01 → 2025-01-31",
-                           "Orbit ▾  ·  DEM ▾  ·  HAND ━●━ 15 m"]):
-        ax.text(0.6, 2.35 - k * 0.42, t, fontsize=6.8, family="monospace")
-    box(ax, 0.6, 0.6, 2.0, 0.45, "Run analysis", fc="#2a78d6", color="#ffffff", fs=7,
-        ha="center")
-    ax.text(2.8, 0.83, "→ map layers, legend and numbers", fontsize=6.8, color="#6b7680")
-    # map
-    box(ax, 5.9, 0.2, 9.9, 9.6, fc="#dfe9e1")
-    ax.text(10.85, 5.2, "MAP\n(satellite basemap, your area outlined,\nresult layers stacked on top)",
-            ha="center", fontsize=9, color="#4b5563")
-    box(ax, 12.6, 6.9, 3.0, 2.6, "Legend", fc="#ffffff", fs=8, ha="center")
-    box(ax, 6.2, 0.5, 6.0, 0.6, "Status bar: what the app is doing now", fc="#ffffff", fs=7)
-    ax.set_title("IJB: the side panel walks you through three steps; the map shows "
-                 "every result", loc="left", fontsize=10)
-    return fig
-
-
-def chain_figure():
-    fig, ax = plt.subplots(figsize=(11, 2.6))
-    ax.set_xlim(0, 16); ax.set_ylim(0, 3); ax.set_axis_off()
-    steps = ["Citra\nSentinel-2 composite", "Toolbox\nindex: (NIR−red)/(NIR+red)",
-             "Toolbox\nOtsu threshold", "Toolbox\nsieve, small patches out",
-             "Toolbox\nraster → vector", "Toolbox\nzonal statistics\nper village"]
-    for i, t in enumerate(steps):
-        box(ax, 0.2 + i * 2.65, 0.8, 2.3, 1.5, t, fc="#eef4fb" if i else "#ffffff", fs=7.5,
-            ha="center")
-        if i:
-            ax.annotate("", (0.2 + i * 2.65, 1.55), (0.2 + i * 2.65 - 0.33, 1.55),
-                        arrowprops={"arrowstyle": "-|>", "color": "#2a78d6"})
-    ax.text(0.2, 0.35, "Each result becomes the active layer, so the next tool works on it: "
-            "a whole workflow without one line of code.", fontsize=8, color="#4b5563")
-    return fig
-
-
-# ---- Click guides: one screen per module, the buttons to press outlined in red
-# and numbered in the order you press them.
-RED = "#d62728"
-
-CARDS = {
-    # module: (card title, [(field label, click number or None)], run button label, run number,
-    #          area click number, unit click number, map note)
-    "Data": ("Data · catalogue", [("Group ▾   e.g. Rainfall", 2), ("Layer ▾   e.g. CHIRPS daily", 3),
-                                  ("Date range   2023-01-01 → 2023-12-31", 4)],
-             "Tampilkan lapisan", 5, 1, None, "layer + its mean over your area"),
-    "Citra": ("Citra · clean Sentinel-2 image", [("Dates   2024-06-01 → 2024-09-30", 2),
-                                                  ("Method ▾   Cloud Score Plus", 3),
-                                                  ("Bands ▾   natural colour / NIR / SWIR", 4),
-                                                  ("Index ▾   NDVI (optional)", None)],
-              "Tampilkan", 5, 1, None, "cloud-free composite, image count"),
-    "Tutupan": ("Tutupan · your own land cover", [("Source ▾   Sentinel-2 composite", 2),
-                                                  ("Tambah class  ·  Tandai → click map", 3),
-                                                  ("Algorithm ▾   Random Forest", 4),
-                                                  ("Min. mapping unit ━●━", None)],
-                "Latih dan klasifikasi", 5, 1, None, "map, accuracy, kappa, area per class"),
-    "Model": ("Model · ready-made models", [("Mode ▾   10-class / Dynamic World / height", 2),
-                                           ("Embedding year ▾   2024", 3)],
-              "Jalankan", 4, 1, None, "land cover or canopy height, no samples"),
-    "Deret": ("Deret · time series", [("Mode ▾   harmonic / LandTrendr / age / CCDC", 2),
-                                      ("Years   2016 → 2024", 3),
-                                      ("Change threshold ━●━", None)],
-              "Jalankan analisis", 4, 1, None, "year of change, age, seasonal amplitude"),
-    "Ubah": ("Ubah · change between two dates", [("Method ▾   Dynamic World transitions", 2),
-                                                 ("Period A   2018", 3), ("Period B   2024", 3)],
-             "Jalankan analisis", 4, 1, None, "hectares gained and lost"),
-    "Banjir": ("Banjir · flood", [("Before period   a month before", 4),
-                                  ("After period    days after the event", 4),
-                                  ("Orbit ▾  ·  DEM ▾  ·  HAND ━●━ 15 m", 5)],
-               "Jalankan analisis", 6, 1, 2, "flooded ha, people, buildings per unit"),
-    "Api": ("Api · fire", [("Before period   June–July", 3), ("After period    Oct–Nov", 3)],
-            "Jalankan analisis", 4, 1, None, "dNBR severity, hotspots, burned peat"),
-    "Rawan": ("Rawan · hazard susceptibility", [("Hazard ▾   landslide", 2),
-                                                ("Tandai RAWAN → click hazardous places", 3),
-                                                ("Tandai AMAN → click safe places", 3),
-                                                ("Trees ━●━ 120", None)],
-              "Latih dari titik manual", 4, 1, None, "susceptibility, accuracy, people exposed"),
-}
-
-
 def badge(ax, x, y, n):
-    ax.add_patch(plt.Circle((x, y), 0.26, color=RED, zorder=30))
+    ax.add_patch(plt.Circle((x, y), 0.24, color=RED, zorder=30))
     ax.text(x, y, str(n), color="white", fontsize=8, weight="bold", ha="center",
             va="center", zorder=31)
 
 
 def outline(ax, x, y, w, h):
-    ax.add_patch(FancyBboxPatch((x - 0.05, y - 0.05), w + 0.1, h + 0.1,
-                                boxstyle="round,pad=0.02,rounding_size=0.1", fc="none",
+    ax.add_patch(FancyBboxPatch((x - 0.06, y - 0.06), w + 0.12, h + 0.12,
+                                boxstyle="round,pad=0.01,rounding_size=0.08", fc="none",
                                 ec=RED, lw=2.2, zorder=25))
 
 
-def click_figure(module):
-    title, fields, run, run_n, area_n, unit_n, note = CARDS[module]
-    fig, ax = plt.subplots(figsize=(11, 5.6))
-    ax.set_xlim(0, 16); ax.set_ylim(0, 9); ax.set_axis_off()
-    box(ax, 0.2, 0.2, 6.6, 8.6, fc="#f7f8fa")
-    # step 1: area
-    ax.text(0.45, 8.3, "STEP 1 · Area of interest", fontsize=8, weight="bold", color="#2a78d6")
-    for i, t in enumerate(["Draw", "Admin", "Paste", "Asset"]):
-        box(ax, 0.45 + i * 1.55, 7.45, 1.4, 0.55, t, fc="#eef4fb", fs=7, ha="center")
-    outline(ax, 0.45 + 1.55, 7.45, 1.4, 0.55); badge(ax, 0.45 + 1.55, 8.0, area_n)
-    # step 2: reporting unit
-    ax.text(0.45, 7.0, "STEP 2 · Reporting unit", fontsize=8, weight="bold", color="#2a78d6")
-    box(ax, 0.45, 6.25, 6.1, 0.5, "Province · Regency · Subdistrict · Village ▾", fc="#eef4fb", fs=7)
-    if unit_n:
-        outline(ax, 0.45, 6.25, 6.1, 0.5); badge(ax, 6.55, 6.75, unit_n)
-    # step 3: modules
-    ax.text(0.45, 5.8, "STEP 3 · Module", fontsize=8, weight="bold", color="#2a78d6")
-    mod_n = 2 if unit_n is None else 3
+# Each module card as it appears in the app: section label, title, description,
+# fields (label, kind, value, click group) and the button. Values are the app's
+# defaults or a typical setting. Kinds: select, date, slider, button.
+CARDS = {
+    "Data": ("KATALOG", "Penjelajah Data", "Seluruh dataset yang terpasang. Tampilkan di AOI, unduh statistik per wilayah.",
+             [("Kelompok", "select", "Curah hujan", 1),
+              ("Lapisan", "select", "CHIRPS harian, akumulasi periode", 2),
+              ("Rentang tanggal untuk lapisan deret waktu", "date", ("1991-01-01", "2020-12-31"), 3)],
+             "Tampilkan lapisan", ["rerata di AOI", "jenis"]),
+    "Citra": ("CITRA", "Komposit Sentinel-2", "Lima cara menyusun citra terbaik dari seluruh rentang tanggal.",
+              [("Metode komposit", "select", "Cloud Score Plus (terbaik)", 1),
+               ("Rentang tanggal", "date", ("2025-01-01", "2025-12-31"), 2),
+               ("Batas awan per scene, persen", "slider", "60", None),
+               ("Ambang Cloud Score Plus", "slider", "0.60", None),
+               ("Kombinasi band", "select", "Warna alami", 3),
+               ("Indeks", "select", "(tanpa indeks)", None)],
+              "Susun komposit", ["citra tersedia", "piksel bersih"]),
+    "Model": ("MODEL", "Klasifikasi dan Tinggi Tajuk", "Model 10 kelas dipanggil langsung dari aset; tinggi tajuk dilatih dari GEDI.",
+              [("Mode", "select", "Tinggi tajuk dari GEDI", 1),
+               ("Tahun embedding", "select", "2024", 2),
+               ("Unit pemetaan minimum, piksel", "slider", "10", None),
+               ("Rentang tembakan GEDI", "date", ("2019-04-01", "2023-12-31"), None),
+               ("Jumlah pohon regresi", "slider", "150", None)],
+              "Jalankan model", ["kelas dominan", "luas kelas dominan", "korelasi GEDI", "tinggi rerata"]),
+    "Tutupan": ("ANALISIS", "Klasifikasi Tutupan Lahan", "Tentukan kelas sendiri, tandai contoh, latih, baca akurasi dan luas.",
+                [("Sumber data", "select", "Sentinel-2 komposit", 1),
+                 ("Algoritma", "select", "Random Forest", 2),
+                 ("Unit pemetaan minimum, piksel", "slider", "0", None),
+                 ("Kelas  ·  nama kelas", "button", "Tambah", 3),
+                 ("hutan  ·  sawah  ·  permukiman  ·  air", "button", "Tandai → klik peta", 4)],
+                "Latih dan klasifikasi", ["akurasi keseluruhan", "kappa"]),
+    "Deret": ("DERET WAKTU", "Harmonik dan Titik Patah", "Harmonik memisahkan musim dari tren; LandTrendr memberi tahun gangguan dan umur.",
+              [("Mode", "select", "Umur tegakan atau tanaman", 1),
+               ("Rentang tahun", "date", ("1990", "2023"), 2),
+               ("Jumlah harmonik", "slider", "2", None),
+               ("Ambang magnitudo perubahan", "slider", "0.20", None)],
+              "Jalankan analisis", ["tahun gangguan dominan", "luas terganggu", "umur rerata", "amplitudo musiman"]),
+    "Ubah": ("ANALISIS", "Deteksi Perubahan", "Empat metode. Untuk waktu kejadian yang presisi, gunakan modul Deret.",
+             [("Metode", "select", "Transisi Dynamic World", 1),
+              ("Periode pertama", "date", ("2017-01-01", "2017-12-31"), 2),
+              ("Periode kedua", "date", ("2024-01-01", "2024-12-31"), 2),
+              ("Ambang batas perubahan", "slider", "0.20", None)],
+             "Jalankan deteksi", ["hektar bertambah", "hektar berkurang"]),
+    "Banjir": ("KEBENCANAAN", "Pemetaan Banjir", "Perubahan hamburan balik Sentinel-1 dengan ambang Otsu, disaring lereng, air permanen, dan HAND.",
+               [("Periode sebelum kejadian", "date", ("2025-09-01", "2025-10-31"), 1),
+                ("Periode saat atau sesudah", "date", ("2025-11-26", "2025-11-30"), 1),
+                ("Arah orbit", "select", "DESCENDING", 2),
+                ("Model elevasi", "select", "FABDEM", None),
+                ("Batas HAND, meter di atas drainase", "slider", "15", 3)],
+               "Jalankan analisis", ["hektar tergenang", "jiwa terpapar", "bangunan", "cocok riwayat"]),
+    "Api": ("KEBENCANAAN", "Kebakaran Hutan dan Lahan", "Selisih NBR dikelaskan menjadi empat tingkat, ditumpangkan dengan sebaran dan ketebalan gambut.",
+            [("Periode sebelum", "date", ("2015-06-01", "2015-07-31"), 1),
+             ("Periode sesudah", "date", ("2015-10-01", "2015-11-30"), 1)],
+            "Jalankan analisis", ["hektar terbakar", "titik panas", "hektar gambut", "tebal gambut rerata"]),
+    "Rawan": ("KEBENCANAAN", "Kerawanan Berbasis Machine Learning", "Random forest di atas Satellite Embedding ditambah lereng, elevasi, TWI, HAND, hujan, tanah.",
+              [("Jenis bahaya", "select", "Longsor", 1),
+               ("Tahun embedding", "select", "2024", None),
+               ("Model elevasi", "select", "SRTM", None),
+               ("Jumlah pohon", "slider", "120", None),
+               ("Titik latih manual", "button", "Tandai RAWAN → klik peta", 2),
+               ("", "button", "Tandai AMAN → klik peta", 3)],
+              "Latih dari titik manual", ["akurasi validasi", "kappa", "hektar rawan tinggi", "jiwa di zona rawan"]),
+}
+# A real result of the same method, made in this book, shown on the "after" map.
+RESULT = {"Data": "ch29-map-sequential.jpg", "Citra": "ch09-truecolour.jpg",
+          "Model": "ch33-eth-map.jpg", "Tutupan": "ch16-rf.jpg", "Deret": "ch44-age.jpg",
+          "Ubah": "ch21-new-built.jpg", "Banjir": "ch24-flood-map.jpg",
+          "Api": "ch37-burn-2015.jpg", "Rawan": "ch50-score.jpg"}
+TEXT = {
+    "en": {"before": "1 · Set the card and press the button (red, in order)",
+           "after": "2 · What appears after you press",
+           "metrics": "Result cards: the numbers fill in here",
+           "map": "Map: the result layer over your area (here: the same method, run in this book)",
+           "screen": "The IJB screen (labels as in the app)"},
+    "id": {"before": "1 · Isi kartu lalu tekan tombol (merah, sesuai urutan)",
+           "after": "2 · Yang muncul setelah tombol ditekan",
+           "metrics": "Kartu hasil: angka muncul di sini",
+           "map": "Peta: lapisan hasil di atas wilayah Anda (di sini: metode yang sama, dijalankan di buku ini)",
+           "screen": "Layar IJB (label sesuai aplikasi)"},
+}
+
+
+def control(ax, x, y, w, kind, value):
+    """One input as the app draws it; returns its height."""
+    h = 0.5
+    if kind == "select":
+        box(ax, x, y, w, h, value, fc=FILL, fs=7, weight="bold")
+        ax.text(x + w - 0.2, y + h / 2, "⇕", fontsize=8, ha="center", va="center", color=GREY)
+    elif kind == "date":
+        box(ax, x, y, w / 2 - 0.02, h, value[0], fs=7, ha="left")
+        box(ax, x + w / 2 + 0.02, y, w / 2 - 0.02, h, value[1], fs=7, ha="left")
+    elif kind == "slider":
+        ax.plot([x + 0.1, x + w - 1.0], [y + h / 2] * 2, color=LINE, lw=1.5)
+        ax.add_patch(plt.Rectangle((x + (w - 1.1) * 0.5, y + 0.1), 0.25, 0.3, fc="#ffffff",
+                                   ec=GREY, lw=0.8))
+        ax.text(x + w - 0.15, y + h / 2, value, fontsize=7, ha="right", va="center")
+    else:                                   # button
+        box(ax, x, y, w, h, value, fc=FILL, fs=7, weight="bold")
+    return h
+
+
+def sidebar(ax, module, step0, unit_click, compact=False):
+    """Draw Langkah 1-3 and the module card; returns the next free y and click count."""
+    y, W, x = 0.0, 7.0, 0.3
+    n = 1
+    # Langkah 1
+    box(ax, 0.1, y - 1.75, W + 0.4, 1.75, fc="#ffffff")
+    ax.text(x, y - 0.3, "LANGKAH 1", fontsize=7, color=TEAL, weight="bold")
+    ax.text(x, y - 0.65, "Area of Interest", fontsize=9.5, weight="bold", color=INK)
+    for i, t in enumerate(["Gambar", "Wilayah", "Tempel", "Aset"]):
+        box(ax, x + i * 1.75, y - 1.55, 1.65, 0.5, t, fc=FILL, fs=7, weight="bold")
+    outline(ax, x + 1.75, y - 1.55, 1.65, 0.5); badge(ax, x + 1.75, y - 1.05, n); n += 1
+    y -= 1.95
+    # Langkah 2
+    box(ax, 0.1, y - 1.45, W + 0.4, 1.45, fc="#ffffff")
+    ax.text(x, y - 0.3, "LANGKAH 2", fontsize=7, color=TEAL, weight="bold")
+    ax.text(x, y - 0.65, "Satuan Pelaporan", fontsize=9.5, weight="bold", color=INK)
+    box(ax, x, y - 1.3, W - 0.2, 0.5, unit_click or "Kabupaten", fc=FILL, fs=7, weight="bold")
+    if unit_click:
+        outline(ax, x, y - 1.3, W - 0.2, 0.5); badge(ax, x + W - 0.2, y - 0.8, n); n += 1
+    y -= 1.65
+    # Langkah 3
+    box(ax, 0.1, y - 2.0, W + 0.4, 2.0, fc="#ffffff")
+    ax.text(x, y - 0.3, "LANGKAH 3", fontsize=7, color=TEAL, weight="bold")
+    ax.text(x, y - 0.65, "Modul Analisis", fontsize=9.5, weight="bold", color=INK)
     for i, m in enumerate(MODULES):
         r, c = divmod(i, 5)
-        x, y = 0.45 + c * 1.24, 5.0 - r * 0.62
+        bx, by = x + c * 1.4, y - 1.3 - r * 0.62
         on = m == module
-        box(ax, x, y, 1.14, 0.48, m, fc="#1b7837" if on else "#ffffff",
-            color="#ffffff" if on else "#1f2933", fs=7, ha="center")
+        box(ax, bx, by, 1.3, 0.5, m, fc=FILL, fs=7, weight="bold",
+            ec=INK if on else LINE, lw=2.5 if on else 1)
         if on:
-            outline(ax, x, y, 1.14, 0.48); badge(ax, x + 1.14, y + 0.48, mod_n)
-    # module card
-    # Fields carrying the same group number are one step (e.g. both date periods).
-    box(ax, 0.45, 0.4, 6.1, 3.85, fc="#ffffff")
-    ax.text(0.65, 3.9, title, fontsize=8.5, weight="bold")
-    step, group = mod_n, None
-    for k, (label, n) in enumerate(fields):
-        y = 3.2 - k * 0.6
-        box(ax, 0.65, y, 5.7, 0.45, label, fc="#eef4fb", fs=6.8)
-        if n is not None:
-            if n != group:
-                step, group = step + 1, n
-            outline(ax, 0.65, y, 5.7, 0.45); badge(ax, 6.35, y + 0.45, step)
-    box(ax, 0.65, 0.6, 2.9, 0.5, run, fc="#2a78d6", color="#ffffff", fs=7.5, ha="center")
-    outline(ax, 0.65, 0.6, 2.9, 0.5); badge(ax, 3.55, 1.1, step + 1)
-    # map pane
-    box(ax, 7.1, 0.2, 8.7, 8.6, fc="#dfe9e1")
-    ax.add_patch(plt.Polygon([[8.6, 2.0], [12.2, 1.6], [14.6, 4.2], [13.2, 7.4], [9.4, 6.8]],
-                             fc="#c7e1cc", ec="#2a78d6", lw=1.5, ls="--"))
-    ax.text(11.6, 4.5, "your area", ha="center", fontsize=8, color="#2a78d6")
-    box(ax, 12.7, 7.3, 2.9, 1.3, "Legend", fc="#ffffff", fs=7.5, ha="center")
-    box(ax, 7.4, 0.45, 8.1, 0.55, "Result → " + note, fc="#ffffff", fs=7.5)
-    ax.text(0.2, 8.95, f"IJB · {module}: press the red buttons in the order of the numbers",
-            fontsize=10, weight="bold", va="bottom")
+            outline(ax, bx, by, 1.3, 0.5); badge(ax, bx + 1.3, by + 0.5, n); n += 1
+    y -= 2.2
+    return y, n
+
+
+def module_card(ax, module, y, n):
+    eyebrow, title, desc, fields, button, _ = CARDS[module]
+    x, W = 0.3, 7.0
+    top = y
+    yy = y - 0.3
+    ax.text(x, yy, eyebrow, fontsize=7, color=TEAL, weight="bold"); yy -= 0.38
+    ax.text(x, yy, title, fontsize=9.5, weight="bold", color=INK); yy -= 0.4
+    ax.text(x, yy, desc, fontsize=6.3, color="#3e4c59", wrap=True); yy -= 0.45
+    groups = {}
+    for label, kind, value, g in fields:
+        if label:
+            ax.text(x, yy, label, fontsize=6.6, color=GREY, va="top"); yy -= 0.3
+        yy -= 0.5
+        control(ax, x, yy, W - 0.2, kind, value)
+        if g is not None:
+            if g not in groups:
+                groups[g] = n; n += 1
+                badge(ax, x + W - 0.2, yy + 0.5, groups[g])
+            outline(ax, x, yy, W - 0.2, 0.5)
+        yy -= 0.3
+    yy -= 0.55
+    box(ax, x, yy, W - 0.2, 0.5, button, fc=FILL, ec=TEAL, fs=7.5, weight="bold")
+    outline(ax, x, yy, W - 0.2, 0.5); badge(ax, x + W - 0.2, yy + 0.5, n)
+    yy -= 0.2
+    ax.add_patch(FancyBboxPatch((0.1, yy), W + 0.4, top - yy, boxstyle="round,pad=0.01",
+                                fc="none", ec=LINE, lw=1, zorder=0))
+    return yy
+
+
+def metric_cards(ax, labels, x, y, w, highlight=False):
+    cw = (w - 0.1 * (len(labels) - 1)) / len(labels)
+    for i, lab in enumerate(labels):
+        bx = x + i * (cw + 0.1)
+        box(ax, bx, y, cw, 1.0, fc="#effaf7", ec="#c6ece3")
+        ax.plot([bx + 0.2, bx + 0.5], [y + 0.62] * 2, color=TEAL, lw=2.5)
+        ax.text(bx + 0.2, y + 0.25, lab, fontsize=6.3, color="#3e4c59")
+        if highlight:
+            outline(ax, bx, y, cw, 1.0)
+
+
+def click_figure(module, lang):
+    t = TEXT[lang]
+    fig = plt.figure(figsize=(12.5, 8.6))
+    a = fig.add_axes([0.01, 0.01, 0.42, 0.93])
+    b = fig.add_axes([0.45, 0.01, 0.54, 0.93])
+    unit = "Desa" if module == "Banjir" else None
+    y, n = sidebar(a, module, 1, unit)
+    bottom = module_card(a, module, y, n)
+    a.set_xlim(0, 7.6); a.set_ylim(bottom - 0.2, 0.15); a.set_aspect("equal"); a.set_axis_off()
+    a.set_title(t["before"], loc="left", fontsize=10, weight="bold", color=RED)
+    # after: result cards, then the map with the real output
+    b.set_xlim(0, 10); b.set_ylim(0, 13); b.set_axis_off()
+    b.set_title(t["after"], loc="left", fontsize=10, weight="bold", color=RED)
+    b.text(0.1, 12.6, t["metrics"], fontsize=8, color=INK, weight="bold")
+    metric_cards(b, CARDS[module][5], 0.1, 11.3, 9.8, highlight=True)
+    b.text(0.1, 10.7, t["map"], fontsize=8, color=INK, weight="bold")
+    box(b, 0.1, 0.1, 9.8, 10.3, fc="#dfe9e1")
+    img = plt.imread(IMAGES / RESULT[module])
+    h, w = img.shape[:2]
+    bw, bh = 9.4, 9.9
+    s = min(bw / w, bh / h)
+    dw, dh = w * s, h * s
+    b.imshow(img, extent=[0.3 + (bw - dw) / 2, 0.3 + (bw + dw) / 2,
+                          0.3 + (bh - dh) / 2, 0.3 + (bh + dh) / 2], zorder=5)
+    return fig
+
+
+def layout_figure(lang):
+    fig = plt.figure(figsize=(12.5, 6.4))
+    a = fig.add_axes([0.01, 0.01, 0.40, 0.92])
+    b = fig.add_axes([0.43, 0.01, 0.56, 0.92])
+    y, n = sidebar(a, "Data", 1, None)
+    a.set_xlim(0, 7.6); a.set_ylim(y - 0.2, 0.15); a.set_aspect("equal"); a.set_axis_off()
+    b.set_xlim(0, 10); b.set_ylim(0, 10); b.set_axis_off()
+    box(b, 0.1, 0.1, 9.8, 9.8, fc="#dfe9e1")
+    b.add_patch(plt.Polygon([[2, 2], [6, 1.6], [8.4, 4.4], [7, 7.6], [3, 7.0]],
+                            fc="#c7e1cc", ec="#2a78d6", lw=1.5, ls="--"))
+    b.text(5.2, 4.6, "AOI", ha="center", fontsize=9, color="#2a78d6")
+    box(b, 7.0, 8.0, 2.6, 1.5, "Legenda", fs=8)
+    box(b, 0.4, 0.4, 6.4, 0.6, "Lapisan aktif: belum ada", fs=7.5, ha="left")
+    fig.suptitle(TEXT[lang]["screen"], x=0.01, ha="left", fontsize=10, weight="bold")
+    return fig
+
+
+def chain_figure(lang):
+    steps = {"en": ["Citra\nSentinel-2 composite", "Kalkulator ekspresi\n(NIR−red)/(NIR+red)",
+                    "Ambang batas Otsu\nautomatic threshold", "Morfologi + sieve\nsmall patches out",
+                    "Raster ke vektor\npolygons", "Statistik zonal\nper village"],
+             "id": ["Citra\nkomposit Sentinel-2", "Kalkulator ekspresi\n(NIR−merah)/(NIR+merah)",
+                    "Ambang batas Otsu\nambang otomatis", "Morfologi + sieve\nbuang petak kecil",
+                    "Raster ke vektor\npoligon", "Statistik zonal\nper desa"]}[lang]
+    note = {"en": "Toolbox › Operasi › Jalankan operasi. Each result becomes the active layer "
+                  "(Lapisan aktif), so the next tool works on it: a whole workflow without code.",
+            "id": "Toolbox › Operasi › Jalankan operasi. Setiap hasil menjadi lapisan aktif, "
+                  "jadi alat berikutnya bekerja di atasnya: satu alur kerja utuh tanpa kode."}[lang]
+    fig, ax = plt.subplots(figsize=(11, 2.6))
+    ax.set_xlim(0, 16); ax.set_ylim(0, 3); ax.set_axis_off()
+    for i, t in enumerate(steps):
+        box(ax, 0.2 + i * 2.65, 0.8, 2.3, 1.5, t, fc="#effaf7" if i else "#ffffff", fs=7.2)
+        if i:
+            ax.annotate("", (0.2 + i * 2.65, 1.55), (0.2 + i * 2.65 - 0.33, 1.55),
+                        arrowprops={"arrowstyle": "-|>", "color": TEAL})
+    ax.text(0.2, 0.35, note, fontsize=8, color="#3e4c59")
     return fig
 
 
@@ -210,16 +305,17 @@ def guide_table():
 
 
 def products():
-    return [
-        {"kind": "figure", "name": "p6-layout", "figure": layout_figure,
-         "caption": "The IJB screen, drawn from the app's structure: area, reporting unit and "
-                    "module on the left, the map on the right."},
-        {"kind": "table", "name": "p6-guide", "data": guide_table,
-         "caption": "Which module to open for which question."},
-        {"kind": "figure", "name": "p6-chain", "figure": chain_figure,
-         "caption": "Chaining tools: every result becomes the active layer for the next one."},
-    ] + [{"kind": "figure", "name": f"p6-click-{m.lower()}", "figure": (lambda m=m: click_figure(m)),
-          "caption": f"IJB {m}: the buttons to press, in order."} for m in CARDS]
+    out = [{"kind": "table", "name": "p6-guide", "data": guide_table,
+            "caption": "Which module to open for which question."}]
+    for lang in ("en", "id"):
+        out += [{"kind": "figure", "name": f"p6-layout-{lang}", "figure": (lambda l=lang: layout_figure(l)),
+                 "caption": "The IJB screen."},
+                {"kind": "figure", "name": f"p6-chain-{lang}", "figure": (lambda l=lang: chain_figure(l)),
+                 "caption": "Chaining Toolbox operations."}]
+        out += [{"kind": "figure", "name": f"p6-click-{m.lower()}-{lang}",
+                 "figure": (lambda m=m, l=lang: click_figure(m, l)),
+                 "caption": f"IJB {m}: before and after pressing the button."} for m in CARDS]
+    return out
 
 
 if __name__ == "__main__":

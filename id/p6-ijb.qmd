@@ -23,7 +23,7 @@ Mula-mula aplikasi hanya memuat kerangkanya. Setiap modul baru dibangun saat tom
 
 ## Layarnya
 
-![Layar IJB: wilayah, unit pelaporan, dan modul di kiri, peta di kanan.](images/real/p6-layout.png){.lightbox fig-alt="Layar IJB: wilayah, unit pelaporan, dan modul di kiri, peta di kanan."}
+![Layar IJB: wilayah, unit pelaporan, dan modul di kiri, peta di kanan.](images/real/p6-layout-id.png){.lightbox fig-alt="Layar IJB: wilayah, unit pelaporan, dan modul di kiri, peta di kanan."}
 
 | Pertanyaan Anda | Modul | Fungsinya |
 |---|---|---|
@@ -47,7 +47,7 @@ Panel kiri memandu Anda melalui tiga langkah. Peta di kanan menampilkan wilayah 
 Setiap analisis butuh wilayah. Ada empat cara menentukannya:
 
 - **Gambar** kotak (*Kotak*) atau poligon (*Poligon*) di peta.
-- **Pilih wilayah administrasi**: provinsi, lalu kabupaten atau kota, dari batas resmi.
+- **Pilih wilayah administrasi** (*Wilayah*): *Pilih provinsi*, lalu *Pilih kabupaten atau kota*, dari batas resmi.
 - **Tempel** geometri yang disalin dari QGIS, atau empat angka kotak batas (barat, selatan, timur, utara).
 - **Muat aset Earth Engine publik**, misalnya batas wilayah yang Anda unggah sendiri.
 
@@ -67,9 +67,11 @@ Di setiap modul di bawah, gambar pertama adalah layar dengan **tombol yang harus
 
 ### Data: katalog
 
-![IJB Data: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-data.png){.lightbox fig-alt="IJB Data: tekan tombol merah sesuai urutan nomor."}
+![IJB Data: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-data-id.png){.lightbox fig-alt="IJB Data: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① Admin: pilih wilayah · ② Data · ③ grup · ④ lapisan · ⑤ tanggal · ⑥ *Tampilkan lapisan*
+**Urutan klik:** ① *Wilayah*: pilih provinsi dan kabupaten · ② *Data* · ③ *Kelompok*: *Curah hujan* · ④ *Lapisan* · ⑤ *Rentang tanggal* · ⑥ *Tampilkan lapisan*
+
+**Setelah ditekan:** kartu hasil menampilkan *rerata di AOI* dan *jenis*; peta menampilkan lapisan hasil.
 
 
 Empat puluh tiga dataset siap pakai dalam tiga belas kelompok: hidrologi, curah hujan, medan, tutupan lahan, bangunan dan penduduk, kebakaran dan gambut, kekeringan, pesisir dan ekosistem, tanah, gunung api, batas administrasi, riwayat kejadian, dan machine learning. Contohnya: curah hujan CHIRPS dan GPM, HAND dan MERIT Hydro, empat model elevasi (FABDEM, Copernicus GLO-30, NASADEM, SRTM), Dynamic World dan WorldCover, jejak bangunan Google, Microsoft, dan VIDA, penduduk WorldPop dan GHSL, titik panas FIRMS, area terbakar, sebaran dan ketebalan gambut, mangrove, kelembapan tanah SMAP, katalog longsor global NASA, dan satellite embedding. Pilih kelompok dan lapisan, atur rentang tanggal bila perlu, lalu tekan *Tampilkan lapisan*: lapisan muncul di peta lengkap dengan rata-ratanya di wilayah Anda.
@@ -82,9 +84,11 @@ Empat puluh tiga dataset siap pakai dalam tiga belas kelompok: hidrologi, curah 
 
 ### Citra: citra Sentinel-2 yang bersih
 
-![IJB Citra: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-citra.png){.lightbox fig-alt="IJB Citra: tekan tombol merah sesuai urutan nomor."}
+![IJB Citra: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-citra-id.png){.lightbox fig-alt="IJB Citra: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Citra · ③ tanggal · ④ metode · ⑤ band · ⑥ tampilkan
+**Urutan klik:** ① *Wilayah* · ② *Citra* · ③ *Metode komposit*: *Cloud Score Plus (terbaik)* · ④ *Rentang tanggal* · ⑤ *Kombinasi band* · ⑥ *Susun komposit*
+
+**Setelah ditekan:** kartu hasil menampilkan *citra tersedia* dan *piksel bersih*; peta menampilkan lapisan hasil.
 
 
 Menyusun komposit bebas awan dari semua citra Sentinel-2 dalam satu rentang tanggal, bukan memilih satu scene. Ada lima metode: **Cloud Score Plus** (bawaan, biasanya terbaik di daerah tropis), median dengan masker klasifikasi scene, piksel terhijau, persentil 25 (cerah, sedikit kabut), dan satu scene paling bersih. Anda mengatur rentang tanggal, batas awan per scene, ambang Cloud Score Plus, kombinasi kanal (warna alami, inframerah vegetasi, SWIR perkotaan, pertanian, atau penembus kabut), dan bila perlu satu indeks (NDVI, NDWI, NDBI, NBR, atau NDMI). Aplikasi melaporkan berapa citra yang dipakai dan berapa piksel yang bersih. (P1 dan Bab [-@sec-cloud] menjelaskan kenapa pilihan-pilihan ini penting.)
@@ -95,9 +99,11 @@ Menyusun komposit bebas awan dari semua citra Sentinel-2 dalam satu rentang tang
 
 ### Tutupan: peta tutupan lahan buatan sendiri
 
-![IJB Tutupan: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-tutupan.png){.lightbox fig-alt="IJB Tutupan: tekan tombol merah sesuai urutan nomor."}
+![IJB Tutupan: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-tutupan-id.png){.lightbox fig-alt="IJB Tutupan: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Tutupan · ③ sumber data · ④ tambah kelas, *Tandai*, klik contoh · ⑤ algoritma · ⑥ *Latih dan klasifikasi*
+**Urutan klik:** ① *Wilayah* · ② *Tutupan* · ③ *Sumber data* · ④ *Algoritma*: *Random Forest* · ⑤ *Tambah* kelas · ⑥ *Tandai*, lalu klik contoh di peta · ⑦ *Latih dan klasifikasi*
+
+**Setelah ditekan:** kartu hasil menampilkan *akurasi keseluruhan* dan *kappa*, beserta luas setiap kelas; peta menampilkan lapisan hasil.
 
 
 Klasifikasi terbimbing dari Bab [-@sec-supervised], cukup dengan klik:
@@ -116,9 +122,11 @@ Aplikasi melaporkan **akurasi keseluruhan dan kappa** serta luas setiap kelas. I
 
 ### Model: model siap pakai, termasuk model milik penulis
 
-![IJB Model: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-model.png){.lightbox fig-alt="IJB Model: tekan tombol merah sesuai urutan nomor."}
+![IJB Model: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-model-id.png){.lightbox fig-alt="IJB Model: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Model · ③ mode · ④ tahun embedding · ⑤ jalankan
+**Urutan klik:** ① *Wilayah* · ② *Model* · ③ *Mode*: *Model 10 kelas milik sendiri*, *Dynamic World*, atau *Tinggi tajuk dari GEDI* · ④ *Tahun embedding* · ⑤ *Jalankan model*
+
+**Setelah ditekan:** kartu hasil menampilkan *kelas dominan*, *luas kelas dominan*, *korelasi GEDI*, dan *tinggi rerata*; peta menampilkan lapisan hasil.
 
 
 Ada tiga mode:
@@ -135,9 +143,11 @@ Ada tiga mode:
 
 ### Deret: deret waktu
 
-![IJB Deret: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-deret.png){.lightbox fig-alt="IJB Deret: tekan tombol merah sesuai urutan nomor."}
+![IJB Deret: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-deret-id.png){.lightbox fig-alt="IJB Deret: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Deret · ③ mode · ④ rentang tahun · ⑤ *Jalankan analisis*
+**Urutan klik:** ① *Wilayah* · ② *Deret* · ③ *Mode*: *Harmonik dan tren*, *Titik patah LandTrendr*, atau *Umur tegakan atau tanaman* · ④ *Rentang tahun* · ⑤ *Jalankan analisis*
+
+**Setelah ditekan:** kartu hasil menampilkan *tahun gangguan dominan*, *luas terganggu*, *umur rerata*, dan *amplitudo musiman*; peta menampilkan lapisan hasil.
 
 
 Untuk mengetahui kapan sesuatu terjadi dan sudah berapa lama (Bab [-@sec-timeseries] dan [-@sec-oil-palm-age]). Empat mode: **model harmonik dan tren** (memisahkan musim dari tren jangka panjang, melaporkan amplitudo musiman), **titik patah LandTrendr** (tahun gangguan utama), **umur tegakan atau tanaman**, dan **titik patah CCDC** (tanggal patah yang presisi, lebih lambat). Atur rentang tahun, jumlah harmonik, dan ambang besaran perubahan.
@@ -148,9 +158,11 @@ Untuk mengetahui kapan sesuatu terjadi dan sudah berapa lama (Bab [-@sec-timeser
 
 ### Ubah: perubahan di antara dua waktu
 
-![IJB Ubah: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-ubah.png){.lightbox fig-alt="IJB Ubah: tekan tombol merah sesuai urutan nomor."}
+![IJB Ubah: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-ubah-id.png){.lightbox fig-alt="IJB Ubah: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Ubah · ③ metode · ④ dua periode · ⑤ *Jalankan analisis*
+**Urutan klik:** ① *Wilayah* · ② *Ubah* · ③ *Metode*: *Selisih indeks*, *Transisi Dynamic World*, atau *Klasifikasi ganda* · ④ *Periode pertama* dan *Periode kedua* · ⑤ *Jalankan deteksi*
+
+**Setelah ditekan:** kartu hasil menampilkan *hektar bertambah* dan *hektar berkurang*; peta menampilkan lapisan hasil.
 
 
 Empat metode: **selisih indeks** (NDVI, NDWI, NDBI, NBR, atau NDMI di antara dua periode, dengan ambang), **transisi Dynamic World**, **klasifikasi ganda**, dan **tren linear**. Aplikasi melaporkan hektare yang bertambah dan berkurang. Untuk tanggal perubahan yang tepat, pakai Deret.
@@ -163,9 +175,11 @@ Empat metode: **selisih indeks** (NDVI, NDWI, NDBI, NBR, atau NDMI di antara dua
 
 ### Banjir: pemetaan banjir
 
-![IJB Banjir: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-banjir.png){.lightbox fig-alt="IJB Banjir: tekan tombol merah sesuai urutan nomor."}
+![IJB Banjir: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-banjir-id.png){.lightbox fig-alt="IJB Banjir: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① Admin: kabupaten Anda · ② unit pelaporan *Desa* · ③ Banjir · ④ periode sebelum dan sesudah · ⑤ orbit, DEM, HAND · ⑥ *Jalankan analisis*
+**Urutan klik:** ① *Wilayah*: kabupaten Anda · ② *Satuan Pelaporan*: *Desa* · ③ *Banjir* · ④ *Periode sebelum kejadian* dan *Periode saat atau sesudah* · ⑤ *Arah orbit* · ⑥ *Batas HAND* · ⑦ *Jalankan analisis*
+
+**Setelah ditekan:** kartu hasil menampilkan *hektar tergenang*, *jiwa terpapar*, *bangunan*, dan *cocok riwayat*; peta menampilkan lapisan hasil.
 
 
 Metode dari Bab [-@sec-flood] dan P5, cukup dengan klik:
@@ -185,9 +199,11 @@ Di balik tombol itu: perubahan hamburan balik Sentinel-1, ambang batas Otsu otom
 
 ### Api: kebakaran hutan dan lahan
 
-![IJB Api: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-api.png){.lightbox fig-alt="IJB Api: tekan tombol merah sesuai urutan nomor."}
+![IJB Api: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-api-id.png){.lightbox fig-alt="IJB Api: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Api · ③ periode sebelum dan sesudah · ④ *Jalankan analisis*
+**Urutan klik:** ① *Wilayah* · ② *Api* · ③ *Periode sebelum* dan *Periode sesudah* · ④ *Jalankan analisis*
+
+**Setelah ditekan:** kartu hasil menampilkan *hektar terbakar*, *titik panas*, *hektar gambut*, dan *tebal gambut rerata*; peta menampilkan lapisan hasil.
 
 
 1. Atur **periode sebelum** dan **periode sesudah** musim kebakaran.
@@ -203,9 +219,11 @@ Aplikasi menghitung selisih Normalized Burn Ratio (dNBR) dari Sentinel-2 lalu me
 
 ### Rawan: kerawanan bencana dengan machine learning
 
-![IJB Rawan: tekan tombol merah sesuai urutan nomor.](images/real/p6-click-rawan.png){.lightbox fig-alt="IJB Rawan: tekan tombol merah sesuai urutan nomor."}
+![IJB Rawan: sebelum ditekan (kiri, tombol merah sesuai urutan) dan sesudahnya (kanan).](images/real/p6-click-rawan-id.png){.lightbox fig-alt="IJB Rawan: sebelum dan sesudah tombol ditekan."}
 
-**Urutan klik:** ① wilayah · ② Rawan · ③ jenis bahaya · ④ *Tandai RAWAN* / *Tandai AMAN*, klik peta · ⑤ *Latih dari titik manual*
+**Urutan klik:** ① *Wilayah* · ② *Rawan* · ③ *Jenis bahaya*: *Longsor* · ④ *Tandai RAWAN*, klik tempat rawan · ⑤ *Tandai AMAN*, klik tempat aman · ⑥ *Latih dari titik manual*
+
+**Setelah ditekan:** kartu hasil menampilkan *akurasi validasi*, *kappa*, *hektar rawan tinggi*, dan *jiwa di zona rawan*; peta menampilkan lapisan hasil.
 
 
 Memetakan tempat yang *mungkin* longsor atau banjir, bukan tempat yang pernah terkena. Random forest belajar dari 64 kanal satellite embedding ditambah lereng, elevasi, aspek, TWI, HAND, curah hujan, tanah, dan tutupan lahan.
@@ -226,7 +244,7 @@ Aplikasi melaporkan **akurasi validasi, kappa, hektare kerawanan tinggi, dan jum
 
 Setiap hasil menjadi **lapisan aktif**, dan setiap alat bekerja pada lapisan aktif, sehingga alat-alat bisa dirangkai (gambar di bawah). Alat-alatnya: **kalkulator ekspresi** untuk rumus kanal apa pun, **ambang batas Otsu**, **raster ke vektor** (dengan unit pemetaan minimum dan penyederhanaan garis), **vektor ke raster** (bangunan, longsor, mangrove, atau vektor terakhir Anda), **statistik zonal** (rerata, jumlah, maksimum, minimum, modus, simpangan baku, median), **segmentasi objek SNIC** (Bab [-@sec-obia]), serta **filter morfologi dan sieve**.
 
-![Merangkai alat: setiap hasil menjadi lapisan aktif bagi alat berikutnya.](images/real/p6-chain.png){.lightbox fig-alt="Merangkai alat: setiap hasil menjadi lapisan aktif bagi alat berikutnya."}
+![Merangkai alat: setiap hasil menjadi lapisan aktif bagi alat berikutnya.](images/real/p6-chain-id.png){.lightbox fig-alt="Merangkai alat: setiap hasil menjadi lapisan aktif bagi alat berikutnya."}
 
 ## Empat resep
 

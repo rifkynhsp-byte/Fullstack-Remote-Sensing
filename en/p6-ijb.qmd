@@ -23,7 +23,12 @@ The app loads only its frame at first. Each module is built the moment you press
 
 ## The screen
 
-![The IJB screen: area, reporting unit and module on the left, the map on the right.](images/real/p6-layout.png){.lightbox fig-alt="The IJB screen: area, reporting unit and module on the left, the map on the right."}
+::: {.callout-note}
+## The app speaks Bahasa Indonesia
+IJB's screen is in Bahasa Indonesia for now; an English interface is planned. This guide names every button exactly as it appears, in *italics*, with its English meaning in brackets the first time, for example *Jalankan analisis* (Run analysis).
+:::
+
+![The IJB screen: area, reporting unit and module on the left, the map on the right.](images/real/p6-layout-en.png){.lightbox fig-alt="The IJB screen: area, reporting unit and module on the left, the map on the right."}
 
 | Your question | Module | What it does |
 |---|---|---|
@@ -46,10 +51,10 @@ The left panel walks you through three steps. The map on the right shows your ar
 
 Every analysis needs an area. There are four ways to set it:
 
-- **Draw** a rectangle (*Kotak*) or polygon (*Poligon*) on the map.
-- **Choose an administrative unit**: province, then regency or city, from the official boundaries.
-- **Paste** a geometry copied from QGIS, or four numbers of a bounding box (west, south, east, north).
-- **Load a public Earth Engine asset**, for example a boundary you uploaded yourself.
+- **Draw** (*Gambar*) a rectangle (*Kotak*) or polygon (*Poligon*) on the map.
+- **Choose an administrative unit** (*Wilayah*): *Pilih provinsi*, then *Pilih kabupaten atau kota*, from the official boundaries.
+- **Paste** (*Tempel*) a geometry copied from QGIS, or four numbers of a bounding box (west, south, east, north).
+- **Load a public Earth Engine asset** (*Aset*, then *Muat aset*), for example a boundary you uploaded yourself.
 
 The app checks the size first and rejects areas over 25,000 km², because larger analyses would run out of time. A regency is usually well within the limit; a whole province often is not.
 
@@ -67,9 +72,11 @@ In every module below, the first picture is the screen with **the buttons to pre
 
 ### Data: the catalogue
 
-![IJB Data: press the red buttons in the order of the numbers.](images/real/p6-click-data.png){.lightbox fig-alt="IJB Data: press the red buttons in the order of the numbers."}
+![IJB Data: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-data-en.png){.lightbox fig-alt="IJB Data: before and after pressing the button."}
 
-**Clicks:** ① Admin: choose your area · ② Data · ③ group · ④ layer · ⑤ dates · ⑥ *Tampilkan lapisan*
+**Clicks:** ① *Wilayah* (Region): choose province and regency · ② *Data* · ③ *Kelompok* (Group): *Curah hujan* · ④ *Lapisan* (Layer) · ⑤ *Rentang tanggal* (Date range) · ⑥ *Tampilkan lapisan* (Show layer)
+
+**After you press:** the result cards show *rerata di AOI* (mean over the area) and *jenis* (type); the map shows the result layer.
 
 
 Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, land cover, buildings and population, fire and peat, drought, coasts and ecosystems, soils, volcanoes, administrative boundaries, event history and machine learning. Examples: CHIRPS and GPM rainfall, HAND and MERIT Hydro, four elevation models (FABDEM, Copernicus GLO-30, NASADEM, SRTM), Dynamic World and WorldCover, Google, Microsoft and VIDA building footprints, WorldPop and GHSL population, FIRMS hotspots, burned area, peat extent and peat thickness, mangroves, SMAP soil moisture, the NASA global landslide catalogue and the satellite embeddings. Pick a group and a layer, set a date range where relevant, and press *Tampilkan lapisan*: the layer appears on the map with its mean over your area.
@@ -82,9 +89,11 @@ Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, lan
 
 ### Citra: a clean Sentinel-2 image
 
-![IJB Citra: press the red buttons in the order of the numbers.](images/real/p6-click-citra.png){.lightbox fig-alt="IJB Citra: press the red buttons in the order of the numbers."}
+![IJB Citra: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-citra-en.png){.lightbox fig-alt="IJB Citra: before and after pressing the button."}
 
-**Clicks:** ① area · ② Citra · ③ dates · ④ method · ⑤ bands · ⑥ show
+**Clicks:** ① *Wilayah* · ② *Citra* · ③ *Metode komposit* (Composite method): *Cloud Score Plus (terbaik)* · ④ *Rentang tanggal* (Date range) · ⑤ *Kombinasi band* (Band combination) · ⑥ *Susun komposit* (Build composite)
+
+**After you press:** the result cards show *citra tersedia* (images available) and *piksel bersih* (clear pixels); the map shows the result layer.
 
 
 Builds a cloud-free composite from all Sentinel-2 images in a date range, not one scene. Five methods: **Cloud Score Plus** (the default and usually the best in the tropics), median with the scene classification mask, greenest pixel, 25th percentile (bright, low-haze) and the single cleanest scene. You set the date range, the maximum cloud per scene, the Cloud Score Plus threshold, the band combination (natural colour, vegetation infrared, urban SWIR, agriculture, or haze penetration) and optionally an index (NDVI, NDWI, NDBI, NBR or NDMI). The app reports how many images were used and how many pixels came out clean. (P1 and Chapter [-@sec-cloud] explain why these choices matter.)
@@ -95,9 +104,11 @@ Builds a cloud-free composite from all Sentinel-2 images in a date range, not on
 
 ### Tutupan: your own land-cover map
 
-![IJB Tutupan: press the red buttons in the order of the numbers.](images/real/p6-click-tutupan.png){.lightbox fig-alt="IJB Tutupan: press the red buttons in the order of the numbers."}
+![IJB Tutupan: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-tutupan-en.png){.lightbox fig-alt="IJB Tutupan: before and after pressing the button."}
 
-**Clicks:** ① area · ② Tutupan · ③ data source · ④ add classes, *Tandai*, click examples · ⑤ algorithm · ⑥ *Latih dan klasifikasi*
+**Clicks:** ① *Wilayah* · ② *Tutupan* · ③ *Sumber data* (Data source) · ④ *Algoritma* (Algorithm): *Random Forest* · ⑤ *Tambah* (Add) a class · ⑥ *Tandai* (Mark), then click examples on the map · ⑦ *Latih dan klasifikasi* (Train and classify)
+
+**After you press:** the result cards show *akurasi keseluruhan* (overall accuracy) and *kappa*, with the area of every class; the map shows the result layer.
 
 
 The supervised classification of Chapter [-@sec-supervised], by clicking:
@@ -116,9 +127,11 @@ The app reports **overall accuracy and kappa** and the area of every class. Reme
 
 ### Model: ready-made models, including the author's own
 
-![IJB Model: press the red buttons in the order of the numbers.](images/real/p6-click-model.png){.lightbox fig-alt="IJB Model: press the red buttons in the order of the numbers."}
+![IJB Model: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-model-en.png){.lightbox fig-alt="IJB Model: before and after pressing the button."}
 
-**Clicks:** ① area · ② Model · ③ mode · ④ embedding year · ⑤ run
+**Clicks:** ① *Wilayah* · ② *Model* · ③ *Mode*: *Model 10 kelas milik sendiri*, *Dynamic World* or *Tinggi tajuk dari GEDI* (canopy height from GEDI) · ④ *Tahun embedding* (Embedding year) · ⑤ *Jalankan model* (Run model)
+
+**After you press:** the result cards show *kelas dominan* (dominant class), *luas kelas dominan* (its area), *korelasi GEDI* (correlation with GEDI) and *tinggi rerata* (mean height); the map shows the result layer.
 
 
 Three modes:
@@ -135,9 +148,11 @@ Three modes:
 
 ### Deret: time series
 
-![IJB Deret: press the red buttons in the order of the numbers.](images/real/p6-click-deret.png){.lightbox fig-alt="IJB Deret: press the red buttons in the order of the numbers."}
+![IJB Deret: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-deret-en.png){.lightbox fig-alt="IJB Deret: before and after pressing the button."}
 
-**Clicks:** ① area · ② Deret · ③ mode · ④ years · ⑤ *Jalankan analisis*
+**Clicks:** ① *Wilayah* · ② *Deret* · ③ *Mode*: *Harmonik dan tren*, *Titik patah LandTrendr* or *Umur tegakan atau tanaman* (stand or crop age) · ④ *Rentang tahun* (Year range) · ⑤ *Jalankan analisis* (Run analysis)
+
+**After you press:** the result cards show *tahun gangguan dominan* (main disturbance year), *luas terganggu* (area disturbed), *umur rerata* (mean age) and *amplitudo musiman* (seasonal amplitude); the map shows the result layer.
 
 
 For when something happened and how long ago (Chapters [-@sec-timeseries] and [-@sec-oil-palm-age]). Four modes: **harmonic model and trend** (separates the season from the long-term trend, reports the seasonal amplitude), **LandTrendr breakpoints** (the year of the main disturbance), **stand or crop age**, and **CCDC breakpoints** (precise break dates, slower). Set the year range, the number of harmonics and the change-magnitude threshold.
@@ -148,9 +163,11 @@ For when something happened and how long ago (Chapters [-@sec-timeseries] and [-
 
 ### Ubah: change between two dates
 
-![IJB Ubah: press the red buttons in the order of the numbers.](images/real/p6-click-ubah.png){.lightbox fig-alt="IJB Ubah: press the red buttons in the order of the numbers."}
+![IJB Ubah: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-ubah-en.png){.lightbox fig-alt="IJB Ubah: before and after pressing the button."}
 
-**Clicks:** ① area · ② Ubah · ③ method · ④ the two periods · ⑤ *Jalankan analisis*
+**Clicks:** ① *Wilayah* · ② *Ubah* · ③ *Metode* (Method): *Selisih indeks*, *Transisi Dynamic World* or *Klasifikasi ganda* · ④ *Periode pertama* and *Periode kedua* (first and second period) · ⑤ *Jalankan deteksi* (Run detection)
+
+**After you press:** the result cards show *hektar bertambah* (hectares gained) and *hektar berkurang* (hectares lost); the map shows the result layer.
 
 
 Four methods: **index difference** (NDVI, NDWI, NDBI, NBR or NDMI between two periods, with a threshold), **Dynamic World transitions**, **double classification**, and **linear trend**. It reports hectares gained and lost. For the exact date of a change, use Deret instead.
@@ -163,9 +180,11 @@ Four methods: **index difference** (NDVI, NDWI, NDBI, NBR or NDMI between two pe
 
 ### Banjir: flood mapping
 
-![IJB Banjir: press the red buttons in the order of the numbers.](images/real/p6-click-banjir.png){.lightbox fig-alt="IJB Banjir: press the red buttons in the order of the numbers."}
+![IJB Banjir: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-banjir-en.png){.lightbox fig-alt="IJB Banjir: before and after pressing the button."}
 
-**Clicks:** ① Admin: your regency · ② reporting unit *Desa* · ③ Banjir · ④ before and after periods · ⑤ orbit, DEM, HAND · ⑥ *Jalankan analisis*
+**Clicks:** ① *Wilayah*: your regency · ② *Satuan Pelaporan* (Reporting unit): *Desa* (village) · ③ *Banjir* · ④ *Periode sebelum kejadian* and *Periode saat atau sesudah* (before, and during or after) · ⑤ *Arah orbit* (Orbit direction) · ⑥ *Batas HAND* (HAND limit) · ⑦ *Jalankan analisis* (Run analysis)
+
+**After you press:** the result cards show *hektar tergenang* (hectares flooded), *jiwa terpapar* (people exposed), *bangunan* (buildings) and *cocok riwayat* (match with the flood record); the map shows the result layer.
 
 
 The method of Chapter [-@sec-flood] and P5, by clicking:
@@ -185,9 +204,11 @@ Behind the button: Sentinel-1 backscatter change, an automatic Otsu threshold, t
 
 ### Api: forest and land fire
 
-![IJB Api: press the red buttons in the order of the numbers.](images/real/p6-click-api.png){.lightbox fig-alt="IJB Api: press the red buttons in the order of the numbers."}
+![IJB Api: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-api-en.png){.lightbox fig-alt="IJB Api: before and after pressing the button."}
 
-**Clicks:** ① area · ② Api · ③ before and after periods · ④ *Jalankan analisis*
+**Clicks:** ① *Wilayah* · ② *Api* · ③ *Periode sebelum* and *Periode sesudah* (before and after) · ④ *Jalankan analisis* (Run analysis)
+
+**After you press:** the result cards show *hektar terbakar* (hectares burned), *titik panas* (hotspots), *hektar gambut* (hectares of peat burned) and *tebal gambut rerata* (mean peat thickness); the map shows the result layer.
 
 
 1. Set a **period before** and a **period after** the fire season.
@@ -203,9 +224,11 @@ The app computes the difference in Normalised Burn Ratio (dNBR) from Sentinel-2 
 
 ### Rawan: hazard susceptibility with machine learning
 
-![IJB Rawan: press the red buttons in the order of the numbers.](images/real/p6-click-rawan.png){.lightbox fig-alt="IJB Rawan: press the red buttons in the order of the numbers."}
+![IJB Rawan: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-rawan-en.png){.lightbox fig-alt="IJB Rawan: before and after pressing the button."}
 
-**Clicks:** ① area · ② Rawan · ③ hazard · ④ *Tandai RAWAN* / *Tandai AMAN*, click the map · ⑤ *Latih dari titik manual*
+**Clicks:** ① *Wilayah* · ② *Rawan* · ③ *Jenis bahaya* (Hazard type): *Longsor* (landslide) · ④ *Tandai RAWAN* (mark hazardous), click places · ⑤ *Tandai AMAN* (mark safe), click places · ⑥ *Latih dari titik manual* (Train from manual points)
+
+**After you press:** the result cards show *akurasi validasi* (validation accuracy), *kappa*, *hektar rawan tinggi* (hectares of high susceptibility) and *jiwa di zona rawan* (people in high-susceptibility zones); the map shows the result layer.
 
 
 Maps where landslides or floods are *likely*, not where they happened. A random forest learns from the 64 satellite embedding bands plus slope, elevation, aspect, TWI, HAND, rainfall, soil and land cover.
@@ -226,7 +249,7 @@ It reports **validation accuracy, kappa, hectares of high susceptibility and peo
 
 Every result becomes the **active layer**, and every tool works on the active layer, so tools can be chained (figure below). The tools: an **expression calculator** for any band formula, **Otsu threshold**, **raster to vector** (with minimum mapping unit and line simplification), **vector to raster** (buildings, landslides, mangroves or your last vector), **zonal statistics** (mean, sum, maximum, minimum, mode, standard deviation, median), **SNIC object segmentation** (Chapter [-@sec-obia]) and **morphological filters and sieve**.
 
-![Chaining tools: every result becomes the active layer for the next one.](images/real/p6-chain.png){.lightbox fig-alt="Chaining tools: every result becomes the active layer for the next one."}
+![Chaining tools: every result becomes the active layer for the next one.](images/real/p6-chain-en.png){.lightbox fig-alt="Chaining tools: every result becomes the active layer for the next one."}
 
 ## Four recipes
 
