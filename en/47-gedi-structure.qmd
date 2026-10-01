@@ -1,0 +1,49 @@
+# Everything GEDI Measures: Structure, Habitat and Fuel {#sec-gedi-structure}
+
+::: {.chapter-goal}
+#### In this chapter
+You will use the whole GEDI product family, not just biomass: relative height profiles, canopy cover, plant area, the vertical distribution of leaves, and foliage height diversity. You will compare four kinds of tree cover in Jambi, and then test whether the fuel structure GEDI measured in mid-2019 differed between land that burned that year and land that did not.
+:::
+
+## One laser shot, many numbers
+
+GEDI is a laser on the International Space Station. Each shot lights a 25 m footprint and records the full returned waveform: energy reflected from the top of the canopy first, then from lower leaves and branches, and last from the ground. Many products come from that one waveform:
+
+| Product | Variable | What it tells you |
+|---|---|---|
+| L2A | rh0 … rh100 | height below which 0 … 100 % of the returned energy lies; rh98 ≈ canopy top, rh50 ≈ where the middle of the foliage sits |
+| L2B | cover | share of the ground hidden by canopy |
+| L2B | pai | plant area index: leaf and wood area per ground area |
+| L2B | pavd_z0, z1 … | plant area volume density in 5 m layers: where the leaves are |
+| L2B | fhd_normal | foliage height diversity: how evenly leaves fill the height range |
+| L4A | agbd | above-ground biomass density, from L2A heights through allometric models |
+
+Earlier chapters used rh98 (Chapter [-@sec-height-scaling]) and agbd (Chapter [-@sec-mrv]). This one uses the rest.
+
+{{< include _snippets/ch47_gedi_structure.qmd >}}
+
+## Four kinds of tree cover
+
+**Height and biomass fall in steps.** Intact forest reaches a median rh98 of about 26 m and 135 Mg/ha of biomass. Degraded forest is about 18 m and 87 Mg/ha. Oil palm and other tree crops (rubber, acacia, mixed gardens) are around 13–14 m and 54–57 Mg/ha. On a Landsat image all four are "trees".
+
+**The profiles show why.** In intact forest the returned energy is spread up to great heights, and leaves fill many layers. Plantations put their leaves in one narrow band. Foliage height diversity, a number for that difference, falls from 3.1 in intact forest to 2.4 in oil palm. Ecologists have long linked vertical complexity to bird and mammal diversity, which makes the FHD map a first map of habitat structure across the whole landscape.
+
+**Understory.** The leaf density in the lowest 5 m (pavd_z0) is similar in intact and degraded forest and lower in plantations, where the ground is kept clear for harvesting.
+
+## Fuel structure and fire
+
+GEDI began measuring in April 2019, a few months before one of the worst fire seasons in Sumatra. That allows a rare test: did the vegetation that burned in August–November 2019 look different, in GEDI's eyes, *before* it burned?
+
+The test area is Ogan Komering Ilir in South Sumatra, a peat landscape that burned extensively in 2019. Shots from April–July 2019 were split by whether MODIS mapped the spot as burned later that year.
+
+**The landscape was already open.** Even where there was no fire, the median canopy top was only about 4 m and cover 0.06: degraded peatland, ferns, shrubs and young regrowth, not forest. Negative rh25 values show that the lowest energy comes from the ground surface itself.
+
+**What burned was lower still.** The burned land had a median height of 3.4 m and cover of 0.03, against 4.2 m and 0.06 for unburned land. The "ladder ratio" (leaf area at 5–10 m over 0–5 m, a crude measure of fuel connecting the ground to the crowns) did not differ.
+
+In this landscape, fire found the most open, most degraded land, not the forest with the most connected fuel. That fits what is known of peat fires: degraded, drained peat covered by ferns and grass dries fastest. A fire-risk model for Sumatran peat should weight openness and drainage history more heavily than canopy fuel ladders. In a dry eucalypt forest in Australia the balance would be the opposite.
+
+## Exercises {.unnumbered}
+
+1. Split the burned and unburned shots by peat and non-peat (Chapter [-@sec-peat]). Does the difference hold on both?
+2. Map the FHD grid against a protected-area boundary. Is structural complexity higher inside?
+3. Build a fire-risk index from GEDI cover, distance to canals or roads and FIRMS history, and test it on the 2023 fire season.

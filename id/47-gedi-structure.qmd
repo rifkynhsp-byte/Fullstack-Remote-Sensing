@@ -1,0 +1,49 @@
+# Semua yang Diukur GEDI: Struktur, Habitat, dan Bahan Bakar {#sec-gedi-structure}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memakai seluruh keluarga produk GEDI, bukan hanya biomassa: profil tinggi relatif, tutupan tajuk, luas tumbuhan, sebaran daun secara vertikal, dan keragaman tinggi dedaunan. Anda akan membandingkan empat jenis tutupan pohon di Jambi, lalu menguji apakah struktur bahan bakar yang diukur GEDI pada pertengahan 2019 berbeda antara lahan yang terbakar tahun itu dan yang tidak.
+:::
+
+## Satu tembakan laser, banyak angka
+
+GEDI adalah laser yang dipasang di Stasiun Antariksa Internasional. Setiap tembakan menyinari jejak berdiameter 25 m dan merekam bentuk gelombang pantulannya secara utuh: energi yang dipantulkan puncak tajuk tiba lebih dulu, lalu dari daun dan cabang yang lebih rendah, dan terakhir dari permukaan tanah. Banyak produk lahir dari satu bentuk gelombang itu:
+
+| Produk | Variabel | Yang dikatakannya |
+|---|---|---|
+| L2A | rh0 … rh100 | tinggi di bawahnya 0 … 100 % energi pantulan berada; rh98 ≈ puncak tajuk, rh50 ≈ letak bagian tengah dedaunan |
+| L2B | cover | bagian permukaan tanah yang tertutup tajuk |
+| L2B | pai | indeks luas tumbuhan: luas daun dan kayu per luas lahan |
+| L2B | pavd_z0, z1 … | kerapatan luas tumbuhan per volume dalam lapisan 5 m: di mana daun-daun berada |
+| L2B | fhd_normal | keragaman tinggi dedaunan: seberapa merata daun mengisi rentang tinggi |
+| L4A | agbd | kerapatan biomassa di atas tanah, dari tinggi L2A lewat model alometrik |
+
+Bab-bab sebelumnya memakai rh98 (Bab [-@sec-height-scaling]) dan agbd (Bab [-@sec-mrv]). Bab ini memakai sisanya.
+
+{{< include _snippets/ch47_gedi_structure.qmd >}}
+
+## Empat jenis tutupan pohon
+
+**Tinggi dan biomassa turun bertahap.** Hutan utuh mencapai median rh98 sekitar 26 m dan biomassa 135 Mg/ha. Hutan terdegradasi sekitar 18 m dan 87 Mg/ha. Sawit dan tanaman pohon lain (karet, akasia, kebun campur) sekitar 13–14 m dan 54–57 Mg/ha. Di citra Landsat, keempatnya sama-sama "pohon".
+
+**Profilnya menjelaskan sebabnya.** Di hutan utuh, energi pantulan tersebar sampai ketinggian besar, dan daun mengisi banyak lapisan. Kebun menaruh daunnya dalam satu pita yang sempit. Keragaman tinggi dedaunan, satu angka untuk perbedaan itu, turun dari 3,1 di hutan utuh menjadi 2,4 di kebun sawit. Ahli ekologi sudah lama mengaitkan kerumitan vertikal dengan keanekaragaman burung dan mamalia, sehingga peta FHD adalah peta pertama struktur habitat untuk seluruh bentang lahan.
+
+**Tumbuhan bawah.** Kerapatan daun di lapisan 5 m terbawah (pavd_z0) serupa di hutan utuh dan hutan terdegradasi, dan lebih rendah di kebun, tempat lantai kebun dibersihkan untuk memudahkan panen.
+
+## Struktur bahan bakar dan kebakaran
+
+GEDI mulai mengukur pada April 2019, beberapa bulan sebelum salah satu musim kebakaran terburuk di Sumatra. Ini memungkinkan uji yang jarang bisa dilakukan: apakah vegetasi yang terbakar pada Agustus–November 2019 tampak berbeda di mata GEDI *sebelum* terbakar?
+
+Wilayah ujinya Ogan Komering Ilir di Sumatra Selatan, bentang gambut yang terbakar luas pada 2019. Tembakan dari April–Juli 2019 dipisahkan menurut apakah MODIS memetakan titik itu terbakar belakangan pada tahun yang sama.
+
+**Bentang lahannya sudah terbuka.** Bahkan di tempat yang tidak terbakar, median puncak tajuknya hanya sekitar 4 m dan tutupannya 0,06: gambut terdegradasi, pakis, semak, dan tumbuhan muda, bukan hutan. Nilai rh25 yang negatif menunjukkan bahwa energi terendah berasal dari permukaan tanah itu sendiri.
+
+**Yang terbakar justru lebih rendah lagi.** Lahan yang terbakar punya median tinggi 3,4 m dan tutupan 0,03, dibandingkan 4,2 m dan 0,06 di lahan yang tidak terbakar. "Rasio tangga" (luas daun di 5–10 m dibagi 0–5 m, ukuran kasar bahan bakar yang menghubungkan tanah dengan tajuk) tidak berbeda.
+
+Di bentang lahan ini, api menemukan lahan yang paling terbuka dan paling terdegradasi, bukan hutan dengan bahan bakar yang paling tersambung. Ini cocok dengan yang diketahui tentang kebakaran gambut: gambut terdegradasi dan dikeringkan yang ditutupi pakis dan rumput paling cepat kering. Model risiko kebakaran untuk gambut Sumatra sebaiknya memberi bobot lebih besar pada keterbukaan dan riwayat drainase daripada tangga bahan bakar tajuk. Di hutan eukaliptus yang kering di Australia, keseimbangannya justru sebaliknya.
+
+## Latihan {.unnumbered}
+
+1. Pisahkan tembakan terbakar dan tidak terbakar menurut gambut dan bukan gambut (Bab [-@sec-peat]). Apakah perbedaannya bertahan di keduanya?
+2. Petakan grid FHD terhadap batas kawasan lindung. Apakah kerumitan struktur lebih tinggi di dalamnya?
+3. Susun indeks risiko kebakaran dari tutupan GEDI, jarak ke kanal atau jalan, dan riwayat FIRMS, lalu uji pada musim kebakaran 2023.

@@ -129,6 +129,7 @@ book:
       chapters:
         - 32-lidar-trees.qmd
         - 33-height-scaling.qmd
+        - 47-gedi-structure.qmd
     - part: "Bagian X: Garis Depan Riset"
       chapters:
         - 36-thesis-bank.qmd
