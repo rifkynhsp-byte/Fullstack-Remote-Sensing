@@ -63,6 +63,7 @@ book:
         - p2-orbits.qmd
         - p3-scanning.qmd
         - p4-resolution.qmd
+        - p5-radar.qmd
     - part: "Part I: Foundations, Purpose and Physics"
       chapters:
         - 01-why-monitor.qmd

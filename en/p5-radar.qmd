@@ -1,0 +1,177 @@
+# P5 · Imaging Radar Basics {#sec-p5-radar .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+You will learn how an imaging radar works and why it looks to the side; how its resolution is set in range and in azimuth, and why a *synthetic* aperture solves the azimuth problem; why mountains lean towards the radar (foreshortening and layover) and hide behind themselves (shadow); what makes a pixel bright or dark; and what polarisation, speckle and interferometry mean. Geometry is computed, and every claim about backscatter is checked against real Sentinel-1 data.
+:::
+
+## Why radar
+
+Radar (RAdio Detection And Ranging) is an **active** sensor. It sends its own microwave pulses and records the echoes (P1). That gives it three advantages over optical sensors:
+
+- It works **day and night**, because it brings its own illumination.
+- It sees **through cloud, smoke and most rain**, because microwaves (centimetres long) pass through droplets that block light.
+- It measures **distance** very precisely, by timing the echo. That makes elevation models and millimetre-scale deformation measurements possible (interferometry, below).
+
+For tropical Indonesia, where some places are cloud-covered for most of the wet season, the first two decide whether you can monitor floods, rice planting or deforestation at all (Chapters 10, 21, 24).
+
+The price: a radar image is not a photograph. Its brightness comes from geometry, roughness and moisture, not colour, and its geometry follows distances, not map positions. It takes practice to read one.
+
+## Radar bands
+
+Radar engineers name their wavelength ranges with letters, a habit from wartime secrecy. The table in the output block lists the common ones. Remember the order rather than the exact numbers: **X is the shortest (about 3 cm), then C (about 5.5 cm), S (about 9 cm), L (about 24 cm), and P the longest (about 70 cm).**
+
+The wavelength decides what the radar "feels":
+
+- **Short wavelengths (X, C)** interact with leaves and small twigs at the top of a canopy, and with small surface roughness. Good for sea ice, oil spills, urban detail, crops.
+- **Long wavelengths (L, P)** pass through leaves and interact with trunks, large branches and the ground below. They penetrate further into dry soil and dry snow. Good for forest biomass (ESA's BIOMASS mission uses P-band) and for interferometry over vegetation, because they stay coherent longer.
+
+## Side-looking geometry
+
+An imaging radar does not look straight down. If it did, two points at the same distance on either side of the track would return their echoes at the same time and could not be told apart. So it looks to one side, and the geometry figure shows the terms:
+
+- **Nadir**: the point directly below the radar. The ground track runs along it.
+- **Near range / far range**: the edges of the illuminated strip nearest and farthest from the ground track. The strip between them is the **swath**.
+- **Slant range**: the direct line from the antenna to a point on the ground. Radar measures distances along it.
+- **Ground range**: the same distance projected onto the ground, as on a map.
+- **Look angle**: at the radar, between the vertical (nadir direction) and the line of sight.
+- **Incidence angle**: at the ground, between the line of sight and the vertical to the ground surface. On flat ground (ignoring Earth curvature) it equals the look angle; on a slope it is the *local* incidence angle and changes with the slope.
+- **Depression angle**: at the radar, between the horizontal and the line of sight. Look angle + depression angle = 90°.
+
+Radar also has its own names for the two image directions (P3): **azimuth** is along track and **range** is across track.
+
+A radar is either **right-looking** or **left-looking**. First-generation radars such as the Canadian RADARSAT-1 used **mechanical beam steering**: the antenna was fixed at a tilt on one side of the spacecraft. Turning a large antenna (several metres wide, many metres long) is risky and slow, so modern radars use **electronic beam steering**: the antenna is a flat array of many small elements, and the beam is pointed by shifting the timing (phase) of each element. Beams can then be switched between swaths, or between left and right, without moving anything.
+
+## Resolution in range
+
+A radar measures range by timing. Two targets can be told apart only if their echoes do not overlap in time. An echo lasts as long as the pulse, $\tau$, and the signal travels to the target and back, so the **slant-range resolution** is
+
+$$\delta_{slant} = \frac{c \, \tau}{2}$$
+
+In practice radars send a long pulse whose frequency sweeps across a bandwidth $B$ (a *chirp*), and compress it after reception; the result is the same as a very short pulse, $\delta_{slant} = c/(2B)$. The slant-range resolution is set by the electronics. It is the same at near range and far range.
+
+On the ground, the same slant distance covers a longer stretch where the beam hits the ground steeply. In the right-angled triangle formed by the wavefront and the ground:
+
+$$\delta_{ground} = \frac{\delta_{slant}}{\sin \theta}$$
+
+where $\theta$ is the incidence angle. Because $\theta$ is smaller at near range, $\sin\theta$ is smaller and $\delta_{ground}$ is **larger (worse) at near range and smaller (better) at far range**. This is the opposite of what intuition suggests and a favourite exam question. The left panel of the resolution figure shows it: at 15° incidence the ground-range resolution is almost four times the slant-range value; at 50° it is only 30 % larger. Straight down ($\theta = 0$) it would be infinite, which is the deepest reason why radar must look to the side.
+
+## Resolution in azimuth: the synthetic aperture
+
+Along track, a radar can only separate two targets if they are not in its beam at the same time. A real antenna of length $L$ makes a beam of angular width about $\lambda / L$ (diffraction, the same spreading that light shows after passing through a slit). At slant range $R$ the beam is $\lambda R / L$ wide on the ground. For C-band ($\lambda$ = 5.55 cm), a 12.3 m antenna and 850 km range, that is about 3.8 km. A **real aperture radar** (RAR) from orbit would have kilometre-wide pixels along track.
+
+The **synthetic aperture radar** (SAR) turns diffraction from a problem into a tool. As the satellite flies, any one target stays inside the beam for a while: it enters the front edge of the beam, is seen from many positions, and leaves from the back edge. The radar records the echo, with its exact phase, at every one of those positions. Processing then combines all the recordings as if they came from one huge antenna as long as the whole stretch of flight during which the target was visible. That stretch is the **synthetic aperture**.
+
+Now comes the surprising part. A *shorter* real antenna has a *wider* beam, so a target stays in view for longer, so the synthetic aperture is *longer*, and the azimuth resolution is *finer*. The result does not depend on range or wavelength at all:
+
+$$\delta_{azimuth} \approx \frac{L}{2}$$
+
+A 12.3 m antenna gives about 6 m in theory, whether the target is 600 or 1,200 km away (the right panel of the figure). A 30 cm antenna would in principle give 15 cm.
+
+Why not make the antenna tiny, then? Because a radar transmits powerful pulses. A smaller antenna concentrates that power in a smaller area: the power density rises, the hardware heats and ages faster, and the returned signal from each target becomes weaker against the noise. A small antenna also has to send pulses faster to sample the long synthetic aperture, which limits the swath. Engineering, not geometry, sets the lower limit.
+
+## Why mountains lean: foreshortening, layover, shadow
+
+Radar places every echo in the image according to its **distance from the antenna**, not according to its position on a map. A map is a vertical (orthogonal) projection. A radar image is a projection along the slant range. On sloping ground the two disagree, and the distortion figure computes what happens to a real profile:
+
+- **Foreshortening.** A slope facing the radar (a *fore-slope*) is reached first at its foot and a little later at its top. Because the top is also closer to the radar, the two echoes arrive closer together than the slope is long. The slope appears **shortened** and, since its energy is packed into fewer pixels, **brighter**. In the figure, the gentle slope A–B is squeezed. Foreshortening is strongest at near range (small incidence angle).
+- **Layover.** If a fore-slope is steeper than the incidence angle, the top of the hill is actually **closer** to the radar than its foot. The echo from the top arrives *first*. The summit is placed in the image before its own base: the mountain appears to lean over towards the radar. In the figure, E (the summit) appears before D (its foot). Layover, too, is worst at near range.
+- **Shadow.** A slope facing away from the radar (a *back-slope*) that is steeper than the grazing angle of the beam is hidden behind the summit. No energy reaches it and no echo returns: it is completely **black** in the image. Shadow is worse at **far range**, where the beam arrives at a lower angle. Shadow is the only one of the three that optical images also have, but in an optical image the shadow is in the Sun's direction, in a radar image in the radar's direction.
+
+A short way to remember: **foreshortening and layover belong to fore-slopes and are worse at near range; shadow belongs to back-slopes and is worse at far range.** Ground-range resolution is also worse at near range.
+
+The two Sentinel-1 maps of Mount Rinjani in Lombok show this on a real volcano. On an **ascending** pass Sentinel-1 flies north and looks east: the west-facing slopes face the radar and are bright and compressed, the east-facing slopes are darker. On a **descending** pass it flies south and looks west, and the pattern flips. Using both passes is the standard way to fill in what one geometry hides, and it is why terrain correction (Chapter 10) needs a good elevation model.
+
+## What makes a pixel bright: backscatter
+
+The value of a radar pixel is its **backscatter**, the share of the transmitted energy sent back towards the antenna, usually expressed in decibels (dB). It depends on three properties of the surface.
+
+**Roughness, compared with the wavelength.** A surface is "smooth" for radar if its height variations are small compared with the wavelength (a common rule is the Rayleigh criterion, $h < \lambda / (8\cos\theta)$). Smooth surfaces reflect specularly, like a mirror (P1), sending the energy away from the radar. Rough surfaces scatter diffusely, sending some of it back.
+
+**Geometry of the target.** Three scattering mechanisms recur:
+
+- **Surface scattering**: from bare soil, water, roads. Weak if smooth, stronger if rough.
+- **Volume scattering**: inside a canopy, the signal bounces between leaves, twigs and branches before some returns. It is moderately bright and changes the polarisation (below).
+- **Double bounce** (dihedral, corner reflection): a wall and the ground, or a tree trunk and floodwater, form a right-angled corner that sends the energy straight back. Buildings and flooded forest are therefore very bright.
+
+**Moisture.** Water greatly raises the *dielectric constant* of soil and vegetation, which makes them reflect microwaves more strongly. Wet soil is brighter than dry soil of the same roughness. This is how radar maps soil moisture.
+
+A flood shows all three. Calm floodwater is a smooth mirror: specular reflection, almost no return, a **black** pixel. If the wind roughens it, it becomes greyer, which is why flood mapping is harder on windy days. Trees standing in floodwater form trunk-and-water corners: double bounce, **very bright** pixels. So the same flood is dark in open fields and bright under forest (Chapter 24).
+
+The backscatter chart and table in the output block measure this around the Jatiluhur reservoir. Calm water is darkest (median VV −18.8 dB). Crops and trees are in between. Built-up areas are brightest in VV (−6.5 dB), from double bounce. In VH, trees (−13.8 dB) catch up with buildings (−13.9 dB), because volume scattering converts much of the signal into the cross-polarisation.
+
+## Polarisation
+
+An electromagnetic wave's electric field oscillates in one plane at right angles to the direction of travel (P1). That plane is its **polarisation**. Sunlight is randomly polarised: its electric field points in every direction. A *polariser* lets through only one direction, which is how polarising sunglasses cut glare and how 3D cinema glasses send a different image to each eye.
+
+A radar controls polarisation on both ends. It transmits a wave polarised horizontally (H) or vertically (V), and receives H or V. That gives four combinations, written transmit-then-receive: **HH, VV** (*like-polarised* or co-polarised) and **HV, VH** (*cross-polarised*). Sentinel-1 over land usually records VV and VH.
+
+- **Like-pol** (VV, HH) responds strongly to surface scattering and double bounce.
+- **Cross-pol** (VH, HV) needs something that *changes* the polarisation. Multiple bounces in a canopy do this, so cross-pol is the most sensitive to vegetation volume and biomass.
+
+A colour composite of radar channels, for example VV, VH and their ratio, is always a false-colour image (P4): microwaves have no natural colour.
+
+## Speckle
+
+A radar pixel contains many small scatterers: leaves, clods, stones. Their echoes add up with random phases, sometimes reinforcing, sometimes cancelling. The result is a granular salt-and-pepper pattern called **speckle**. It is not noise from the instrument; it is real interference, and it would be the same if you imaged the same unchanged scene again from the same position.
+
+Speckle is reduced by averaging:
+
+- **Multilooking**: averaging neighbouring pixels during processing. This is why Sentinel-1 GRD pixels are 10 m but the resolution is about 20 m.
+- **Spatial filters** (median, Lee, refined Lee): smoother images, but edges and small objects blur.
+- **Multi-temporal averaging**: averaging many dates. Speckle changes from date to date while stable features do not, so averaging keeps detail. Average in linear power, then convert back to dB.
+
+The speckle figure compares a single date, a 3 × 3 median filter and a multi-date mean over rice fields near Karawang.
+
+## Interferometry, in one page
+
+Every radar echo has an amplitude (how strong) and a **phase** (where in its wave cycle it arrived). The phase depends on the exact distance to the target, to a fraction of the wavelength. **Interferometric SAR (InSAR)** compares the phase of two images of the same place:
+
+- Taken from two slightly different positions (the distance between them is the **baseline**), the phase difference depends on terrain height. This is how the SRTM elevation model was made.
+- Taken at two different times from almost the same position, the phase difference measures how much the ground moved towards or away from the radar, a fraction of the wavelength per phase cycle. This reveals millimetre-to-centimetre subsidence, landslide creep and earthquake deformation.
+
+Why can InSAR measure millimetres? Because a change of distance $\Delta r$ changes the phase by $4\pi\Delta r/\lambda$: half a wavelength of movement (2.8 cm at C-band) is a full cycle. Errors in the elevation model used to remove topography are scaled down by roughly the ratio of the baseline to the range, around 1 : 1,000 for typical orbits. A 5 m elevation error becomes about 5 mm.
+
+The method needs the two images to remain **coherent**: the scatterers in each pixel must stay the same. Two effects destroy coherence:
+
+- **Temporal decorrelation**: the scene changes between dates (vegetation grows, fields are ploughed, wet becomes dry). Like comparing two photographs of the same person ten years apart.
+- **Geometric (spatial) decorrelation**: the two viewing positions are too far apart. Like comparing a front view and a side view.
+
+Longer wavelengths (L-band) stay coherent longer over vegetation, which is why L-band missions are preferred for deformation in forested, wet tropical landscapes.
+
+{{< include _snippets/ch00e_radar.qmd >}}
+
+## Key terms
+
+**Active / passive**. **RAR / SAR**: real / synthetic aperture radar. **Azimuth / range**: along / across track. **Slant range / ground range**. **Near / far range**. **Look, incidence, depression angle**. **Slant- and ground-range resolution**: $c\tau/2$ and $c\tau/(2\sin\theta)$. **Azimuth resolution**: $\lambda R/L$ (real), $L/2$ (synthetic). **Mechanical / electronic beam steering**. **Foreshortening, layover, shadow**. **Backscatter**, in dB. **Surface, volume, double-bounce scattering**. **Dielectric constant**. **Specular / diffuse**. **Like- / cross-polarisation** (VV, HH / VH, HV). **Speckle**, **multilooking**. **InSAR**, **phase**, **baseline**, **coherence**, **temporal / geometric decorrelation**.
+
+## Quiz
+
+1. Give three advantages of imaging radar over optical sensors, and one disadvantage.
+2. Put these bands in order from shortest to longest wavelength: L, X, P, C.
+3. Why must an imaging radar look to the side rather than straight down? Give two reasons.
+4. A radar has a slant-range resolution of 3 m. What is its ground-range resolution at 20° and at 45° incidence? Which is better?
+5. A C-band radar (λ = 5.6 cm) with a 10 m antenna images from 800 km slant range. What is the azimuth resolution as a real aperture radar, and as a SAR?
+6. If a shorter antenna gives finer SAR azimuth resolution, why don't engineers build a 10 cm antenna?
+7. Define foreshortening, layover and shadow. Which occur on fore-slopes and which on back-slopes? Which are worse at near range?
+8. On an ascending Sentinel-1 image of a volcano, which side is bright and compressed? What changes on a descending image?
+9. Calm floodwater is black in a radar image, but flooded forest is very bright. Explain both.
+10. Why is VH (cross-pol) more sensitive to forest biomass than VV?
+11. What is speckle? Name two ways to reduce it and the cost of each.
+12. In InSAR, what are temporal and geometric decorrelation? Why does L-band suit deformation mapping in tropical forest?
+
+::: {.callout-note collapse="true"}
+## Answers
+1. Works day and night; sees through cloud and smoke; measures distance precisely (elevation, deformation). Disadvantage: harder to interpret (speckle, geometric distortion, no natural colour).
+2. X (≈3 cm), C (≈5.5 cm), L (≈24 cm), P (≈70 cm).
+3. Echoes from equal distances on both sides of nadir would arrive together and could not be separated; and ground-range resolution, $\delta_{slant}/\sin\theta$, becomes infinite as θ approaches 0.
+4. $3/\sin 20° \approx 8.8$ m and $3/\sin 45° \approx 4.2$ m. 45° (far range) is better.
+5. Real aperture: $\lambda R/L = 0.056 \times 800{,}000 / 10 \approx 4.5$ km. SAR: $L/2 = 5$ m.
+6. Power density: the same transmit power in a smaller antenna heats and ages the hardware, and the weaker signal per target loses against noise. A small antenna also needs a higher pulse rate, which limits the swath.
+7. Foreshortening: a fore-slope appears shortened and bright. Layover: a steep fore-slope's top is imaged before its foot. Shadow: a steep back-slope receives no signal and is black. Foreshortening and layover on fore-slopes, worse at near range; shadow on back-slopes, worse at far range.
+8. Ascending: flying north, looking east, so west-facing slopes face the radar and are bright and compressed; east-facing slopes darker, possibly shadowed. Descending: flying south, looking west, so the pattern reverses.
+9. Calm water is smooth: specular reflection sends the energy away, so almost nothing returns (black). In flooded forest, trunk and water surface form a corner reflector: double bounce sends most energy straight back (very bright).
+10. Multiple scattering in the canopy volume rotates the polarisation, producing a cross-polarised return. Surfaces and simple corners mostly keep the transmitted polarisation, so VV responds to them as well, while VH responds mainly to vegetation volume.
+11. Speckle is the granular pattern from interference of echoes from many scatterers in each pixel. Reduce it by multilooking or spatial filtering (cost: coarser detail, blurred edges) or by multi-temporal averaging (cost: needs many dates of an unchanging scene; loses short-term changes).
+12. Temporal decorrelation: the scatterers change between the two dates. Geometric decorrelation: the two viewing positions differ too much (long baseline). L-band passes through leaves and interacts with stable trunks and ground, so it stays coherent longer in vegetation.
+:::

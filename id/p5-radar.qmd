@@ -1,0 +1,177 @@
+# P5 · Dasar-Dasar Radar Pencitra {#sec-p5-radar .unnumbered}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mempelajari cara kerja radar pencitra dan kenapa radar melihat ke samping; bagaimana resolusinya ditentukan pada arah range dan azimut, dan kenapa *apertur sintetis* memecahkan masalah azimut; kenapa gunung tampak condong ke arah radar (foreshortening dan layover) dan bersembunyi di balik dirinya sendiri (bayangan); apa yang membuat piksel terang atau gelap; serta apa arti polarisasi, speckle, dan interferometri. Geometrinya dihitung, dan setiap klaim tentang hamburan balik dicek dengan data Sentinel-1 sungguhan.
+:::
+
+## Kenapa radar
+
+Radar (RAdio Detection And Ranging) adalah sensor **aktif**. Radar mengirim pulsa gelombang mikronya sendiri lalu merekam gemanya (P1). Ini memberinya tiga keunggulan dibandingkan sensor optis:
+
+- Bekerja **siang dan malam**, karena membawa penerangannya sendiri.
+- Melihat **menembus awan, asap, dan sebagian besar hujan**, karena gelombang mikro (sepanjang beberapa sentimeter) lolos melewati butir air yang menghalangi cahaya.
+- Mengukur **jarak** dengan sangat teliti, dengan menghitung waktu tempuh gemanya. Inilah yang memungkinkan model elevasi dan pengukuran deformasi skala milimeter (interferometri, di bawah).
+
+Bagi Indonesia yang tropis, dengan tempat-tempat yang tertutup awan hampir sepanjang musim hujan, dua keunggulan pertama menentukan apakah banjir, tanam padi, atau deforestasi bisa dipantau sama sekali (Bab 10, 21, 24).
+
+Harganya: citra radar bukan foto. Kecerahannya berasal dari geometri, kekasaran, dan kelembapan, bukan warna, dan geometrinya mengikuti jarak, bukan posisi di peta. Butuh latihan untuk membacanya.
+
+## Kanal radar
+
+Insinyur radar menamai rentang panjang gelombangnya dengan huruf, kebiasaan dari masa kerahasiaan perang. Tabel di bagian keluaran mendaftar yang umum. Ingat urutannya, bukan angka persisnya: **X paling pendek (sekitar 3 cm), lalu C (sekitar 5,5 cm), S (sekitar 9 cm), L (sekitar 24 cm), dan P paling panjang (sekitar 70 cm).**
+
+Panjang gelombang menentukan apa yang "dirasakan" radar:
+
+- **Gelombang pendek (X, C)** berinteraksi dengan daun dan ranting kecil di bagian atas tajuk, serta dengan kekasaran permukaan yang kecil. Cocok untuk es laut, tumpahan minyak, detail perkotaan, dan tanaman pertanian.
+- **Gelombang panjang (L, P)** menembus daun dan berinteraksi dengan batang, cabang besar, dan tanah di bawahnya. Gelombang ini juga menembus lebih dalam ke tanah kering dan salju kering. Cocok untuk biomassa hutan (misi BIOMASS milik ESA memakai kanal P) dan untuk interferometri di atas vegetasi, karena koherensinya bertahan lebih lama.
+
+## Geometri pandang samping
+
+Radar pencitra tidak melihat tegak lurus ke bawah. Kalau begitu, dua titik yang jaraknya sama di kiri dan kanan lintasan akan mengirim gema pada waktu yang sama dan tidak bisa dibedakan. Karena itu radar melihat ke satu sisi, dan gambar geometri menampilkan istilah-istilahnya:
+
+- **Nadir**: titik tepat di bawah radar. Lintasan tanah berjalan di sepanjangnya.
+- **Range dekat / range jauh** (near range / far range): tepi jalur yang disinari, yang paling dekat dan paling jauh dari lintasan tanah. Jalur di antaranya adalah **lebar sapuan**.
+- **Slant range** (jarak miring): garis lurus dari antena ke sebuah titik di permukaan. Radar mengukur jarak di sepanjang garis ini.
+- **Ground range** (jarak permukaan): jarak yang sama setelah diproyeksikan ke permukaan, seperti di peta.
+- **Sudut pandang** (look angle): di radar, antara garis vertikal (arah nadir) dan garis pandang.
+- **Sudut datang** (incidence angle): di permukaan, antara garis pandang dan garis vertikal terhadap permukaan. Di tanah datar (tanpa memperhitungkan kelengkungan bumi) besarnya sama dengan sudut pandang; di lereng, ini menjadi sudut datang *lokal* dan berubah mengikuti kemiringan.
+- **Sudut depresi**: di radar, antara garis horizontal dan garis pandang. Sudut pandang + sudut depresi = 90°.
+
+Radar juga punya nama sendiri untuk dua arah citra (P3): **azimut** adalah searah lintasan dan **range** adalah melintang lintasan.
+
+Radar bisa **melihat ke kanan** atau **melihat ke kiri**. Radar generasi pertama seperti RADARSAT-1 milik Kanada memakai **pengarahan berkas mekanis**: antena dipasang miring tetap di satu sisi wahana. Memutar antena besar (lebar beberapa meter, panjang belasan meter) itu berisiko dan lambat, sehingga radar modern memakai **pengarahan berkas elektronik**: antenanya berupa larik datar dari banyak elemen kecil, dan berkas diarahkan dengan menggeser waktu (fase) setiap elemen. Berkas bisa dipindah antarsapuan, atau antara kiri dan kanan, tanpa menggerakkan apa pun.
+
+## Resolusi pada arah range
+
+Radar mengukur range dengan menghitung waktu. Dua sasaran baru bisa dibedakan kalau gema keduanya tidak tumpang-tindih dalam waktu. Gema berlangsung selama pulsa, $\tau$, dan sinyal menempuh perjalanan ke sasaran dan kembali, sehingga **resolusi slant range** adalah
+
+$$\delta_{miring} = \frac{c \, \tau}{2}$$
+
+Dalam praktiknya radar mengirim pulsa panjang yang frekuensinya menyapu suatu lebar pita $B$ (disebut *chirp*), lalu memampatkannya setelah diterima; hasilnya sama dengan pulsa yang sangat pendek, $\delta_{miring} = c/(2B)$. Resolusi slant range ditentukan oleh elektronik. Nilainya sama di range dekat maupun range jauh.
+
+Di permukaan, jarak miring yang sama mencakup bentangan lebih panjang di tempat berkas mengenai tanah dengan curam. Dalam segitiga siku-siku yang dibentuk muka gelombang dan permukaan tanah:
+
+$$\delta_{permukaan} = \frac{\delta_{miring}}{\sin \theta}$$
+
+dengan $\theta$ sudut datang. Karena $\theta$ lebih kecil di range dekat, $\sin\theta$ lebih kecil dan $\delta_{permukaan}$ **lebih besar (lebih buruk) di range dekat dan lebih kecil (lebih baik) di range jauh**. Ini berlawanan dengan intuisi, dan menjadi soal ujian favorit. Panel kiri gambar resolusi memperlihatkannya: pada sudut datang 15°, resolusi permukaan hampir empat kali nilai slant range; pada 50°, hanya 30 % lebih besar. Tepat ke bawah ($\theta = 0$) nilainya tak terhingga, dan inilah alasan paling mendasar kenapa radar harus melihat ke samping.
+
+## Resolusi pada arah azimut: apertur sintetis
+
+Searah lintasan, radar hanya bisa memisahkan dua sasaran kalau keduanya tidak berada dalam berkas pada saat yang sama. Antena nyata sepanjang $L$ menghasilkan berkas selebar kira-kira $\lambda / L$ (difraksi, penyebaran yang sama seperti cahaya setelah melewati celah sempit). Pada slant range $R$, lebar berkas di permukaan adalah $\lambda R / L$. Untuk kanal C ($\lambda$ = 5,55 cm), antena 12,3 m, dan range 850 km, lebarnya sekitar 3,8 km. **Radar apertur nyata** (real aperture radar, RAR) dari orbit akan menghasilkan piksel selebar kilometer searah lintasan.
+
+**Radar apertur sintetis** (synthetic aperture radar, SAR) mengubah difraksi dari masalah menjadi alat. Selama satelit terbang, satu sasaran tetap berada di dalam berkas untuk beberapa saat: masuk dari tepi depan berkas, terlihat dari banyak posisi, lalu keluar dari tepi belakang. Radar merekam gemanya, lengkap dengan fasenya yang persis, di setiap posisi itu. Pengolahan lalu menggabungkan semua rekaman seolah-olah berasal dari satu antena raksasa sepanjang seluruh jalur terbang selama sasaran itu terlihat. Jalur itulah **apertur sintetis**.
+
+Sekarang bagian yang mengejutkan. Antena nyata yang *lebih pendek* punya berkas yang *lebih lebar*, sehingga sasaran terlihat lebih lama, sehingga apertur sintetisnya *lebih panjang*, dan resolusi azimutnya *lebih halus*. Hasilnya sama sekali tidak bergantung pada range atau panjang gelombang:
+
+$$\delta_{azimut} \approx \frac{L}{2}$$
+
+Antena 12,3 m secara teori memberi sekitar 6 m, entah sasarannya 600 atau 1.200 km jauhnya (panel kanan gambar). Antena 30 cm secara prinsip akan memberi 15 cm.
+
+Lalu kenapa antenanya tidak dibuat sangat kecil? Karena radar memancarkan pulsa yang kuat. Antena yang lebih kecil memusatkan daya itu pada luasan yang lebih kecil: kerapatan dayanya naik, perangkat keras memanas dan cepat menua, dan sinyal balik dari setiap sasaran makin lemah dibandingkan derau. Antena kecil juga harus mengirim pulsa lebih cepat untuk mencuplik apertur sintetis yang panjang, dan ini membatasi lebar sapuan. Batas bawahnya ditentukan oleh rekayasa, bukan geometri.
+
+## Kenapa gunung tampak condong: foreshortening, layover, bayangan
+
+Radar menempatkan setiap gema di citra menurut **jaraknya dari antena**, bukan menurut posisinya di peta. Peta adalah proyeksi tegak (ortogonal). Citra radar adalah proyeksi sepanjang slant range. Di permukaan yang miring keduanya tidak cocok, dan gambar distorsi menghitung apa yang terjadi pada sebuah profil sungguhan:
+
+- **Foreshortening** (pemendekan). Lereng yang menghadap radar (*lereng depan*) dicapai lebih dulu di kakinya dan sedikit kemudian di puncaknya. Karena puncaknya juga lebih dekat ke radar, kedua gema tiba lebih berdekatan daripada panjang lerengnya. Lereng tampak **lebih pendek** dan, karena energinya dipadatkan ke lebih sedikit piksel, **lebih terang**. Pada gambar, lereng landai A–B tampak termampatkan. Foreshortening paling kuat di range dekat (sudut datang kecil).
+- **Layover** (rebah). Kalau lereng depan lebih curam daripada sudut datangnya, puncak bukit sebenarnya **lebih dekat** ke radar daripada kakinya. Gema dari puncak tiba *lebih dulu*. Puncak ditempatkan di citra sebelum kakinya sendiri: gunung tampak rebah ke arah radar. Pada gambar, E (puncak) muncul sebelum D (kakinya). Layover juga paling parah di range dekat.
+- **Bayangan** (shadow). Lereng yang membelakangi radar (*lereng belakang*) dan lebih curam daripada sudut singgung berkas tersembunyi di balik puncak. Tidak ada energi yang sampai dan tidak ada gema yang kembali: tampak **hitam pekat** di citra. Bayangan makin parah di **range jauh**, tempat berkas datang dengan sudut lebih rendah. Bayangan satu-satunya dari ketiganya yang juga dimiliki citra optis, tetapi pada citra optis bayangan searah matahari, sedangkan pada citra radar searah radar.
+
+Cara singkat mengingatnya: **foreshortening dan layover milik lereng depan dan lebih parah di range dekat; bayangan milik lereng belakang dan lebih parah di range jauh.** Resolusi permukaan juga lebih buruk di range dekat.
+
+Dua peta Sentinel-1 Gunung Rinjani di Lombok memperlihatkannya pada gunung api sungguhan. Pada lintasan **naik**, Sentinel-1 terbang ke utara dan melihat ke timur: lereng yang menghadap barat menghadap radar, sehingga terang dan termampatkan, sedangkan lereng yang menghadap timur lebih gelap. Pada lintasan **turun**, Sentinel-1 terbang ke selatan dan melihat ke barat, dan polanya berbalik. Memakai kedua lintasan adalah cara baku untuk mengisi bagian yang disembunyikan oleh satu geometri, dan itulah sebabnya koreksi medan (Bab 10) butuh model elevasi yang baik.
+
+## Apa yang membuat piksel terang: hamburan balik
+
+Nilai piksel radar adalah **hamburan baliknya** (backscatter), yaitu bagian energi terpancar yang dikirim kembali ke arah antena, biasanya dinyatakan dalam desibel (dB). Nilainya bergantung pada tiga sifat permukaan.
+
+**Kekasaran, dibandingkan dengan panjang gelombang.** Permukaan disebut "halus" bagi radar kalau variasi ketinggiannya kecil dibandingkan panjang gelombang (aturan yang umum dipakai adalah kriteria Rayleigh, $h < \lambda / (8\cos\theta)$). Permukaan halus memantul secara spekular, seperti cermin (P1), sehingga energinya pergi menjauhi radar. Permukaan kasar menghamburkan secara baur, sehingga sebagian energinya kembali.
+
+**Geometri sasaran.** Ada tiga mekanisme hamburan yang selalu muncul:
+
+- **Hamburan permukaan**: dari tanah terbuka, air, jalan. Lemah kalau halus, lebih kuat kalau kasar.
+- **Hamburan volume**: di dalam tajuk, sinyal memantul-mantul di antara daun, ranting, dan cabang sebelum sebagian kembali. Cukup terang dan mengubah polarisasi (di bawah).
+- **Pantulan ganda** (double bounce, dihedral, pantulan sudut): dinding dan tanah, atau batang pohon dan air banjir, membentuk sudut siku yang mengirim energi langsung kembali. Karena itu bangunan dan hutan yang tergenang tampak sangat terang.
+
+**Kelembapan.** Air sangat menaikkan *konstanta dielektrik* tanah dan vegetasi, sehingga keduanya memantulkan gelombang mikro lebih kuat. Tanah basah lebih terang daripada tanah kering dengan kekasaran yang sama. Dengan cara inilah radar memetakan kelembapan tanah.
+
+Banjir memperlihatkan ketiganya. Air banjir yang tenang adalah cermin yang halus: pantulan spekular, hampir tidak ada yang kembali, piksel **hitam**. Kalau angin membuat permukaannya beriak, pikselnya menjadi lebih abu-abu, itulah sebabnya pemetaan banjir lebih sulit saat berangin. Pohon yang berdiri di air banjir membentuk sudut batang-dan-air: pantulan ganda, piksel **sangat terang**. Jadi banjir yang sama tampak gelap di lahan terbuka dan terang di bawah hutan (Bab 24).
+
+Grafik dan tabel hamburan balik di bagian keluaran mengukurnya di sekitar Waduk Jatiluhur. Air yang tenang paling gelap (median VV −18,8 dB). Lahan pertanian dan pepohonan di tengah-tengah. Kawasan terbangun paling terang di VV (−6,5 dB), karena pantulan ganda. Di VH, pepohonan (−13,8 dB) menyusul bangunan (−13,9 dB), karena hamburan volume mengubah sebagian besar sinyal menjadi polarisasi silang.
+
+## Polarisasi
+
+Medan listrik gelombang elektromagnetik bergetar dalam satu bidang yang tegak lurus arah rambatnya (P1). Bidang itu disebut **polarisasinya**. Sinar matahari berpolarisasi acak: medan listriknya mengarah ke segala arah. *Polarisator* hanya meloloskan satu arah. Begitulah kacamata hitam terpolarisasi mengurangi silau, dan begitu pula kacamata bioskop 3D mengirim gambar yang berbeda ke setiap mata.
+
+Radar mengatur polarisasi di kedua ujung. Radar memancarkan gelombang yang terpolarisasi horizontal (H) atau vertikal (V), lalu menerima H atau V. Jadi ada empat kombinasi, ditulis kirim-lalu-terima: **HH, VV** (*polarisasi sejajar* atau ko-polarisasi) dan **HV, VH** (*polarisasi silang*). Di atas daratan, Sentinel-1 biasanya merekam VV dan VH.
+
+- **Polarisasi sejajar** (VV, HH) merespons kuat terhadap hamburan permukaan dan pantulan ganda.
+- **Polarisasi silang** (VH, HV) butuh sesuatu yang *mengubah* polarisasi. Pantulan berulang di dalam tajuk melakukan hal itu, sehingga polarisasi silang paling peka terhadap volume vegetasi dan biomassa.
+
+Komposit warna dari saluran-saluran radar, misalnya VV, VH, dan rasionya, selalu berupa citra warna semu (P4): gelombang mikro tidak punya warna alami.
+
+## Speckle
+
+Satu piksel radar berisi banyak penghambur kecil: daun, bongkahan tanah, batu. Gema-gema mereka bertumpuk dengan fase acak, kadang saling menguatkan, kadang saling meniadakan. Hasilnya adalah pola butiran seperti garam dan merica yang disebut **speckle**. Speckle bukan derau dari instrumen; speckle adalah interferensi yang nyata, dan polanya akan sama kalau scene yang sama dan tidak berubah dipotret lagi dari posisi yang sama.
+
+Speckle dikurangi dengan merata-ratakan:
+
+- **Multilooking**: merata-ratakan piksel bertetangga saat pengolahan. Itulah sebabnya piksel Sentinel-1 GRD berukuran 10 m tetapi resolusinya sekitar 20 m.
+- **Filter spasial** (median, Lee, refined Lee): citra lebih halus, tetapi tepi dan benda kecil menjadi kabur.
+- **Rata-rata multitemporal**: merata-ratakan banyak tanggal. Speckle berubah dari tanggal ke tanggal, sedangkan kenampakan yang stabil tidak, sehingga rata-ratanya mempertahankan detail. Rata-ratakan dalam daya linear, lalu ubah kembali ke dB.
+
+Gambar speckle membandingkan satu tanggal, filter median 3 × 3, dan rata-rata banyak tanggal di atas sawah dekat Karawang.
+
+## Interferometri, dalam satu halaman
+
+Setiap gema radar punya amplitudo (seberapa kuat) dan **fase** (di titik mana dalam siklus gelombangnya gema itu tiba). Fase bergantung pada jarak persis ke sasaran, sampai sepersekian panjang gelombang. **SAR interferometri (InSAR)** membandingkan fase dua citra dari tempat yang sama:
+
+- Kalau diambil dari dua posisi yang sedikit berbeda (jarak antara keduanya disebut **baseline**), selisih fasenya bergantung pada ketinggian medan. Begitulah model elevasi SRTM dibuat.
+- Kalau diambil pada dua waktu berbeda dari posisi yang hampir sama, selisih fasenya mengukur seberapa jauh permukaan bergerak mendekati atau menjauhi radar, sepersekian panjang gelombang untuk setiap siklus fase. Dengan cara ini terlihat penurunan tanah, rayapan longsor, dan deformasi gempa berskala milimeter sampai sentimeter.
+
+Kenapa InSAR bisa mengukur milimeter? Karena perubahan jarak $\Delta r$ mengubah fase sebesar $4\pi\Delta r/\lambda$: gerakan setengah panjang gelombang (2,8 cm pada kanal C) sudah menjadi satu siklus penuh. Kesalahan pada model elevasi yang dipakai untuk menghilangkan pengaruh topografi diperkecil kira-kira sebesar rasio baseline terhadap range, sekitar 1 : 1.000 untuk orbit pada umumnya. Kesalahan elevasi 5 m menjadi sekitar 5 mm.
+
+Cara ini butuh dua citra yang tetap **koheren**: penghambur di setiap piksel harus tetap sama. Ada dua hal yang merusak koherensi:
+
+- **Dekorelasi temporal**: scene berubah di antara dua tanggal (vegetasi tumbuh, sawah dibajak, yang basah menjadi kering). Seperti membandingkan dua foto orang yang sama yang berselang sepuluh tahun.
+- **Dekorelasi geometris (spasial)**: dua posisi pandang terlalu berjauhan. Seperti membandingkan foto tampak depan dan tampak samping.
+
+Panjang gelombang yang lebih panjang (kanal L) bertahan koheren lebih lama di atas vegetasi. Karena itu misi kanal L lebih disukai untuk pemantauan deformasi di bentang alam tropis yang berhutan dan basah.
+
+{{< include _snippets/ch00e_radar.qmd >}}
+
+## Istilah kunci
+
+**Aktif / pasif**. **RAR / SAR**: radar apertur nyata / sintetis. **Azimut / range**: searah / melintang lintasan. **Slant range / ground range**. **Range dekat / jauh**. **Sudut pandang, sudut datang, sudut depresi**. **Resolusi slant range dan ground range**: $c\tau/2$ dan $c\tau/(2\sin\theta)$. **Resolusi azimut**: $\lambda R/L$ (nyata), $L/2$ (sintetis). **Pengarahan berkas mekanis / elektronik**. **Foreshortening, layover, bayangan**. **Hamburan balik**, dalam dB. **Hamburan permukaan, volume, pantulan ganda**. **Konstanta dielektrik**. **Spekular / baur**. **Polarisasi sejajar / silang** (VV, HH / VH, HV). **Speckle**, **multilooking**. **InSAR**, **fase**, **baseline**, **koherensi**, **dekorelasi temporal / geometris**.
+
+## Kuis
+
+1. Sebutkan tiga keunggulan radar pencitra dibandingkan sensor optis, dan satu kelemahannya.
+2. Urutkan kanal-kanal ini dari panjang gelombang terpendek ke terpanjang: L, X, P, C.
+3. Kenapa radar pencitra harus melihat ke samping, bukan tegak lurus ke bawah? Sebutkan dua alasan.
+4. Sebuah radar punya resolusi slant range 3 m. Berapa resolusi ground range-nya pada sudut datang 20° dan 45°? Mana yang lebih baik?
+5. Radar kanal C (λ = 5,6 cm) dengan antena 10 m memotret dari slant range 800 km. Berapa resolusi azimutnya sebagai radar apertur nyata, dan sebagai SAR?
+6. Kalau antena yang lebih pendek menghasilkan resolusi azimut SAR yang lebih halus, kenapa insinyur tidak membuat antena 10 cm?
+7. Definisikan foreshortening, layover, dan bayangan. Mana yang terjadi di lereng depan dan mana di lereng belakang? Mana yang lebih parah di range dekat?
+8. Pada citra Sentinel-1 lintasan naik sebuah gunung api, sisi mana yang terang dan termampatkan? Apa yang berubah pada citra lintasan turun?
+9. Air banjir yang tenang tampak hitam di citra radar, tetapi hutan yang tergenang tampak sangat terang. Jelaskan keduanya.
+10. Kenapa VH (polarisasi silang) lebih peka terhadap biomassa hutan daripada VV?
+11. Apa itu speckle? Sebutkan dua cara menguranginya dan harga yang dibayar masing-masing.
+12. Dalam InSAR, apa itu dekorelasi temporal dan dekorelasi geometris? Kenapa kanal L cocok untuk pemetaan deformasi di hutan tropis?
+
+::: {.callout-note collapse="true"}
+## Kunci jawaban
+1. Bekerja siang dan malam; menembus awan dan asap; mengukur jarak dengan teliti (elevasi, deformasi). Kelemahan: lebih sulit ditafsirkan (speckle, distorsi geometris, tanpa warna alami).
+2. X (≈3 cm), C (≈5,5 cm), L (≈24 cm), P (≈70 cm).
+3. Gema dari jarak yang sama di kedua sisi nadir akan tiba bersamaan dan tidak bisa dipisahkan; dan resolusi ground range, $\delta_{miring}/\sin\theta$, menjadi tak terhingga ketika θ mendekati 0.
+4. $3/\sin 20° \approx 8,8$ m dan $3/\sin 45° \approx 4,2$ m. Yang 45° (range jauh) lebih baik.
+5. Apertur nyata: $\lambda R/L = 0,056 \times 800.000 / 10 \approx 4,5$ km. SAR: $L/2 = 5$ m.
+6. Kerapatan daya: daya pancar yang sama pada antena yang lebih kecil memanaskan dan mempercepat penuaan perangkat keras, dan sinyal per sasaran yang makin lemah kalah oleh derau. Antena kecil juga butuh laju pulsa yang lebih tinggi, yang membatasi lebar sapuan.
+7. Foreshortening: lereng depan tampak memendek dan terang. Layover: puncak lereng depan yang curam tercitrakan sebelum kakinya. Bayangan: lereng belakang yang curam tidak menerima sinyal dan tampak hitam. Foreshortening dan layover di lereng depan, lebih parah di range dekat; bayangan di lereng belakang, lebih parah di range jauh.
+8. Lintasan naik: terbang ke utara, melihat ke timur, sehingga lereng yang menghadap barat menghadap radar, terang dan termampatkan; lereng yang menghadap timur lebih gelap, mungkin terbayangi. Lintasan turun: terbang ke selatan, melihat ke barat, sehingga polanya berbalik.
+9. Air tenang itu halus: pantulan spekular mengirim energi menjauh, sehingga hampir tidak ada yang kembali (hitam). Di hutan tergenang, batang pohon dan permukaan air membentuk pemantul sudut: pantulan ganda mengirim sebagian besar energi langsung kembali (sangat terang).
+10. Hamburan berulang di dalam volume tajuk memutar polarisasi, sehingga muncul pantulan berpolarisasi silang. Permukaan dan sudut sederhana sebagian besar mempertahankan polarisasi yang dipancarkan, sehingga VV juga merespons keduanya, sedangkan VH terutama merespons volume vegetasi.
+11. Speckle adalah pola butiran akibat interferensi gema dari banyak penghambur di setiap piksel. Kurangi dengan multilooking atau filter spasial (harganya: detail lebih kasar, tepi kabur) atau dengan rata-rata multitemporal (harganya: butuh banyak tanggal dari scene yang tidak berubah; perubahan jangka pendek hilang).
+12. Dekorelasi temporal: penghambur berubah di antara dua tanggal. Dekorelasi geometris: dua posisi pandang terlalu berbeda (baseline panjang). Kanal L menembus daun dan berinteraksi dengan batang dan tanah yang stabil, sehingga koherensinya bertahan lebih lama di vegetasi.
+:::
