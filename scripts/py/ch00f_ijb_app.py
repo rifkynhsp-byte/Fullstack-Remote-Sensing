@@ -53,7 +53,7 @@ CARDS = {
     "Data": ("KATALOG", "Penjelajah Data", "Seluruh dataset yang terpasang. Tampilkan di AOI, unduh statistik per wilayah.",
              [("Kelompok", "select", "Curah hujan", 1),
               ("Lapisan", "select", "CHIRPS harian, akumulasi periode", 2),
-              ("Rentang tanggal untuk lapisan deret waktu", "date", ("1991-01-01", "2020-12-31"), 3)],
+              ("Rentang tanggal untuk lapisan deret waktu", "date", ("2023-01-01", "2023-12-31"), 3)],
              "Tampilkan lapisan", ["rerata di AOI", "jenis"]),
     "Citra": ("CITRA", "Komposit Sentinel-2", "Lima cara menyusun citra terbaik dari seluruh rentang tanggal.",
               [("Metode komposit", "select", "Cloud Score Plus (terbaik)", 1),
@@ -84,8 +84,9 @@ CARDS = {
                ("Ambang magnitudo perubahan", "slider", "0.20", None)],
               "Jalankan analisis", ["tahun gangguan dominan", "luas terganggu", "umur rerata", "amplitudo musiman"]),
     "Ubah": ("ANALISIS", "Deteksi Perubahan", "Empat metode. Untuk waktu kejadian yang presisi, gunakan modul Deret.",
-             [("Metode", "select", "Transisi Dynamic World", 1),
-              ("Periode pertama", "date", ("2017-01-01", "2017-12-31"), 2),
+             [("Metode", "select", "Selisih indeks", 1),
+              ("Indeks", "select", "NDVI", None),
+              ("Periode pertama", "date", ("2019-01-01", "2019-12-31"), 2),
               ("Periode kedua", "date", ("2024-01-01", "2024-12-31"), 2),
               ("Ambang batas perubahan", "slider", "0.20", None)],
              "Jalankan deteksi", ["hektar bertambah", "hektar berkurang"]),
@@ -109,21 +110,35 @@ CARDS = {
                ("", "button", "Tandai AMAN → klik peta", 3)],
               "Latih dari titik manual", ["akurasi validasi", "kappa", "hektar rawan tinggi", "jiwa di zona rawan"]),
 }
-# A real result of the same method, made in this book, shown on the "after" map.
-RESULT = {"Data": "ch29-map-sequential.jpg", "Citra": "ch09-truecolour.jpg",
-          "Model": "ch33-eth-map.jpg", "Tutupan": "ch16-rf.jpg", "Deret": "ch44-age.jpg",
-          "Ubah": "ch21-new-built.jpg", "Banjir": "ch24-flood-map.jpg",
-          "Api": "ch37-burn-2015.jpg", "Rawan": "ch50-score.jpg"}
+# The legend each module puts on the map, copied from the app's code:
+# ("ramp", title, palette, min, max) or ("class", title, names, colours).
+LEGEND = {
+    "Data": ("ramp", "CHIRPS harian, akumulasi periode",
+             ["#ffffff", "#c7e9b4", "#7fcdbb", "#41b6c4", "#2c7fb8", "#253494"], 0, 3000),
+    "Citra": None,                                   # true colour: no legend
+    "Model": ("ramp", "Tinggi tajuk, meter",
+              ["#ffffcc", "#c2e699", "#78c679", "#31a354", "#006837"], 0, 35),
+    "Tutupan": ("class", "Tutupan lahan", ["hutan", "sawah", "permukiman", "air"],
+                ["#1a9850", "#fee08b", "#d73027", "#2c7fb8"]),
+    "Deret": ("ramp", "Umur tegakan, tahun", ["#fee08b", "#a6d96a", "#1a9850", "#006837"], 0, 25),
+    "Ubah": ("ramp", "Selisih NDVI", ["#c4281b", "#f5f5f5", "#397d49"], -0.5, 0.5),
+    "Banjir": ("class", "Banjir", ["Area tergenang"], ["#0b2f6b"]),
+    "Api": ("class", "Keparahan (dNBR)", ["Rendah", "Sedang rendah", "Sedang tinggi", "Tinggi"],
+            ["#ffe066", "#ff9f1c", "#e63946", "#7d1128"]),
+    "Rawan": ("ramp", "Indeks kerawanan", ["#1a9850", "#a6d96a", "#ffffbf", "#fdae61", "#d73027"], 0, 1),
+}
 TEXT = {
     "en": {"before": "1 · Set the card and press the button (red, in order)",
            "after": "2 · What appears after you press",
            "metrics": "Result cards: the numbers fill in here",
-           "map": "Map: the result layer over your area (here: the same method, run in this book)",
+           "map": "Map: the result layer is added over your area, with this legend",
+           "here": "the result layer appears here", "own": "(colours follow your own classes)",
            "screen": "The IJB screen (labels as in the app)"},
     "id": {"before": "1 · Isi kartu lalu tekan tombol (merah, sesuai urutan)",
            "after": "2 · Yang muncul setelah tombol ditekan",
            "metrics": "Kartu hasil: angka muncul di sini",
-           "map": "Peta: lapisan hasil di atas wilayah Anda (di sini: metode yang sama, dijalankan di buku ini)",
+           "map": "Peta: lapisan hasil ditambahkan di atas wilayah Anda, dengan legenda ini",
+           "here": "lapisan hasil tampil di sini", "own": "(warna mengikuti kelas Anda sendiri)",
            "screen": "Layar IJB (label sesuai aplikasi)"},
 }
 
@@ -240,14 +255,37 @@ def click_figure(module, lang):
     metric_cards(b, CARDS[module][5], 0.1, 11.3, 9.8, highlight=True)
     b.text(0.1, 10.7, t["map"], fontsize=8, color=INK, weight="bold")
     box(b, 0.1, 0.1, 9.8, 10.3, fc="#dfe9e1")
-    img = plt.imread(IMAGES / RESULT[module])
-    h, w = img.shape[:2]
-    bw, bh = 9.4, 9.9
-    s = min(bw / w, bh / h)
-    dw, dh = w * s, h * s
-    b.imshow(img, extent=[0.3 + (bw - dw) / 2, 0.3 + (bw + dw) / 2,
-                          0.3 + (bh - dh) / 2, 0.3 + (bh + dh) / 2], zorder=5)
+    b.add_patch(plt.Polygon([[1.2, 1.4], [5.6, 0.9], [8.0, 4.0], [6.6, 8.0], [2.2, 7.4]],
+                            fc="#c7e1cc", ec="#2a78d6", lw=1.5, ls="--", hatch="///"))
+    b.text(4.6, 4.4, t["here"], ha="center", fontsize=9, color="#2a78d6", weight="bold",
+           bbox={"fc": "white", "ec": "none", "alpha": 0.85})
+    legend(b, LEGEND[module], t, 6.3, 8.3)
     return fig
+
+
+def legend(ax, spec, t, x, y):
+    """The app's legend panel, drawn at the top right of the map."""
+    if spec is None:
+        return
+    box(ax, x, y - 0.1 - (0.45 * len(spec[2]) if spec[0] == "class" else 1.2), 3.4,
+        (0.45 * len(spec[2]) if spec[0] == "class" else 1.2) + 1.0, fc="#ffffff")
+    ax.text(x + 0.15, y + 0.6, spec[1], fontsize=7.5, weight="bold", color=INK)
+    if spec[0] == "class":
+        for i, (n, c) in enumerate(zip(spec[2], spec[3])):
+            yy = y + 0.05 - i * 0.45
+            ax.add_patch(plt.Rectangle((x + 0.15, yy - 0.15), 0.35, 0.3, fc=c, ec=GREY, lw=0.5))
+            ax.text(x + 0.65, yy, n, fontsize=7, va="center")
+        if spec[1] == "Tutupan lahan":
+            ax.text(x + 0.15, y - 0.45 * len(spec[2]) + 0.05, t["own"], fontsize=6, color=GREY)
+    else:
+        pal, lo, hi = spec[2], spec[3], spec[4]
+        n = 60
+        for i in range(n):
+            c = plt.matplotlib.colors.LinearSegmentedColormap.from_list("p", pal)(i / (n - 1))
+            ax.add_patch(plt.Rectangle((x + 0.15 + i * 3.1 / n, y - 0.1), 3.1 / n, 0.4, fc=c,
+                                       ec="none"))
+        ax.text(x + 0.15, y - 0.45, f"{lo:g}", fontsize=7)
+        ax.text(x + 3.25, y - 0.45, f"{hi:g}", fontsize=7, ha="right")
 
 
 def layout_figure(lang):

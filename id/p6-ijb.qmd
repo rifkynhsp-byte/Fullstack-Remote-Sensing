@@ -63,7 +63,7 @@ Sepuluh tombol, sepuluh jenis pertanyaan. Tabel di atas menunjukkan modul mana u
 
 ## Modul-modulnya
 
-Di setiap modul di bawah, gambar pertama adalah layar dengan **tombol yang harus ditekan diberi garis merah dan nomor urut**. Gambar sesudahnya adalah hasil nyata yang dibuat di buku ini dengan metode yang sama dengan yang dijalankan tombol itu, supaya Anda tahu apa yang akan muncul; di aplikasi, hasilnya tampil di atas wilayah Anda sendiri.
+Di setiap modul di bawah, gambar menampilkan kartu modul di kiri, dengan **tombol yang harus ditekan diberi garis merah dan nomor urut**, dan di kanan apa yang ditambahkan aplikasi setelah tombol ditekan: kartu hasil dan legenda peta, disalin dari aplikasi. Peta dan angka dari aplikasi bergantung pada wilayah dan tanggal Anda. Sesudahnya, contoh dari bab-bab kode di buku ini menunjukkan analisis sejenis. Contoh itu **bukan keluaran aplikasi**, dan peta dari aplikasi akan tampak berbeda.
 
 ### Data: katalog
 
@@ -78,9 +78,9 @@ Empat puluh tiga dataset siap pakai dalam tiga belas kelompok: hidrologi, curah 
 
 **Gunakan untuk:** melihat sekilas tempat mana pun, dan menyiapkan lapisan latar sebelum analisis apa pun.
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Curah hujan tahunan, jenis lapisan yang ditampilkan Data (Bab [-@sec-dataviz]).](images/real/ch29-map-sequential.jpg){.lightbox fig-alt="Curah hujan tahunan, jenis lapisan yang ditampilkan Data."}
+![Curah hujan tahunan (Bab [-@sec-dataviz]).](images/real/ch29-map-sequential.jpg){.lightbox fig-alt="Curah hujan tahunan."}
 
 ### Citra: citra Sentinel-2 yang bersih
 
@@ -93,9 +93,9 @@ Empat puluh tiga dataset siap pakai dalam tiga belas kelompok: hidrologi, curah 
 
 Menyusun komposit bebas awan dari semua citra Sentinel-2 dalam satu rentang tanggal, bukan memilih satu scene. Ada lima metode: **Cloud Score Plus** (bawaan, biasanya terbaik di daerah tropis), median dengan masker klasifikasi scene, piksel terhijau, persentil 25 (cerah, sedikit kabut), dan satu scene paling bersih. Anda mengatur rentang tanggal, batas awan per scene, ambang Cloud Score Plus, kombinasi kanal (warna alami, inframerah vegetasi, SWIR perkotaan, pertanian, atau penembus kabut), dan bila perlu satu indeks (NDVI, NDWI, NDBI, NBR, atau NDMI). Aplikasi melaporkan berapa citra yang dipakai dan berapa piksel yang bersih. (P1 dan Bab [-@sec-cloud] menjelaskan kenapa pilihan-pilihan ini penting.)
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Komposit median bebas awan, hasil yang dibangun Citra (Bab [-@sec-cloud]).](images/real/ch09-truecolour.jpg){.lightbox fig-alt="Komposit median bebas awan, hasil yang dibangun Citra."}
+![Komposit median bebas awan (Bab [-@sec-cloud]).](images/real/ch09-truecolour.jpg){.lightbox fig-alt="Komposit median bebas awan."}
 
 ### Tutupan: peta tutupan lahan buatan sendiri
 
@@ -116,9 +116,9 @@ Klasifikasi terbimbing dari Bab [-@sec-supervised], cukup dengan klik:
 
 Aplikasi melaporkan **akurasi keseluruhan dan kappa** serta luas setiap kelas. Ingat Bab [-@sec-accuracy]: akurasi dari titik yang Anda klik sendiri dan saling berdekatan cenderung terlalu optimis. Sebarkan sampel ke seluruh wilayah.
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Peta tutupan lahan random forest, hasil yang dikembalikan Tutupan (Bab [-@sec-supervised]).](images/real/ch16-rf.jpg){.lightbox fig-alt="Peta tutupan lahan random forest, hasil yang dikembalikan Tutupan."}
+![Peta tutupan lahan random forest (Bab [-@sec-supervised]).](images/real/ch16-rf.jpg){.lightbox fig-alt="Peta tutupan lahan random forest."}
 
 ### Model: model siap pakai, termasuk model milik penulis
 
@@ -135,11 +135,11 @@ Ada tiga mode:
 - **Dynamic World**: tutupan lahan hampir waktu nyata dari Google, sebagai pembanding.
 - **Tinggi tajuk dari GEDI**: aplikasi mengambil tinggi laser GEDI di wilayah Anda (hanya tembakan bermutu baik), melatih regresi di atas embedding, lalu memprediksi peta tinggi tajuk 10 m yang utuh. Aplikasi melaporkan korelasinya dengan tembakan GEDI dan tinggi rata-ratanya (Bab [-@sec-height-scaling] dan [-@sec-gedi-structure]).
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Tutupan lahan dari satellite embeddings dengan sedikit sampel, gagasan di balik model siap pakai (Bab [-@sec-embeddings]).](images/real/ch19-classified.jpg){.lightbox fig-alt="Tutupan lahan dari satellite embeddings dengan sedikit sampel, gagasan di balik model siap pakai."}
+![Tutupan lahan dari satellite embeddings dengan sedikit sampel (Bab [-@sec-embeddings]).](images/real/ch19-classified.jpg){.lightbox fig-alt="Tutupan lahan dari satellite embeddings dengan sedikit sampel."}
 
-![Peta tinggi kanopi 10 m yang dilatih dengan GEDI, jenis hasil mode tinggi kanopi (Bab [-@sec-height-scaling]).](images/real/ch33-eth-map.jpg){.lightbox fig-alt="Peta tinggi kanopi 10 m yang dilatih dengan GEDI, jenis hasil mode tinggi kanopi."}
+![Peta tinggi kanopi 10 m yang dilatih dengan GEDI (Bab [-@sec-height-scaling]).](images/real/ch33-eth-map.jpg){.lightbox fig-alt="Peta tinggi kanopi 10 m yang dilatih dengan GEDI."}
 
 ### Deret: deret waktu
 
@@ -152,9 +152,9 @@ Ada tiga mode:
 
 Untuk mengetahui kapan sesuatu terjadi dan sudah berapa lama (Bab [-@sec-timeseries] dan [-@sec-oil-palm-age]). Empat mode: **model harmonik dan tren** (memisahkan musim dari tren jangka panjang, melaporkan amplitudo musiman), **titik patah LandTrendr** (tahun gangguan utama), **umur tegakan atau tanaman**, dan **titik patah CCDC** (tanggal patah yang presisi, lebih lambat). Atur rentang tahun, jumlah harmonik, dan ambang besaran perubahan.
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Umur kebun dari tahun gangguan, yang dipetakan mode umur di Deret (Bab [-@sec-oil-palm-age]).](images/real/ch44-age.jpg){.lightbox fig-alt="Umur kebun dari tahun gangguan, yang dipetakan mode umur di Deret."}
+![Umur kebun dari tahun gangguan (Bab [-@sec-oil-palm-age]).](images/real/ch44-age.jpg){.lightbox fig-alt="Umur kebun dari tahun gangguan."}
 
 ### Ubah: perubahan di antara dua waktu
 
@@ -167,7 +167,7 @@ Untuk mengetahui kapan sesuatu terjadi dan sudah berapa lama (Bab [-@sec-timeser
 
 Empat metode: **selisih indeks** (NDVI, NDWI, NDBI, NBR, atau NDMI di antara dua periode, dengan ambang), **transisi Dynamic World**, **klasifikasi ganda**, dan **tren linear**. Aplikasi melaporkan hektare yang bertambah dan berkurang. Untuk tanggal perubahan yang tepat, pakai Deret.
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
 ![Lahan terbangun baru di antara dua tahun dari Dynamic World (Bab [-@sec-timeseries]).](images/real/ch21-new-built.jpg){.lightbox fig-alt="Lahan terbangun baru di antara dua tahun dari Dynamic World."}
 
@@ -191,9 +191,9 @@ Metode dari Bab [-@sec-flood] dan P5, cukup dengan klik:
 
 Di balik tombol itu: perubahan hamburan balik Sentinel-1, ambang batas Otsu otomatis, lalu penyaringan untuk lereng curam, air permanen, dan HAND yang tinggi. Hasilnya **hektare tergenang, jiwa terpapar, bangunan terdampak**, serta seberapa cocok genangannya dengan catatan banjir di masa lalu. Diringkas menurut satuan pelaporan Anda, itulah laporan situasi awal.
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Sebaran banjir dari radar dengan ambang Otsu dan HAND, metode di balik Banjir (Bab [-@sec-flood]).](images/real/ch24-flood-map.jpg){.lightbox fig-alt="Sebaran banjir dari radar dengan ambang Otsu dan HAND, metode di balik Banjir."}
+![Sebaran banjir dari radar dengan ambang Otsu dan HAND (Bab [-@sec-flood]).](images/real/ch24-flood-map.jpg){.lightbox fig-alt="Sebaran banjir dari radar dengan ambang Otsu dan HAND."}
 
 ![Pemeriksaan HAND: titik banjir berada di bagian rendah medan.](images/real/ch24-flood-hand.png){.lightbox fig-alt="Pemeriksaan HAND: titik banjir berada di bagian rendah medan."}
 
@@ -211,9 +211,9 @@ Di balik tombol itu: perubahan hamburan balik Sentinel-1, ambang batas Otsu otom
 
 Aplikasi menghitung selisih Normalized Burn Ratio (dNBR) dari Sentinel-2 lalu membaginya menjadi empat kelas keparahan, dengan batas dNBR 0,27, 0,44, dan 0,66. Aplikasi menumpangkan titik panas FIRMS dan peta gambut, lalu melaporkan **hektare terbakar, titik panas, hektare gambut yang terbakar, dan rata-rata ketebalan gambutnya**. Satu hektare gambut yang terbakar tidak sama dengan satu hektare rumput yang terbakar (Bab [-@sec-peat] dan [-@sec-carbon-balance]).
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Area terbakar di gambut pada 2015, hasil yang dilaporkan Api bersama gambut terbakar (Bab [-@sec-peat]).](images/real/ch37-burn-2015.jpg){.lightbox fig-alt="Area terbakar di gambut pada 2015, hasil yang dilaporkan Api bersama gambut terbakar."}
+![Area terbakar di gambut pada 2015 (Bab [-@sec-peat]).](images/real/ch37-burn-2015.jpg){.lightbox fig-alt="Area terbakar di gambut pada 2015."}
 
 ![Titik panas dibandingkan curah hujan, grafik di balik angka kebakaran.](images/real/ch37-series.png){.lightbox fig-alt="Titik panas dibandingkan curah hujan, grafik di balik angka kebakaran."}
 
@@ -236,9 +236,9 @@ Memetakan tempat yang *mungkin* longsor atau banjir, bukan tempat yang pernah te
 
 Aplikasi melaporkan **akurasi validasi, kappa, hektare kerawanan tinggi, dan jumlah jiwa yang tinggal di zona rawan tinggi**. Titik yang diletakkan secara manual oleh orang yang mengenal wilayahnya biasanya lebih baik daripada katalog global.
 
-**Yang Anda dapat**
+**Ide yang sama dalam kode buku ini** (bukan keluaran aplikasi)
 
-![Peta kerawanan longsor (Bab [-@sec-landslide-simple]); Rawan mempelajari bobotnya dengan random forest, bukan menetapkannya.](images/real/ch50-score.jpg){.lightbox fig-alt="Peta kerawanan longsor; Rawan mempelajari bobotnya dengan random forest, bukan menetapkannya."}
+![Peta kerawanan longsor (Bab [-@sec-landslide-simple]); Rawan mempelajari bobotnya dengan random forest.](images/real/ch50-score.jpg){.lightbox fig-alt="Peta kerawanan longsor; Rawan mempelajari bobotnya dengan random forest."}
 
 ### Toolbox: merangkai alur kerja sendiri
 

@@ -68,7 +68,7 @@ Ten buttons, ten kinds of question. The table above says which to open for what.
 
 ## The modules
 
-In every module below, the first picture is the screen with **the buttons to press outlined in red and numbered in order**. The pictures after it are real results made in this book with the same method the button runs, so you know what to expect; in the app they appear over your own area.
+In every module below, the picture shows the module card on the left, with **the buttons to press outlined in red and numbered in order**, and on the right what the app adds after you press: the result cards and the map legend, copied from the app. The app's own map and numbers depend on your area and dates. After it, an example from this book's coding chapters shows the same kind of analysis. It is **not the app's output**, and the app's map will look different.
 
 ### Data: the catalogue
 
@@ -83,9 +83,9 @@ Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, lan
 
 **Use it for:** a first look at any place, and background layers before any analysis.
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![Annual rainfall, the kind of layer Data shows (Chapter [-@sec-dataviz]).](images/real/ch29-map-sequential.jpg){.lightbox fig-alt="Annual rainfall, the kind of layer Data shows."}
+![Annual rainfall (Chapter [-@sec-dataviz]).](images/real/ch29-map-sequential.jpg){.lightbox fig-alt="Annual rainfall."}
 
 ### Citra: a clean Sentinel-2 image
 
@@ -98,9 +98,9 @@ Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, lan
 
 Builds a cloud-free composite from all Sentinel-2 images in a date range, not one scene. Five methods: **Cloud Score Plus** (the default and usually the best in the tropics), median with the scene classification mask, greenest pixel, 25th percentile (bright, low-haze) and the single cleanest scene. You set the date range, the maximum cloud per scene, the Cloud Score Plus threshold, the band combination (natural colour, vegetation infrared, urban SWIR, agriculture, or haze penetration) and optionally an index (NDVI, NDWI, NDBI, NBR or NDMI). The app reports how many images were used and how many pixels came out clean. (P1 and Chapter [-@sec-cloud] explain why these choices matter.)
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![A cloud-free median composite, what Citra builds (Chapter [-@sec-cloud]).](images/real/ch09-truecolour.jpg){.lightbox fig-alt="A cloud-free median composite, what Citra builds."}
+![A cloud-free median composite (Chapter [-@sec-cloud]).](images/real/ch09-truecolour.jpg){.lightbox fig-alt="A cloud-free median composite."}
 
 ### Tutupan: your own land-cover map
 
@@ -121,9 +121,9 @@ The supervised classification of Chapter [-@sec-supervised], by clicking:
 
 The app reports **overall accuracy and kappa** and the area of every class. Remember Chapter [-@sec-accuracy]: accuracy on points you clicked yourself near each other is optimistic. Spread your samples over the whole area.
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![A random-forest land-cover map, what Tutupan returns (Chapter [-@sec-supervised]).](images/real/ch16-rf.jpg){.lightbox fig-alt="A random-forest land-cover map, what Tutupan returns."}
+![A random-forest land-cover map (Chapter [-@sec-supervised]).](images/real/ch16-rf.jpg){.lightbox fig-alt="A random-forest land-cover map."}
 
 ### Model: ready-made models, including the author's own
 
@@ -140,11 +140,11 @@ Three modes:
 - **Dynamic World**: Google's near-real-time land cover, for comparison.
 - **Canopy height from GEDI**: the app takes GEDI laser heights in your area (good-quality shots only), trains a regression on the embeddings, and predicts a wall-to-wall 10 m canopy height map. It reports the correlation with the GEDI shots and the mean height (Chapters [-@sec-height-scaling] and [-@sec-gedi-structure]).
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![Land cover from satellite embeddings with few samples, the idea behind the ready-made model (Chapter [-@sec-embeddings]).](images/real/ch19-classified.jpg){.lightbox fig-alt="Land cover from satellite embeddings with few samples, the idea behind the ready-made model."}
+![Land cover from satellite embeddings with few samples (Chapter [-@sec-embeddings]).](images/real/ch19-classified.jpg){.lightbox fig-alt="Land cover from satellite embeddings with few samples."}
 
-![A 10 m canopy height map trained on GEDI, the kind of result the height mode gives (Chapter [-@sec-height-scaling]).](images/real/ch33-eth-map.jpg){.lightbox fig-alt="A 10 m canopy height map trained on GEDI, the kind of result the height mode gives."}
+![A 10 m canopy height map trained on GEDI (Chapter [-@sec-height-scaling]).](images/real/ch33-eth-map.jpg){.lightbox fig-alt="A 10 m canopy height map trained on GEDI."}
 
 ### Deret: time series
 
@@ -157,9 +157,9 @@ Three modes:
 
 For when something happened and how long ago (Chapters [-@sec-timeseries] and [-@sec-oil-palm-age]). Four modes: **harmonic model and trend** (separates the season from the long-term trend, reports the seasonal amplitude), **LandTrendr breakpoints** (the year of the main disturbance), **stand or crop age**, and **CCDC breakpoints** (precise break dates, slower). Set the year range, the number of harmonics and the change-magnitude threshold.
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![Plantation age from the year of disturbance, what Deret's age mode maps (Chapter [-@sec-oil-palm-age]).](images/real/ch44-age.jpg){.lightbox fig-alt="Plantation age from the year of disturbance, what Deret's age mode maps."}
+![Plantation age from the year of disturbance (Chapter [-@sec-oil-palm-age]).](images/real/ch44-age.jpg){.lightbox fig-alt="Plantation age from the year of disturbance."}
 
 ### Ubah: change between two dates
 
@@ -172,7 +172,7 @@ For when something happened and how long ago (Chapters [-@sec-timeseries] and [-
 
 Four methods: **index difference** (NDVI, NDWI, NDBI, NBR or NDMI between two periods, with a threshold), **Dynamic World transitions**, **double classification**, and **linear trend**. It reports hectares gained and lost. For the exact date of a change, use Deret instead.
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
 ![New built-up land between two years from Dynamic World (Chapter [-@sec-timeseries]).](images/real/ch21-new-built.jpg){.lightbox fig-alt="New built-up land between two years from Dynamic World."}
 
@@ -196,9 +196,9 @@ The method of Chapter [-@sec-flood] and P5, by clicking:
 
 Behind the button: Sentinel-1 backscatter change, an automatic Otsu threshold, then filters for steep slopes, permanent water and high HAND. The results are **hectares flooded, people exposed, buildings affected** and how well the flood matches the historical flood record. Summarised by your reporting unit, that is a first situation report.
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![Radar flood extent with Otsu threshold and HAND, the method behind Banjir (Chapter [-@sec-flood]).](images/real/ch24-flood-map.jpg){.lightbox fig-alt="Radar flood extent with Otsu threshold and HAND, the method behind Banjir."}
+![Radar flood extent with Otsu threshold and HAND (Chapter [-@sec-flood]).](images/real/ch24-flood-map.jpg){.lightbox fig-alt="Radar flood extent with Otsu threshold and HAND."}
 
 ![The HAND check: flooded points sit low on the terrain.](images/real/ch24-flood-hand.png){.lightbox fig-alt="The HAND check: flooded points sit low on the terrain."}
 
@@ -216,9 +216,9 @@ Behind the button: Sentinel-1 backscatter change, an automatic Otsu threshold, t
 
 The app computes the difference in Normalised Burn Ratio (dNBR) from Sentinel-2 and splits it into four severity classes, with breaks at dNBR 0.27, 0.44 and 0.66. It overlays FIRMS hotspots and the peat map, and reports **hectares burned, hotspots, hectares of burned peat and the mean peat thickness**. A hectare of burned peat is not a hectare of burned grass (Chapters [-@sec-peat] and [-@sec-carbon-balance]).
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![Burned area on peat in 2015, the result Api reports with burned peat (Chapter [-@sec-peat]).](images/real/ch37-burn-2015.jpg){.lightbox fig-alt="Burned area on peat in 2015, the result Api reports with burned peat."}
+![Burned area on peat in 2015 (Chapter [-@sec-peat]).](images/real/ch37-burn-2015.jpg){.lightbox fig-alt="Burned area on peat in 2015."}
 
 ![Hotspots against rainfall, the chart behind the fire numbers.](images/real/ch37-series.png){.lightbox fig-alt="Hotspots against rainfall, the chart behind the fire numbers."}
 
@@ -241,9 +241,9 @@ Maps where landslides or floods are *likely*, not where they happened. A random 
 
 It reports **validation accuracy, kappa, hectares of high susceptibility and people living in high-susceptibility zones**. Hand-placed points from people who know the area usually beat a global catalogue.
 
-**What you get**
+**The same idea in this book's code** (not the app's output)
 
-![A landslide susceptibility map (Chapter [-@sec-landslide-simple]); Rawan learns the weights with a random forest instead of fixing them.](images/real/ch50-score.jpg){.lightbox fig-alt="A landslide susceptibility map; Rawan learns the weights with a random forest instead of fixing them."}
+![A landslide susceptibility map (Chapter [-@sec-landslide-simple]); Rawan learns its weights with a random forest instead.](images/real/ch50-score.jpg){.lightbox fig-alt="A landslide susceptibility map; Rawan learns its weights with a random forest instead."}
 
 ### Toolbox: chain your own workflow
 
