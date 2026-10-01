@@ -1,0 +1,49 @@
+# Jasa Ekosistem: Apa yang Diberikan Sebuah Bentang Lahan {#sec-ecosystem-services}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memetakan tiga jasa ekosistem untuk Cekungan Bandung (hasil air, simpanan karbon, dan kualitas habitat), menemukan tempat ketiganya bertumpuk, lalu menjalankan satu skenario penggunaan lahan untuk melihat bagaimana ketiganya saling bertukar. Metodenya mengikuti logika InVEST, perangkat jasa ekosistem yang paling banyak dipakai, tetapi setiap angkanya berasal dari data satelit yang bisa Anda periksa.
+:::
+
+## Jasa, bukan sekadar tutupan lahan
+
+Peta tutupan lahan menyatakan apa yang ada di sana. Peta jasa ekosistem menyatakan apa yang *dilakukan* lahan itu bagi manusia: memasok air, menyimpan karbon, menjadi rumah satwa, menahan tanah di lereng, menyejukkan kota. Perencana dan pembuat kebijakan butuh jenis peta yang kedua, karena keputusan selalu soal pertukaran: jalan usaha tani yang baru menambah pangan dan pendapatan, tetapi mengurangi sebagian hutan, karbon, dan pengaturan air.
+
+Model jasa ekosistem punya struktur yang sama:
+
+1. **peta tutupan lahan** (apa di mana);
+2. **nilai biofisik** untuk setiap tempat atau kelas (berapa air, karbon, atau habitat yang diberikannya);
+3. **skenario** (peta tutupan lahan yang diubah), sehingga *selisih* jasanya bisa diukur.
+
+Titik lemahnya selalu di langkah 2. Banyak studi memakai tabel nilai per kelas yang disalin dari studi lain di negara lain. Di sini setiap nilai diukur.
+
+## Tiga jasa
+
+**Hasil air** adalah hujan dikurangi evapotranspirasi, yaitu air yang tersisa untuk sungai, mata air, dan air tanah (Bab [-@sec-water-cycle]). Hutan memakai air lebih banyak daripada tanaman pertanian lewat transpirasi, sehingga hasil air totalnya lebih kecil, tetapi hutan mengaturnya: infiltrasi lebih besar, debit musim kemarau lebih stabil. Hasil air tahunan hanya menangkap separuh pertama cerita itu.
+
+**Simpanan karbon** memakai logika tabel InVEST: setiap kelas tutupan lahan mendapat satu nilai kerapatan karbon. Alih-alih tabel dari pustaka, kerapatan setiap kelas di sini adalah rata-rata puluhan ribu jejak biomassa GEDI yang jatuh di kelas itu (Bab [-@sec-height-scaling]).
+
+**Kualitas habitat** adalah hutan yang nilainya dikurangi menurut kedekatannya dengan lahan terbangun: piksel hutan di tepi permukiman hampir tidak bernilai, sedangkan yang berjarak beberapa kilometer dihitung hampir penuh. Model habitat sungguhan menambahkan jalan, tambang, dan kepekaan setiap habitat terhadap setiap ancaman; ini versi jujur yang paling sederhana.
+
+{{< include _snippets/ch43_ecosystem_services.qmd >}}
+
+## Membaca hasilnya
+
+**Tabel karbon.** Tutupan pohon menyimpan sekitar 62 Mg C per hektare di atas tanah, lahan pertanian sekitar 12. Dua nilai perlu kehati-hatian. Lahan terbangun mendapat sekitar 19 Mg C/ha, karena jejak GEDI di kota sering mengenai pohon pekarangan dan pohon jalan. Semak dan air hanya punya segelintir jejak, terlalu sedikit untuk dipercaya. Tabel nilai hanya sebaik sampel di balik setiap barisnya, jadi laporkan jumlahnya.
+
+**Titik panas.** Piksel yang masuk 20 % teratas untuk ketiga jasa sekaligus terutama berada di lereng gunung api berhutan di barat daya dan selatan (sekitar Patuha dan Malabar), dengan petak-petak kecil di gunung api sebelah utara dan timur, tempat hujan paling tinggi, hutan masih utuh, dan permukiman jauh. Di sinilah perlindungan memberi manfaat tiga kali lipat. Kotak-kotak dalam polanya adalah piksel hujan 5 km, resolusi data airnya, bukan batas lahan.
+
+**Skenario.** Kalau setiap piksel hutan dalam jarak 500 m dari lahan pertanian berubah menjadi lahan pertanian, sekitar dua pertiga hutan cekungan ini hilang (dari 323.000 ha menjadi 112.000 ha). Karbon di atas tanah turun 47 % (22,7 menjadi 12,1 Mt C) dan habitat turun 37 %. Hasil air tahunan justru *naik* sekitar 6 %, karena tanaman pertanian bertranspirasi lebih sedikit daripada hutan. Kenaikan itu bukan keuntungan: datang bersama limpasan yang lebih cepat, erosi yang lebih besar, dan debit musim kemarau yang lebih kecil, yang tidak bisa diperlihatkan model tahunan. Inilah pelajaran utama kerja jasa ekosistem: jasa-jasa saling bertukar, dan model hanya melihat yang diukurnya.
+
+## Batasan
+
+- **Hasil air tahunan** tidak berkata apa-apa tentang waktu, banjir, atau debit musim kemarau.
+- **Satu nilai karbon per kelas** menyembunyikan keragaman di dalam setiap kelas (hutan tua dibandingkan hutan muda yang tumbuh kembali).
+- **Habitat** di sini mengabaikan spesies, koridor, dan jalan.
+- **Jasa yang belum masuk**: pengendalian erosi, pengaturan banjir, penyerbukan, nilai budaya. Masing-masing butuh modelnya sendiri.
+
+## Latihan {.unnumbered}
+
+1. Ganti aturan 500 m dengan 200 m dan 1.000 m. Jasa mana yang paling peka?
+2. Pisahkan tutupan pohon menjadi hutan di lereng di atas 30 % dan di bawahnya. Apakah karbon per hektarenya berbeda?
+3. Tambahkan jasa keempat, pengaturan banjir, dengan HAND dari Bab [-@sec-flood]: lahan rendah di dekat sungai yang masih bervegetasi. Di mana jasa ini bertumpuk dengan tiga jasa lainnya?

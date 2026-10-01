@@ -1,0 +1,49 @@
+# Ecosystem Services: What a Landscape Gives {#sec-ecosystem-services}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map three ecosystem services for the Bandung basin (water yield, carbon storage and habitat quality), find where they overlap, and run one land-use scenario to see how they trade off. The method follows the logic of InVEST, the most widely used ecosystem-service toolkit, but every number comes from satellite data you can inspect.
+:::
+
+## Services, not just land cover
+
+A land-cover map says what is there. An ecosystem-service map says what that land *does for people*: supplies water, stores carbon, shelters wildlife, holds soil on slopes, cools cities. Planners and policy-makers need the second kind, because decisions are about trade-offs: a new farm road gains food and income and loses some forest, carbon and water regulation.
+
+Ecosystem-service models share one structure:
+
+1. a **land-cover map** (what is where);
+2. a **biophysical value** for each place or class (how much water, carbon or habitat it provides);
+3. a **scenario** (a changed land-cover map), so the *difference* in services can be measured.
+
+The weak point is always step 2. Many studies use a lookup table of values per class copied from another study in another country. Here each value is measured.
+
+## Three services
+
+**Water yield** is rainfall minus evapotranspiration, the water left over for rivers, springs and groundwater (Chapter [-@sec-water-cycle]). Forests use more water than crops through transpiration, so they yield less in total, but they regulate it: more infiltration, steadier dry-season flow. Annual water yield captures only the first half of that story.
+
+**Carbon storage** uses InVEST's lookup logic: each land-cover class gets one carbon density. Instead of a literature table, the density of each class here is the mean of tens of thousands of GEDI biomass footprints that fell on that class (Chapter [-@sec-height-scaling]).
+
+**Habitat quality** is forest, discounted by its closeness to built-up land: a forest pixel at a settlement edge counts for almost nothing, one a few kilometres away counts almost fully. Real habitat models add roads, mines and the sensitivity of each habitat to each threat; this is the simplest honest version.
+
+{{< include _snippets/ch43_ecosystem_services.qmd >}}
+
+## Reading the results
+
+**The carbon lookup.** Tree cover holds about 62 Mg C per hectare above ground, cropland about 12. Two values need care. Built-up land gets about 19 Mg C/ha, because GEDI footprints in towns often hit garden and street trees. Shrubland and water have only a handful of footprints, too few to trust. A lookup table is only as good as the samples behind each row, so report the count.
+
+**Hotspots.** The pixels in the top 20 % for all three services lie mainly on the forested volcanic slopes in the south-west and south (around Patuha and Malabar), with smaller patches on the volcanoes to the north and east, where rainfall is highest, forest is intact and settlements are far. These are the places where protection pays three times. The squares in the pattern are the 5 km rainfall pixels, the resolution of the water data, not field boundaries.
+
+**The scenario.** If every forest pixel within 500 m of cropland became cropland, about two-thirds of the basin's forest would go (323,000 ha down to 112,000). Above-ground carbon would fall by 47 % (22.7 to 12.1 Mt C) and habitat by 37 %. Annual water yield would *rise* by about 6 %, because crops transpire less than forest. That rise is not a benefit: it comes with faster runoff, more erosion and lower dry-season flow, which an annual model cannot show. This is the central lesson of ecosystem-service work: services trade off, and the model only sees the ones it measures.
+
+## Limits
+
+- **Annual water yield** says nothing about timing, floods or dry-season flow.
+- **One carbon value per class** hides the variation inside each class (old forest versus young regrowth).
+- **Habitat** here ignores species, corridors and roads.
+- **Missing services**: erosion control, flood regulation, pollination, cultural value. Each needs its own model.
+
+## Exercises {.unnumbered}
+
+1. Replace the 500 m rule with 200 m and 1,000 m. Which service responds most?
+2. Split tree cover into forest on slopes above 30 % and below. Does carbon per hectare differ?
+3. Add a fourth service, flood regulation, using HAND from Chapter [-@sec-flood]: low-lying land near rivers that is still vegetated. Where does it overlap with the other three?

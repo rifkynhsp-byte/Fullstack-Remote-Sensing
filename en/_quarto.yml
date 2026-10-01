@@ -114,6 +114,7 @@ book:
         - 40-water-cycle.qmd
         - 42-carbon-balance.qmd
         - 41-mrv.qmd
+        - 43-ecosystem-services.qmd
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:
         - 28-map-production.qmd

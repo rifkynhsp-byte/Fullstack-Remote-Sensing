@@ -1,0 +1,40 @@
+[
+ {
+  "name": "ch43_ecosystem_services-webmap",
+  "kind": "html",
+  "html": "images/real/ch43_ecosystem_services-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch43-landcover",
+  "kind": "map",
+  "caption": "The land-cover map every service below is computed from.",
+  "image": "images/real/ch43-landcover.jpg"
+ },
+ {
+  "name": "ch43-carbon-lookup",
+  "kind": "chart",
+  "caption": "Mean above-ground carbon of each land-cover class from GEDI L4A footprints (carbon = 0.47 × biomass). n is the number of footprints.",
+  "image": "images/real/ch43-carbon-lookup.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"class,code,gedi_shots,agbd_Mg_ha,carbon_MgC_ha\ntree cover,10,78921,132.86,62.442\ngrassland,30,4180,50.031,23.514\nbare,60,34,49.33,23.185\nbuilt-up,50,2629,39.972,18.787\ncropland,40,5612,25.848,12.148\nshrubland,20,4,11.391,5.354\nwater,80,3,10.361,4.8698\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_carbon(df):\n    fig, ax = plt.subplots(figsize=(6.6, 3.4))\n    d = df.sort_values(\"carbon_MgC_ha\")\n    ax.barh(d[\"class\"], d.carbon_MgC_ha, color=[\"#\" + PALETTE[c] for c in d.code])\n    for y, (v, n) in enumerate(zip(d.carbon_MgC_ha, d.gedi_shots)):\n        ax.text(v, y, f\"  {v:.0f}  (n={n:,})\", va=\"center\", fontsize=7)\n    ax.set_xlabel(\"Above-ground carbon (Mg C/ha), mean of GEDI footprints\")\n    ax.set_title(\"The carbon lookup table, measured instead of assumed\", loc=\"left\",\n                 fontsize=10)\n    return fig\n\nplot_carbon(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch43-water-yield",
+  "kind": "map",
+  "caption": "Water left for rivers and groundwater. The volcanic uplands around the basin yield most.",
+  "image": "images/real/ch43-water-yield.jpg"
+ },
+ {
+  "name": "ch43-hotspots",
+  "kind": "map",
+  "caption": "Pixels in the top 20 % for carbon, habitat and water yield, counted. Where all three overlap is where protection pays three times. Water yield rests on 5 km rainfall data: the square edges are that resolution showing, not field boundaries.",
+  "image": "images/real/ch43-hotspots.jpg"
+ },
+ {
+  "name": "ch43-scenario",
+  "kind": "table",
+  "caption": "Today against a scenario where forest within 500 m of cropland becomes cropland. Water yield rises slightly (less ET) while carbon and habitat fall: services trade off against each other.",
+  "markdown": "| case         |   forest_ha |   carbon_MtC |   water_yield_million_m3 |   habitat_units_ha |\n|:-------------|------------:|-------------:|-------------------------:|-------------------:|\n| today (2021) |     323,208 |        22.70 |                  7,770.2 |             90,778 |\n| scenario     |     111,859 |        12.07 |                  8,258.7 |             57,521 |"
+ }
+]
