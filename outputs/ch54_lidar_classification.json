@@ -1,0 +1,26 @@
+[
+ {
+  "name": "ch54-section",
+  "kind": "figure",
+  "caption": "The same 5 m slice of the lidR Topography file, classified by the data provider (top) and automatically (bottom).",
+  "image": "images/real/ch54-section.png"
+ },
+ {
+  "name": "ch54-ground",
+  "kind": "table",
+  "caption": "Automatic ground against the delivered ground class, point by point (water points excluded). The delivered class is conservative: many unlabelled points lie on the provider's own ground surface, so precision here is understated.",
+  "markdown": "|   points |   delivered_ground_share |   ground_recall |   ground_precision |   overall_accuracy |   kappa |\n|---------:|-------------------------:|----------------:|-------------------:|-------------------:|--------:|\n|   69,506 |                    11.7% |           91.2% |              39.7% |              82.7% |    0.47 |"
+ },
+ {
+  "name": "ch54-dtm",
+  "kind": "table",
+  "caption": "The fair test: terrain models (1 m) built from the automatic ground and from the delivered ground, cell by cell.",
+  "markdown": "|   grid_cells |   median_difference_m |   mean_abs_difference_m |   rmse_m |   share_within_0.5m |   p95_abs_m |\n|-------------:|----------------------:|------------------------:|---------:|--------------------:|------------:|\n|       76,176 |                  0.03 |                    0.22 |     0.43 |               90.3% |        0.76 |"
+ },
+ {
+  "name": "ch54-classes",
+  "kind": "table",
+  "caption": "Share of points in each automatic class (ASPRS codes).",
+  "markdown": "| automatic class             |   share_of_points |\n|:----------------------------|------------------:|\n| 2 ground                    |             30.9% |\n| 3 low vegetation (< 2 m)    |             13.0% |\n| 4 medium vegetation (2-5 m) |             23.2% |\n| 5 high vegetation (> 5 m)   |             33.0% |"
+ }
+]

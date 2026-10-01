@@ -1,0 +1,70 @@
+# Automatic LiDAR Classification: Finding the Ground {#sec-lidar-classification}
+
+::: {.chapter-goal}
+#### In this chapter
+You will classify an airborne LiDAR point cloud automatically: ground first, with a progressive morphological filter, then vegetation by height above it. You will score the result against the classes delivered with the data and find that the point-by-point score misleads, while comparing the terrain models gives the fair answer. The same workflow is given in R with lidR.
+:::
+
+## Why ground comes first
+
+A LiDAR delivery is millions of points. Some providers label them, some do not, and labels are not always right. The most important label is **ground** (ASPRS class 2): the terrain model, the height of every tree, the canopy height model, biomass and flood modelling all start from it (Chapters [-@sec-lidar-trees] and [-@sec-flood]). If the ground is wrong, everything built on it is wrong.
+
+## How a ground filter works
+
+Ground is the lowest surface that is *smooth*. A tree crown is low only at its edge; a building is a sudden step. The **progressive morphological filter** [@zhang2003pmf] uses that:
+
+1. Make a grid of the lowest point in each cell, from **last returns** (ground is usually the last thing a laser pulse hits).
+2. *Open* the grid with a small window: an erosion, which takes the minimum around each cell, then a dilation, which takes the maximum. Objects smaller than the window disappear and the ground stays.
+3. Cells that drop by more than a height threshold were not ground.
+4. Repeat with larger and larger windows, letting the threshold grow with the window so real slopes are not cut away. The largest window must be wider than the widest object, including a continuous forest canopy.
+5. Interpolate a terrain surface through the remaining ground cells and call every point within 0.3 m of it ground.
+
+Other algorithms do the same job differently. The **cloth simulation filter** [@zhang2016csf] turns the cloud upside down and drops a virtual cloth on it; where the cloth rests is ground. It works well on most landscapes and needs few parameters.
+
+Once ground is found, **height above ground** splits the rest into the standard vegetation classes: 3 low (below 2 m), 4 medium (2–5 m) and 5 high vegetation (above 5 m).
+
+{{< include _snippets/ch54_lidar_classification.qmd >}}
+
+## Reading the results
+
+**Point by point, the score looks poor.** The automatic filter found 91 % of the points the provider called ground, but only about 40 % of the points it called ground carry the provider's ground label. Kappa is 0.47.
+
+**But the reference is conservative.** More than 10,000 points the provider left unlabelled lie within 0.3 m of the provider's *own* ground surface: more than the 8,159 points it actually labelled ground. The delivered class is a thinned set of ground points, which is common, and many of our "false" ground points are ground the provider did not bother to label.
+
+**The fair test is the terrain.** Ground exists to build a terrain model, so compare terrain models. Built from the automatic ground and from the delivered ground, the two 1 m DTMs differ by a median of 3 cm; 90 % of cells agree within 0.5 m (RMSE 0.43 m). Ground filters are known to struggle at steep breaks and under dense canopy, so check the cells that disagree most in a cross-section.
+
+## The same workflow in R with lidR
+
+The author's LiDAR workshop runs this in lidR [@roussel2020lidr]. It is not run when the book is built.
+
+```r
+library(lidR)
+
+las <- readLAS("tiles/area.laz")
+las <- classify_noise(las, sor(k = 10, m = 3))        # drop isolated noise points
+las <- filter_poi(las, Classification != LASNOISE)
+
+# Ground: cloth simulation, or the progressive morphological filter
+las <- classify_ground(las, algorithm = csf(sloop_smooth = TRUE, class_threshold = 0.3,
+                                            cloth_resolution = 0.5))
+# las <- classify_ground(las, algorithm = pmf(ws = seq(3, 65, length.out = 6),
+#                                             th = seq(0.3, 3, length.out = 6)))
+
+# Vegetation by height above ground (ASPRS classes 3, 4, 5)
+nlas <- normalize_height(las, tin())
+nlas$Classification[nlas$Classification != 2 & nlas$Z <  2] <- 3L
+nlas$Classification[nlas$Classification != 2 & nlas$Z >= 2 & nlas$Z < 5] <- 4L
+nlas$Classification[nlas$Classification != 2 & nlas$Z >= 5] <- 5L
+
+# Many tiles: the same steps over a catalog, with a buffer so tile edges stay right
+ctg <- readLAScatalog("tiles/")
+opt_chunk_buffer(ctg) <- 30
+opt_output_files(ctg) <- "classified/{ORIGINALFILENAME}"
+ctg_classified <- classify_ground(ctg, csf())
+```
+
+## Exercises {.unnumbered}
+
+1. Drop the largest window (65 m) from the filter. Where does the terrain model fail, and why?
+2. Try a ground threshold of 0.1 m and 0.5 m. How do the DTM statistics change?
+3. In R, classify the same file with `csf()` and `pmf()` and compare the two DTMs with the one from this chapter.

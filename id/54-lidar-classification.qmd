@@ -1,0 +1,70 @@
+# Klasifikasi LiDAR Otomatis: Menemukan Permukaan Tanah {#sec-lidar-classification}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengklasifikasi point cloud LiDAR udara secara otomatis: tanah lebih dulu, dengan progressive morphological filter, lalu vegetasi menurut tinggi di atas tanah. Anda akan menilai hasilnya terhadap kelas bawaan data dan menemukan bahwa nilai titik demi titik menyesatkan, sedangkan membandingkan model medannya memberi jawaban yang adil. Alur kerja yang sama juga diberikan dalam R dengan lidR.
+:::
+
+## Kenapa tanah harus lebih dulu
+
+Data LiDAR yang diserahkan berisi jutaan titik. Sebagian penyedia memberinya label, sebagian tidak, dan labelnya tidak selalu benar. Label terpenting adalah **tanah** (kelas ASPRS 2): model medan, tinggi setiap pohon, model tinggi kanopi, biomassa, dan pemodelan banjir semuanya bermula dari sini (Bab [-@sec-lidar-trees] dan [-@sec-flood]). Kalau tanahnya salah, semua yang dibangun di atasnya ikut salah.
+
+## Cara kerja penyaring tanah
+
+Tanah adalah permukaan terendah yang *halus*. Tajuk pohon hanya rendah di tepinya; bangunan adalah undakan yang tiba-tiba. **Progressive morphological filter** [@zhang2003pmf] memanfaatkan hal ini:
+
+1. Buat grid titik terendah di setiap sel, dari **pantulan terakhir** (tanah biasanya adalah benda terakhir yang dikenai pulsa laser).
+2. *Buka* (opening) grid dengan jendela kecil: erosi, yang mengambil nilai minimum di sekitar setiap sel, lalu dilasi, yang mengambil nilai maksimum. Benda yang lebih kecil dari jendela menghilang dan tanahnya tetap.
+3. Sel yang turun lebih dari ambang tinggi tertentu bukanlah tanah.
+4. Ulangi dengan jendela yang makin besar, dan biarkan ambangnya ikut naik seiring jendela supaya lereng sungguhan tidak ikut terpangkas. Jendela terbesar harus lebih lebar daripada benda terlebar, termasuk tajuk hutan yang bersambung.
+5. Interpolasikan permukaan medan melalui sel-sel tanah yang tersisa, lalu sebut setiap titik yang berjarak 0,3 m dari permukaan itu sebagai tanah.
+
+Algoritma lain mengerjakan tugas yang sama dengan cara berbeda. **Cloth simulation filter** [@zhang2016csf] membalik point cloud lalu menjatuhkan kain virtual di atasnya; tempat kain itu bertumpu adalah tanah. Cara ini bekerja baik di sebagian besar bentang lahan dan hanya butuh sedikit parameter.
+
+Begitu tanah ditemukan, **tinggi di atas tanah** membagi sisanya ke dalam kelas vegetasi baku: 3 vegetasi rendah (di bawah 2 m), 4 vegetasi sedang (2–5 m), dan 5 vegetasi tinggi (di atas 5 m).
+
+{{< include _snippets/ch54_lidar_classification.qmd >}}
+
+## Membaca hasilnya
+
+**Titik demi titik, nilainya tampak buruk.** Penyaring otomatis menemukan 91 % titik yang disebut tanah oleh penyedia, tetapi hanya sekitar 40 % titik yang ia sebut tanah membawa label tanah dari penyedia. Kappa-nya 0,47.
+
+**Tetapi rujukannya konservatif.** Lebih dari 10.000 titik yang tidak diberi label oleh penyedia berada dalam jarak 0,3 m dari permukaan tanah buatan penyedia *sendiri*: lebih banyak daripada 8.159 titik yang benar-benar diberi label tanah. Kelas bawaan itu adalah himpunan titik tanah yang sudah dijarangkan, hal yang umum, dan banyak titik tanah "palsu" kita sebenarnya adalah tanah yang tidak dilabeli penyedia.
+
+**Uji yang adil adalah medannya.** Tanah ada untuk membangun model medan, jadi bandingkan model medannya. DTM 1 m yang dibangun dari tanah otomatis dan dari tanah bawaan berbeda dengan median 3 cm; 90 % sel cocok dalam batas 0,5 m (RMSE 0,43 m). Penyaring tanah dikenal kesulitan di patahan curam dan di bawah tajuk rapat, jadi periksa sel-sel yang paling berbeda lewat irisan melintang.
+
+## Alur yang sama di R dengan lidR
+
+Workshop LiDAR penulis menjalankan ini dengan lidR [@roussel2020lidr]. Kode ini tidak dijalankan saat buku dibangun.
+
+```r
+library(lidR)
+
+las <- readLAS("tiles/area.laz")
+las <- classify_noise(las, sor(k = 10, m = 3))        # buang titik derau yang terisolasi
+las <- filter_poi(las, Classification != LASNOISE)
+
+# Tanah: cloth simulation, atau progressive morphological filter
+las <- classify_ground(las, algorithm = csf(sloop_smooth = TRUE, class_threshold = 0.3,
+                                            cloth_resolution = 0.5))
+# las <- classify_ground(las, algorithm = pmf(ws = seq(3, 65, length.out = 6),
+#                                             th = seq(0.3, 3, length.out = 6)))
+
+# Vegetasi menurut tinggi di atas tanah (kelas ASPRS 3, 4, 5)
+nlas <- normalize_height(las, tin())
+nlas$Classification[nlas$Classification != 2 & nlas$Z <  2] <- 3L
+nlas$Classification[nlas$Classification != 2 & nlas$Z >= 2 & nlas$Z < 5] <- 4L
+nlas$Classification[nlas$Classification != 2 & nlas$Z >= 5] <- 5L
+
+# Banyak tile: langkah yang sama di atas catalog, dengan buffer supaya tepi tile tetap benar
+ctg <- readLAScatalog("tiles/")
+opt_chunk_buffer(ctg) <- 30
+opt_output_files(ctg) <- "classified/{ORIGINALFILENAME}"
+ctg_classified <- classify_ground(ctg, csf())
+```
+
+## Latihan {.unnumbered}
+
+1. Buang jendela terbesar (65 m) dari penyaringnya. Di mana model medan gagal, dan kenapa?
+2. Coba ambang tanah 0,1 m dan 0,5 m. Bagaimana statistik DTM-nya berubah?
+3. Di R, klasifikasi file yang sama dengan `csf()` dan `pmf()`, lalu bandingkan kedua DTM-nya dengan DTM dari bab ini.

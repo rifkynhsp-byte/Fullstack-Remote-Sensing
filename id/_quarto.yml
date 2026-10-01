@@ -135,6 +135,7 @@ book:
     - part: "Bagian IX: LiDAR untuk Kehutanan"
       chapters:
         - 32-lidar-trees.qmd
+        - 54-lidar-classification.qmd
         - 33-height-scaling.qmd
         - 47-gedi-structure.qmd
     - part: "Bagian X: Garis Depan Riset"

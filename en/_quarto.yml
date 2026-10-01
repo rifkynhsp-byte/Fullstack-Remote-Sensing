@@ -135,6 +135,7 @@ book:
     - part: "Part IX: LiDAR for Forestry"
       chapters:
         - 32-lidar-trees.qmd
+        - 54-lidar-classification.qmd
         - 33-height-scaling.qmd
         - 47-gedi-structure.qmd
     - part: "Part X: Research Frontiers"
