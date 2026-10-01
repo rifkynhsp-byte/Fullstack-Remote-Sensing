@@ -106,8 +106,10 @@ book:
         - 25-mining.qmd
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
+        - 44-oil-palm-age.qmd
         - 48-land-suitability.qmd
         - 34-fire.qmd
+        - 46-windstorm.qmd
         - 37-peat.qmd
         - 35-urban-energy.qmd
     - part: "Environmental Science: Water, Carbon and Policy"

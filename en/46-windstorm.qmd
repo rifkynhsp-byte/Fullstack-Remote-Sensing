@@ -1,0 +1,38 @@
+# Windstorm Damage to Forest: Cyclone Seroja, 2021 {#sec-windstorm}
+
+::: {.chapter-goal}
+#### In this chapter
+You will measure forest damage from Tropical Cyclone Seroja in Nusa Tenggara Timur by comparing canopy moisture before and after the storm, and you will learn why a before/after comparison is not enough unless the same weeks of a normal year are subtracted. You will also see a second sensor fail to confirm the result, and what to make of that.
+:::
+
+## The storm
+
+Seroja formed over the Savu Sea and struck Nusa Tenggara Timur on 4–5 April 2021, with extreme rain, floods and landslides as well as wind. Rote, Sumba and Timor were all hit, Rote among the hardest. Wind damage to forest takes several forms: leaves stripped, branches and crowns broken, trees snapped or uprooted. Each lowers the amount of green, water-filled leaf the canopy holds.
+
+## Separating the wind from the season
+
+The **NDMI** (normalised difference moisture index, from near infrared and shortwave infrared) tracks canopy water. A storm that strips and breaks the canopy lowers it. But Seroja came at the turn from the wet to the dry season, when canopies in Nusa Tenggara dry anyway. A simple before/after drop would blame the wind for the season.
+
+The fix is a **baseline year**. Measure the change across the same weeks in a year without a cyclone (2020) and subtract it:
+
+$$\text{anomaly} = (\text{after} - \text{before})_{2021} - (\text{after} - \text{before})_{2020}$$
+
+This follows the author's wind-damage analysis (indices before and after, summarised per stand), with the baseline added. "Before" is February to March, "after" mid-April to May, from cloud-masked Sentinel-2 surface reflectance, on ESA WorldCover tree cover.
+
+{{< include _snippets/ch46_windstorm.qmd >}}
+
+## Reading the results
+
+**Rote.** The forest's NDMI fell across April 2021 far more than across the same weeks of 2020: the median anomaly is −0.066, and about a third of the forest (32 %, about 15,800 ha) has an anomaly below −0.1. The histogram shows it is not a few damaged patches: the whole distribution shifts.
+
+**The gradient.** On east Sumba the median anomaly is −0.012, in West Timor around Kupang −0.004. In both, about one forest pixel in six falls below −0.1, roughly what noise and patchy cloud masking produce on their own. The damage signal is strongest where the cyclone passed closest.
+
+**Per block.** The 1 km block map is the form a forest agency would use: where to inspect, where salvage or replanting may be needed.
+
+**Radar did not confirm it.** Sentinel-1 VH backscatter changed by almost nothing on any of the three islands. One likely reason is that C-band radar responds to the volume and structure of branches and stems more than to leaf moisture, so stripped leaves alone barely move it. Whatever the reason, the honest report says: one sensor shows clear damage on Rote, a second sensor does not. Field photographs or very-high-resolution images of a sample of blocks would settle it.
+
+## Exercises {.unnumbered}
+
+1. Replace NDMI with NDVI. Is the Rote anomaly larger or smaller? Why might leaf water respond more than greenness?
+2. Use 2019 as the baseline instead of 2020. How much does the result depend on the baseline year?
+3. Sample 50 blocks with the strongest anomaly and look at them in high-resolution basemaps from before and after. How many show visible damage?

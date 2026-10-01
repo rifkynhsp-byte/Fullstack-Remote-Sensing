@@ -1,0 +1,39 @@
+# Kelapa Sawit: Umur, Tinggi, dan Fase Hidup {#sec-oil-palm-age}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menaksir kapan setiap blok kelapa sawit di sebuah bentang lahan Kalimantan Tengah ditanam, memakai 34 tahun arsip Landsat, lalu mengecek jawabannya dengan pengukuran yang independen: tinggi tajuk dari GEDI. Setelah itu umur diubah menjadi fase hidup, dasar perencanaan produktivitas dan kebijakan peremajaan.
+:::
+
+## Kenapa umur penting
+
+Hasil sawit mengikuti umur tanamannya. Sawit muda belum berbuah pada tahun-tahun pertama; produksi naik seiring berkembangnya tajuk, tetap tinggi selama tahun-tahun puncak, lalu menurun ketika pohon terlalu tinggi untuk dipanen dengan efisien dan akhirnya diremajakan, biasanya setelah sekitar 25 tahun. Perusahaan perkebunan tahu umur blok-bloknya. Pemerintah, pembeli yang memeriksa rantai pasok, dan peneliti biasanya tidak tahu, terutama untuk kebun rakyat. Program peremajaan sawit rakyat di Indonesia butuh persis informasi ini: di mana sawit-sawit yang sudah tua?
+
+## Umur dari arsip
+
+Penanaman diawali pembukaan lahan. Selama satu atau dua tahun lahan terbuka, lalu tajuk menutup kembali dalam sekitar lima tahun. Dalam deret tahunan **Normalised Burn Ratio** (NBR, dari inframerah dekat dan inframerah gelombang pendek, peka terhadap tanah terbuka dan kadar air tajuk), pembukaan lahan tampak sebagai lembah terdalam. Tahun lembah itu menaksir tahun tanam.
+
+Metodenya mengikuti aplikasi TimeseriesAPPsawit milik penulis, yang menampilkan sinyal Landsat yang sama piksel demi piksel; di sini sinyal itu dijadikan peta:
+
+1. Saring piksel sawit dengan peta global dari @descals2021oilpalm.
+2. Buat median NBR untuk setiap tahun, 1990–2023, dari Landsat 5, 7, 8, dan 9.
+3. Pilih, per piksel, tahun dengan NBR terendah (`qualityMosaic` pada −NBR).
+4. Umur pada 2023 = 2023 − tahun tersebut.
+
+{{< include _snippets/ch44_oil_palm_age.qmd >}}
+
+## Mengecek umur dengan laser
+
+Peta umur ini tidak bisa dicocokkan dengan catatan perusahaan, tetapi fisika memberi cara menguji. Kalau umurnya benar, sawit yang terdeteksi lebih tua pasti lebih tinggi. GEDI mengukur tinggi tajuk di sekitar 400 jejak di kebun-kebun ini antara 2019 dan 2023, sepenuhnya terpisah dari Landsat. Median tingginya naik teratur seiring umur taksiran: sekitar 6 m untuk umur 5–8 tahun, 7 m pada 8–12, 11 m pada 12–18, dan 12 m pada 18–25 tahun ke atas. Kalau umurnya keliru, sebaran titiknya akan datar. Metode ini tidak sempurna (blok yang ditanam ulang setelah kebakaran atau dibuka dua kali akan diberi tanggal oleh lembah terdalam, bukan yang terakhir), tetapi lolos ujian ini.
+
+## Fase hidup dan produktivitas
+
+Tabel fase mengubah umur menjadi kategori yang dipakai pekebun. Di bentang lahan ini, 72 % sawit yang terpetakan berada di tahun-tahun puncak (9–18), 14 % dewasa (19–24), dan sekitar 9.700 ha (12 %) berumur lebih dari 25 tahun, sudah waktunya diremajakan. Sawit muda dan belum menghasilkan hampir tidak terlihat. Itu keterbatasan peta sawitnya, bukan kenyataan di lapangan: peta global itu hanya memuat sawit bertajuk rapat pada 2019, sehingga tanaman baru tidak masuk ke saringan.
+
+Mengubah fase menjadi ton tandan buah segar butuh data hasil per umur dari lapangan, yang tidak terbuka untuk publik. Peta fase tetap berguna dengan sendirinya: peta ini menunjukkan di mana produksi akan turun dalam sepuluh tahun ke depan dan di mana peremajaan perlu direncanakan.
+
+## Latihan {.unnumbered}
+
+1. Ganti NBR dengan NDVI. Apakah tahun tanamnya berubah? Indeks mana yang lebih baik membedakan tanah terbuka dari sawit muda?
+2. Cari blok yang lembahnya jatuh pada 1997, 2015, atau 2019. Apakah itu penanaman ulang setelah kebakaran, bukan penanaman pertama?
+3. Pakai GEDI untuk menaksir laju pertambahan tinggi per tahun umur. Kapan pertambahannya melambat?

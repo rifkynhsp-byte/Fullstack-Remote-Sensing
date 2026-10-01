@@ -1,0 +1,39 @@
+# Oil Palm: Age, Height and Life Stage {#sec-oil-palm-age}
+
+::: {.chapter-goal}
+#### In this chapter
+You will estimate when every oil palm block in a Central Kalimantan landscape was planted, using 34 years of Landsat, and check the answer against an independent measurement: GEDI canopy height. You will then turn age into life stages, the basis of productivity planning and replanting policy.
+:::
+
+## Why age matters
+
+Oil palm yield follows the age of the palm. Young palms produce nothing for the first years; production rises as the crown develops, stays high through the prime years, then declines as palms grow too tall to harvest efficiently and are replanted, typically after about 25 years. Plantation companies know the age of their blocks. Governments, buyers checking supply chains and researchers usually do not, especially for smallholders. Indonesia's smallholder replanting programme needs exactly this: where are the old palms?
+
+## Age from the archive
+
+Planting starts with clearing. For a year or two the land is bare, then the canopy closes again over roughly five years. In a yearly series of the **Normalised Burn Ratio** (NBR, from near infrared and shortwave infrared, sensitive to bare soil and to canopy water), the clearing is the deepest dip. The year of that dip estimates the planting year.
+
+The method follows the author's TimeseriesAPPsawit app, which charted the same Landsat signal pixel by pixel; here it becomes a map:
+
+1. Mask oil palm with the global map of @descals2021oilpalm.
+2. Build a median NBR for each year, 1990–2023, from Landsat 5, 7, 8 and 9.
+3. Pick, per pixel, the year of the lowest NBR (`qualityMosaic` on −NBR).
+4. Age in 2023 = 2023 − that year.
+
+{{< include _snippets/ch44_oil_palm_age.qmd >}}
+
+## Checking the age with a laser
+
+An age map cannot be checked against the companies' records here, but physics offers a test. If the age is right, palms detected as older must be taller. GEDI measured canopy height at about 400 footprints on these palms between 2019 and 2023, independent of Landsat. The median height rises steadily with estimated age: about 6 m for palms aged 5–8 years, 7 m at 8–12, 11 m at 12–18, 12 m at 18–25 and older. Had the ages been wrong, the cloud of points would be flat. The method is not perfect (a block replanted after a fire or cleared twice will be dated by the deepest dip, not the latest), but it passes the test.
+
+## Life stages and productivity
+
+The stage table converts age to the categories planters use. In this landscape 72 % of the mapped palm is in its prime years (9–18), 14 % mature (19–24) and about 9,700 ha (12 %) older than 25 years, due for replanting. Young and immature palm looks almost absent. That is a limitation of the palm map, not of the landscape: the global map shows closed-canopy palm in 2019, so recent planting is missing from the mask.
+
+Turning stages into tonnes of fresh fruit bunches needs yield data by age from the field, which is not public. The stage map is still useful on its own: it says where production will fall in the next decade and where replanting should be planned.
+
+## Exercises {.unnumbered}
+
+1. Replace NBR with NDVI. Do the planting years change? Which index separates bare soil from young palm better?
+2. Find blocks whose dip falls in 1997, 2015 or 2019. Are they replanting after fire rather than first planting?
+3. Use GEDI to estimate the height growth rate per year of age. When does it level off?

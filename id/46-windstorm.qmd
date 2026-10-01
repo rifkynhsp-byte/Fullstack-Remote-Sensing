@@ -1,0 +1,38 @@
+# Kerusakan Hutan akibat Angin Kencang: Siklon Seroja, 2021 {#sec-windstorm}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengukur kerusakan hutan akibat Siklon Tropis Seroja di Nusa Tenggara Timur dengan membandingkan kelembapan tajuk sebelum dan sesudah badai, dan Anda akan belajar kenapa perbandingan sebelum-sesudah tidak cukup kalau minggu-minggu yang sama pada tahun normal tidak dikurangkan. Anda juga akan melihat sensor kedua gagal mengonfirmasi hasilnya, dan bagaimana menyikapinya.
+:::
+
+## Badainya
+
+Seroja terbentuk di atas Laut Sawu dan menghantam Nusa Tenggara Timur pada 4–5 April 2021, membawa hujan ekstrem, banjir, dan longsor selain angin kencang. Rote, Sumba, dan Timor semuanya terdampak, Rote termasuk yang paling parah. Kerusakan hutan akibat angin punya beberapa bentuk: daun tercabik, cabang dan tajuk patah, pohon patah batangnya atau tumbang tercabut. Masing-masing menurunkan jumlah daun hijau berisi air yang dimiliki tajuk.
+
+## Memisahkan angin dari musim
+
+**NDMI** (normalised difference moisture index, dari inframerah dekat dan inframerah gelombang pendek) mengikuti kadar air tajuk. Badai yang mencabik dan mematahkan tajuk menurunkannya. Tetapi Seroja datang di peralihan musim hujan ke kemarau, ketika tajuk di Nusa Tenggara memang mengering. Penurunan sebelum-sesudah yang sederhana akan menyalahkan angin atas perubahan musim.
+
+Pemecahannya adalah **tahun pembanding**. Ukur perubahan pada minggu-minggu yang sama di tahun tanpa siklon (2020), lalu kurangkan:
+
+$$\text{anomali} = (\text{sesudah} - \text{sebelum})_{2021} - (\text{sesudah} - \text{sebelum})_{2020}$$
+
+Cara ini mengikuti analisis kerusakan angin milik penulis (indeks sebelum dan sesudah, diringkas per tegakan), dengan tambahan tahun pembanding. "Sebelum" adalah Februari sampai Maret, "sesudah" pertengahan April sampai Mei, dari reflektansi permukaan Sentinel-2 yang sudah disaring awannya, di atas tutupan pohon ESA WorldCover.
+
+{{< include _snippets/ch46_windstorm.qmd >}}
+
+## Membaca hasilnya
+
+**Rote.** NDMI hutan turun selama April 2021 jauh lebih besar daripada pada minggu-minggu yang sama di 2020: median anomalinya −0,066, dan sekitar sepertiga hutan (32 %, sekitar 15.800 ha) punya anomali di bawah −0,1. Histogramnya menunjukkan bahwa ini bukan hanya beberapa petak rusak: seluruh sebarannya bergeser.
+
+**Gradiennya.** Di Sumba bagian timur median anomalinya −0,012, di Timor Barat sekitar Kupang −0,004. Di keduanya, kira-kira satu dari enam piksel hutan berada di bawah −0,1, kurang lebih sebesar yang bisa dihasilkan derau dan penyaringan awan yang tidak merata. Sinyal kerusakan paling kuat di tempat siklon lewat paling dekat.
+
+**Per blok.** Peta blok 1 km adalah bentuk yang akan dipakai instansi kehutanan: di mana perlu diperiksa, di mana mungkin perlu pemanenan sisa atau penanaman ulang.
+
+**Radar tidak mengonfirmasi.** Hamburan balik VH Sentinel-1 hampir tidak berubah di ketiga pulau. Salah satu kemungkinan sebabnya, radar kanal C lebih merespons volume dan struktur cabang serta batang daripada kadar air daun, sehingga daun yang tercabik saja hampir tidak menggesernya. Apa pun sebabnya, laporan yang jujur berbunyi: satu sensor menunjukkan kerusakan jelas di Rote, sensor kedua tidak. Foto lapangan atau citra resolusi sangat tinggi dari sampel blok akan menuntaskannya.
+
+## Latihan {.unnumbered}
+
+1. Ganti NDMI dengan NDVI. Apakah anomali Rote lebih besar atau lebih kecil? Kenapa kadar air daun mungkin lebih responsif daripada kehijauan?
+2. Pakai 2019 sebagai tahun pembanding, bukan 2020. Seberapa besar hasilnya bergantung pada tahun pembanding?
+3. Ambil sampel 50 blok dengan anomali terkuat lalu lihat di peta dasar resolusi tinggi sebelum dan sesudah. Berapa yang menunjukkan kerusakan kasatmata?
