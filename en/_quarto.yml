@@ -112,6 +112,7 @@ book:
     - part: "Environmental Science: Water, Carbon and Policy"
       chapters:
         - 40-water-cycle.qmd
+        - 42-carbon-balance.qmd
         - 41-mrv.qmd
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:

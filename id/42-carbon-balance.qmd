@@ -1,0 +1,59 @@
+# Neraca Karbon Bentang Lahan Gambut {#sec-carbon-balance}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menyusun neraca karbon satu kabupaten yang kaya gambut, Tanjung Jabung Timur di Jambi, dari data satelit: produktivitas, cadangan biomassa, kehilangan akibat pembukaan lahan dan kebakaran, serta CO₂ dari gambut yang dikeringkan. Anda juga akan melihat dengan tepat suku mana yang tidak bisa diukur satelit, dan kenapa "neraca karbon" dari satelit selalu tidak lengkap.
+:::
+
+## Suku-suku neraca karbon
+
+Ahli ekologi menggambarkan pertukaran karbon sebuah bentang lahan sebagai rantai, setiap langkah mengurangi satu kehilangan lagi:
+
+| Suku | Arti | Dari satelit? |
+|---|---|---|
+| **GPP**, produksi primer bruto | karbon yang diikat lewat fotosintesis | dimodelkan (MODIS MOD17, dari cahaya dan kehijauan) |
+| **NPP**, produksi primer bersih | GPP dikurangi respirasi tumbuhan itu sendiri | dimodelkan (MODIS MOD17) |
+| **NEP**, produksi ekosistem bersih | NPP dikurangi respirasi mikroba tanah dan hewan (respirasi *heterotrof*) | tidak; butuh menara fluks atau sungkup tanah |
+| **NBP**, produksi bioma bersih | NEP dikurangi kehilangan akibat gangguan: pembukaan, panen, kebakaran, gambut yang dikeringkan | sebagian: luasnya ya, jumlahnya sering dari nilai baku |
+
+Hutan bisa punya GPP yang besar tetapi tetap menjadi *sumber* karbon bersih kalau terbakar, ditebang, atau berdiri di atas gambut yang dikeringkan. Satelit melihat dua baris pertama dan luasan baris terakhir; baris tengah yang menentukan, respirasi tanah, tidak terlihat dari orbit. Menara fluks (eddy covariance) mengukur pertukaran bersihnya secara langsung di atas sekitar satu kilometer persegi, dan dari situlah NEP bisa diketahui.
+
+## Kenapa gambut mengubah segalanya
+
+Gambut tropis menyimpan ribuan ton karbon per hektare, jauh lebih banyak daripada hutan di atasnya (Bab [-@sec-peat]). Mengeringkannya untuk pertanian atau perkebunan membuat udara masuk ke gambut, lalu mikroba menguraikannya dan melepas CO₂ tahun demi tahun selama drainase berlangsung. IPCC memberi faktor emisi Tier 1 untuk ini dalam Wetlands Supplement 2013 [@ipcc2014wetlands], Tabel 2.1, dalam ton karbon-CO₂ per hektare per tahun (rentang 95 %):
+
+| Penggunaan lahan di gambut tropis yang dikeringkan | t C-CO₂ ha⁻¹ th⁻¹ |
+|---|---|
+| Hutan dan bekas hutan (semak), dikeringkan | 5,3 (−0,7 sampai 9,5) |
+| Perkebunan kelapa sawit | 11 (5,6 sampai 17) |
+| Perkebunan rotasi pendek (misalnya akasia) | 20 (16 sampai 24) |
+| Perkebunan rotasi tidak diketahui atau panjang | 15 (10 sampai 21) |
+| Lahan pertanian dan bera | 14 (6,6 sampai 26) |
+
+Mengalikan dengan 44/12 mengubahnya menjadi CO₂: satu hektare sawit di gambut yang dikeringkan melepas sekitar 40 t CO₂ per tahun.
+
+{{< include _snippets/ch42_carbon_balance.qmd >}}
+
+## Membaca hasilnya
+
+**Apa yang menutupi gambut.** Menurut Global Peatland Map, sebagian besar kabupaten ini bergambut. Pada 2023, sekitar 98.000 ha di antaranya hutan tidak terganggu, 78.000 ha hutan terdegradasi atau tumbuh kembali, 97.000 ha sawit, dan 145.000 ha lahan terbuka lainnya (sebagian besar kebun, ladang rakyat, dan semak).
+
+**Gambut yang dikeringkan mendominasi.** Dengan faktor IPCC, gambut yang dikeringkan melepas sekitar 13 Mt CO₂ per tahun (rentang sekitar 7 sampai 20). Angka ini kira-kira lima kali 2,5 Mt CO₂ per tahun yang dilepas dari pembukaan biomassa hutan selama 2015–2023. Di bentang lahan gambut, sistem MRV yang hanya menghitung deforestasi melewatkan sebagian besar emisinya (Bab [-@sec-mrv]).
+
+**Kebakaran datang bergelombang.** Luas terbakar sekitar 13.700 ha pada 2015 dan 28.400 ha pada 2019, hampir semuanya di gambut, dan mendekati nol pada tahun basah. CO₂ dari kebakaran itu tidak ada di tabel, karena bergantung pada seberapa dalam gambut terbakar, yang tidak diukur satelit. Jumlahnya bisa melebihi emisi drainase satu tahun penuh.
+
+**Produktivitas bukan rosot karbon.** MODIS menaksir NPP kabupaten ini sekitar 10 Mt CO₂ per tahun. Menggoda untuk menyandingkannya dengan emisi lalu menyebut bentang lahan ini seimbang. Itu keliru: NPP adalah pertumbuhan tumbuhan bruto sebelum respirasi tanah dan sebelum sebagian besar biomassa membusuk atau dipanen. Kebun dengan NPP tinggi yang dipanen setiap beberapa tahun hanya menyimpan sedikit.
+
+## Yang dibutuhkan untuk menutup neracanya
+
+- **Menara fluks** di hutan gambut dan kebun, untuk mengukur NEP secara langsung.
+- **Kedalaman muka air tanah**, yang lebih mengendalikan emisi gambut daripada kelas penggunaan lahan. Faktor IPCC adalah rata-rata dari banyak kedalaman drainase.
+- **Kedalaman bakaran** dari LiDAR sebelum dan sesudah kebakaran, atau dari survei lapangan.
+- **Peta gambut nasional** skala 1:50.000 sebagai pengganti peta global yang kasar.
+- **Catatan panen** kebun, supaya pembukaan lahan tidak disangka kehilangan permanen.
+
+## Latihan {.unnumbered}
+
+1. Ganti faktor "lahan terbuka lainnya" (15) dengan faktor akasia (20) atau faktor lahan pertanian (14). Seberapa besar totalnya bergeser, dibandingkan rentang IPCC?
+2. Ulangi analisis untuk kabupaten yang sedikit gambutnya (misalnya Tebo, Bab [-@sec-mrv]). Suku mana yang dominan di sana?
+3. Dengan luas terbakar di gambut dan kedalaman bakaran yang diandaikan 10, 20, dan 30 cm, taksir CO₂ dari kebakaran 2019. Andaian mana yang harus Anda pertahankan dalam laporan?

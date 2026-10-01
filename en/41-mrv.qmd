@@ -46,7 +46,7 @@ Tebo lies in the lowlands of Jambi, where forest has been converted to rubber, o
 1. **Which forest definition, and does the map follow it?** The largest difference here comes from the definition, not the satellite.
 2. **How was the AD uncertainty estimated?** Comparing two maps is a warning sign, not an estimate. The accepted method is a stratified random sample of reference points, interpreted by people from high-resolution imagery, and an unbiased area estimator with confidence intervals (Chapter [-@sec-accuracy]; @olofsson2014good). Map pixel counts are biased whenever omission and commission errors differ.
 3. **Does the EF match what was actually cleared?** Biomass of intact forest applied to plantation harvest overstates emissions.
-4. **Are all pools and gases included?** This example covers above- and below-ground biomass only. Peat oxidation after drainage and fire emissions are often larger in Sumatra and Kalimantan (Chapter [-@sec-peat]).
+4. **Are all pools and gases included?** This example covers above- and below-ground biomass only. Peat oxidation after drainage and fire emissions are often larger in Sumatra and Kalimantan (Chapters [-@sec-peat] and [-@sec-carbon-balance]).
 5. **Is the reference level fair?** A reference period that includes unusually high loss years makes later reductions look larger.
 6. **Can it be reproduced?** Every number here comes from public data and a script anyone can run. That is the standard to aim for.
 

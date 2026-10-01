@@ -46,7 +46,7 @@ Tebo terletak di dataran rendah Jambi, tempat hutan dikonversi menjadi karet, sa
 1. **Definisi hutan yang mana, dan apakah petanya mengikutinya?** Perbedaan terbesar di sini berasal dari definisi, bukan dari satelitnya.
 2. **Bagaimana ketidakpastian AD ditaksir?** Membandingkan dua peta adalah tanda peringatan, bukan taksiran. Cara yang diterima adalah sampel acak berstrata dari titik-titik referensi yang ditafsirkan manusia dari citra resolusi tinggi, lalu penaksir luas yang tidak bias dengan selang kepercayaan (Bab [-@sec-accuracy]; @olofsson2014good). Hitungan piksel peta bias setiap kali kesalahan omisi dan komisi tidak seimbang.
 3. **Apakah EF cocok dengan yang benar-benar ditebang?** Biomassa hutan utuh yang dipakai untuk panen kebun membesar-besarkan emisi.
-4. **Apakah semua sumber karbon dan gas sudah masuk?** Contoh ini hanya mencakup biomassa di atas dan di bawah tanah. Oksidasi gambut setelah dikeringkan dan emisi kebakaran sering lebih besar di Sumatra dan Kalimantan (Bab [-@sec-peat]).
+4. **Apakah semua sumber karbon dan gas sudah masuk?** Contoh ini hanya mencakup biomassa di atas dan di bawah tanah. Oksidasi gambut setelah dikeringkan dan emisi kebakaran sering lebih besar di Sumatra dan Kalimantan (Bab [-@sec-peat] dan [-@sec-carbon-balance]).
 5. **Apakah tingkat acuannya adil?** Periode acuan yang memuat tahun-tahun dengan kehilangan sangat tinggi membuat penurunan sesudahnya tampak lebih besar.
 6. **Bisakah diulang?** Setiap angka di sini berasal dari data terbuka dan skrip yang bisa dijalankan siapa saja. Itulah standar yang patut dituju.
 

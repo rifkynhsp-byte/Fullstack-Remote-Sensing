@@ -112,6 +112,7 @@ book:
     - part: "Ilmu Lingkungan: Air, Karbon, dan Kebijakan"
       chapters:
         - 40-water-cycle.qmd
+        - 42-carbon-balance.qmd
         - 41-mrv.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:

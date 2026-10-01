@@ -1,0 +1,59 @@
+# The Carbon Balance of a Peat Landscape {#sec-carbon-balance}
+
+::: {.chapter-goal}
+#### In this chapter
+You will assemble the carbon balance of one peat-rich district, Tanjung Jabung Timur in Jambi, from satellite data: productivity, the biomass stock, losses from clearing and fire, and CO₂ from drained peat. You will also see exactly which terms satellites cannot measure, and why a satellite "carbon balance" is always incomplete.
+:::
+
+## The terms of a carbon balance
+
+Ecologists describe the carbon exchange of a landscape as a chain, each step subtracting one more loss:
+
+| Term | Meaning | From space? |
+|---|---|---|
+| **GPP**, gross primary production | carbon fixed by photosynthesis | modelled (MODIS MOD17, from light and greenness) |
+| **NPP**, net primary production | GPP minus the plants' own respiration | modelled (MODIS MOD17) |
+| **NEP**, net ecosystem production | NPP minus respiration by soil microbes and animals (*heterotrophic* respiration) | no; needs flux towers or soil chambers |
+| **NBP**, net biome production | NEP minus disturbance losses: clearing, harvest, fire, drained peat | partly: areas yes, amounts often from defaults |
+
+A forest can have a large GPP and still be a net *source* of carbon if it burns, is cleared or sits on drained peat. Satellites see the first two rows and the areas of the last; the decisive middle row, soil respiration, is invisible from orbit. Flux towers (eddy covariance) measure the net exchange directly over about one square kilometre and are how NEP is known at all.
+
+## Why peat changes everything
+
+Tropical peat stores thousands of tonnes of carbon per hectare, far more than the forest on top of it (Chapter [-@sec-peat]). Draining it for agriculture or plantations lets air into the peat, and microbes decompose it, releasing CO₂ year after year for as long as the drainage lasts. The IPCC gives Tier 1 emission factors for this in the 2013 Wetlands Supplement [@ipcc2014wetlands], Table 2.1, in tonnes of CO₂-carbon per hectare per year (95 % range):
+
+| Land use on drained tropical peat | t CO₂-C ha⁻¹ yr⁻¹ |
+|---|---|
+| Forest and cleared forest (shrubland), drained | 5.3 (−0.7 to 9.5) |
+| Plantations, oil palm | 11 (5.6 to 17) |
+| Plantations, short rotation (e.g. acacia) | 20 (16 to 24) |
+| Plantations, unknown or long rotation | 15 (10 to 21) |
+| Cropland and fallow | 14 (6.6 to 26) |
+
+Multiplying by 44/12 converts to CO₂: an oil palm hectare on drained peat emits about 40 t CO₂ a year.
+
+{{< include _snippets/ch42_carbon_balance.qmd >}}
+
+## Reading the results
+
+**What covers the peat.** By the Global Peatland Map, most of the district is peat. In 2023, about 98,000 ha of it was undisturbed forest, 78,000 ha degraded or regrowing forest, 97,000 ha oil palm and 145,000 ha other cleared land (much of it plantation, smallholder farms and scrub).
+
+**Drained peat dominates.** With the IPCC factors, drained peat emits about 13 Mt CO₂ a year (range about 7 to 20). That is roughly five times the 2.5 Mt CO₂ a year released by clearing forest biomass over 2015–2023. In a peat landscape, an MRV system that counts only deforestation misses most of the emissions (Chapter [-@sec-mrv]).
+
+**Fire comes in pulses.** Burned area was about 13,700 ha in 2015 and 28,400 ha in 2019, nearly all of it on peat, and close to zero in wet years. The CO₂ from those fires is not in the table, because it depends on how deep the peat burned, which satellites do not measure. It can exceed a whole year of drainage emissions.
+
+**Productivity is not a sink.** MODIS puts the district's NPP at about 10 Mt CO₂ a year. It is tempting to set this against the emissions and call the landscape balanced. That is wrong: NPP is gross plant growth before soil respiration and before most of the biomass decays or is harvested. A plantation with high NPP that is harvested every few years stores little.
+
+## What it would take to close the balance
+
+- **Flux towers** on peat forest and plantation, to measure NEP directly.
+- **Water-table depth**, which controls peat emissions more than land-use class does. The IPCC factors are averages over many drainage depths.
+- **Burn depth** from LiDAR before and after fire, or from field surveys.
+- **A national peat map** at 1:50,000 instead of the coarse global map.
+- **Harvest records** for plantations, so that clearing is not mistaken for permanent loss.
+
+## Exercises {.unnumbered}
+
+1. Replace the "other cleared land" factor (15) with the acacia factor (20) or the cropland factor (14). How much does the total move, compared with the IPCC ranges?
+2. Repeat the analysis for a district with little peat (for example Tebo, Chapter [-@sec-mrv]). Which term dominates there?
+3. Using the burned area on peat and an assumed burn depth of 10, 20 and 30 cm, estimate the CO₂ from the 2019 fires. Which assumption would you need to defend in a report?

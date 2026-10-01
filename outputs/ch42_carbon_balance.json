@@ -1,0 +1,41 @@
+[
+ {
+  "name": "ch42_carbon_balance-webmap",
+  "kind": "html",
+  "html": "images/real/ch42_carbon_balance-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch42-peat-strata",
+  "kind": "map",
+  "caption": "Land on peat in four strata, each matched to an IPCC drainage emission factor. Peat outside the Global Peatland Map is not counted.",
+  "image": "images/real/ch42-peat-strata.jpg"
+ },
+ {
+  "name": "ch42-peat-table",
+  "kind": "table",
+  "caption": "CO₂ from drained peat by stratum, with the IPCC 95 % range (low, high).",
+  "markdown": "| stratum on peat             |   area_ha |   EF_tC_ha_yr |   Mt_CO2_yr |   low |   high |\n|:----------------------------|----------:|--------------:|------------:|------:|-------:|\n| degraded / regrowing forest |    77,619 |           5.3 |        1.51 | -0.20 |   2.70 |\n| oil palm                    |    96,784 |          11.0 |        3.90 |  1.99 |   6.03 |\n| other cleared land          |   144,915 |          15.0 |        7.97 |  5.31 |  11.16 |\n| undisturbed forest          |    98,048 |           0.0 |        0.00 |  0.00 |   0.00 |"
+ },
+ {
+  "name": "ch42-productivity",
+  "kind": "chart",
+  "caption": "Gross and net primary production of the whole district, MODIS MOD17.",
+  "image": "images/real/ch42-productivity.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"GPP_MtC,NPP_MtC,year\n9.4286,2.4683,2001\n11.053,3.5579,2002\n10.271,3.0743,2003\n10.132,2.9003,2004\n10.007,2.8549,2005\n10.468,3.1411,2006\n9.9547,2.6399,2007\n9.5564,2.406,2008\n10.392,2.7537,2009\n9.65,2.237,2010\n10.03,2.4803,2011\n10.058,2.5629,2012\n9.775,2.1454,2013\n10.839,2.9328,2014\n10.954,3.1429,2015\n9.8825,2.3384,2016\n9.9473,2.3446,2017\n10.759,2.9143,2018\n11.266,3.3845,2019\n10.512,2.7681,2020\n10.114,2.4789,2021\n9.6001,2.0927,2022\n10.599,3.0001,2023\n10.618,2.8683,2024\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_productivity(df):\n    fig, ax = plt.subplots(figsize=(8, 3.4))\n    ax.plot(df.year, df.GPP_MtC, \"o-\", ms=3, color=\"#1b7837\", label=\"GPP\")\n    ax.plot(df.year, df.NPP_MtC, \"o-\", ms=3, color=\"#7fbf7b\", label=\"NPP\")\n    ax.set_ylabel(\"Mt C per year, whole district\")\n    ax.set_title(\"Photosynthesis is large and steady; most of it returns to the air \"\n                 \"through respiration\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_productivity(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch42-losses",
+  "kind": "chart",
+  "caption": "Hectares of tree cover lost (Hansen) and burned (MODIS) each year.",
+  "image": "images/real/ch42-losses.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"burned,burned_peat,lost,year,forest_C_stock_MtC,agb_C_Mg_ha,clearing_Mt_CO2\n13742,13739,5306.1,2015,10.988,68.286,1.8201\n0,0,25833,2016,10.988,68.286,8.8612\n0,0,5503.5,2017,10.988,68.286,1.8878\n41.47,41.47,4631.9,2018,10.988,68.286,1.5888\n28452,28420,3745.6,2019,10.988,68.286,1.2848\n0,0,7114.6,2020,10.988,68.286,2.4405\n106.44,106.44,3831.9,2021,10.988,68.286,1.3144\n0,0,4270.8,2022,10.988,68.286,1.465\n137.43,137.43,5018.5,2023,10.988,68.286,1.7215\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_losses(df):\n    fig, ax = plt.subplots(figsize=(8, 3.4))\n    ax.bar(df.year - 0.2, df.lost / 1000, 0.4, color=\"#c0392b\", label=\"tree cover lost\")\n    ax.bar(df.year + 0.2, df.burned / 1000, 0.4, color=\"#e67e22\", label=\"burned (MCD64A1)\")\n    ax.set_ylabel(\"Thousand hectares\")\n    ax.set_title(\"Disturbance: clearing every year, fire in the drought years\",\n                 loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_losses(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch42-balance",
+  "kind": "table",
+  "caption": "The carbon balance as far as satellites can take it, in Mt CO₂ per year (negative = uptake). The missing rows are why a satellite 'carbon balance' is never complete.",
+  "markdown": "| term                                                |   Mt_CO2_per_yr | measured_from_space     |\n|:----------------------------------------------------|----------------:|:------------------------|\n| GPP (gross uptake, not a net sink)                  |           -38.1 | modelled from MODIS     |\n| NPP (after plant respiration, still not a net sink) |           -10.0 | modelled from MODIS     |\n| Soil (heterotrophic) respiration                    |           nan   | no                      |\n| Clearing of forest biomass (mean 2015-2023)         |             2.5 | area yes, stock GEDI    |\n| Peat drainage (IPCC Tier 1)                         |            13.4 | area yes, EF from IPCC  |\n| Peat and vegetation fires                           |           nan   | area yes, burn depth no |"
+ }
+]
