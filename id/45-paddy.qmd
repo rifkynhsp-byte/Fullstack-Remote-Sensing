@@ -1,0 +1,40 @@
+# Padi Sawah: Musim Tanam, Hasil, dan Satu Tahun yang Buruk {#sec-paddy}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memetakan sawah dan menghitung musim tanamnya menembus awan dengan Sentinel-1, membandingkan kabupaten beririgasi yang intensif (Karawang) dengan komunitas adat di dataran tinggi (Kasepuhan Ciptagelar, Sukabumi), menyusun peta hasil yang jumlahnya sama dengan produksi resmi kabupaten, dan mencari tahu dari mana penurunan produksi Karawang pada 2023 berasal. Dua uji dalam bab ini gagal, dan bab ini sengaja menyimpannya, karena mengetahui apa yang tidak bisa dilihat sebuah metode adalah bagian dari cara memakainya.
+:::
+
+## Tanda khas padi
+
+Sawah beririgasi digenangi sebelum tanam. Air yang tenang menjadi cermin bagi radar, sehingga hamburan balik VH turun sangat rendah (P5). Ketika padi tumbuh, tajuknya menghamburkan lebih banyak dan VH naik 6 dB atau lebih; saat panen VH turun lagi. Awan tidak berpengaruh. Tanda khas ini cukup teratur untuk mengenali sawah, menghitung musim tanamnya, dan menentukan waktunya.
+
+Di bab ini sebuah petak dianggap sawah kalau, di lahan pertanian ESA WorldCover, petak itu punya paling sedikit satu lembah penggenangan (VH di bawah −21 dB) per tahun dan rentang VH musiman paling sedikit 6 dB. Satu musim tanam dihitung pada *awal* setiap masa tergenang, bukan pada setiap citra yang tergenang: satu masa tergenang berlangsung dua atau tiga komposit 12 harian, dan menghitung kompositnya akan menggandakan atau melipattigakan jumlah musim.
+
+{{< include _snippets/ch45_paddy.qmd >}}
+
+## Dua cara bertani padi
+
+**Karawang** adalah kabupaten penghasil padi terbesar kedua di Jawa Barat, hampir seluruhnya beririgasi. Petak-petak sampel menanam median **3 kali setahun** (nilai tertinggi, di atas 4, adalah artefak penghitungan ketika satu petak tergenang dua kali dalam satu musim). Tanam memuncak pada Februari–Maret dan Agustus, dan tajuk mencapai puncaknya sekitar 84 hari setelah lembah penggenangan.
+
+**Di sekitar Kasepuhan Ciptagelar**, di perbukitan Sukabumi, komunitas adat memegang kalender tradisional dan menanam padi sekali setahun di sawah-sawah bertingkat di lembah. Di sini metode radar **gagal**: petak-petak teras kecil di antara pepohonan di lereng curam tidak pernah turun di bawah batas genangan (median rentang VH musimannya sekitar 3,6 dB, dibandingkan 6 dB atau lebih di Karawang). Karena itu musim tanam dihitung dari NDVI Sentinel-2 (lembah di bawah 0,45 yang diikuti puncak di atas 0,6). Hasilnya, dari hanya 12 petak yang punya cukup citra cerah, adalah median **sekitar 0,7 kali tanam per tahun** dengan musim yang panjang (median 214 hari dari lembah ke puncak), sesuai dengan varietas lokal berumur panjang yang ditanam sekali setahun. Dua tempat yang hanya terpaut sekitar 120 km, dua sistem padi yang berbeda, dan dua sensor berbeda yang dibutuhkan untuk melihatnya.
+
+## Peta hasil yang jumlahnya cocok
+
+Penginderaan jauh tidak bisa menimbang gabah. Yang bisa dilakukannya adalah membagi angka resmi ke ruang. BPS melaporkan produksi Karawang tahun 2023 sekitar 1,09 juta ton gabah kering giling (GKG), angka sementara ([BPS Jawa Barat, diberitakan ANTARA, 1 November 2023](https://jabar.antaranews.com/berita/476739/bps-peristiwa-alam-sebabkan-produksi-padi-di-jawa-barat-2023-turun)). Bab ini membaginya ke setiap panen yang terpetakan sebanding dengan GPP MODIS per musim. Totalnya pasti benar karena memang dibuat begitu; polanya hanya sebaik hubungan GPP dengan gabah.
+
+Radar menemukan sekitar 70.500 ha sawah dan 146.600 ha luas panen pada 2023 (rata-rata 2,08 kali tanam per tahun), yang berarti **7,4 t GKG per hektare panen**. Angka itu tinggi dibandingkan rata-rata nasional 2023 sekitar 5,3 t/ha (53,98 juta t dari 10,21 juta ha, [BPS, 1 Maret 2024](https://www.bps.go.id/en/pressrelease/2024/03/01/2375/pada-2023--luas-panen-padi-mencapai-sekitar-10-21-juta-hektare-dengan-produksi-padi-sebesar-53-98-juta-ton-gabah-kering-giling--gkg-.html)). Sebagian selisihnya nyata (Karawang termasuk kabupaten dengan irigasi terbaik di negeri ini), dan sebagian kemungkinan berasal dari saringan: petak yang kecil, bercampur dengan rumah dan pohon, atau tidak diberi label lahan pertanian oleh WorldCover akan terlewat, sehingga 70.500 ha versi radar kemungkinan terlalu kecil. Kalau luas panen sebenarnya lebih besar, hasil per hektarenya turun sebanding. Kalibrasi terhadap angka resmi hanya sebaik taksiran luas yang menjadi pembaginya.
+
+## Apa yang salah pada 2023?
+
+BPS melaporkan bahwa produksi Karawang turun sekitar 130.000 t pada 2023, penurunan terbesar di Jawa Barat, dan menyebut dua penyebab: banjir pada Maret dan kekeringan sejak Juni saat El Niño. Ada dua uji radar yang dilakukan.
+
+**Uji 1: tanaman terendam pada Maret (gagal).** Sawah yang sedang tumbuh pada Februari lalu terendam pada Maret justru lebih luas pada 2022 (sekitar 12.000 ha) daripada pada tahun banjir 2023 (sekitar 5.700 ha). Di Karawang, Maret adalah saat musim pertama dipanen dan sawah digenangi lagi untuk musim berikutnya. Uji ini tidak bisa membedakan penggenangan biasa dari tanaman yang tenggelam. Peta kerugian akibat banjir butuh umur tanaman (sawah yang tergenang 40 hari setelah tanam adalah kerugian; yang tergenang setelah panen adalah musim baru) atau laporan lapangan.
+
+**Uji 2: berapa kali menanam (berhasil).** Luas panen yang dipetakan radar turun dari sekitar 166.000 ha pada 2022 menjadi 147.000 ha pada 2023, turun sekitar 12 %, dekat dengan penurunan produksi resmi sebesar 11 %. Musim tanam yang dimulai pada paruh kedua tahun, yaitu musim kekeringan, turun dengan porsi serupa. Hasil per hektare panen hampir tidak berubah, sekitar 7,3 sampai 7,4 t/ha di kedua tahun. **Kerugian 2023 berasal dari lebih sedikitnya tanaman yang ditanam dan dipanen, bukan dari tanaman yang lebih buruk.** Ini lebih mengarah pada kekurangan air di musim kemarau, yaitu kekeringan El Niño, daripada banjir Maret.
+
+## Latihan {.unnumbered}
+
+1. Petakan umur tanaman saat banjir Maret 2023 (hari sejak lembah penggenangan terakhir) dan hitung hanya sawah yang tergenang 20–80 hari setelah tanam. Apakah 2023 sekarang menonjol dibandingkan 2022?
+2. Ulangi perbandingan untuk Indramayu, kabupaten padi terbesar. Apakah penurunan 2023 juga terjadi pada luas panen?
+3. Kalau Anda bisa memperoleh luas panen BPS per kecamatan, bandingkan dengan taksiran radar kecamatan demi kecamatan. Di mana radar melewatkan sawah?

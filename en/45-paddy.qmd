@@ -1,0 +1,40 @@
+# Paddy Rice: Seasons, Yield and a Bad Year {#sec-paddy}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map rice fields and count their crops through the clouds with Sentinel-1, compare an intensive irrigated district (Karawang) with a traditional upland community (Kasepuhan Ciptagelar, Sukabumi), build a yield map that adds up to the official district production, and find out where Karawang's 2023 production loss came from. Two of the tests in this chapter fail, and the chapter keeps them, because knowing what a method cannot see is part of using it.
+:::
+
+## The rice signature
+
+An irrigated rice field is flooded before transplanting. Calm water is a mirror for radar, so VH backscatter drops very low (P5). As the rice grows, the canopy scatters more and VH rises by 6 dB or more; at harvest it falls again. Cloud does not matter. The signature is regular enough to identify a field, count its crops and time them.
+
+In this chapter a field counts as paddy if, on ESA WorldCover cropland, it has at least one flooding dip (VH below −21 dB) a year and a seasonal VH range of at least 6 dB. A crop is counted at the *start* of each flooded spell, not at every flooded image: a spell lasts two or three 12-day composites, and counting composites would double or triple the number of crops.
+
+{{< include _snippets/ch45_paddy.qmd >}}
+
+## Two ways of farming rice
+
+**Karawang** is the second-largest rice district of West Java, almost all of it irrigated. The sampled fields grow a median of **3 crops a year** (the highest values, above 4, are counting artefacts where a field dips twice in one season). Transplanting peaks in February–March and in August, and the canopy reaches its peak about 84 days after the flooding dip.
+
+**Around Kasepuhan Ciptagelar** in the hills of Sukabumi, the community keeps a traditional calendar and plants rice once a year on terraced valleys. Here the radar method **fails**: small terraces among trees on steep slopes never drop below the flooding threshold (the median seasonal VH range is about 3.6 dB, against 6 dB or more in Karawang). The crops were therefore counted from Sentinel-2 NDVI instead (a trough below 0.45 followed by a peak above 0.6). The result, from only 12 fields with enough clear images, is a median of **about 0.7 crops a year** with long seasons (a median of 214 days from trough to peak), consistent with long-duration traditional varieties grown once a year. Two places about 120 km apart, two different rice systems, and two different sensors needed to see them.
+
+## A yield map that adds up
+
+Remote sensing cannot weigh grain. What it can do is share an official total out over space. BPS reported Karawang's 2023 production as about 1.09 million tonnes of dry milled grain (GKG), a preliminary figure ([BPS West Java, reported by ANTARA, 1 November 2023](https://jabar.antaranews.com/berita/476739/bps-peristiwa-alam-sebabkan-produksi-padi-di-jawa-barat-2023-turun)). The chapter divides it among the mapped harvests in proportion to MODIS GPP per crop. The map is right in total by construction; its pattern is only as good as GPP's link to grain.
+
+The radar finds about 70,500 ha of paddy and 146,600 ha harvested in 2023 (2.08 crops a year on average), which implies **7.4 t GKG per harvested hectare**. That is high compared with the 2023 national average of about 5.3 t/ha (53.98 million t on 10.21 million ha, [BPS, 1 March 2024](https://www.bps.go.id/en/pressrelease/2024/03/01/2375/pada-2023--luas-panen-padi-mencapai-sekitar-10-21-juta-hektare-dengan-produksi-padi-sebesar-53-98-juta-ton-gabah-kering-giling--gkg-.html)). Part of the difference is real (Karawang is among the best irrigated districts in the country), and part is likely the mask: fields that are small, mixed with houses and trees, or not labelled cropland by WorldCover are missed, so the radar's 70,500 ha is probably an undercount. If the true harvested area is larger, the implied yield falls in proportion. Calibrating against official totals is only as good as the area estimate that divides them.
+
+## What went wrong in 2023?
+
+BPS reported that Karawang's production fell by about 130,000 t in 2023, the largest fall in West Java, and named two causes: floods in March and drought from June, during El Niño. Two radar tests followed.
+
+**Test 1: crops under water in March (failed).** Paddy that was growing in February and under water in March covered *more* area in 2022 (about 12,000 ha) than in the flood year 2023 (about 5,700 ha). In Karawang, March is when the first crop is harvested and fields are flooded again for the next one. The test cannot tell ordinary re-flooding from a drowned crop. A flood-loss map needs the crop's age (a field flooded 40 days after transplanting is a loss; one flooded after harvest is a new season) or field reports.
+
+**Test 2: how many crops were grown (worked).** The harvested area mapped by radar fell from about 166,000 ha in 2022 to 147,000 ha in 2023, a drop of about 12 %, close to the official 11 % fall in production. Crops started in the second half of the year, the drought season, fell by a similar share. Yield per harvested hectare stayed almost the same, about 7.3 to 7.4 t/ha in both years. **The 2023 loss came from fewer crops being planted and harvested, not from poorer crops.** That points to water shortage in the dry season, the El Niño drought, more than to the March floods.
+
+## Exercises {.unnumbered}
+
+1. Map crop age at the time of the March 2023 floods (days since the last flooding dip) and count only fields flooded 20–80 days after transplanting. Does 2023 now stand out against 2022?
+2. Repeat the comparison for Indramayu, the largest rice district. Is the 2023 fall also in harvested area?
+3. If you can obtain BPS harvested area by subdistrict, compare it with the radar estimate subdistrict by subdistrict. Where does the radar miss fields?
