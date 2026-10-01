@@ -64,6 +64,7 @@ book:
         - p3-scanning.qmd
         - p4-resolution.qmd
         - p5-radar.qmd
+        - p6-ijb.qmd
     - part: "Bagian I: Fondasi, Tujuan dan Fisika"
       chapters:
         - 01-why-monitor.qmd

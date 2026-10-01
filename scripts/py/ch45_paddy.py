@@ -305,6 +305,24 @@ def years_table():
     return pd.DataFrame(rows)
 
 
+def bps_sukabumi_table():
+    """BPS Kabupaten Sukabumi, 2023: harvested area, productivity and production
+    by subdistrict (data/bps_sukabumi_padi_kecamatan_2023.csv). Kasepuhan
+    Ciptagelar lies in Cisolok subdistrict."""
+    from pathlib import Path
+    f = Path(__file__).resolve().parents[2] / "data" / "bps_sukabumi_padi_kecamatan_2023.csv"
+    raw = pd.read_csv(f, skiprows=10, header=None, thousands=",", na_values="-",
+                      names=["subdistrict", "sawah_ha", "gogo_ha", "sawah_qu_ha", "gogo_qu_ha",
+                             "sawah_t", "gogo_t"])
+    rows = raw[raw.subdistrict.isin(["Cisolok", "Cikakak", "Kabandungan"])].copy()
+    total = raw.iloc[[-1]].copy()
+    total["subdistrict"] = "Kabupaten Sukabumi (total)"
+    out = pd.concat([rows, total])
+    out["sawah_t_ha"] = out.sawah_qu_ha / 10
+    out["gogo_t_ha"] = out.gogo_qu_ha / 10
+    return out[["subdistrict", "sawah_ha", "sawah_t_ha", "gogo_ha", "gogo_t_ha"]]
+
+
 def products():
     return [
         {"kind": "map", "name": "ch45-paddy", "image": paddy_mask(karawang_district),
@@ -337,6 +355,11 @@ def products():
          "caption": "Official district production shared out over the mapped harvests in "
                     "proportion to MODIS GPP per crop. The total is right by construction; "
                     "the pattern is only as good as GPP's link to grain."},
+        {"kind": "table", "name": "ch45-bps-sukabumi", "data": bps_sukabumi_table,
+         "floatfmt": ("", ",.0f", ".2f", ",.0f", ".2f"),
+         "caption": "Official 2023 figures for the subdistricts around Kasepuhan Ciptagelar "
+                    "(BPS Kabupaten Sukabumi): wetland rice (sawah) and upland rice (gogo), "
+                    "harvested hectares and t GKG per hectare."},
         {"kind": "table", "name": "ch45-years", "data": years_table,
          "floatfmt": (".0f", ",.0f", ",.0f", ",.0f", ".2f"),
          "caption": "Karawang, three years. The mapped harvested area falls by about 12 % "

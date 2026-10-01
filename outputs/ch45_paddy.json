@@ -45,6 +45,12 @@
   "image": "images/real/ch45-yield-map.jpg"
  },
  {
+  "name": "ch45-bps-sukabumi",
+  "kind": "table",
+  "caption": "Official 2023 figures for the subdistricts around Kasepuhan Ciptagelar (BPS Kabupaten Sukabumi): wetland rice (sawah) and upland rice (gogo), harvested hectares and t GKG per hectare.",
+  "markdown": "| subdistrict                |   sawah_ha |   sawah_t_ha |   gogo_ha |   gogo_t_ha |\n|:---------------------------|-----------:|-------------:|----------:|------------:|\n| Cisolok                    |       2423 |         5.60 |     1,000 |        3.50 |\n| Cikakak                    |       2028 |         5.68 |       100 |        4.30 |\n| Kabandungan                |       1442 |         5.85 |       289 |        3.50 |\n| Kabupaten Sukabumi (total) |     113191 |         5.72 |    15,487 |        3.79 |"
+ },
+ {
   "name": "ch45-years",
   "kind": "table",
   "caption": "Karawang, three years. The mapped harvested area falls by about 12 % in 2023, close to the official fall in production; yield per harvested hectare hardly changes. The 2023 loss came from fewer crops, not poorer ones.",

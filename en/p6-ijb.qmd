@@ -1,0 +1,145 @@
+# P6 · IJB: Remote Sensing Without Code {#sec-p6-ijb .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+You will learn to use IJB, an Earth Engine application built by the author, to answer real questions (where did it flood, what burned, how has land cover changed, where is landslide risk highest) by clicking instead of coding. Everything P1 to P5 explained runs inside it: Sentinel-1 radar, Sentinel-2 composites, terrain, GEDI, machine learning. The rest of the book shows the code behind the same ideas; this chapter shows what you can do before writing a single line.
+:::
+
+## Why an app
+
+Most people who need a flood map are not programmers: a disaster officer, a district planner, a student on the first day. For them a script is a wall. IJB (from *Indraja Buana*, "remote sensing of the earth") puts the most useful analyses of this book behind buttons, with sensible defaults chosen from the author's own projects. It gives beginners real results on day one, and gives experts a fast first look before they open the Code Editor.
+
+What you still need is the understanding from P1 to P5. The app will happily produce a flood map from the wrong dates or a land-cover map from three badly placed samples. Knowing *why* radar sees water and *what* an accuracy number means is what separates a usable result from a pretty one.
+
+## Opening IJB
+
+IJB runs inside the Google Earth Engine Code Editor (Chapter [-@sec-ecosystem] explains how to get an account).
+
+1. Sign in to Earth Engine, then open the repository link: <https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/IndrajaBuana>. The repository `IndrajaBuana` appears under *Reader* in the Scripts panel on the left.
+2. Open the script called **app** in that repository.
+3. Press **Run**. The Code Editor's map is replaced by the IJB screen.
+
+The app loads only its frame at first. Each module is built the moment you press its button, so the app stays light, and if one module ever fails, its name and error appear on screen while the others keep working.
+
+## The screen
+
+{{< include _snippets/ch00f_ijb_app.qmd >}}
+
+The left panel walks you through three steps. The map on the right shows your area, every result layer, a legend and a status bar telling you what the app is doing.
+
+### Step 1: area of interest
+
+Every analysis needs an area. There are four ways to set it:
+
+- **Draw** a rectangle (*Kotak*) or polygon (*Poligon*) on the map.
+- **Choose an administrative unit**: province, then regency or city, from the official boundaries.
+- **Paste** a geometry copied from QGIS, or four numbers of a bounding box (west, south, east, north).
+- **Load a public Earth Engine asset**, for example a boundary you uploaded yourself.
+
+The app checks the size first and rejects areas over 25,000 km², because larger analyses would run out of time. A regency is usually well within the limit; a whole province often is not.
+
+### Step 2: reporting unit
+
+Choose whether statistics and tables are summarised per **province, regency, subdistrict (kecamatan) or village (desa)**. Subdistricts and villages use the community geoBoundaries dataset. A flood map summarised per village is what an emergency response actually needs.
+
+### Step 3: choose a module
+
+Ten buttons, ten kinds of question. The table in the figure block above says which to open for what. The sections below explain each, with the settings that matter.
+
+## The modules
+
+### Data: the catalogue
+
+Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, land cover, buildings and population, fire and peat, drought, coasts and ecosystems, soils, volcanoes, administrative boundaries, event history and machine learning. Examples: CHIRPS and GPM rainfall, HAND and MERIT Hydro, four elevation models (FABDEM, Copernicus GLO-30, NASADEM, SRTM), Dynamic World and WorldCover, Google, Microsoft and VIDA building footprints, WorldPop and GHSL population, FIRMS hotspots, burned area, peat extent and peat thickness, mangroves, SMAP soil moisture, the NASA global landslide catalogue and the satellite embeddings. Pick a group and a layer, set a date range where relevant, and press *Tampilkan lapisan*: the layer appears on the map with its mean over your area.
+
+**Use it for:** a first look at any place, and background layers before any analysis.
+
+### Citra: a clean Sentinel-2 image
+
+Builds a cloud-free composite from all Sentinel-2 images in a date range, not one scene. Five methods: **Cloud Score Plus** (the default and usually the best in the tropics), median with the scene classification mask, greenest pixel, 25th percentile (bright, low-haze) and the single cleanest scene. You set the date range, the maximum cloud per scene, the Cloud Score Plus threshold, the band combination (natural colour, vegetation infrared, urban SWIR, agriculture, or haze penetration) and optionally an index (NDVI, NDWI, NDBI, NBR or NDMI). The app reports how many images were used and how many pixels came out clean. (P1 and Chapter [-@sec-cloud] explain why these choices matter.)
+
+### Tutupan: your own land-cover map
+
+The supervised classification of Chapter [-@sec-supervised], by clicking:
+
+1. Choose the data source (Sentinel-2 composite, Sentinel-1, satellite embeddings, terrain or Dynamic World) and the date range.
+2. **Add your classes** (*Tambah*): for example forest, rice field, settlement, water.
+3. For each class, press *Tandai* and click examples on the map.
+4. Choose the algorithm: Random Forest (recommended), Gradient Tree Boost, SVM, CART, Minimum Distance, or K-Means if you want clusters without samples.
+5. Set the minimum mapping unit to remove speckled single pixels, then press *Latih dan klasifikasi*.
+
+The app reports **overall accuracy and kappa** and the area of every class. Remember Chapter [-@sec-accuracy]: accuracy on points you clicked yourself near each other is optimistic. Spread your samples over the whole area.
+
+### Model: ready-made models, including the author's own
+
+Three modes:
+
+- **The author's 10-class model**: a classifier trained on satellite embeddings, elevation and slope, mapping plantation, forest, agriculture, open land, water, mangrove, rice field, oil palm, sago and rubber. Choose the embedding year (2021–2025) and press run. No samples needed; the model was trained in advance and is applied to your area.
+- **Dynamic World**: Google's near-real-time land cover, for comparison.
+- **Canopy height from GEDI**: the app takes GEDI laser heights in your area (good-quality shots only), trains a regression on the embeddings, and predicts a wall-to-wall 10 m canopy height map. It reports the correlation with the GEDI shots and the mean height (Chapters [-@sec-height-scaling] and [-@sec-gedi-structure]).
+
+### Deret: time series
+
+For when something happened and how long ago (Chapters [-@sec-timeseries] and [-@sec-oil-palm-age]). Four modes: **harmonic model and trend** (separates the season from the long-term trend, reports the seasonal amplitude), **LandTrendr breakpoints** (the year of the main disturbance), **stand or crop age**, and **CCDC breakpoints** (precise break dates, slower). Set the year range, the number of harmonics and the change-magnitude threshold.
+
+### Ubah: change between two dates
+
+Four methods: **index difference** (NDVI, NDWI, NDBI, NBR or NDMI between two periods, with a threshold), **Dynamic World transitions**, **double classification**, and **linear trend**. It reports hectares gained and lost. For the exact date of a change, use Deret instead.
+
+### Banjir: flood mapping
+
+The method of Chapter [-@sec-flood] and P5, by clicking:
+
+1. Set a **period before** the flood and a **period during or after** it.
+2. Choose the **orbit direction** (descending or ascending; pick the one that passed during your event).
+3. Choose the **elevation model** (FABDEM by default, with trees and buildings removed) and the **HAND limit**, the height above the nearest drainage beyond which water is not plausible (15 m by default).
+4. Press *Jalankan analisis*.
+
+Behind the button: Sentinel-1 backscatter change, an automatic Otsu threshold, then filters for steep slopes, permanent water and high HAND. The results are **hectares flooded, people exposed, buildings affected** and how well the flood matches the historical flood record. Summarised by your reporting unit, that is a first situation report.
+
+### Api: forest and land fire
+
+1. Set a **period before** and a **period after** the fire season.
+2. Press *Jalankan analisis*.
+
+The app computes the difference in Normalised Burn Ratio (dNBR) from Sentinel-2 and splits it into four severity classes, with breaks at dNBR 0.27, 0.44 and 0.66. It overlays FIRMS hotspots and the peat map, and reports **hectares burned, hotspots, hectares of burned peat and the mean peat thickness**. A hectare of burned peat is not a hectare of burned grass (Chapters [-@sec-peat] and [-@sec-carbon-balance]).
+
+### Rawan: hazard susceptibility with machine learning
+
+Maps where landslides or floods are *likely*, not where they happened. A random forest learns from the 64 satellite embedding bands plus slope, elevation, aspect, TWI, HAND, rainfall, soil and land cover.
+
+1. Choose the **hazard** (landslide, flood, or general), the **embedding year** and the **elevation model**.
+2. Give it examples, in one of two ways:
+   - **Automatically**, from the NASA global landslide catalogue (*Latih otomatis*), or
+   - **By hand**: press *Tandai RAWAN* and click places known to be hazardous, then *Tandai AMAN* and click safe places, then *Latih dari titik manual*.
+3. Set the number of trees (120 by default).
+
+It reports **validation accuracy, kappa, hectares of high susceptibility and people living in high-susceptibility zones**. Hand-placed points from people who know the area usually beat a global catalogue.
+
+### Toolbox: chain your own workflow
+
+Every result becomes the **active layer**, and every tool works on the active layer, so tools can be chained (figure above). The tools: an **expression calculator** for any band formula, **Otsu threshold**, **raster to vector** (with minimum mapping unit and line simplification), **vector to raster** (buildings, landslides, mangroves or your last vector), **zonal statistics** (mean, sum, maximum, minimum, mode, standard deviation, median), **SNIC object segmentation** (Chapter [-@sec-obia]) and **morphological filters and sieve**.
+
+## Four recipes
+
+**A flood situation report.** Step 1: choose the regency. Step 2: reporting unit *Desa*. Banjir: before period a month before the event, after period the days just after it, the orbit that passed during the flood. Run. Read hectares, people and buildings per village; check the map against news photographs before sharing it.
+
+**A burn-severity map for a peat district.** Api with a before period in June–July and an after period in October–November of a dry year. Read the burned peat and its thickness; use Data → FIRMS to compare with hotspot counts.
+
+**Urban growth.** Ubah with *Dynamic World transitions* between two years, or *Selisih indeks* on NDBI. For building counts, Data → VIDA building footprints, then Toolbox → zonal statistics per village.
+
+**A quick land-cover map with no samples.** Model → the 10-class model for the latest embedding year. If your area has classes the model never saw, switch to Tutupan and train your own.
+
+## Using an app responsibly
+
+- **Dates are everything.** A flood map from the wrong week maps rice-field irrigation (Chapter [-@sec-paddy]).
+- **Read the numbers the app gives you,** especially accuracy and kappa, and treat any map without them as a draft.
+- **Check against something independent**: field reports, high-resolution basemaps, news photographs.
+- **Credit the data.** Every layer in the catalogue has an owner; name them when you publish a map.
+
+## Exercises {.unnumbered}
+
+1. Map a flood you know (for example in your own district) with Banjir. Which orbit direction passed closest to the event date?
+2. Train Tutupan twice for the same area: once with five samples per class clustered in one corner, once with twenty spread out. Compare the accuracy and the maps.
+3. Run Model → canopy height for a forest area. Where does the GEDI-trained map disagree most with your expectations?
+4. Use Rawan with manual points in a landslide-prone valley you know. How many points does it take before the map stops changing?
