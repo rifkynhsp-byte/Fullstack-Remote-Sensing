@@ -1,0 +1,51 @@
+# Ensemble Land Cover and Honest Validation {#sec-ensemble}
+
+::: {.chapter-goal}
+#### In this chapter
+You will train five different classifiers and two ensembles on 2,320 field-labelled points in ten classes, including oil palm, sago, rubber and paddy, which no global land-cover map has. Then you will validate them two ways and watch every model lose 12 to 15 points of accuracy when neighbouring points are no longer allowed on both sides of the split. One class drops to zero. That drop is the most important result in the chapter.
+:::
+
+## Field labels, the classes that matter
+
+The automatic labels of Chapter [-@sec-auto-landcover] are free, but they only know the classes of global maps. A plantation manager, a peat restoration agency or a district agriculture office needs *oil palm*, *rubber*, *sago* and *paddy*. Those come only from people who know the land.
+
+This chapter uses the author's own reference points: 2,320 points labelled for 2023 imagery on the Riau coast of Sumatra, in ten classes (plantation, forest, agriculture, open land, water, mangrove, paddy, oil palm, sago and rubber), published as an Earth Engine asset.
+
+## Many models, one vote
+
+Different classifiers fail in different ways. A random forest splits the feature space into boxes; a support vector machine draws smooth boundaries; k-nearest neighbours copies the label of the most similar training points; logistic regression draws straight boundaries. An **ensemble** combines them:
+
+- **Soft voting** averages the class probabilities of all models and picks the highest.
+- **Stacking** trains a second model that learns how much to trust each first model.
+
+When the members make *different* mistakes, the ensemble is better than any of them. When they make the same mistakes, it is not.
+
+The features are the 2023 satellite embeddings (64 bands, Chapter [-@sec-embeddings]) plus elevation and slope. The models are trained in Python with scikit-learn; the map is drawn in Earth Engine with three classifiers that vote.
+
+## Two ways to validate
+
+1. **Random split**: 70 % of the points train, 30 % test, chosen at random.
+2. **Spatial blocks**: the area is cut into blocks of about 5 km (47 blocks contain points), and whole blocks are held out together in five folds. A test point never has a training neighbour a few metres away.
+
+Labellers tend to click many points in one patch. A random split then tests the model on the neighbours of its own training points, which look almost identical. That measures memory, not mapping.
+
+{{< include _snippets/ch59_ensemble_landcover.qmd >}}
+
+## Reading the results
+
+**Every model looks excellent, until the blocks.** With a random split, all seven models score between 0.966 and 0.983. With spatial blocks, they score between 0.819 and 0.856. The 12 to 15 points between the two numbers are how much the random split flatters the models on clustered labels. Report the block number.
+
+**The best model depends on the test.** Gradient boosting wins the random split (0.983) and is among the weakest on spatial blocks (0.833): it learned the places more than the classes. Logistic regression, the simplest model, holds up best among single models (0.854). Stacking is best overall (0.856), but only by a hair. The ensembles help a little, because the members mostly make the same mistakes: the mistakes come from the labels, not from the algorithms.
+
+**Paddy drops to zero.** All 152 paddy points sit in just two blocks. When those blocks are held out, the model has never seen paddy and calls it open land, and recall is 0 %. In the random split, paddy looked fine. This is the strongest argument in the book for spreading reference points: **a class sampled in one place is a class the model cannot map anywhere else.** Oil palm and sago (two blocks each) survive only because they look distinctive; rubber (three blocks) falls to 72 %, confused with forest.
+
+**What a global map calls these classes.** WorldCover calls 95 % of the paddy points *grassland*, and 86 to 99 % of oil palm, sago and rubber *trees*. Mangrove agrees (99 %), and so does water. For the classes that carry the economic and policy questions in this landscape, a global map is not an answer; it is a different question.
+
+**Where the map is uncertain.** On the agreement map, the three Earth Engine models agree on most of the area, including the river, the mangrove fringe and the large estates. They disagree in the mixed agricultural land between them, where small gardens, young plantings and open patches alternate. That is where to send the next labelling trip.
+
+## Exercises {.unnumbered}
+
+1. Change the block size to 2 km and to 10 km. How does the block accuracy change, and why?
+2. Remove paddy from the training set and retrain. Does the accuracy of the other classes change?
+3. Add 30 paddy points from another district of your choice (from imagery you can interpret) and rerun the block validation. How many does it take before paddy recall rises above zero?
+4. Run the automatic-label method of Chapter [-@sec-auto-landcover] over this area and compare it with the ensemble map. Where do the classes from field labels add the most?

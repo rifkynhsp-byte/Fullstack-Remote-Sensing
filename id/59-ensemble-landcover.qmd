@@ -1,0 +1,51 @@
+# Tutupan Lahan Ensemble dan Validasi yang Jujur {#sec-ensemble}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan melatih lima classifier berbeda dan dua ensemble pada 2.320 titik berlabel lapangan dalam sepuluh kelas, termasuk sawit, sagu, karet, dan sawah, yang tidak dimiliki peta tutupan lahan global mana pun. Lalu Anda akan memvalidasinya dengan dua cara dan melihat setiap model kehilangan 12 sampai 15 poin akurasi ketika titik-titik yang bertetangga tidak lagi boleh berada di kedua sisi pembagian data. Satu kelas jatuh ke nol. Penurunan itulah hasil terpenting di bab ini.
+:::
+
+## Label lapangan, kelas yang penting
+
+Label otomatis di Bab [-@sec-auto-landcover] memang gratis, tetapi hanya mengenal kelas peta global. Pengelola perkebunan, badan restorasi gambut, atau dinas pertanian kabupaten membutuhkan *sawit*, *karet*, *sagu*, dan *sawah*. Kelas-kelas itu hanya bisa datang dari orang yang mengenal lahannya.
+
+Bab ini memakai titik rujukan milik penulis sendiri: 2.320 titik yang dilabeli untuk citra 2023 di pesisir Riau, Sumatra, dalam sepuluh kelas (perkebunan, hutan, pertanian, lahan terbuka, air, mangrove, sawah, sawit, sagu, dan karet), yang diterbitkan sebagai aset Earth Engine.
+
+## Banyak model, satu suara
+
+Classifier yang berbeda gagal dengan cara yang berbeda. Random forest membagi ruang fitur menjadi kotak-kotak; support vector machine menggambar batas yang halus; k-nearest neighbours menyalin label titik latih yang paling mirip; regresi logistik menggambar batas lurus. **Ensemble** menggabungkan semuanya:
+
+- **Soft voting** merata-ratakan probabilitas kelas dari semua model lalu memilih yang tertinggi.
+- **Stacking** melatih model kedua yang belajar seberapa jauh setiap model pertama bisa dipercaya.
+
+Kalau anggotanya membuat kesalahan yang *berbeda*, ensemble lebih baik daripada masing-masing anggotanya. Kalau kesalahannya sama, tidak.
+
+Fiturnya adalah satellite embeddings 2023 (64 kanal, Bab [-@sec-embeddings]) ditambah elevasi dan kemiringan lereng. Model dilatih di Python dengan scikit-learn; petanya digambar di Earth Engine dengan tiga classifier yang memberi suara.
+
+## Dua cara memvalidasi
+
+1. **Pembagian acak**: 70 % titik untuk latih, 30 % untuk uji, dipilih secara acak.
+2. **Blok spasial**: wilayah dipotong menjadi blok sekitar 5 km (47 blok berisi titik), dan seluruh isi blok disisihkan bersama dalam lima lipatan. Titik uji tidak pernah punya tetangga latih yang hanya beberapa meter jauhnya.
+
+Pelabel cenderung mengeklik banyak titik di satu petak. Pembagian acak lalu menguji model pada tetangga dari titik latihnya sendiri, yang tampak hampir sama. Itu mengukur hafalan, bukan kemampuan memetakan.
+
+{{< include _snippets/ch59_ensemble_landcover.qmd >}}
+
+## Membaca hasilnya
+
+**Setiap model tampak sangat bagus, sampai bloknya.** Dengan pembagian acak, ketujuh model mendapat nilai antara 0,966 dan 0,983. Dengan blok spasial, nilainya antara 0,819 dan 0,856. Selisih 12 sampai 15 poin itulah seberapa besar pembagian acak memanjakan model pada label yang mengelompok. Laporkan angka blok.
+
+**Model terbaik bergantung pada ujinya.** Gradient boosting menang di pembagian acak (0,983) dan termasuk yang terlemah di blok spasial (0,833): ia lebih banyak mempelajari tempat daripada kelas. Regresi logistik, model paling sederhana, paling tahan di antara model tunggal (0,854). Stacking terbaik secara keseluruhan (0,856), tetapi hanya unggul tipis. Ensemble sedikit membantu, karena anggotanya sebagian besar membuat kesalahan yang sama: kesalahannya berasal dari label, bukan dari algoritma.
+
+**Sawah jatuh ke nol.** Seluruh 152 titik sawah berada di hanya dua blok. Ketika blok-blok itu disisihkan, model belum pernah melihat sawah dan menyebutnya lahan terbuka, sehingga recall-nya 0 %. Pada pembagian acak, sawah tampak baik-baik saja. Inilah argumen terkuat di buku ini untuk menyebar titik rujukan: **kelas yang diambil sampelnya di satu tempat adalah kelas yang tidak bisa dipetakan model di tempat lain.** Sawit dan sagu (masing-masing dua blok) selamat hanya karena tampilannya khas; karet (tiga blok) turun ke 72 %, tertukar dengan hutan.
+
+**Apa sebutan peta global untuk kelas-kelas ini.** WorldCover menyebut 95 % titik sawah sebagai *padang rumput*, dan 86 sampai 99 % titik sawit, sagu, dan karet sebagai *pohon*. Mangrove cocok (99 %), begitu pula air. Untuk kelas yang memikul pertanyaan ekonomi dan kebijakan di bentang lahan ini, peta global bukan jawaban; ia menjawab pertanyaan yang lain.
+
+**Di mana petanya tidak pasti.** Pada peta kesepakatan, ketiga model Earth Engine sepakat di sebagian besar wilayah, termasuk sungai, tepian mangrove, dan perkebunan besar. Mereka tidak sepakat di lahan pertanian campuran di antaranya, tempat kebun kecil, tanaman muda, dan petak terbuka berselang-seling. Ke sanalah perjalanan pelabelan berikutnya sebaiknya dikirim.
+
+## Latihan {.unnumbered}
+
+1. Ubah ukuran blok menjadi 2 km dan 10 km. Bagaimana akurasi blok berubah, dan kenapa?
+2. Buang sawah dari data latih lalu latih ulang. Apakah akurasi kelas-kelas lain berubah?
+3. Tambahkan 30 titik sawah dari kabupaten lain pilihan Anda (dari citra yang bisa Anda tafsirkan) lalu jalankan ulang validasi blok. Berapa titik yang dibutuhkan sampai recall sawah naik di atas nol?
+4. Jalankan metode label otomatis dari Bab [-@sec-auto-landcover] di wilayah ini lalu bandingkan dengan peta ensemble. Di mana kelas dari label lapangan paling banyak menambah informasi?

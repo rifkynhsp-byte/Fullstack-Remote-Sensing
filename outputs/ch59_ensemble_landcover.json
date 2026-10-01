@@ -1,0 +1,46 @@
+[
+ {
+  "name": "ch59_ensemble_landcover-webmap",
+  "kind": "html",
+  "html": "images/real/ch59_ensemble_landcover-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch59-validation",
+  "kind": "table",
+  "caption": "Five models and two ensembles, scored with a random split and with spatial blocks of about 5 km held out (5-fold GroupKFold).",
+  "markdown": "| model                |   random_split_accuracy |   random_split_kappa |   spatial_block_accuracy |   spatial_block_kappa |   points |   blocks |\n|:---------------------|------------------------:|---------------------:|-------------------------:|----------------------:|---------:|---------:|\n| random forest        |                   0.967 |                0.963 |                    0.819 |                 0.795 |     2320 |       47 |\n| gradient boosting    |                   0.983 |                0.981 |                    0.833 |                 0.811 |     2320 |       47 |\n| SVM (RBF)            |                   0.974 |                0.971 |                    0.850 |                 0.831 |     2320 |       47 |\n| k-nearest neighbours |                   0.966 |                0.961 |                    0.830 |                 0.808 |     2320 |       47 |\n| logistic regression  |                   0.974 |                0.971 |                    0.854 |                 0.835 |     2320 |       47 |\n| ensemble: soft vote  |                   0.977 |                0.974 |                    0.847 |                 0.827 |     2320 |       47 |\n| ensemble: stacking   |                   0.976 |                0.973 |                    0.856 |                 0.837 |     2320 |       47 |"
+ },
+ {
+  "name": "ch59-validation-chart",
+  "kind": "chart",
+  "caption": "Overall accuracy under the two validation schemes.",
+  "image": "images/real/ch59-validation-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"model,random_split_accuracy,random_split_kappa,spatial_block_accuracy,spatial_block_kappa,points,blocks\nrandom forest,0.96695,0.96289,0.81897,0.79527,2320,47\ngradient boosting,0.98276,0.98064,0.83319,0.81144,2320,47\nSVM (RBF),0.97414,0.97096,0.85043,0.83101,2320,47\nk-nearest neighbours,0.96552,0.96128,0.83017,0.80835,2320,47\nlogistic regression,0.97414,0.97096,0.85388,0.83498,2320,47\nensemble: soft vote,0.97701,0.97419,0.84741,0.82748,2320,47\nensemble: stacking,0.97557,0.97258,0.8556,0.83674,2320,47\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_validation(df):\n    fig, ax = plt.subplots(figsize=(7.2, 3.6))\n    y = np.arange(len(df))\n    ax.barh(y + 0.2, df.random_split_accuracy, 0.4, color=\"#9aa5b1\", label=\"random 70/30 split\")\n    ax.barh(y - 0.2, df.spatial_block_accuracy, 0.4, color=\"#2a78d6\",\n            label=\"spatial blocks held out\")\n    ax.set_yticks(y, df.model, fontsize=8)\n    ax.invert_yaxis()\n    ax.set_xlim(0, 1)\n    ax.set_xlabel(\"Overall accuracy\")\n    ax.set_title(\"Same models, two validations\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8, loc=\"lower right\")\n    return fig\n\nplot_validation(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch59-classes",
+  "kind": "table",
+  "caption": "Soft-vote ensemble, spatial blocks: recall per class, how many blocks each class appears in, and its most common confusion.",
+  "markdown": "| class       |   points |   blocks_with_this_class |   recall_spatial_blocks | most_often_confused_with   |\n|:------------|---------:|-------------------------:|------------------------:|:---------------------------|\n| plantation  |      286 |                        6 |                    100% |                            |\n| forest      |      303 |                        8 |                     97% | mangrove                   |\n| agriculture |      324 |                        8 |                     88% | open land                  |\n| open land   |      304 |                        6 |                     78% | agriculture                |\n| water       |      297 |                       19 |                    100% | mangrove                   |\n| mangrove    |      153 |                        8 |                     88% | forest                     |\n| paddy       |      152 |                        2 |                      0% | open land                  |\n| oil palm    |      170 |                        2 |                     91% | sago                       |\n| sago        |      166 |                        2 |                     96% | forest                     |\n| rubber      |      165 |                        3 |                     72% | forest                     |"
+ },
+ {
+  "name": "ch59-worldcover",
+  "kind": "table",
+  "caption": "What ESA WorldCover 2021 calls the points of each of the author's classes.",
+  "markdown": "| author's class   | WorldCover calls it   |   share | second          |\n|:-----------------|:----------------------|--------:|:----------------|\n| plantation       | trees                 |     75% | cropland (16%)  |\n| forest           | trees                 |     70% | mangroves (30%) |\n| agriculture      | trees                 |     51% | grassland (30%) |\n| open land        | grassland             |     65% | cropland (26%)  |\n| water            | water                 |    100% | mangroves (0%)  |\n| mangrove         | mangroves             |     99% | trees (1%)      |\n| paddy            | grassland             |     95% | cropland (5%)   |\n| oil palm         | trees                 |     86% | grassland (14%) |\n| sago             | trees                 |     99% | shrubland (1%)  |\n| rubber           | trees                 |     92% | shrubland (8%)  |"
+ },
+ {
+  "name": "ch59-map",
+  "kind": "map",
+  "caption": "Majority vote of random forest, CART and minimum distance in Earth Engine, trained on all 2,320 points.",
+  "image": "images/real/ch59-map.jpg"
+ },
+ {
+  "name": "ch59-agreement",
+  "kind": "map",
+  "caption": "Number of the three models that give the majority class. Red and yellow areas are where the map is least certain.",
+  "image": "images/real/ch59-agreement.jpg"
+ }
+]
