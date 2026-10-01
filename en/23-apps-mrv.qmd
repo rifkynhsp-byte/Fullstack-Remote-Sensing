@@ -2,29 +2,122 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will wrap a workflow in a user interface that a district officer can operate, and connect it to the reporting frameworks that give the map institutional weight.
+You will learn what the three words in this chapter's title mean in practice. An **app** turns your script into a tool someone else can operate. **MRV** is what turns a map into a number that governments and carbon markets will accept. **Democratisation** is what free data and free tools make possible, and what they make easy to get wrong. You will build a small Earth Engine App, look at a district dashboard made from the same data, and see what MRV demands beyond a good map.
 :::
 
-::: {.callout-note}
-## In progress
-The section plan below is settled. Prose and annotated listings are being
-written part by part; check the roadmap in the preface for the current order.
-:::
+## Three words, one idea
 
-## Planned sections
+Every chapter so far has ended with a map on *your* screen. That map changes nothing until someone else uses it: a district officer deciding where to send a flood team, a ministry reporting its forest emissions, a village checking whether the plantation next door crossed its boundary.
 
-1. **The ui library**: panels, labels, selects, sliders, charts and layouts
-2. **Event handling**: onClick, onChange and updating the map from a widget
-3. **Publishing an Earth Engine App and controlling access**
-4. **Designing for a non technical user**: defaults, guard rails and honest uncertainty
-5. **Exporting to Drive, Cloud Storage and Assets, and choosing between them**
-6. **Digital MRV**: what monitoring, reporting and verification requires beyond a map
-7. **Architecture beyond Earth Engine**: Cloud Storage, external APIs, messaging integrations and serverless inference
-8. **Blue carbon and the voluntary carbon market**: where the map meets the methodology
+- **App**: a script wrapped in buttons, menus and a map, so that a person who does not code can run it on their own area and dates. In Earth Engine this is an *Earth Engine App*, built with the `ui` library and published as a web page.
+- **MRV**: *Monitoring, Reporting and Verification*. It is the procedure by which a country, company or project proves a claim about land or carbon: what was measured, how, with what uncertainty, and whether an independent party can check it.
+- **Democratisation**: free satellite data and free computing mean that anyone with a browser can now do what only space agencies and large companies could do twenty years ago. That is a huge gain and a responsibility.
 
-## Source material
+The three belong together. An app puts the analysis in other people's hands; MRV sets the standard the analysis must meet when money or law depends on it; democratisation is why both matter now.
 
-The ui.Panel legend builders in your code collection, the Indraja Buana app, the Thryve WhatsApp bot design and the thermal monitoring blueprint.
+## From script to app
+
+An Earth Engine App has three parts:
+
+1. **Widgets** from the `ui` library: `ui.Panel` to hold things, `ui.Label` for text, `ui.Select`, `ui.Slider`, `ui.DateSlider` and `ui.Button` for input, `ui.Chart` for charts, and the map itself.
+2. **Events**: functions that run when the user does something, attached with `onChange` or `onClick`. Inside them you recompute and update the map or a label.
+3. **Publishing**: in the Code Editor, *Apps* → *New App* turns the script into a web page at an address like `https://<project>.projects.earthengine.app/view/<name>`. You choose whether it is public or restricted, and you can update it later from the same script.
+
+A minimal app: pick a district, see its greenness.
+
+```javascript
+// A one-panel app: pick a West Java district, see its mean NDVI for 2024.
+var districts = ee.FeatureCollection('FAO/GAUL/2025/level2')
+    .filter(ee.Filter.eq('GAUL1_NAME', 'Jawa Barat'));
+var ndvi = ee.ImageCollection('MODIS/061/MOD13A2')
+    .filterDate('2024-01-01', '2025-01-01').select('NDVI').mean().multiply(0.0001);
+
+var result = ui.Label('Pick a district.');
+var select = ui.Select({placeholder: 'District', onChange: show});
+districts.aggregate_array('GAUL2_NAME').sort().evaluate(function (names) {
+  select.items().reset(names);              // fill the menu once the names arrive
+});
+
+var panel = ui.Panel({style: {width: '320px'}});
+panel.add(ui.Label('West Java greenness, 2024', {fontWeight: 'bold', fontSize: '18px'}));
+panel.add(select).add(result);
+ui.root.insert(0, panel);                   // panel on the left, map on the right
+
+Map.addLayer(ndvi, {min: 0.2, max: 0.9, palette: ['white', 'darkgreen']}, 'NDVI 2024');
+Map.setCenter(107.6, -6.9, 8);
+
+function show(name) {
+  var d = districts.filter(ee.Filter.eq('GAUL2_NAME', name));
+  Map.centerObject(d, 10);
+  result.setValue('Computing...');
+  ndvi.reduceRegion({reducer: ee.Reducer.mean(), geometry: d.geometry(), scale: 1000})
+      .get('NDVI')
+      .evaluate(function (v) {               // evaluate: never block the page with getInfo
+        result.setValue(name + ': mean NDVI ' + v.toFixed(2));
+      });
+}
+```
+
+Two habits matter more than any widget. Use `evaluate` with a callback, never `getInfo`, inside an app: `getInfo` freezes the page until the server answers. And always show the user that something is happening ("Computing..."), because Earth Engine answers can take seconds.
+
+## Designing for someone who does not code
+
+A tool that lets anyone choose the scale, the threshold and the dates will be used with the wrong ones. Good apps:
+
+- **Choose defensible defaults**: the dates, thresholds and datasets you would choose yourself.
+- **Put up guard rails**: refuse areas too large to compute, dates with no images, combinations that make no sense. IJB, the author's app in P6, rejects areas over 25,000 km² for this reason.
+- **Show the uncertainty**: accuracy, kappa, image counts, the date of the newest image. A number without its confidence will be read as certain.
+- **Explain in the user's language**: IJB's labels are in Bahasa Indonesia because its first users are Indonesian officers and students.
+
+P6 shows a complete app of this kind, module by module, with no code at all.
+
+## A working example: West Java at a glance
+
+The listing below joins the two halves of this chapter. Earth Engine computes four indicators for every district of West Java in 2024: greenness (MODIS NDVI), daytime land surface temperature (MODIS LST), the share of built-up land (Dynamic World) and population (WorldPop). The JavaScript tab turns them into a click-to-explore Code Editor app and exports the table. The Python tab turns the same table into a web dashboard: one HTML file you can email, host on a website, or open offline (except for the chart library).
+
+Why these four? Because together they answer a question a district planner actually asks: *which districts are hot, crowded and losing green space?* The chart shows one such pattern: greener districts run cooler. It is a pattern across districts, not proof that planting trees in one district will cool it by a given amount, and an app should say so next to the chart.
+
+{{< include _snippets/ch23_westjava_dashboard.qmd >}}
+
+## When the app needs more than Earth Engine
+
+Earth Engine is a data-preparation and classical machine-learning environment, and an app built on it inherits its limits. Leave it, or connect it to other services, when the problem needs:
+
+- **A custom neural network** (for example the U-Net of Chapter [-@sec-deeplearning]): export training patches from Earth Engine, train on a GPU in Colab, Vertex AI or SageMaker, and either bring predictions back as an asset or call the model from a hosted endpoint.
+- **Alerts and messages**: Earth Engine cannot send an email or a chat message by itself. A small scheduled cloud function can run the analysis through the Python API and send the result.
+- **Other data**: field reports, permits or prices that live in a database belong in that database; join them to the Earth Engine results outside it.
+
+The reason to hand off is the model or the integration, not the words "machine learning": a random forest or a gradient-boosted tree runs well inside Earth Engine (Chapters [-@sec-supervised] and [-@sec-embeddings]).
+
+## MRV: more than a map
+
+When a map supports a claim that money or law depends on, such as "our district reduced deforestation", "this project avoided 50,000 t CO₂" or "Indonesia's forests are a net sink", it enters the world of MRV.
+
+**Monitoring** means measuring the same thing the same way, again and again: the same definitions (what counts as forest), the same data sources or documented changes between them, the same method every year. A beautiful map made once is not monitoring.
+
+**Reporting** means presenting results in the format a framework requires, with the uncertainty stated. For countries, this is the Paris Agreement's Enhanced Transparency Framework, through Biennial Transparency Reports; for forests in developing countries, it is REDD+, where results are measured against a Forest Reference Emission Level reviewed under the UNFCCC. Indonesia's FOLU Net Sink 2030 target, a net removal of carbon by the forestry and land-use sector by 2030, is reported this way. In the voluntary carbon market, standards such as Verra's VCS publish their own methodologies.
+
+**Verification** means an independent party can check the claim: by repeating the method on the same data, by visiting a sample of sites, or by comparing with another source. This is why every chapter in this book keeps its scripts, data versions and accuracy assessments.
+
+What MRV adds to a map, in practice:
+
+| A good map has | MRV also requires |
+|---|---|
+| A classification with an accuracy | Area estimates with confidence intervals from a probability sample (Chapter [-@sec-accuracy]) |
+| One year | A consistent time series with the same definitions every year |
+| A method in a script | A documented, versioned method a third party can rerun |
+| Biomass or carbon on a map | Emission factors and their sources (IPCC tiers), and how each number was derived |
+| Results | A verification step, and a record of what changed after it |
+
+Chapter [-@sec-mrv] works through the numbers of a forest-carbon MRV example step by step, and Chapter [-@sec-carbon-balance] does the same for a peat landscape.
+
+## Democratisation: what free data gives and what it risks
+
+In 2008 the United States Geological Survey made the whole Landsat archive free. The European Copernicus programme made Sentinel data free and open from the start. Earth Engine made the computing free for research, education and non-profit work. Together they mean that a student in Bandung, an officer in Jambi and a journalist in Jakarta can now map their own landscape with the same data as a space agency.
+
+The gains are real: local people can check claims made about their land (Chapter [-@sec-enforcement]); small organisations can monitor what once needed a consultancy; teaching no longer depends on buying software or images.
+
+So are the risks. Easy maps are easy to get wrong, and a wrong map published with confidence can do more harm than no map: a false flood extent in an emergency, or a "deforestation" that was a harvest of a plantation planted decades ago. Free tools also mean that coordinates of small farms, indigenous land and vulnerable people can be published by anyone. The safeguards are the habits this book repeats: state the method and the uncertainty, validate with something independent, and think about who could be harmed before publishing.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -67,12 +160,9 @@ The ui.Panel legend builders in your code collection, the Indraja Buana app, the
 }
 </script>
 
-## A working example: West Java at a glance
-
-The GEE101 course ends with exports and small apps. This listing joins the two. Earth Engine computes four indicators for all 27 districts of West Java. The JavaScript tab turns them into a click-to-explore Code Editor app and exports the table. The Python tab turns the same table into a web dashboard: one HTML file you can email, host, or open with no internet connection except for the chart library.
-
-{{< include _snippets/ch23_westjava_dashboard.qmd >}}
-
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Run the minimal app above, then add a second indicator (for example daytime LST) and a `ui.Select` that switches between them.
+2. Add a guard rail: if the user picks a district whose mean NDVI cannot be computed, show a clear message instead of `NaN`.
+3. Publish the app as a restricted Earth Engine App and share it with one colleague. What do they misunderstand on first use?
+4. Take any map from this book and write the MRV table above for it: what would still be missing before a ministry could report it?

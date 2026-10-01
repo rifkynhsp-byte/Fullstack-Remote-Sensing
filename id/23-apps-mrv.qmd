@@ -2,25 +2,122 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan membungkus alur kerja dalam antarmuka yang dapat dioperasikan penyuluh kabupaten, dan menghubungkannya dengan kerangka pelaporan yang memberi peta itu bobot kelembagaan.
+Anda akan mempelajari arti praktis tiga kata dalam judul bab ini. **Aplikasi** mengubah skrip Anda menjadi alat yang bisa dijalankan orang lain. **MRV** adalah yang mengubah peta menjadi angka yang diterima pemerintah dan pasar karbon. **Demokratisasi** adalah apa yang dimungkinkan oleh data dan alat gratis, dan apa yang jadi mudah dikerjakan dengan keliru. Anda akan membuat Earth Engine App kecil, melihat dashboard kabupaten yang dibuat dari data yang sama, dan melihat apa yang dituntut MRV di luar peta yang bagus.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
-:::
+## Tiga kata, satu gagasan
 
-## Rencana bagian
+Setiap bab sejauh ini berakhir dengan peta di layar *Anda*. Peta itu tidak mengubah apa pun sampai orang lain memakainya: petugas kabupaten yang memutuskan ke mana mengirim tim banjir, kementerian yang melaporkan emisi hutannya, warga desa yang memeriksa apakah kebun di sebelahnya melewati batas.
 
-1. **Pustaka ui**: panel, label, select, slider, chart dan tata letak
-2. **Penanganan peristiwa**: onClick, onChange, dan memperbarui peta dari widget
-3. **Menerbitkan Earth Engine App dan mengatur aksesnya**
-4. **Merancang untuk pengguna non teknis**: nilai baku, pagar pengaman, ketidakpastian yang jujur
-5. **Ekspor ke Drive, Cloud Storage dan Assets, serta cara memilihnya**
-6. **MRV digital**: apa yang dibutuhkan di luar sekadar peta
-7. **Arsitektur di luar Earth Engine**: Cloud Storage, API eksternal, inferensi tanpa server
-8. **Blue carbon dan pasar karbon sukarela**: titik temu peta dan metodologi
+- **Aplikasi**: skrip yang dibungkus tombol, menu, dan peta, sehingga orang yang tidak bisa koding dapat menjalankannya untuk wilayah dan tanggalnya sendiri. Di Earth Engine ini disebut *Earth Engine App*, dibangun dengan pustaka `ui` dan diterbitkan sebagai halaman web.
+- **MRV**: *Monitoring, Reporting and Verification* (pemantauan, pelaporan, dan verifikasi). Ini prosedur yang dipakai negara, perusahaan, atau proyek untuk membuktikan sebuah klaim tentang lahan atau karbon: apa yang diukur, bagaimana caranya, seberapa besar ketidakpastiannya, dan apakah pihak independen bisa memeriksanya.
+- **Demokratisasi**: data satelit gratis dan komputasi gratis berarti siapa pun yang punya peramban kini bisa mengerjakan apa yang dua puluh tahun lalu hanya bisa dikerjakan badan antariksa dan perusahaan besar. Itu kemajuan besar sekaligus tanggung jawab.
+
+Ketiganya saling terkait. Aplikasi menaruh analisis di tangan orang lain; MRV menetapkan standar yang harus dipenuhi analisis itu ketika uang atau hukum bergantung padanya; demokratisasi adalah alasan keduanya penting sekarang.
+
+## Dari skrip menjadi aplikasi
+
+Earth Engine App punya tiga bagian:
+
+1. **Widget** dari pustaka `ui`: `ui.Panel` sebagai wadah, `ui.Label` untuk teks, `ui.Select`, `ui.Slider`, `ui.DateSlider`, dan `ui.Button` untuk masukan, `ui.Chart` untuk grafik, serta petanya sendiri.
+2. **Event**: fungsi yang berjalan ketika pengguna melakukan sesuatu, dipasang dengan `onChange` atau `onClick`. Di dalamnya Anda menghitung ulang lalu memperbarui peta atau label.
+3. **Penerbitan**: di Code Editor, *Apps* → *New App* mengubah skrip menjadi halaman web dengan alamat seperti `https://<project>.projects.earthengine.app/view/<nama>`. Anda memilih apakah aplikasinya publik atau terbatas, dan bisa memperbaruinya kemudian dari skrip yang sama.
+
+Aplikasi minimal: pilih kabupaten, lihat tingkat kehijauannya.
+
+```javascript
+// Aplikasi satu panel: pilih kabupaten di Jawa Barat, lihat rerata NDVI 2024.
+var districts = ee.FeatureCollection('FAO/GAUL/2025/level2')
+    .filter(ee.Filter.eq('GAUL1_NAME', 'Jawa Barat'));
+var ndvi = ee.ImageCollection('MODIS/061/MOD13A2')
+    .filterDate('2024-01-01', '2025-01-01').select('NDVI').mean().multiply(0.0001);
+
+var result = ui.Label('Pilih kabupaten.');
+var select = ui.Select({placeholder: 'Kabupaten', onChange: show});
+districts.aggregate_array('GAUL2_NAME').sort().evaluate(function (names) {
+  select.items().reset(names);              // isi menu setelah daftar nama tiba
+});
+
+var panel = ui.Panel({style: {width: '320px'}});
+panel.add(ui.Label('Kehijauan Jawa Barat, 2024', {fontWeight: 'bold', fontSize: '18px'}));
+panel.add(select).add(result);
+ui.root.insert(0, panel);                   // panel di kiri, peta di kanan
+
+Map.addLayer(ndvi, {min: 0.2, max: 0.9, palette: ['white', 'darkgreen']}, 'NDVI 2024');
+Map.setCenter(107.6, -6.9, 8);
+
+function show(name) {
+  var d = districts.filter(ee.Filter.eq('GAUL2_NAME', name));
+  Map.centerObject(d, 10);
+  result.setValue('Menghitung...');
+  ndvi.reduceRegion({reducer: ee.Reducer.mean(), geometry: d.geometry(), scale: 1000})
+      .get('NDVI')
+      .evaluate(function (v) {               // evaluate: jangan bekukan halaman dengan getInfo
+        result.setValue(name + ': rerata NDVI ' + v.toFixed(2));
+      });
+}
+```
+
+Dua kebiasaan lebih penting daripada widget apa pun. Di dalam aplikasi, pakai `evaluate` dengan callback, jangan `getInfo`: `getInfo` membekukan halaman sampai server menjawab. Dan selalu tunjukkan kepada pengguna bahwa sesuatu sedang berjalan ("Menghitung..."), karena jawaban Earth Engine bisa butuh beberapa detik.
+
+## Merancang untuk orang yang tidak bisa koding
+
+Alat yang membiarkan siapa pun memilih skala, ambang, dan tanggal akan dipakai dengan pilihan yang salah. Aplikasi yang baik:
+
+- **Memilih nilai bawaan yang bisa dipertanggungjawabkan**: tanggal, ambang, dan dataset yang akan Anda pilih sendiri.
+- **Memasang pagar pengaman**: menolak wilayah yang terlalu besar untuk dihitung, tanggal tanpa citra, kombinasi yang tidak masuk akal. IJB, aplikasi penulis di P6, menolak wilayah di atas 25.000 km² karena alasan ini.
+- **Menunjukkan ketidakpastian**: akurasi, kappa, jumlah citra, tanggal citra terbaru. Angka tanpa tingkat keyakinannya akan dibaca seolah pasti.
+- **Berbicara dalam bahasa penggunanya**: label IJB berbahasa Indonesia karena pengguna pertamanya adalah petugas dan mahasiswa Indonesia.
+
+P6 menunjukkan aplikasi lengkap semacam ini, modul demi modul, tanpa kode sama sekali.
+
+## Contoh nyata: Jawa Barat sekilas pandang
+
+Listing di bawah menyatukan dua bagian bab ini. Earth Engine menghitung empat indikator untuk setiap kabupaten dan kota di Jawa Barat pada 2024: kehijauan (NDVI MODIS), suhu permukaan siang hari (LST MODIS), persentase lahan terbangun (Dynamic World), dan jumlah penduduk (WorldPop). Tab JavaScript mengubahnya menjadi aplikasi Code Editor yang bisa diklik, lalu mengekspor tabelnya. Tab Python mengubah tabel yang sama menjadi dashboard web: satu berkas HTML yang bisa dikirim lewat email, dipasang di situs, atau dibuka tanpa internet (kecuali untuk memuat pustaka grafiknya).
+
+Kenapa empat indikator ini? Karena bersama-sama keempatnya menjawab pertanyaan yang benar-benar diajukan perencana daerah: *kabupaten mana yang panas, padat, dan kehilangan ruang hijau?* Grafiknya menunjukkan salah satu pola: kabupaten yang lebih hijau lebih sejuk. Ini pola antarkabupaten, bukan bukti bahwa menanam pohon di satu kabupaten akan mendinginkannya sekian derajat, dan aplikasi sebaiknya menuliskan hal itu di samping grafiknya.
+
+{{< include _snippets/ch23_westjava_dashboard.qmd >}}
+
+## Ketika aplikasi butuh lebih dari Earth Engine
+
+Earth Engine adalah lingkungan penyiapan data dan pembelajaran mesin klasik, dan aplikasi yang dibangun di atasnya mewarisi batasannya. Tinggalkan, atau sambungkan dengan layanan lain, ketika masalahnya membutuhkan:
+
+- **Jaringan saraf khusus** (misalnya U-Net di Bab [-@sec-deeplearning]): ekspor patch latih dari Earth Engine, latih dengan GPU di Colab, Vertex AI, atau SageMaker, lalu bawa hasil prediksinya kembali sebagai aset atau panggil modelnya dari endpoint yang di-hosting.
+- **Peringatan dan pesan**: Earth Engine tidak bisa mengirim email atau pesan obrolan sendiri. Fungsi cloud kecil yang terjadwal bisa menjalankan analisis lewat Python API lalu mengirimkan hasilnya.
+- **Data lain**: laporan lapangan, izin, atau harga yang tersimpan di basis data tempatnya di basis data itu; gabungkan dengan hasil Earth Engine di luarnya.
+
+Alasan untuk berpindah adalah modelnya atau integrasinya, bukan kata "machine learning": random forest atau gradient-boosted tree berjalan baik di dalam Earth Engine (Bab [-@sec-supervised] dan [-@sec-embeddings]).
+
+## MRV: lebih dari sekadar peta
+
+Ketika sebuah peta mendukung klaim yang menyangkut uang atau hukum, misalnya "kabupaten kami menurunkan deforestasi", "proyek ini menghindari 50.000 t CO₂", atau "hutan Indonesia adalah penyerap bersih", peta itu masuk ke dunia MRV.
+
+**Pemantauan** berarti mengukur hal yang sama dengan cara yang sama, berulang-ulang: definisi yang sama (apa yang dihitung sebagai hutan), sumber data yang sama atau perubahan sumber yang didokumentasikan, metode yang sama setiap tahun. Peta indah yang dibuat sekali bukanlah pemantauan.
+
+**Pelaporan** berarti menyajikan hasil dalam format yang diminta sebuah kerangka kerja, beserta ketidakpastiannya. Bagi negara, ini adalah Enhanced Transparency Framework dalam Persetujuan Paris, melalui Biennial Transparency Report; untuk hutan di negara berkembang, ini adalah REDD+, di mana hasil diukur terhadap Forest Reference Emission Level yang ditinjau di bawah UNFCCC. Target FOLU Net Sink 2030 Indonesia, yaitu penyerapan karbon bersih oleh sektor kehutanan dan penggunaan lahan pada 2030, dilaporkan dengan cara ini. Di pasar karbon sukarela, standar seperti VCS dari Verra menerbitkan metodologinya sendiri.
+
+**Verifikasi** berarti pihak independen bisa memeriksa klaimnya: dengan mengulang metode pada data yang sama, mengunjungi sampel lokasi, atau membandingkannya dengan sumber lain. Inilah alasan setiap bab di buku ini menyimpan skrip, versi data, dan penilaian akurasinya.
+
+Yang ditambahkan MRV pada sebuah peta, dalam praktik:
+
+| Peta yang baik punya | MRV juga menuntut |
+|---|---|
+| Klasifikasi dengan akurasinya | Estimasi luas dengan selang kepercayaan dari sampel probabilitas (Bab [-@sec-accuracy]) |
+| Satu tahun | Deret waktu yang konsisten dengan definisi yang sama setiap tahun |
+| Metode dalam skrip | Metode yang terdokumentasi dan berversi, yang bisa dijalankan ulang pihak ketiga |
+| Biomassa atau karbon di peta | Faktor emisi dan sumbernya (tier IPCC), serta asal-usul setiap angka |
+| Hasil | Langkah verifikasi, dan catatan apa yang berubah sesudahnya |
+
+Bab [-@sec-mrv] mengerjakan angka-angka contoh MRV karbon hutan langkah demi langkah, dan Bab [-@sec-carbon-balance] melakukan hal yang sama untuk bentang lahan gambut.
+
+## Demokratisasi: apa yang diberikan data gratis, dan apa risikonya
+
+Pada 2008 United States Geological Survey membuka seluruh arsip Landsat secara gratis. Program Copernicus Eropa membuat data Sentinel gratis dan terbuka sejak awal. Earth Engine membuat komputasinya gratis untuk riset, pendidikan, dan kerja nirlaba. Bersama-sama, ini berarti mahasiswa di Bandung, petugas di Jambi, dan wartawan di Jakarta kini bisa memetakan bentang lahannya sendiri dengan data yang sama dengan badan antariksa.
+
+Manfaatnya nyata: warga bisa memeriksa klaim yang dibuat tentang lahan mereka (Bab [-@sec-enforcement]); organisasi kecil bisa memantau hal yang dulu butuh konsultan; pengajaran tidak lagi bergantung pada pembelian perangkat lunak atau citra.
+
+Risikonya juga nyata. Peta yang mudah dibuat juga mudah keliru, dan peta keliru yang diterbitkan dengan percaya diri bisa lebih merugikan daripada tidak ada peta sama sekali: sebaran banjir palsu dalam keadaan darurat, atau "deforestasi" yang ternyata panen kebun yang ditanam puluhan tahun lalu. Alat gratis juga berarti koordinat kebun kecil, tanah adat, dan kelompok rentan bisa diterbitkan oleh siapa saja. Pengamannya adalah kebiasaan yang terus diulang buku ini: nyatakan metode dan ketidakpastiannya, validasi dengan sesuatu yang independen, dan pikirkan siapa yang bisa dirugikan sebelum menerbitkan.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -63,12 +160,9 @@ bagian demi bagian; lihat prakata untuk urutannya.
 }
 </script>
 
-## Contoh nyata: Jawa Barat sekilas pandang
-
-Kursus GEE101 ditutup dengan ekspor dan aplikasi kecil. Skrip ini menggabungkan keduanya. Earth Engine menghitung empat indikator untuk 27 kabupaten dan kota di Jawa Barat. Tab JavaScript mengubahnya menjadi aplikasi Code Editor yang bisa diklik, lalu mengekspor tabelnya. Tab Python mengubah tabel yang sama menjadi dashboard web: satu berkas HTML yang bisa dikirim lewat email, dipasang di situs, atau dibuka tanpa internet kecuali untuk memuat pustaka grafiknya.
-
-{{< include _snippets/ch23_westjava_dashboard.qmd >}}
-
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Jalankan aplikasi minimal di atas, lalu tambahkan indikator kedua (misalnya LST siang hari) dan sebuah `ui.Select` untuk berganti di antara keduanya.
+2. Tambahkan pagar pengaman: kalau pengguna memilih kabupaten yang rerata NDVI-nya tidak bisa dihitung, tampilkan pesan yang jelas, bukan `NaN`.
+3. Terbitkan aplikasinya sebagai Earth Engine App terbatas dan bagikan kepada satu rekan. Apa yang mereka salah pahami pada pemakaian pertama?
+4. Ambil peta mana pun dari buku ini dan isi tabel MRV di atas untuknya: apa yang masih kurang sebelum sebuah kementerian bisa melaporkannya?
