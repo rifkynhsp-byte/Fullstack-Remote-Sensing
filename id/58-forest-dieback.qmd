@@ -1,0 +1,54 @@
+# Wabah Hama Hutan dari Antariksa {#sec-forest-dieback}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengikuti sebuah wabah menjalar di hutan, satu musim panas demi satu musim panas: epidemi kumbang kulit kayu yang membunuh sebagian besar pohon spruce di Pegunungan Harz, Jerman, setelah kekeringan 2018. Untuk setiap piksel konifer, Anda akan menemukan tahun tajuknya mengering, memetakan bagaimana kerusakannya menyebar, dan menguji apakah satelit melihat pohon-pohon itu sekarat sebelum tercatat hilang. Ternyata tidak, setidaknya tidak dengan data tahunan, dan hasil negatif itu sama berharganya dengan petanya.
+:::
+
+## Kenapa hutan Jerman di buku tentang Indonesia
+
+Hama dan penyakit juga membunuh pohon di Indonesia: busuk akar di perkebunan, layu jamur pada akasia, hama yang menggunduli jati. Tetapi hanya sedikit wabah semacam itu yang datanya terbuka dan terdokumentasi dengan baik. Wabah di Harz adalah salah satu gangguan hutan yang paling baik terdokumentasi di era satelit: kekeringan panas pada 2018, spruce yang melemah, dan populasi kumbang kulit kayu yang meledak pada tahun-tahun berikutnya. Di seluruh Jerman, kehilangan tutupan tajuk dari Januari 2018 sampai April 2021 mencapai sekitar 501.000 ha, dengan kehilangan terbesar di bagian tengah negara itu [@thonfeld2022canopy]. Metode yang dipelajari di sini bisa dipakai untuk wabah apa pun di mana tajuk mengering sebelum pohonnya mati.
+
+## Seperti apa wabah dilihat dari atas
+
+Kumbang kulit kayu mengebor di bawah kulit kayu dan memutus aliran air pohon. Daun jarumnya tetap hijau beberapa waktu (*green attack*), lalu memerah, lalu kelabu, lalu rontok. Dari antariksa, sinyal yang paling jelas adalah **air di tajuk**: indeks kelembapan ternormalisasi,
+
+$$\text{NDMI} = \frac{\text{NIR} - \text{SWIR}}{\text{NIR} + \text{SWIR}},$$
+
+turun ketika daun jarum mengering dan tajuk menipis (P1: air menyerap inframerah gelombang pendek).
+
+Metodenya:
+
+1. **Hutan konifer**: hutan berdaun jarum yang selalu hijau menurut tutupan lahan Copernicus 2019, dengan tutupan pohon setidaknya 50 % pada 2000 (Hansen).
+2. **Satu angka per musim panas**: median NDMI Juni sampai Agustus, setiap tahun dari 2017 sampai 2024 (Sentinel-2, di-mask dengan Cloud Score+). Musim panas menghindari salju dan siklus musiman.
+3. **Awal stres**: musim panas pertama ketika NDMI sebuah piksel turun lebih dari 0,15 di bawah nilainya sendiri pada 2017, *dan tetap rendah pada musim panas berikutnya*, sehingga satu musim panas kering yang kemudian pulih tidak dihitung.
+4. **Pemeriksaan**: tahun ketika Hansen pertama kali mencatat piksel itu sebagai kehilangan tutupan pohon.
+
+Sebelum memercayai perbandingan antartahun, hitung citranya: musim panas 2017 punya 36 citra Sentinel-2 di wilayah ini dengan cakupan penuh, musim panas berikutnya sekitar 75. Baseline-nya kuat (bandingkan dengan jebakan 2018 di Bab [-@sec-enforcement]).
+
+{{< include _snippets/ch58_forest_dieback.qmd >}}
+
+## Membaca hasilnya
+
+**Wabah dalam angka.** Dari sekitar 48.000 ha hutan konifer di wilayah kajian, sekitar **34.100 ha (71 %) sudah mengering dan tetap kering pada 2024**. Gelombangnya kecil pada 2018 (sekitar 1.600 ha), membesar pada 2019 (4.000 ha), memuncak pada **2020 (sekitar 11.900 ha)**, dan masih besar pada 2021 dan 2022 (8.800 dan 6.000 ha). Pada 2023 dan 2024 hampir tidak ada wilayah baru yang terdampak, terutama karena spruce yang sehat tinggal sedikit.
+
+**Setiap kohort bercerita sama, di tahunnya sendiri.** Kelompokkan piksel menurut tahun awal stres dan plot rerata NDMI-nya. Setiap kelompok bertahan dekat tingkat 2017-nya, lalu jatuh pada tahun awal stresnya, dari sekitar 0,4 menjadi sekitar 0,1, dan tetap rendah. Pada 2024 kohort tertua naik sedikit lagi: pohon muda dan tumbuhan bawah tumbuh di tegakan yang mati atau sudah dibersihkan. Bahkan konifer yang tidak pernah stres pun sedikit turun pada musim panas kering 2018, 2020, dan 2022, dan karena itulah ambangnya 0,15 dan penurunannya harus bertahan.
+
+**Peta menunjukkan penyebaran, bukan hanya kerusakan.** Baca peta awal stres sebagai urutan. Petak-petak awal (2018–2019, biru tua) tersebar di bagian tengah dan timur wilayah; tahun-tahun berikutnya (2021–2022, hijau lebih terang) lebih banyak di selatan dan barat, mengisi celah di antara petak lama; dan sebagian besar konifer yang tetap sehat berada di barat. Apakah petak-petak awal punya kesamaan (elevasi lebih rendah, lereng menghadap selatan, tepi tegakan) adalah pertanyaan untuk lapisan medan dan sebuah uji, bukan untuk mata (latihan 4). Pola penyebaran itulah yang dibutuhkan pengelola hutan untuk merencanakan ke mana harus memeriksa berikutnya.
+
+**Tidak ada peringatan dini, dan inilah sebabnya.** Harapannya, tajuk mengering *sebelum* pohon tercatat hilang, sehingga pengelola punya waktu setahun untuk bertindak. Di sini hal itu tidak terjadi. Untuk 68 % piksel yang stres, Hansen mencatat kehilangannya pada tahun yang sama dengan awal stres kita atau lebih awal; 22 % setahun kemudian; hanya beberapa persen yang lebih lambat lagi. Ada dua alasan. Pertama, "kehilangan tutupan pohon" versi Hansen mencakup pohon mati yang masih berdiri, bukan hanya penebangan, sehingga Hansen melihat kematian yang sama dengan yang kita lihat. Kedua, satu angka per musim panas terlalu kasar: tahap green attack hanya berlangsung beberapa minggu, dan pada musim panas berikutnya tajuknya sudah merah atau hilang. Peringatan dini yang sesungguhnya butuh deret waktu di bawah setahun, kanal red-edge yang peka terhadap klorofil, dan pemeriksaan lapangan atas petak mencurigakan yang pertama.
+
+## Dari Harz ke perkebunan Indonesia
+
+Tiga langkah yang sama berlaku untuk wabah penyakit di perkebunan akasia atau sawit, dengan tiga perubahan:
+
+- **Tidak ada salju, tidak ada musim panas**: di tropis, pakai baseline bergerak (bulan yang sama pada tahun-tahun sebelumnya) atau model harmonik musiman (Bab [-@sec-timeseries]), bukan satu musim panas.
+- **Awan**: komposit optik bulanan akan berlubang; radar Sentinel-1 bisa menambal sebagian, meskipun radar peka terhadap struktur, bukan air di daun.
+- **Panen bukan penyakit**: kebun memang ditebang secara terencana. Penurunan yang diikuti tanah terbuka dan penanaman ulang adalah panen; penurunan perlahan di tegakan yang seharusnya sedang tumbuh adalah sinyal yang mencurigakan (Bab [-@sec-oil-palm-age]).
+
+## Latihan {.unnumbered}
+
+1. Ganti ambang 0,15 menjadi 0,10 dan 0,20. Bagaimana luas wabahnya berubah, dan ambang mana yang menghasilkan petak yang masuk akal di peta?
+2. Ganti median musim panas dengan median bulanan untuk 2019–2020 dan cari piksel yang NDMI-nya turun berbulan-bulan sebelum tahun kehilangan versi Hansen.
+3. Jalankan skrip yang sama untuk hutan beech (berdaun lebar) di dekatnya. Apakah kekeringan 2018 juga membuatnya stres, dan apakah ia pulih?
+4. Tambahkan elevasi dan arah lereng (Bab [-@sec-terrain]) lalu bandingkan piksel yang stres lebih awal (2018–2019) dengan yang belakangan (2021–2022). Apakah perbedaannya nyata atau masih dalam batas derau?

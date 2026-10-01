@@ -1,0 +1,54 @@
+# A Forest Pest Outbreak from Space {#sec-forest-dieback}
+
+::: {.chapter-goal}
+#### In this chapter
+You will follow an outbreak through a forest, one summer at a time: the bark beetle epidemic that killed most of the spruce in the Harz mountains of Germany after the 2018 drought. For every conifer pixel you will find the year its canopy dried out, map how the damage spread, and test whether satellites saw the trees dying before they were recorded as lost. They did not, at least not with annual data, and that negative result is worth as much as the map.
+:::
+
+## Why a German forest in an Indonesian book
+
+Pests and diseases kill trees in Indonesia too: root rot in plantations, fungal wilt in acacia, pests that defoliate teak. But few of these outbreaks have open, well-documented data. The Harz outbreak is one of the best-documented forest disturbances of the satellite era: a hot drought in 2018, weakened spruce, and a bark beetle population that exploded over the following years. Across Germany, canopy cover loss from January 2018 to April 2021 reached about 501,000 ha, with the largest losses in the centre of the country [@thonfeld2022canopy]. The method you learn here carries over to any outbreak where the canopy dries before it dies.
+
+## How an outbreak looks from above
+
+Bark beetles bore under the bark and cut the tree's water transport. The needles stay green for a while (*green attack*), then turn red, then grey, and fall. From space the clearest signal is **canopy water**: the normalised difference moisture index,
+
+$$\text{NDMI} = \frac{\text{NIR} - \text{SWIR}}{\text{NIR} + \text{SWIR}},$$
+
+falls as the needles dry and the canopy thins (P1: water absorbs shortwave infrared).
+
+The method:
+
+1. **Conifer forest**: needle-leaved evergreen forest in the Copernicus 2019 land cover, with at least 50 % tree cover in 2000 (Hansen).
+2. **One number per summer**: the median NDMI of June to August, every year from 2017 to 2024 (Sentinel-2, Cloud Score+ masked). Summer avoids snow and the seasonal cycle.
+3. **Onset**: the first summer in which a pixel's NDMI falls more than 0.15 below its own 2017 value, *and stays down the following summer*, so a single dry summer that recovers is not counted.
+4. **Check**: the year Hansen first records the pixel as tree cover loss.
+
+Before trusting any year-to-year comparison, count the images: summer 2017 has 36 Sentinel-2 scenes over the area and full coverage, later summers about 75. The baseline is sound (compare the 2018 trap in Chapter [-@sec-enforcement]).
+
+{{< include _snippets/ch58_forest_dieback.qmd >}}
+
+## Reading the results
+
+**The outbreak in numbers.** Of about 48,000 ha of conifer forest in the study area, about **34,100 ha (71 %) had dried out and stayed dry by 2024**. The wave was small in 2018 (about 1,600 ha), grew in 2019 (4,000 ha), peaked in **2020 (about 11,900 ha)**, and was still large in 2021 and 2022 (8,800 and 6,000 ha). By 2023 and 2024 almost no new area was affected, mostly because little healthy spruce was left.
+
+**Every cohort tells the same story in its own year.** Group the pixels by onset year and plot their mean NDMI. Each group stays near its 2017 level, then collapses in its onset year, from about 0.4 to about 0.1, and stays low. In 2024 the oldest cohorts rise a little again: young trees and ground vegetation grow on the dead or cleared stands. Even the never-stressed conifers dip slightly in the dry summers of 2018, 2020 and 2022, which is why the threshold is 0.15 and why the drop has to last.
+
+**The map shows spread, not just damage.** Read the onset map as a sequence. The early patches (2018–2019, dark blue) are scattered through the centre and east of the area; the later years (2021–2022, lighter greens) are more common in the south and west, filling the gaps between older patches; and most of the conifer that stayed healthy lies in the west. Whether the early patches share something (lower elevation, south-facing slopes, stand edges) is a question for a terrain layer and a test, not for the eye (exercise 4). That pattern of spread is what a forest manager needs to plan where to look next.
+
+**No early warning, and why.** The hope was that the canopy would dry *before* the trees were recorded as lost, giving managers a year to act. It did not happen here. For 68 % of the stressed pixels, Hansen records the loss in the same year as our onset or earlier; 22 % one year later; only a few percent later still. Two reasons. First, Hansen's "tree cover loss" includes standing dead trees, not only cutting, so it sees the same dieback we do. Second, one number per summer is too coarse: the green-attack stage lasts weeks, and by the next summer the canopy is already red or gone. Real early warning needs sub-annual time series, red-edge bands that respond to chlorophyll, and field checks of the first suspicious patches.
+
+## From the Harz to Indonesian plantations
+
+The same three steps apply to a disease outbreak in an acacia or oil-palm plantation, with three changes:
+
+- **No snow, no summer**: in the tropics, use a moving baseline (the same months of earlier years) or a harmonic model of the season (Chapter [-@sec-timeseries]), not one summer.
+- **Clouds**: monthly optical composites will have gaps; Sentinel-1 radar can fill some of them, though it responds to structure, not water in the leaves.
+- **Harvest is not disease**: plantations are cut on purpose. A drop followed by bare soil and replanting is a harvest; a slow decline in a stand that should be growing is the suspicious signal (Chapter [-@sec-oil-palm-age]).
+
+## Exercises {.unnumbered}
+
+1. Change the threshold from 0.15 to 0.10 and 0.20. How does the area of the outbreak change, and which threshold produces patches that make sense on the map?
+2. Replace the summer median with monthly medians for 2019–2020 and look for a pixel whose NDMI falls months before the Hansen loss year.
+3. Run the same script for a beech (broadleaf) forest nearby. Did the 2018 drought stress it too, and did it recover?
+4. Add elevation and aspect (Chapter [-@sec-terrain]) and compare the early-onset pixels (2018–2019) with the late ones (2021–2022). Is the difference real or within the noise?

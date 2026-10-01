@@ -1,0 +1,41 @@
+[
+ {
+  "name": "ch58_forest_dieback-webmap",
+  "kind": "html",
+  "html": "images/real/ch58_forest_dieback-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch58-onset",
+  "kind": "map",
+  "caption": "First summer in which a conifer pixel's NDMI fell more than 0.15 below 2017 and stayed down the next summer.",
+  "image": "images/real/ch58-onset.jpg"
+ },
+ {
+  "name": "ch58-area",
+  "kind": "chart",
+  "caption": "Conifer forest newly stressed each summer, and the running total.",
+  "image": "images/real/ch58-area.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,new_stressed_ha,cumulative_ha,cumulative_share\n2018,1636.8,1636.8,0.034027\n2019,4021.9,5658.7,0.11763\n2020,11949,17607,0.36603\n2021,8833.8,26441,0.54967\n2022,6034.8,32476,0.67512\n2023,1300.9,33777,0.70216\n2024,353.47,34130,0.70951\nnever stressed,13974,48104,\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_area(df):\n    d = df[pd.to_numeric(df.year, errors=\"coerce\").notna()]\n    fig, ax = plt.subplots(figsize=(6.8, 3.3))\n    ax.bar(d.year.astype(int), d.new_stressed_ha / 1000, color=\"#b2182b\",\n           label=\"newly stressed that summer\")\n    ax2 = ax.twinx()\n    ax2.plot(d.year.astype(int), d.cumulative_share * 100, color=\"#1f2933\", marker=\"o\",\n             ms=3, label=\"cumulative, % of conifer\")\n    ax.set_ylabel(\"Newly stressed (thousand ha)\")\n    ax2.set_ylabel(\"Cumulative (% of conifer forest)\")\n    ax.set_title(\"The outbreak year by year\", loc=\"left\", fontsize=10)\n    h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()\n    ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=8, loc=\"upper left\")\n    return fig\n\nplot_area(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch58-area-table",
+  "kind": "table",
+  "caption": "Area by onset year (ha).",
+  "markdown": "| year           |   new_stressed_ha |   cumulative_ha |   cumulative_share |\n|:---------------|------------------:|----------------:|-------------------:|\n| 2018           |             1,637 |           1,637 |                 3% |\n| 2019           |             4,022 |           5,659 |                12% |\n| 2020           |            11,949 |          17,607 |                37% |\n| 2021           |             8,834 |          26,441 |                55% |\n| 2022           |             6,035 |          32,476 |                68% |\n| 2023           |             1,301 |          33,777 |                70% |\n| 2024           |               353 |          34,130 |                71% |\n| never stressed |            13,974 |          48,104 |               nan% |"
+ },
+ {
+  "name": "ch58-series",
+  "kind": "chart",
+  "caption": "Mean summer NDMI of conifer pixels, grouped by the year their decline began.",
+  "image": "images/real/ch58-series.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,onset,ndmi\n2017,0,0.36451\n2017,2018,0.41323\n2017,2019,0.43848\n2017,2020,0.44956\n2017,2021,0.45024\n2017,2022,0.4461\n2017,2023,0.45651\n2017,2024,0.44514\n2018,0,0.33288\n2018,2018,0.16028\n2018,2019,0.37047\n2018,2020,0.40236\n2018,2021,0.41192\n2018,2022,0.40724\n2018,2023,0.42379\n2018,2024,0.41283\n2019,0,0.33268\n2019,2018,0.11751\n2019,2019,0.17318\n2019,2020,0.38249\n2019,2021,0.41734\n2019,2022,0.41609\n2019,2023,0.43496\n2019,2024,0.42236\n2020,0,0.29498\n2020,2018,0.10019\n2020,2019,0.059744\n2020,2020,0.11336\n2020,2021,0.35469\n2020,2022,0.36789\n2020,2023,0.38731\n2020,2024,0.37916\n2021,0,0.32754\n2021,2018,0.16851\n2021,2019,0.11865\n2021,2020,0.054228\n2021,2021,0.10577\n2021,2022,0.3659\n2021,2023,0.41353\n2021,2024,0.40406\n2022,0,0.28532\n2022,2018,0.12909\n2022,2019,0.094137\n2022,2020,0.059058\n2022,2021,0.031928\n2022,2022,0.10557\n2022,2023,0.35421\n2022,2024,0.36144\n2023,0,0.29555\n2023,2018,0.15609\n2023,2019,0.12361\n2023,2020,0.096681\n2023,2021,0.070277\n2023,2022,0.052715\n2023,2023,0.096278\n2023,2024,0.33786\n2024,0,0.32387\n2024,2018,0.22285\n2024,2019,0.1922\n2024,2020,0.18109\n2024,2021,0.17101\n2024,2022,0.16672\n2024,2023,0.15289\n2024,2024,0.19692\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_series(df):\n    fig, ax = plt.subplots(figsize=(7.0, 3.5))\n    cmap = plt.get_cmap(\"inferno\")\n    for k, (o, g) in enumerate(df.groupby(\"onset\")):\n        if o == 0:\n            ax.plot(g.year, g.ndmi, color=\"#1a9850\", lw=2.2, label=\"never stressed\")\n        else:\n            ax.plot(g.year, g.ndmi, color=cmap(0.15 + 0.7 * (o - 2018) / 6), lw=1.4,\n                    label=f\"onset {o}\")\n    ax.set_ylabel(\"Summer NDMI (conifer pixels)\")\n    ax.set_title(\"Each cohort holds, then falls in its own year\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=7, ncol=2)\n    return fig\n\nplot_series(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch58-lag",
+  "kind": "table",
+  "caption": "Stressed pixels against the year Hansen records them as lost.",
+  "markdown": "| group                                       |   share |   median_lag_if_lost_years |   sample_pixels |\n|:--------------------------------------------|--------:|---------------------------:|----------------:|\n| stressed, never recorded lost (to 2024)     |      4% |                        1.0 |            1774 |\n| lost before or in the onset year (lag <= 0) |     68% |                        1.0 |            1774 |\n| lost 1 year after onset                     |     22% |                        1.0 |            1774 |\n| lost 2 years after onset                    |      4% |                        1.0 |            1774 |\n| lost 3 or more years after onset            |      2% |                        1.0 |            1774 |"
+ }
+]
