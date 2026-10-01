@@ -271,9 +271,10 @@ def check_scripts() -> None:
 
     for stem in sorted(referenced):
         found = list(scripts_en.glob(stem + ".*")) + \
-                list((ROOT / "scripts" / "id").glob(stem + ".*"))
+                list((ROOT / "scripts" / "id").glob(stem + ".*")) + \
+                list((ROOT / "scripts" / "py").glob(stem + ".py"))      # Python-only listings
         if not found:
-            fail(f"No source script for snippet '{stem}' in scripts/en or scripts/id.")
+            fail(f"No source script for snippet '{stem}' in scripts/en, scripts/id or scripts/py.")
 
     print(f"  {len(referenced)} listing(s) referenced, all have a source script")
 

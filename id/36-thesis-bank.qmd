@@ -58,6 +58,41 @@ Embeddings menjelaskan sekitar sepertiga variasi biomassa GEDI, dan galatnya men
 | 15 | Apakah tren LST di tropis nyata atau akibat orbit? | Bab [-@sec-statistics] menemukan "pendinginan" luas yang mungkin berasal dari waktu lintas Terra yang bergeser | bandingkan tren Terra, Aqua, dan Landsat | harmonisasi antar sensor |
 
 ::: {.callout-important}
+## Starter untuk setiap topik
+
+Setiap topik di atas kini punya percobaan pertama yang bisa dijalankan, lengkap dengan hasil sungguhannya. Tidak satu pun sudah berupa tesis. Masing-masing menunjukkan bahwa pertanyaannya nyata, dan memberi angka pertama yang harus dikalahkan. Beberapa hasilnya mengejutkan, dan justru itu intinya.
+
+### Embedding dan biomassa (T1, T2, T4, T5, T6)
+
+{{< include _snippets/ch36b_bank_carbon.qmd >}}
+
+Apa artinya:
+
+- **T1.** Dilatih di sekitar Bandung dan diuji di sekitar Garut, kesesuaian dengan WorldCover naik dari sekitar 0,59 dengan 5 label per kelas menjadi 0,73 dengan 100 label, dan sebagian besar kenaikan sudah dicapai pada 10 sampai 20 label. Di titik mana kurvanya mendatar di provinsi lain, dan terhadap label lapangan sungguhan, itulah pertanyaan terbukanya.
+- **T2.** 73 % piksel yang ditandai Hansen hilang pada 2021 menunjukkan perubahan embedding di atas persentil ke-95 hutan stabil. Sisanya yang 27 %, serta 5 % hutan "stabil" yang berubah sama besarnya, adalah tempat kehilangan hutan rakyat mungkin bersembunyi.
+- **T4.** Korelasi NDVI Landsat dengan biomassa plot berpindah antara 0,05 dan 0,26 hanya karena tahun citranya. Tanpa tanggal survei, tahun prediktor adalah pilihan yang tersembunyi.
+- **T5.** Interval konformal yang dikalibrasi pada satu blok spasial hanya mencakup 62 % (target 80 %) dan 77 % (target 90 %) jejak GEDI di blok lain. Jaminan di buku teks mengandaikan data yang bisa dipertukarkan (exchangeable); ruang mematahkannya. Metode konformal yang sadar ruang adalah masalah terbuka yang layak terbit.
+- **T6.** Pada satu tegakan simulasi, dua persamaan yang sudah terbit [@chave2005tree; @komiyama2005mangrove] berbeda sekitar 8 %, sedangkan ketidakpastian berat jenis kayu ±10 % saja sudah menyebarkan setiap jawaban sekitar ±16 %. Berat jenis kayu, bukan hanya persamaannya, layak mendapat perhatian di lapangan.
+
+### LiDAR dan bencana (T7 sampai T12)
+
+{{< include _snippets/ch36c_bank_lidar_hazards.qmd >}}
+
+- **T7.** Lahan 0,81 ha yang sama menghasilkan 178 pohon atau 117 pohon, tergantung satu parameter jendela. Hanya data batang di lapangan yang bisa menentukannya.
+- **T8.** Di tempat ETH menunjukkan lebih dari 30 m, ETH rata-rata 12 m lebih tinggi daripada GLAD. Mana yang benar butuh LiDAR udara setempat.
+- **T9.** Tiga puluh plot yang ditempatkan dengan mengelompokkan ruang embedding mencakup bentang alam Jawa Barat lebih baik daripada setiap satu dari 300 rancangan acak. Mengoptimalkannya dengan biaya terbang sungguhan itulah tesisnya.
+- **T10.** Di dalam satu jendela Iburi, model yang diuji pada separuh wilayah lainnya tidak kehilangan apa-apa (F1 0,75 di kedua cara). Itu uji yang mudah; yang sulit adalah gempa kedua.
+- **T11.** Dua lapisan jejak bangunan berbeda jauh: Google menemukan sekitar dua kali jumlah bangunan Microsoft di kota-kota Jawa, nol sama sekali di Kuala Simpang (Aceh), dan Microsoft nol di Jayapura. Angka keterpaparan mewarisi selisih ini.
+- **T12.** Rata-rata amplitudo hampir tidak memisahkan lahan longsor dari sekitarnya, baik sebelum maupun sesudah gempa. Peringatan dini, kalau memang ada, akan datang dari koherensi atau tekstur.
+
+### Metode (T13 sampai T15)
+
+{{< include _snippets/ch36d_bank_methods.qmd >}}
+
+- **T13.** Dengan label dari peta di sekitar Bandung, validasi acak dan validasi blok 5 km sepakat (0,87 dan 0,86). Bab [-@sec-sampling] menemukan selisih besar dengan label lapangan. Mengetahui kapan validasi spasial penting adalah pertanyaan itu sendiri.
+- **T14.** Sekitar 18 % Jawa Barat berada di luar wilayah keberlakuan model yang dilatih di sekitar Bandung, terutama di timur laut dan sepanjang pesisir selatan.
+- **T15.** Terra dan Aqua sama-sama menunjukkan "pendinginan" musim kemarau di Jawa Barat, dengan laju berbeda (−0,29 dan −0,46 °C per dekade). Tren permukaan yang nyata seharusnya tidak bergantung pada satelitnya.
+
 ## Sebelum memutuskan satu topik
 Cari di Google Scholar dan Scopus untuk dua tahun terakhir dengan kata kunci topiknya. Baca tiga makalah yang paling banyak dikutip dan tiga yang paling baru. Tulis satu paragraf tentang apa yang belum mereka kerjakan. Kalau paragraf itu tidak bisa ditulis, pilih topik lain. Perkiraan luas dalam tesis apa pun sebaiknya mengikuti praktik baik untuk akurasi dan luas [@olofsson2014good].
 :::

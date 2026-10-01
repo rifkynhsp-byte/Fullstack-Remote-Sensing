@@ -243,6 +243,19 @@ def main() -> int:
             (target_dir / f"{stem}.qmd").write_text(snippet, encoding="utf-8")
             written += 1
 
+        # Python-only listings (no Earth Engine JavaScript equivalent): LiDAR,
+        # local statistics, Colab jobs. One listing plus its real outputs.
+        js_stems = {Path(n).stem for n in names}
+        for py in sorted(PY_DIR.glob("*.py")):
+            if py.stem in js_stems:
+                continue
+            snippet = build(py, f"scripts/py/{py.name}", lang)
+            if snippet is None:
+                continue
+            snippet += outputs_block(py.stem, lang)
+            (target_dir / f"{py.stem}.qmd").write_text(snippet, encoding="utf-8")
+            written += 1
+
     print(f"build_snippets: wrote {written} snippet(s), {fell_back} using fallback")
     return 0
 

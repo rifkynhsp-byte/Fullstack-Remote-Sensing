@@ -58,6 +58,41 @@ The embeddings explain about a third of the variation in GEDI biomass, and the e
 | 15 | Are LST trends in the tropics real or orbital? | Chapter [-@sec-statistics] found broad "cooling" that may come from Terra's drifting overpass | compare Terra, Aqua and Landsat trends | cross-sensor harmonisation |
 
 ::: {.callout-important}
+## A starter for every topic
+
+Each topic above now has a first experiment you can run, with its real result. None of them is a thesis. Each one shows that the question is real, and gives you the first number to beat. Some results surprised us, which is the point.
+
+### Embeddings and biomass (T1, T2, T4, T5, T6)
+
+{{< include _snippets/ch36b_bank_carbon.qmd >}}
+
+What they say:
+
+- **T1.** Trained near Bandung and tested near Garut, agreement with WorldCover rises from about 0.59 with 5 labels per class to 0.73 with 100, and most of the gain comes by 10 to 20 labels. Where the curve flattens in other provinces, and against real field labels, is the open question.
+- **T2.** 73 % of the pixels Hansen marks as lost in 2021 show embedding change above the 95th percentile of stable forest. The other 27 %, and the 5 % of "stable" forest that changed as much, are where smallholder loss may be hiding.
+- **T4.** The correlation between Landsat NDVI and plot biomass moves between 0.05 and 0.26 depending only on the year of the image. Without survey dates, the predictor year is a hidden choice.
+- **T5.** Conformal intervals calibrated on one spatial block cover only 62 % (target 80 %) and 77 % (target 90 %) of footprints on another block. The textbook guarantee assumes exchangeable data; space breaks it. Spatially aware conformal methods are an open, publishable problem.
+- **T6.** On one simulated stand, two published equations [@chave2005tree; @komiyama2005mangrove] differ by about 8 %, while a ±10 % uncertainty in wood density alone spreads each answer by about ±16 %. Wood density, not only the equation, deserves the field effort.
+
+### LiDAR and hazards (T7 to T12)
+
+{{< include _snippets/ch36c_bank_lidar_hazards.qmd >}}
+
+- **T7.** The same 0.81 ha yields 178 trees or 117 depending on one window parameter. Only field stems can set it.
+- **T8.** Where ETH reads above 30 m, it is on average 12 m taller than GLAD. Which is right needs local airborne LiDAR.
+- **T9.** Thirty plots placed by clustering the embedding space cover the landscapes of West Java better than every one of 300 random designs. Optimising this for real flight costs is the thesis.
+- **T10.** Inside one Iburi window a model tested on the other half of the area loses nothing (F1 0.75 both ways). That is the easy test; the hard one is a second earthquake.
+- **T11.** The two footprint layers disagree wildly: Google finds about twice Microsoft's buildings in Java's towns, none at all in Kuala Simpang (Aceh), and Microsoft has none in Jayapura. Exposure numbers inherit this.
+- **T12.** Averaged amplitude barely separates landslide ground from its surroundings, before or after the earthquake. A warning, if one exists, will come from coherence or texture.
+
+### Methods (T13 to T15)
+
+{{< include _snippets/ch36d_bank_methods.qmd >}}
+
+- **T13.** With map labels near Bandung, random and 5 km block validation agree (0.87 and 0.86). Chapter [-@sec-sampling] found a large gap with field labels. Knowing when spatial validation matters is itself the question.
+- **T14.** About 18 % of West Java lies outside the area of applicability of a model trained near Bandung, mostly in the north-east and along the south coast.
+- **T15.** Terra and Aqua both show dry-season "cooling" over West Java, at different rates (−0.29 and −0.46 °C per decade). A real surface trend should not depend on the satellite.
+
 ## Before you commit to a topic
 Search Google Scholar and Scopus for the last two years with the topic's key terms. Read the three most cited and the three most recent papers. Write one paragraph on what they did not do. If you cannot write that paragraph, pick another topic. Area estimates in any thesis should follow good practice for accuracy and area [@olofsson2014good].
 :::
