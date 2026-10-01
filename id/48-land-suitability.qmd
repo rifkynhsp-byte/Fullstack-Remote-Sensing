@@ -1,0 +1,53 @@
+# Kesesuaian Lahan: Cocokkah Lahan Ini untuk Tanaman Ini? {#sec-land-suitability}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menjalankan evaluasi kesesuaian lahan ala FAO untuk satu komoditas di satu kabupaten, dibangun ulang dari proyek Bentala Aksa milik penulis: kelas per faktor, faktor pembatas, dan peta kesesuaian akhirnya. Anda juga akan melihat bagaimana satu kanal masukan yang keliru mengubah lahan "tidak sesuai" menjadi "sangat sesuai", dan kenapa peta kesesuaian selalu harus menunjukkan faktor apa yang menahan setiap tempat.
+:::
+
+## Kerangka FAO
+
+Evaluasi lahan menjawab pertanyaan praktis: kalau tanaman X ditanam di sini, apakah akan tumbuh baik, dan kalau tidak, apa penghalangnya? Kerangka FAO, yang dipakai dalam petunjuk teknis evaluasi lahan di Indonesia, menjawab dengan empat kelas:
+
+| Kelas | Arti |
+|---|---|
+| **S1** sangat sesuai | tidak ada pembatas yang berarti |
+| **S2** cukup sesuai | ada pembatas yang menurunkan hasil atau menaikkan biaya, tetapi masih bisa dikelola |
+| **S3** sesuai marginal | pembatas berat; hanya layak dengan masukan besar |
+| **N** tidak sesuai | pembatas yang tidak bisa diatasi dengan biaya wajar |
+
+Setiap karakteristik lahan (suhu, curah hujan, kemasaman tanah, lereng, drainase, kedalaman tanah, dan seterusnya) diberi kelas tersendiri berdasarkan kebutuhan tanaman. Lahan lalu mengambil kelas dari faktornya yang **paling buruk**. *Hukum faktor pembatas* inilah inti metodenya: tanah yang sangat baik tidak bisa menebus hujan yang jauh terlalu banyak.
+
+## Aturan yang dipakai
+
+Alat Bentala Aksa milik penulis menilai beberapa komoditas untuk Pangandaran. Bab ini memakai aturannya untuk jarak (*Jatropha curcas*), tanaman penghasil minyak yang tahan kering:
+
+| Kelas | Suhu rata-rata (°C) | Curah hujan tahunan (mm) | pH tanah | Lereng (°) |
+|---|---|---|---|---|
+| S1 | 24 sampai 35 | 700 sampai 1.400 | 6,0 sampai 7,0 | di bawah 8 |
+| S2 | 20 sampai 32 | 600 sampai 1.800 | 5,5 sampai 7,2 | di bawah 15 |
+| S3 | 16 sampai 50 | 500 sampai 4.000 | (berapa pun) | di bawah 30 |
+| N | di luar S3 | | | |
+
+Masukannya adalah lapisan terbuka: suhu dan curah hujan WorldClim, pH tanah OpenLandMap, dan lereng dari SRTM.
+
+{{< include _snippets/ch48_land_suitability.qmd >}}
+
+## Membaca hasilnya
+
+**Tidak ada lahan S1 atau S2.** Dengan curah hujan tahunan yang benar, tidak ada lahan di Pangandaran yang mencapai S1 atau S2 untuk jarak. Sekitar 114.000 ha sesuai marginal (S3) dan 7.000 ha tidak sesuai. Peta faktor pembatas menjelaskan sebabnya: di mana-mana, **curah hujan** yang menentukan kelasnya. Di sebagian besar lahan, tanahnya juga terlalu masam (median pH 5,2, di bawah batas bawah S2 yaitu 5,5), pembatas yang sama beratnya, tetapi peta menampilkannya sebagai curah hujan karena hanya satu faktor yang bisa digambar per piksel. Pangandaran menerima sekitar 2.800 sampai 4.000 mm per tahun (median 3.500), jauh di atas batas atas 1.400 mm untuk S1 dan 1.800 mm untuk S2. Jarak adalah tanaman untuk wilayah kering di timur Indonesia (Nusa Tenggara), bukan untuk pesisir selatan Jawa Barat yang basah.
+
+**Satu kanal, jawaban berbeda.** Skrip aslinya memakai BIO18 dari WorldClim sebagai "curah hujan tahunan". BIO18 hanyalah curah hujan *kuartal terpanas*, sekitar 700 sampai 970 mm di sini. Dengan kanal itu, aturan yang sama menghasilkan sekitar 17.500 ha lahan S1 dan S2, lahan yang mungkin saja direkomendasikan perencana untuk ditanami. Tidak ada yang tampak salah di kodenya; variabelnya bahkan dinamai `anprecip`. Kesalahannya baru terlihat ketika nilai-nilainya dicocokkan dengan pengetahuan kita tentang tempat itu. Pelajarannya sama dengan model banjir di Bab [-@sec-sar-flood]: peta yang tampak masuk akal belum tentu benar.
+
+## Melakukannya dengan baik
+
+- **Periksa setiap masukan terhadap kenyataan.** Cetak rentang setiap faktor di wilayah itu lalu tanyakan apakah masuk akal. Curah hujan tahunan 400 mm di Pangandaran jelas tidak.
+- **Selalu terbitkan peta faktor pembatas.** "S3" saja tidak berarti apa-apa bagi petani; "S3 karena curah hujan" memberi tahu mereka untuk tidak mencoba, dan "S3 karena pH" memberi tahu bahwa pengapuran mungkin membantu.
+- **Pakai karakteristik yang lengkap.** Evaluasi sungguhan mencakup drainase, kedalaman tanah, tekstur, retensi hara, bahaya banjir, dan bahaya erosi. Faktor yang hilang membuat peta tampak lebih sesuai daripada kenyataannya.
+- **Sesuaikan resolusi dengan keputusannya.** WorldClim 1 km dan pH tanah 250 m cocok untuk gambaran kabupaten, bukan untuk satu kebun.
+
+## Latihan {.unnumbered}
+
+1. Tambahkan komoditas kedua dengan batas-batasnya sendiri (misalnya tanaman yang cocok untuk kondisi basah) lalu bandingkan kedua petanya.
+2. Ganti curah hujan WorldClim dengan CHIRPS 2001–2020. Apakah kelasnya berubah?
+3. Tambahkan faktor genangan dari model HAND di Bab [-@sec-flood] dan lihat di mana faktor itu menjadi pembatas.

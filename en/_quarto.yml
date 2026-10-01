@@ -106,6 +106,7 @@ book:
         - 25-mining.qmd
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
+        - 48-land-suitability.qmd
         - 34-fire.qmd
         - 37-peat.qmd
         - 35-urban-energy.qmd

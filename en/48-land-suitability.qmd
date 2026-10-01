@@ -1,0 +1,53 @@
+# Land Suitability: Is This Land Right for This Crop? {#sec-land-suitability}
+
+::: {.chapter-goal}
+#### In this chapter
+You will run an FAO-style land suitability assessment for one crop in one regency, rebuilt from the author's earlier Bentala Aksa project: factor classes, the limiting factor, and the final suitability map. You will also see how one wrong input band turned "not suitable" land into "highly suitable" land, and why a suitability map must always show which factor holds each place back.
+:::
+
+## The FAO framework
+
+Land evaluation asks a practical question: if we grow crop X here, will it do well, and if not, what is in the way? The FAO framework, used in Indonesia's national technical guidelines for land evaluation, answers in four classes:
+
+| Class | Meaning |
+|---|---|
+| **S1** highly suitable | no significant limitation |
+| **S2** moderately suitable | limitations that reduce yield or raise costs, but can be managed |
+| **S3** marginally suitable | serious limitations; only worth it with large inputs |
+| **N** not suitable | limitations that cannot be overcome at reasonable cost |
+
+Each land characteristic (temperature, rainfall, soil acidity, slope, drainage, soil depth and so on) is classed separately against the crop's requirements. The land then takes the class of its **worst** factor. This *law of the limiting factor* is the heart of the method: excellent soil does not compensate for far too much rain.
+
+## The rules used here
+
+The author's Bentala Aksa tool assessed several crops for Pangandaran. This chapter uses its rules for jarak (*Jatropha curcas*), a drought-tolerant oil crop:
+
+| Class | Mean temperature (°C) | Annual rainfall (mm) | Soil pH | Slope (°) |
+|---|---|---|---|---|
+| S1 | 24 to 35 | 700 to 1,400 | 6.0 to 7.0 | below 8 |
+| S2 | 20 to 32 | 600 to 1,800 | 5.5 to 7.2 | below 15 |
+| S3 | 16 to 50 | 500 to 4,000 | (any) | below 30 |
+| N | outside S3 | | | |
+
+The inputs are public layers: WorldClim temperature and rainfall, OpenLandMap soil pH and the SRTM slope.
+
+{{< include _snippets/ch48_land_suitability.qmd >}}
+
+## Reading the results
+
+**No land is S1 or S2.** With the correct annual rainfall, none of Pangandaran's land reaches S1 or S2 for jarak. About 114,000 ha is marginal (S3) and 7,000 ha not suitable. The limiting-factor map shows why: everywhere, **rainfall** sets the class. On most land the soil is also too acidic (median pH 5.2, below the S2 floor of 5.5), an equal limitation that the map shows as rainfall because only one factor can be drawn per pixel. Pangandaran receives about 2,800 to 4,000 mm a year (median 3,500), far above the 1,400 mm ceiling for S1 and the 1,800 mm ceiling for S2. Jarak is a crop for the dry east of Indonesia (Nusa Tenggara), not for the wet south coast of West Java.
+
+**One band, a different answer.** The original script used WorldClim's BIO18 as "annual rainfall". BIO18 is the rainfall of the *warmest quarter* only, about 700 to 970 mm here. With it, the same rules produced about 17,500 ha of S1 and S2 land, land that a planner might have recommended for planting. Nothing in the code looked wrong; the variable was even named `anprecip`. The error shows only when you check the values against what you know of the place. This is the same lesson as the flood model in Chapter [-@sec-sar-flood]: a plausible map is not a correct one.
+
+## Doing it well
+
+- **Check every input against reality.** Print the range of each factor over the area and ask if it is believable. Annual rainfall of 400 mm in Pangandaran is not.
+- **Always publish the limiting-factor map.** "S3" alone tells a farmer nothing; "S3 because of rainfall" tells them not to try, and "S3 because of pH" tells them liming might help.
+- **Use the full set of characteristics.** Real assessments include drainage, soil depth, texture, nutrient retention, flooding and erosion hazard. Missing factors make the map look more suitable than it is.
+- **Match the resolution to the decision.** WorldClim at 1 km and soil pH at 250 m suit a regency overview, not a single farm.
+
+## Exercises {.unnumbered}
+
+1. Add a second crop with its own thresholds (for example a crop suited to wet conditions) and compare the two maps.
+2. Replace WorldClim rainfall with CHIRPS 2001–2020. Do the classes change?
+3. Add a flooding factor from the HAND model in Chapter [-@sec-flood] and see where it becomes the limiting factor.
