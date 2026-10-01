@@ -1,0 +1,43 @@
+# Tutupan Lahan Otomatis: Label Gratis dan Satu Model untuk Setiap Tahun {#sec-auto-landcover}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan membuat peta tutupan lahan Lombok tanpa mengumpulkan satu pun titik latih: labelnya diambil dari tempat-tempat di mana dua peta global sepakat, fiturnya adalah satellite embeddings, dan model yang sama memetakan tahun berikutnya tanpa label baru. Lalu Anda akan mengujinya dengan tiga cara dan melihat kenapa akurasi 94 % bisa berdampingan dengan kecocokan 46 % di seperempat pulau yang paling sulit.
+:::
+
+## Langkah paling lambat, diotomasi
+
+Mengumpulkan titik latih adalah bagian paling lambat dari sebuah klasifikasi (Bab [-@sec-sampling] dan [-@sec-supervised]). Produk tutupan lahan global sudah tersedia, dibuat oleh tim berbeda dengan metode berbeda: **ESA WorldCover** (10 m, 2021) dan **Dynamic World** dari Google (10 m, setiap citra Sentinel-2). Masing-masing keliru di beberapa tempat, tetapi kelirunya di tempat yang *berbeda*. Di tempat dua peta yang independen memberi jawaban yang sama, jawaban itu kemungkinan besar benar, sehingga kesepakatannya bisa dipakai sebagai data latih gratis.
+
+Alurnya:
+
+1. **Terjemahkan kedua peta ke kelas bersama.** WorldCover punya 11 kelas dan Dynamic World 9, dan keduanya tidak persis sejajar. Tujuh kelas ada di keduanya: air, pohon, mangrove, semak dan rumput, lahan pertanian, terbangun, dan lahan terbuka. Dynamic World tidak punya kelas mangrove, jadi kelas *vegetasi tergenang* dipakai sebagai penggantinya, dan piksel mangrove WorldCover diterima kalau Dynamic World menyebutnya pohon.
+2. **Ambil hanya yang sepakat.** Piksel yang oleh kedua peta disebut sama menjadi label. Sisanya dibiarkan tanpa label.
+3. **Belajar dari embedding.** Satellite embeddings (Bab [-@sec-embeddings]) meringkas setahun data Sentinel-1, Sentinel-2, dan data lain menjadi 64 angka per piksel. Random forest mempelajari tujuh kelas itu dari 300 titik per kelas.
+4. **Pakai ulang modelnya.** Embedding dari tahun yang berbeda berada di ruang yang sama, jadi model yang dilatih pada 2021 bisa diterapkan ke 2024 tanpa label baru.
+
+{{< include _snippets/ch56_auto_landcover.qmd >}}
+
+## Membaca hasilnya
+
+**Petanya tampak benar.** Hutan menutupi Rinjani, danau kawah Segara Anak berada di kalderanya, Mataram tampak sebagai blok lahan terbangun di barat, sawah memenuhi dataran tengah, dan bagian selatan yang kering berubah menjadi semak dan rumput. (Cincin biru di sekeliling pantai adalah laut di dalam batas administrasi yang kasar; cincin ini menggelembungkan luas air dan perlu di-mask sebelum dilaporkan.)
+
+**94 % adalah nilai yang mudah.** Pada titik konsensus yang disisihkan, model mencapai 0,94 secara keseluruhan, dan setiap kelas punya F1 0,87 atau lebih. Tetapi titik-titik ini dipilih *justru karena dua peta sudah sepakat*: dari awal mereka adalah piksel yang mudah. Angka ini menunjukkan model berhasil mempelajari labelnya, bukan bahwa petanya benar.
+
+**Seperempat yang sulit.** Pada 3.000 titik acak di seluruh pulau, peta 2024 cocok dengan Dynamic World 2024 di 75 % titik. Kalau dipisah menurut tingkat kesulitan, ceritanya berubah: 86 % di tempat peta-peta 2021 sepakat, dan hanya **46 %** di tempat mereka tidak sepakat. Piksel yang diperdebatkan itu mencakup 27 % pulau: pekarangan desa yang berpohon, ladang kering yang setengah tahun berupa rumput, tepi-tepi campuran. Tidak ada label yang pernah diambil di sana, sehingga model menebak tepat di tempat peta sumbernya juga menebak.
+
+**Perubahan antartahun: hati-hati.** Menerapkan model yang sama ke 2024 memberi sekitar 8.400 ha lahan terbangun lebih banyak dan 22.400 ha tutupan pohon lebih sedikit daripada 2021. Angka ini menggoda, tetapi jangan dilaporkan begitu saja. Dynamic World sendiri menaksir lahan terbangun Lombok pada 2021 sekitar 85.000 ha, sedangkan peta ini menyebut sekitar 45.000 ha untuk tahun yang sama. Kalau dua peta untuk satu tahun berbeda hampir dua kali lipat, perubahan 8.400 ha antartahun lebih kecil daripada ketidaksepakatan tentang titik awalnya. Perubahan butuh metode dan validasinya sendiri (Bab [-@sec-timeseries] dan [-@sec-accuracy]).
+
+## Kapan memakai label otomatis
+
+**Cocok untuk:** peta awal yang cepat di wilayah baru, baseline sebelum kerja lapangan, pemeriksaan kewajaran peta buatan tangan, dan banyak tempat di mana tidak akan ada yang mengumpulkan label.
+
+**Tidak cocok untuk:** kelas yang tidak dimiliki peta global. WorldCover dan Dynamic World tidak punya kelas sawit, karet, sagu, atau sawah; bagi mereka semuanya adalah pohon atau tanaman pertanian. Perusahaan perkebunan, studi produktivitas padi, atau proyek restorasi gambut butuh labelnya sendiri (Bab [-@sec-oil-palm-age] dan [-@sec-paddy]). Label otomatis juga menyalin kesalahan yang sama dari sumbernya: kalau kedua peta melewatkan desa kecil di bawah pepohonan, peta Anda juga akan melewatkannya.
+
+**Selalu laporkan:** peta mana yang digabungkan, bagaimana kelasnya diterjemahkan, berapa bagian lahan yang mendapat label, dan akurasi pada titik *acak*, bukan hanya pada titik yang sepakat.
+
+## Latihan {.unnumbered}
+
+1. Tambahkan peta ketiga (misalnya ESRI 10 m land cover) dan ambil hanya piksel yang disepakati ketiganya. Apakah angka 46 % di piksel sulit membaik, atau luas yang berlabel saja yang menyusut?
+2. Mask laut dengan lapisan kejadian air, lalu hitung ulang tabel luas.
+3. Latih dengan label konsensus 2021 dan 2024 sekaligus. Apakah perubahan lahan terbangun di antara dua tahun itu mendekati angka Dynamic World?

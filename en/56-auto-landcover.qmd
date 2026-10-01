@@ -1,0 +1,43 @@
+# Automatic Land Cover: Free Labels and One Model for Every Year {#sec-auto-landcover}
+
+::: {.chapter-goal}
+#### In this chapter
+You will build a land-cover map of Lombok without collecting a single training point: the labels come from the places where two global maps agree, the features are satellite embeddings, and the same model maps a later year with no new labels. Then you will test it three ways and see why a 94 % accuracy can sit next to 46 % agreement on the hardest quarter of the island.
+:::
+
+## The slowest step, automated
+
+Collecting training points is the slowest part of a classification (Chapters [-@sec-sampling] and [-@sec-supervised]). Global land-cover products already exist, made by different teams with different methods: **ESA WorldCover** (10 m, 2021) and Google's **Dynamic World** (10 m, every Sentinel-2 scene). Each is wrong in places, but they are wrong in *different* places. Where two independent maps give the same answer, that answer is probably right, so the agreement can be used as free training data.
+
+The pipeline:
+
+1. **Translate both maps into shared classes.** WorldCover has 11 classes and Dynamic World 9, and they do not line up exactly. Seven classes exist in both: water, trees, mangrove, shrub and grass, cropland, built and bare. Dynamic World has no mangrove class, so its *flooded vegetation* stands in for it, and a WorldCover mangrove pixel is accepted if Dynamic World calls it trees.
+2. **Keep only agreement.** Pixels where both maps say the same thing become labels. The rest are left unlabelled.
+3. **Learn from embeddings.** Satellite embeddings (Chapter [-@sec-embeddings]) summarise a year of Sentinel-1, Sentinel-2 and other data in 64 numbers per pixel. A random forest learns the seven classes from 300 points per class.
+4. **Reuse the model.** Embeddings of different years share the same space, so a model trained on 2021 can be applied to 2024 without new labels.
+
+{{< include _snippets/ch56_auto_landcover.qmd >}}
+
+## Reading the results
+
+**The map looks right.** Forest covers Rinjani, the crater lake Segara Anak sits in its caldera, Mataram is a block of built-up land in the west, rice land fills the central plain and the dry south turns to shrub and grass. (The blue ring around the coast is sea inside the coarse administrative boundary; it inflates the water area and should be masked before reporting.)
+
+**94 % is the easy score.** On held-out consensus points the model scores 0.94 overall, and every class has an F1 of 0.87 or more. But these points were chosen *because two maps already agreed on them*: they are the easy pixels by construction. This number tells you the model learned the labels, not that the map is right.
+
+**The hard quarter.** At 3,000 random points over the whole island, the 2024 map agrees with Dynamic World 2024 on 75 % of them. Split by difficulty, the story changes: 86 % where the 2021 maps agreed, and only **46 %** where they disagreed. Those disputed pixels are 27 % of the island: village gardens with trees, dry fields that are grass half the year, mixed edges. No label was ever taken there, so the model is guessing in exactly the places where the source maps were guessing too.
+
+**Change between years: careful.** Applying the same model to 2024 gives about 8,400 ha more built-up land and 22,400 ha less tree cover than in 2021. These numbers are tempting and should not be reported as they are. Dynamic World alone puts Lombok's built-up area in 2021 at about 85,000 ha, while this map says about 45,000 ha for the same year. When two maps of one year differ by a factor of two, a change of 8,400 ha between years is smaller than the disagreement about the starting point. Change needs its own method and its own validation (Chapters [-@sec-timeseries] and [-@sec-accuracy]).
+
+## When to use automatic labels
+
+**Good for:** a fast first map of a new area, a baseline before field work, a sanity check of a hand-made map, and the many places where nobody will ever collect labels.
+
+**Not good for:** classes the global maps do not have. WorldCover and Dynamic World have no oil palm, rubber, sago or paddy class; to them all of these are trees or crops. A plantation company, a rice-yield study or a peat restoration project needs its own labels (Chapters [-@sec-oil-palm-age] and [-@sec-paddy]). Automatic labels also copy the shared mistakes of their sources: if both maps miss small villages under trees, so will yours.
+
+**Always report:** which maps were combined, how classes were translated, the share of land that was labelled, and accuracy on *random* points, not only on the agreement points.
+
+## Exercises {.unnumbered}
+
+1. Add a third map (for example ESRI 10 m land cover) and keep only pixels where all three agree. Does the 46 % on hard pixels improve, or does the labelled area just shrink?
+2. Mask the sea with a water-occurrence layer, then recompute the area table.
+3. Train on 2021 and 2024 consensus labels together. Does the change in built-up area between the two years get closer to what Dynamic World reports?

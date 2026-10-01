@@ -1,0 +1,46 @@
+[
+ {
+  "name": "ch56_auto_landcover-webmap",
+  "kind": "html",
+  "html": "images/real/ch56_auto_landcover-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch56-labels",
+  "kind": "map",
+  "caption": "Pixels where WorldCover and Dynamic World gave the same class in 2021. Blank land is where they disagree: no label is taken there.",
+  "image": "images/real/ch56-labels.jpg"
+ },
+ {
+  "name": "ch56-map2024",
+  "kind": "map",
+  "caption": "The 2021 model applied to the 2024 embeddings. No 2024 sample was collected.",
+  "image": "images/real/ch56-map2024.jpg"
+ },
+ {
+  "name": "ch56-f1",
+  "kind": "table",
+  "caption": "Held-out consensus points (30 %). Optimistic: these are pixels two maps already agreed on, the easy ones.",
+  "markdown": "| class            |   test_points |   precision |   recall |   f1 |\n|:-----------------|--------------:|------------:|---------:|-----:|\n| water            |            96 |        0.99 |     0.98 | 0.98 |\n| trees            |            83 |        0.96 |     0.88 | 0.92 |\n| mangrove         |            87 |        0.93 |     0.98 | 0.96 |\n| shrub and grass  |            99 |        0.86 |     0.88 | 0.87 |\n| cropland         |           101 |        0.94 |     0.89 | 0.91 |\n| built            |            91 |        0.97 |     1.00 | 0.98 |\n| bare             |           104 |        0.94 |     0.98 | 0.96 |\n| overall accuracy |           661 |      nan    |   nan    | 0.94 |"
+ },
+ {
+  "name": "ch56-check",
+  "kind": "table",
+  "caption": "Agreement at 3,000 random points on the island, split by whether the two source maps agreed there in 2021.",
+  "markdown": "| points                        |    n |   share_of_island |   ours_2024_vs_DW_2024 |   ours_2021_vs_WorldCover |\n|:------------------------------|-----:|------------------:|-----------------------:|--------------------------:|\n| all random points             | 2998 |              100% |                    75% |                       83% |\n| where the 2021 maps agreed    | 2188 |               73% |                    86% |                       93% |\n| where the 2021 maps disagreed |  810 |               27% |                    46% |                       57% |"
+ },
+ {
+  "name": "ch56-area",
+  "kind": "chart",
+  "caption": "Area of each class in 2021 and 2024 from the same model.",
+  "image": "images/real/ch56-area.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"class,ha_2021,ha_2024,change_ha\nwater,24616,24499,-117.25\ntrees,2.4222e+05,2.1978e+05,-22444\nmangrove,3364.9,3883.5,518.6\nshrub and grass,56192,71786,15594\ncropland,88241,85930,-2310.3\nbuilt,45176,53607,8431.2\nbare,4507.5,4835.7,328.26\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_area(df):\n    fig, ax = plt.subplots(figsize=(7.2, 3.4))\n    x = np.arange(len(df))\n    ax.bar(x - 0.2, df.ha_2021 / 1000, 0.4, color=\"#9aa5b1\", label=\"2021\")\n    ax.bar(x + 0.2, df.ha_2024 / 1000, 0.4, color=\"#2a78d6\", label=\"2024 (same model)\")\n    ax.set_xticks(x, df[\"class\"], rotation=20, ha=\"right\", fontsize=8)\n    ax.set_ylabel(\"Area (thousand ha)\")\n    ax.set_title(\"Lombok land cover, 2021 and 2024, one model\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_area(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch56-area-table",
+  "kind": "table",
+  "caption": "Area per class (ha). Small changes are within the model's error.",
+  "markdown": "| class           |   ha_2021 |   ha_2024 |   change_ha |\n|:----------------|----------:|----------:|------------:|\n| water           |    24,616 |    24,499 |        -117 |\n| trees           |   242,220 |   219,776 |     -22,444 |\n| mangrove        |     3,365 |     3,884 |        +519 |\n| shrub and grass |    56,192 |    71,786 |     +15,594 |\n| cropland        |    88,241 |    85,930 |      -2,310 |\n| built           |    45,176 |    53,607 |      +8,431 |\n| bare            |     4,507 |     4,836 |        +328 |"
+ }
+]
