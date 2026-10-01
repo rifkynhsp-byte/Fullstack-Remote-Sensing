@@ -23,7 +23,22 @@ The app loads only its frame at first. Each module is built the moment you press
 
 ## The screen
 
-{{< include _snippets/ch00f_ijb_app.qmd >}}
+![The IJB screen: area, reporting unit and module on the left, the map on the right.](images/real/p6-layout.png){.lightbox fig-alt="The IJB screen: area, reporting unit and module on the left, the map on the right."}
+
+| Your question | Module | What it does |
+|---|---|---|
+| I need a basic layer (rainfall, buildings, peat, population...) for my area | **Data** | 43 public datasets in 13 groups, statistics per reporting unit |
+| I need a clean satellite image without clouds | **Citra** | five ways to build a Sentinel-2 composite, band combinations and indices |
+| What is the land cover here, by my own classes? | **Tutupan** | mark examples, choose an algorithm, get a map with accuracy and areas |
+| I want a ready-made land-cover map or a canopy height map | **Model** | the author's 10-class model, Dynamic World, or canopy height trained on GEDI |
+| When did this place change, or how old is this plantation? | **Deret** | harmonics, LandTrendr, stand age, CCDC breakpoints |
+| What changed between two dates? | **Ubah** | index difference, Dynamic World transitions, double classification, trend |
+| Where did it flood, and who was affected? | **Banjir** | Sentinel-1 change with Otsu threshold, HAND, slope and permanent-water filters; people and buildings |
+| What burned, how badly, and on peat? | **Api** | dNBR in four severity classes, hotspots, burned peat and its thickness |
+| Where is landslide or flood risk highest? | **Rawan** | random forest on embeddings and terrain, from your points or the NASA landslide catalog |
+| I need to combine steps: threshold, clean up, vectorise, summarise | **Toolbox** | expression calculator, Otsu, raster ↔ vector, zonal statistics, SNIC, morphology |
+
+: Which module to open for which question.
 
 The left panel walks you through three steps. The map on the right shows your area, every result layer, a legend and a status bar telling you what the app is doing.
 
@@ -44,21 +59,46 @@ Choose whether statistics and tables are summarised per **province, regency, sub
 
 ### Step 3: choose a module
 
-Ten buttons, ten kinds of question. The table in the figure block above says which to open for what. The sections below explain each, with the settings that matter.
+Ten buttons, ten kinds of question. The table above says which to open for what. The sections below explain each, with the settings that matter.
 
 ## The modules
 
+In every module below, the first picture is the screen with **the buttons to press outlined in red and numbered in order**. The pictures after it are real results made in this book with the same method the button runs, so you know what to expect; in the app they appear over your own area.
+
 ### Data: the catalogue
+
+![IJB Data: press the red buttons in the order of the numbers.](images/real/p6-click-data.png){.lightbox fig-alt="IJB Data: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① Admin: choose your area · ② Data · ③ group · ④ layer · ⑤ dates · ⑥ *Tampilkan lapisan*
+
 
 Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, land cover, buildings and population, fire and peat, drought, coasts and ecosystems, soils, volcanoes, administrative boundaries, event history and machine learning. Examples: CHIRPS and GPM rainfall, HAND and MERIT Hydro, four elevation models (FABDEM, Copernicus GLO-30, NASADEM, SRTM), Dynamic World and WorldCover, Google, Microsoft and VIDA building footprints, WorldPop and GHSL population, FIRMS hotspots, burned area, peat extent and peat thickness, mangroves, SMAP soil moisture, the NASA global landslide catalogue and the satellite embeddings. Pick a group and a layer, set a date range where relevant, and press *Tampilkan lapisan*: the layer appears on the map with its mean over your area.
 
 **Use it for:** a first look at any place, and background layers before any analysis.
 
+**What you get**
+
+![Annual rainfall, the kind of layer Data shows (Chapter [-@sec-dataviz]).](images/real/ch29-map-sequential.jpg){.lightbox fig-alt="Annual rainfall, the kind of layer Data shows."}
+
 ### Citra: a clean Sentinel-2 image
+
+![IJB Citra: press the red buttons in the order of the numbers.](images/real/p6-click-citra.png){.lightbox fig-alt="IJB Citra: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Citra · ③ dates · ④ method · ⑤ bands · ⑥ show
+
 
 Builds a cloud-free composite from all Sentinel-2 images in a date range, not one scene. Five methods: **Cloud Score Plus** (the default and usually the best in the tropics), median with the scene classification mask, greenest pixel, 25th percentile (bright, low-haze) and the single cleanest scene. You set the date range, the maximum cloud per scene, the Cloud Score Plus threshold, the band combination (natural colour, vegetation infrared, urban SWIR, agriculture, or haze penetration) and optionally an index (NDVI, NDWI, NDBI, NBR or NDMI). The app reports how many images were used and how many pixels came out clean. (P1 and Chapter [-@sec-cloud] explain why these choices matter.)
 
+**What you get**
+
+![A cloud-free median composite, what Citra builds (Chapter [-@sec-cloud]).](images/real/ch09-truecolour.jpg){.lightbox fig-alt="A cloud-free median composite, what Citra builds."}
+
 ### Tutupan: your own land-cover map
+
+![IJB Tutupan: press the red buttons in the order of the numbers.](images/real/p6-click-tutupan.png){.lightbox fig-alt="IJB Tutupan: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Tutupan · ③ data source · ④ add classes, *Tandai*, click examples · ⑤ algorithm · ⑥ *Latih dan klasifikasi*
+
 
 The supervised classification of Chapter [-@sec-supervised], by clicking:
 
@@ -70,7 +110,16 @@ The supervised classification of Chapter [-@sec-supervised], by clicking:
 
 The app reports **overall accuracy and kappa** and the area of every class. Remember Chapter [-@sec-accuracy]: accuracy on points you clicked yourself near each other is optimistic. Spread your samples over the whole area.
 
+**What you get**
+
+![A random-forest land-cover map, what Tutupan returns (Chapter [-@sec-supervised]).](images/real/ch16-rf.jpg){.lightbox fig-alt="A random-forest land-cover map, what Tutupan returns."}
+
 ### Model: ready-made models, including the author's own
+
+![IJB Model: press the red buttons in the order of the numbers.](images/real/p6-click-model.png){.lightbox fig-alt="IJB Model: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Model · ③ mode · ④ embedding year · ⑤ run
+
 
 Three modes:
 
@@ -78,15 +127,46 @@ Three modes:
 - **Dynamic World**: Google's near-real-time land cover, for comparison.
 - **Canopy height from GEDI**: the app takes GEDI laser heights in your area (good-quality shots only), trains a regression on the embeddings, and predicts a wall-to-wall 10 m canopy height map. It reports the correlation with the GEDI shots and the mean height (Chapters [-@sec-height-scaling] and [-@sec-gedi-structure]).
 
+**What you get**
+
+![Land cover from satellite embeddings with few samples, the idea behind the ready-made model (Chapter [-@sec-embeddings]).](images/real/ch19-classified.jpg){.lightbox fig-alt="Land cover from satellite embeddings with few samples, the idea behind the ready-made model."}
+
+![A 10 m canopy height map trained on GEDI, the kind of result the height mode gives (Chapter [-@sec-height-scaling]).](images/real/ch33-eth-map.jpg){.lightbox fig-alt="A 10 m canopy height map trained on GEDI, the kind of result the height mode gives."}
+
 ### Deret: time series
+
+![IJB Deret: press the red buttons in the order of the numbers.](images/real/p6-click-deret.png){.lightbox fig-alt="IJB Deret: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Deret · ③ mode · ④ years · ⑤ *Jalankan analisis*
+
 
 For when something happened and how long ago (Chapters [-@sec-timeseries] and [-@sec-oil-palm-age]). Four modes: **harmonic model and trend** (separates the season from the long-term trend, reports the seasonal amplitude), **LandTrendr breakpoints** (the year of the main disturbance), **stand or crop age**, and **CCDC breakpoints** (precise break dates, slower). Set the year range, the number of harmonics and the change-magnitude threshold.
 
+**What you get**
+
+![Plantation age from the year of disturbance, what Deret's age mode maps (Chapter [-@sec-oil-palm-age]).](images/real/ch44-age.jpg){.lightbox fig-alt="Plantation age from the year of disturbance, what Deret's age mode maps."}
+
 ### Ubah: change between two dates
+
+![IJB Ubah: press the red buttons in the order of the numbers.](images/real/p6-click-ubah.png){.lightbox fig-alt="IJB Ubah: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Ubah · ③ method · ④ the two periods · ⑤ *Jalankan analisis*
+
 
 Four methods: **index difference** (NDVI, NDWI, NDBI, NBR or NDMI between two periods, with a threshold), **Dynamic World transitions**, **double classification**, and **linear trend**. It reports hectares gained and lost. For the exact date of a change, use Deret instead.
 
+**What you get**
+
+![New built-up land between two years from Dynamic World (Chapter [-@sec-timeseries]).](images/real/ch21-new-built.jpg){.lightbox fig-alt="New built-up land between two years from Dynamic World."}
+
+![The same change as a chart, year by year.](images/real/ch21-built-series.png){.lightbox fig-alt="The same change as a chart, year by year."}
+
 ### Banjir: flood mapping
+
+![IJB Banjir: press the red buttons in the order of the numbers.](images/real/p6-click-banjir.png){.lightbox fig-alt="IJB Banjir: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① Admin: your regency · ② reporting unit *Desa* · ③ Banjir · ④ before and after periods · ⑤ orbit, DEM, HAND · ⑥ *Jalankan analisis*
+
 
 The method of Chapter [-@sec-flood] and P5, by clicking:
 
@@ -97,14 +177,36 @@ The method of Chapter [-@sec-flood] and P5, by clicking:
 
 Behind the button: Sentinel-1 backscatter change, an automatic Otsu threshold, then filters for steep slopes, permanent water and high HAND. The results are **hectares flooded, people exposed, buildings affected** and how well the flood matches the historical flood record. Summarised by your reporting unit, that is a first situation report.
 
+**What you get**
+
+![Radar flood extent with Otsu threshold and HAND, the method behind Banjir (Chapter [-@sec-flood]).](images/real/ch24-flood-map.jpg){.lightbox fig-alt="Radar flood extent with Otsu threshold and HAND, the method behind Banjir."}
+
+![The HAND check: flooded points sit low on the terrain.](images/real/ch24-flood-hand.png){.lightbox fig-alt="The HAND check: flooded points sit low on the terrain."}
+
 ### Api: forest and land fire
+
+![IJB Api: press the red buttons in the order of the numbers.](images/real/p6-click-api.png){.lightbox fig-alt="IJB Api: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Api · ③ before and after periods · ④ *Jalankan analisis*
+
 
 1. Set a **period before** and a **period after** the fire season.
 2. Press *Jalankan analisis*.
 
 The app computes the difference in Normalised Burn Ratio (dNBR) from Sentinel-2 and splits it into four severity classes, with breaks at dNBR 0.27, 0.44 and 0.66. It overlays FIRMS hotspots and the peat map, and reports **hectares burned, hotspots, hectares of burned peat and the mean peat thickness**. A hectare of burned peat is not a hectare of burned grass (Chapters [-@sec-peat] and [-@sec-carbon-balance]).
 
+**What you get**
+
+![Burned area on peat in 2015, the result Api reports with burned peat (Chapter [-@sec-peat]).](images/real/ch37-burn-2015.jpg){.lightbox fig-alt="Burned area on peat in 2015, the result Api reports with burned peat."}
+
+![Hotspots against rainfall, the chart behind the fire numbers.](images/real/ch37-series.png){.lightbox fig-alt="Hotspots against rainfall, the chart behind the fire numbers."}
+
 ### Rawan: hazard susceptibility with machine learning
+
+![IJB Rawan: press the red buttons in the order of the numbers.](images/real/p6-click-rawan.png){.lightbox fig-alt="IJB Rawan: press the red buttons in the order of the numbers."}
+
+**Clicks:** ① area · ② Rawan · ③ hazard · ④ *Tandai RAWAN* / *Tandai AMAN*, click the map · ⑤ *Latih dari titik manual*
+
 
 Maps where landslides or floods are *likely*, not where they happened. A random forest learns from the 64 satellite embedding bands plus slope, elevation, aspect, TWI, HAND, rainfall, soil and land cover.
 
@@ -116,9 +218,15 @@ Maps where landslides or floods are *likely*, not where they happened. A random 
 
 It reports **validation accuracy, kappa, hectares of high susceptibility and people living in high-susceptibility zones**. Hand-placed points from people who know the area usually beat a global catalogue.
 
+**What you get**
+
+![A landslide susceptibility map (Chapter [-@sec-landslide-simple]); Rawan learns the weights with a random forest instead of fixing them.](images/real/ch50-score.jpg){.lightbox fig-alt="A landslide susceptibility map; Rawan learns the weights with a random forest instead of fixing them."}
+
 ### Toolbox: chain your own workflow
 
-Every result becomes the **active layer**, and every tool works on the active layer, so tools can be chained (figure above). The tools: an **expression calculator** for any band formula, **Otsu threshold**, **raster to vector** (with minimum mapping unit and line simplification), **vector to raster** (buildings, landslides, mangroves or your last vector), **zonal statistics** (mean, sum, maximum, minimum, mode, standard deviation, median), **SNIC object segmentation** (Chapter [-@sec-obia]) and **morphological filters and sieve**.
+Every result becomes the **active layer**, and every tool works on the active layer, so tools can be chained (figure below). The tools: an **expression calculator** for any band formula, **Otsu threshold**, **raster to vector** (with minimum mapping unit and line simplification), **vector to raster** (buildings, landslides, mangroves or your last vector), **zonal statistics** (mean, sum, maximum, minimum, mode, standard deviation, median), **SNIC object segmentation** (Chapter [-@sec-obia]) and **morphological filters and sieve**.
+
+![Chaining tools: every result becomes the active layer for the next one.](images/real/p6-chain.png){.lightbox fig-alt="Chaining tools: every result becomes the active layer for the next one."}
 
 ## Four recipes
 

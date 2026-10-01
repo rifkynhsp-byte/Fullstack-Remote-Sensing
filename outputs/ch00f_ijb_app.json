@@ -16,5 +16,59 @@
   "kind": "figure",
   "caption": "Chaining tools: every result becomes the active layer for the next one.",
   "image": "images/real/p6-chain.png"
+ },
+ {
+  "name": "p6-click-data",
+  "kind": "figure",
+  "caption": "IJB Data: the buttons to press, in order.",
+  "image": "images/real/p6-click-data.png"
+ },
+ {
+  "name": "p6-click-citra",
+  "kind": "figure",
+  "caption": "IJB Citra: the buttons to press, in order.",
+  "image": "images/real/p6-click-citra.png"
+ },
+ {
+  "name": "p6-click-tutupan",
+  "kind": "figure",
+  "caption": "IJB Tutupan: the buttons to press, in order.",
+  "image": "images/real/p6-click-tutupan.png"
+ },
+ {
+  "name": "p6-click-model",
+  "kind": "figure",
+  "caption": "IJB Model: the buttons to press, in order.",
+  "image": "images/real/p6-click-model.png"
+ },
+ {
+  "name": "p6-click-deret",
+  "kind": "figure",
+  "caption": "IJB Deret: the buttons to press, in order.",
+  "image": "images/real/p6-click-deret.png"
+ },
+ {
+  "name": "p6-click-ubah",
+  "kind": "figure",
+  "caption": "IJB Ubah: the buttons to press, in order.",
+  "image": "images/real/p6-click-ubah.png"
+ },
+ {
+  "name": "p6-click-banjir",
+  "kind": "figure",
+  "caption": "IJB Banjir: the buttons to press, in order.",
+  "image": "images/real/p6-click-banjir.png"
+ },
+ {
+  "name": "p6-click-api",
+  "kind": "figure",
+  "caption": "IJB Api: the buttons to press, in order.",
+  "image": "images/real/p6-click-api.png"
+ },
+ {
+  "name": "p6-click-rawan",
+  "kind": "figure",
+  "caption": "IJB Rawan: the buttons to press, in order.",
+  "image": "images/real/p6-click-rawan.png"
  }
 ]
