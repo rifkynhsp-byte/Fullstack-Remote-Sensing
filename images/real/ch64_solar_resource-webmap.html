@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_a17327d4c5c83694cd58ece84f2b6c4f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+            
+                <style>
+                    .leaflet-image-layer {
+                        /* old android/safari*/
+                        image-rendering: -webkit-optimize-contrast;
+                        image-rendering: crisp-edges; /* safari */
+                        image-rendering: pixelated; /* chrome */
+                        image-rendering: -moz-crisp-edges; /* firefox */
+                        image-rendering: -o-crisp-edges; /* opera */
+                        -ms-interpolation-mode: nearest-neighbor; /* ie */
+                    }
+                </style>
+            
+        
+    
+            
+                <style>
+                    .leaflet-image-layer {
+                        /* old android/safari*/
+                        image-rendering: -webkit-optimize-contrast;
+                        image-rendering: crisp-edges; /* safari */
+                        image-rendering: pixelated; /* chrome */
+                        image-rendering: -moz-crisp-edges; /* firefox */
+                        image-rendering: -o-crisp-edges; /* opera */
+                        -ms-interpolation-mode: nearest-neighbor; /* ie */
+                    }
+                </style>
+            
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
+    
+            <div class="folium-map" id="map_a17327d4c5c83694cd58ece84f2b6c4f" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_a17327d4c5c83694cd58ece84f2b6c4f = L.map(
+                "map_a17327d4c5c83694cd58ece84f2b6c4f",
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 1,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_a17327d4c5c83694cd58ece84f2b6c4f);
+
+            
+
+        
+    
+            var tile_layer_d5335db36934a816b62858873a74c28c = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_d5335db36934a816b62858873a74c28c.addTo(map_a17327d4c5c83694cd58ece84f2b6c4f);
+        
+    
+            var tile_layer_7530aa481f0effcd428392305cb63117 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri World Imagery",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_7530aa481f0effcd428392305cb63117.addTo(map_a17327d4c5c83694cd58ece84f2b6c4f);
+        
+    
+            var image_overlay_1dc781347267c4d9d11d3dd3a5c3824f = L.imageOverlay(
+                "raw/ch64-ghi.png",
+                [[-11, 95], [6, 141]],
+                {
+  "opacity": 0.85,
+  "interactive": false,
+  "zindex": 10,
+}
+            );
+        
+    
+            image_overlay_1dc781347267c4d9d11d3dd3a5c3824f.addTo(map_a17327d4c5c83694cd58ece84f2b6c4f);
+        
+    
+            var image_overlay_033f6609ebf8a185cc46090ecee678bc = L.imageOverlay(
+                "raw/ch64-land.png",
+                [[-7.15, 107.25], [-6.75, 107.95]],
+                {
+  "opacity": 0.85,
+  "interactive": false,
+  "zindex": 11,
+}
+            );
+        
+    
+            var layer_control_ad7e09b80fb5b46a158024cc92de5d87_layers = {
+                base_layers : {
+                    "Street map" : tile_layer_d5335db36934a816b62858873a74c28c,
+                    "Satellite basemap" : tile_layer_7530aa481f0effcd428392305cb63117,
+                },
+                overlays :  {
+                    "Sunlight across Indonesia" : image_overlay_1dc781347267c4d9d11d3dd3a5c3824f,
+                    "Open land that could host solar, Bandung basin" : image_overlay_033f6609ebf8a185cc46090ecee678bc,
+                },
+            };
+            let layer_control_ad7e09b80fb5b46a158024cc92de5d87 = L.control.layers(
+                layer_control_ad7e09b80fb5b46a158024cc92de5d87_layers.base_layers,
+                layer_control_ad7e09b80fb5b46a158024cc92de5d87_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_a17327d4c5c83694cd58ece84f2b6c4f);
+
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_a17327d4c5c83694cd58ece84f2b6c4f);
+        
+    
+            map_a17327d4c5c83694cd58ece84f2b6c4f.fitBounds(
+                [[-11, 95], [6, 141]],
+                {}
+            );
+        
+</script>
+</html>

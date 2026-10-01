@@ -121,6 +121,7 @@ book:
         - 37-peat.qmd
         - 35-urban-energy.qmd
         - 57-solar-pv.qmd
+        - 64-solar-resource.qmd
     - part: "Ilmu Lingkungan: Air, Karbon, dan Kebijakan"
       chapters:
         - 40-water-cycle.qmd

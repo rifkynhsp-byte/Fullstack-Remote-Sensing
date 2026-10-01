@@ -1,0 +1,58 @@
+[
+ {
+  "name": "ch64_solar_resource-webmap",
+  "kind": "html",
+  "html": "images/real/ch64_solar_resource-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch64-ghi",
+  "kind": "map",
+  "caption": "Mean daily global horizontal irradiance, 2019-2023. Nusa Tenggara gets the most sun; the wet mountains of Sumatra, Kalimantan and Papua the least.",
+  "image": "images/real/ch64-ghi.jpg"
+ },
+ {
+  "name": "ch64-sites",
+  "kind": "chart",
+  "caption": "Monthly sunlight and rainfall at four sites (ERA5-Land, 2019-2023).",
+  "image": "images/real/ch64-sites.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"site,month,ghi_kwh_m2_day,temp_c,rain_mm\nCirata (floating PV),1,4.4566,24.144,285.73\nCirata (floating PV),2,3.8696,24.014,293.45\nCirata (floating PV),3,4.7937,24.457,303.88\nCirata (floating PV),4,4.8264,24.701,248.02\nCirata (floating PV),5,4.8076,24.983,176.94\nCirata (floating PV),6,4.6849,24.649,95.844\nCirata (floating PV),7,5.2511,24.91,45.285\nCirata (floating PV),8,5.6979,25.432,51.228\nCirata (floating PV),9,5.9786,25.914,75.72\nCirata (floating PV),10,5.7785,25.808,206.9\nCirata (floating PV),11,4.9643,25.163,261.93\nCirata (floating PV),12,4.6539,24.607,333.94\nNorth Bandung,1,4.3765,22.03,385.61\nNorth Bandung,2,3.7507,21.931,368.88\nNorth Bandung,3,4.5649,22.33,424.51\nNorth Bandung,4,4.6692,22.58,307.04\nNorth Bandung,5,4.7053,22.832,264.94\nNorth Bandung,6,4.6019,22.479,144.93\nNorth Bandung,7,5.201,22.56,71.519\nNorth Bandung,8,5.6618,22.916,84.826\nNorth Bandung,9,5.8844,23.34,110.16\nNorth Bandung,10,5.5832,23.358,314.68\nNorth Bandung,11,4.7567,22.882,384.41\nNorth Bandung,12,4.4729,22.426,501.11\nSaguling reservoir,1,4.4034,22.278,302.28\nSaguling reservoir,2,3.7851,22.153,324.64\nSaguling reservoir,3,4.5921,22.594,387.01\nSaguling reservoir,4,4.684,22.832,293.79\nSaguling reservoir,5,4.7067,23.045,276.89\nSaguling reservoir,6,4.613,22.591,167.56\nSaguling reservoir,7,5.2093,22.624,89.174\nSaguling reservoir,8,5.6712,22.933,100.21\nSaguling reservoir,9,5.8845,23.292,143.03\nSaguling reservoir,10,5.5891,23.351,339.73\nSaguling reservoir,11,4.7489,23.057,378.28\nSaguling reservoir,12,4.4931,22.701,439.79\n\"Kupang, NTT\",1,5.1689,26.241,311.79\n\"Kupang, NTT\",2,4.6017,25.951,314.88\n\"Kupang, NTT\",3,5.5867,26.369,239.4\n\"Kupang, NTT\",4,5.4694,26.501,142.04\n\"Kupang, NTT\",5,5.3878,26.592,23.541\n\"Kupang, NTT\",6,4.929,26.134,22.552\n\"Kupang, NTT\",7,5.4436,25.388,5.7759\n\"Kupang, NTT\",8,6.18,26.021,3.15\n\"Kupang, NTT\",9,6.6966,26.867,16.386\n\"Kupang, NTT\",10,7.1105,27.937,41.265\n\"Kupang, NTT\",11,6.4461,28.308,112.64\n\"Kupang, NTT\",12,5.8798,27.486,192.52\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_sites(df):\n    fig, (a, b) = plt.subplots(1, 2, figsize=(10, 3.6))\n    for n, g in df.groupby(\"site\", sort=False):\n        a.plot(g.month, g.ghi_kwh_m2_day, marker=\"o\", ms=3, label=n)\n        b.plot(g.month, g.rain_mm, marker=\"o\", ms=3, label=n)\n    a.set_ylabel(\"GHI (kWh/m2/day)\"); b.set_ylabel(\"Rainfall (mm/month)\")\n    for ax in (a, b):\n        ax.set_xticks(range(1, 13)); ax.set_xlabel(\"Month\")\n    a.set_title(\"Sunlight through the year, 2019-2023\", loc=\"left\", fontsize=10)\n    b.set_title(\"Rainfall through the year\", loc=\"left\", fontsize=10)\n    a.legend(frameon=False, fontsize=7)\n    fig.tight_layout()\n    return fig\n\nplot_sites(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch64-site-table",
+  "kind": "table",
+  "caption": "Mean sunlight, the darkest month as a share of the mean, temperature and rainfall per site.",
+  "markdown": "| site                 |   ghi_kwh_m2_day |   ghi_kwh_m2_year |   worst_month_share |   temp_c |   rain_mm_year |\n|:---------------------|-----------------:|------------------:|--------------------:|---------:|---------------:|\n| Cirata (floating PV) |             4.98 |             1,818 |                 78% |     24.9 |          2,379 |\n| North Bandung        |             4.85 |             1,771 |                 77% |     22.6 |          3,363 |\n| Saguling reservoir   |             4.87 |             1,776 |                 78% |     22.8 |          3,242 |\n| Kupang, NTT          |             5.74 |             2,096 |                 80% |     26.6 |          1,426 |"
+ },
+ {
+  "name": "ch64-calibration",
+  "kind": "table",
+  "caption": "Calibration on Cirata: reported output and capacity against the satellite sunlight.",
+  "markdown": "|   reported_gwh_yr |   ghi_kwh_m2_yr |   yield_kwh_per_kwp |   performance_ratio |   mwp_per_ha_panels |   mwp_per_ha_outline |\n|------------------:|----------------:|--------------------:|--------------------:|--------------------:|---------------------:|\n|               245 |           1,818 |               1,276 |                0.70 |                1.29 |                 0.74 |\n|               300 |           1,818 |               1,562 |                0.86 |                1.29 |                 0.74 |"
+ },
+ {
+  "name": "ch64-rooftops",
+  "kind": "table",
+  "caption": "North Bandung rooftops with 30 % of the roof area covered, and the share of a 150 kWh/month household need per building.",
+  "markdown": "| case    |   buildings |   roof_ha |   panel_ha_30pct |   mwp |   gwh_per_year |   kwh_per_building_month |   share_of_150kwh_need |   worst_month_share |\n|:--------|------------:|----------:|-----------------:|------:|---------------:|-------------------------:|-----------------------:|--------------------:|\n| low PR  |       27221 |     349.7 |            104.9 | 209.8 |          260.9 |                      799 |                   532% |                412% |\n| high PR |       27221 |     349.7 |            104.9 | 209.8 |          319.5 |                      978 |                   652% |                504% |"
+ },
+ {
+  "name": "ch64-reservoir",
+  "kind": "table",
+  "caption": "Floating panels on Saguling reservoir at Cirata's density.",
+  "markdown": "|   surface_covered | case    |   reservoir_ha |   mwp |   gwh_per_year |   households_at_150kwh |\n|------------------:|:--------|---------------:|------:|---------------:|-----------------------:|\n|                5% | low PR  |          1,561 |    58 |             72 |                 39,907 |\n|                5% | high PR |          1,561 |    58 |             88 |                 48,866 |\n|               10% | low PR  |          1,561 |   115 |            144 |                 79,814 |\n|               10% | high PR |          1,561 |   115 |            176 |                 97,731 |\n|               20% | low PR  |          1,561 |   231 |            287 |                159,627 |\n|               20% | high PR |          1,561 |   231 |            352 |                195,462 |"
+ },
+ {
+  "name": "ch64-land",
+  "kind": "map",
+  "caption": "Grass, shrub or bare land on gentle slopes outside protected areas. A first screen only: ownership, grid distance and food land come next.",
+  "image": "images/real/ch64-land.jpg"
+ },
+ {
+  "name": "ch64-land-table",
+  "kind": "table",
+  "caption": "Suitable open land and its potential at Cirata's density.",
+  "markdown": "|   suitable_open_land_ha |   mwp_at_cirata_density |   gwh_per_year_low |   gwh_per_year_high |\n|------------------------:|------------------------:|-------------------:|--------------------:|\n|                   3,072 |                   2,269 |              2,821 |               3,454 |"
+ }
+]

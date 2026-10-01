@@ -1,0 +1,46 @@
+# Solar Resource: How Much Electricity Could the Sun Give Here? {#sec-solar-resource}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map how much sunlight reaches Indonesia, calibrate a simple generation model on a real power plant (Cirata, Chapter [-@sec-solar-pv]), and use it to answer three practical questions: how much electricity the rooftops of North Bandung could make, how much floating panels on Saguling reservoir could make, and whether that is enough for a household or the grid (PLN) is still needed. On the way you will see that Bandung's heavy rain costs surprisingly little sunlight.
+:::
+
+## From sunlight to kilowatt-hours
+
+Three numbers turn a satellite map into electricity:
+
+- **GHI**, global horizontal irradiance: the solar energy reaching a flat surface, in kWh per m² per day or per year. Clouds and haze lower it. Here it comes from ERA5-Land, a reanalysis that combines weather models with observations, at about 9 km.
+- **Installed capacity**, in kWp (kilowatt-peak): what the panels deliver under standard test light of 1,000 W/m². A module with 20 % efficiency gives about 0.2 kWp per m².
+- **Performance ratio (PR)**: the share of the theoretical output that reaches the grid after losses from heat, dirt, wiring, inverters and downtime. Panels lose about 0.3–0.5 % of output for every degree of heat, so cool places help a little.
+
+Annual energy (kWh) = capacity (kWp) × GHI (kWh/m²/yr) × PR.
+
+PR is the uncertain one. Instead of guessing it, this chapter **measures it on a real plant**: Cirata's reported capacity and output against Cirata's sunlight.
+
+{{< include _snippets/ch64_solar_resource.qmd >}}
+
+## Reading the results
+
+**Sunlight across Indonesia.** Most of the country receives between about 4.5 and 5.5 kWh/m² per day. Nusa Tenggara is the sunniest: Kupang averages 5.74 kWh/m²/day, about 2,100 kWh/m² a year. The wet mountains of Sumatra, Kalimantan and Papua receive the least.
+
+**Rain is not darkness.** North Bandung receives about 3,360 mm of rain a year, 40 % more than Cirata (about 2,380 mm), yet its sunlight is only 3 % lower: 4.85 against 4.98 kWh/m²/day. Tropical rain falls mostly in heavy afternoon storms; mornings are often clear, and the sun is high all year. Even the darkest month at every site keeps 77–80 % of the average sunlight. Rain matters much more for *when* the power comes than for *how much* comes in a year.
+
+**Calibration on Cirata.** Cirata has 192 MWp and its reported output is 245 GWh a year (PLN) or 300 GWh (another press report). With Cirata's sunlight of about 1,820 kWh/m² a year, that is a specific yield of 1,276 to 1,562 kWh per kWp and a **performance ratio of 0.70 to 0.86**. The range is honest: two reported outputs, and no operating data. Every estimate below is given at both ends. The plant also gives a density: 1.29 MWp per hectare of panels, or 0.74 MWp per hectare of the whole site including the water lanes.
+
+**North Bandung rooftops.** Google Open Buildings finds 27,221 buildings (confidence at least 0.75) in a box of about 5.5 by 3.3 km covering parts of Coblong, Sukasari and Cidadap, with about 350 ha of roof. If 30 % of every roof carried 20 % efficient panels, that would be about **210 MWp**, more than Cirata itself, making **260 to 320 GWh a year**.
+
+**Is it enough for a household?** The average building would produce about 800 to 980 kWh a month. Against a planning assumption of 150 kWh per household per month (a modest urban household; the true figure varies widely), that is **5 to 6.5 times the need over a year**, and still about 4 to 5 times in the darkest month. Two cautions keep this from meaning "no more PLN":
+
+- **Night and storms.** Panels produce nothing at night and little under a storm. Without batteries, a house still draws from PLN every evening, even if it exports more than it uses during the day. Over a year the grid acts as the battery; on its own, a house would need storage.
+- **Averages flatter.** The average building includes shops, campuses and offices with big roofs. A small house with a 40 m² roof and 30 % coverage would have about 2.4 kWp, roughly 250 to 300 kWh a month: still more than 150 kWh, but by much less. Orientation, shading and roof strength cut further.
+
+**Saguling reservoir.** In the area mapped, Saguling has about 1,560 ha of permanent water (JRC occurrence of at least 80 %). Panels on 5 % of it at Cirata's density would be about 58 MWp, 72 to 88 GWh a year, the yearly use of 40,000 to 49,000 households at 150 kWh a month. On 20 %, about 160,000 to 195,000 households. How much of a reservoir may be covered is a matter of regulation, water quality, fisheries and the dam operator, not of sunlight.
+
+**Open land.** About 3,070 ha of grass, shrub or bare land on slopes under 10° outside protected areas lies in the Bandung basin. At Cirata's site density that would be about 2.3 GWp. This is a first screen only: much of it may be fallow farmland or grazing, and ownership, distance to the grid and food production come before panels.
+
+## Exercises {.unnumbered}
+
+1. Replace the 150 kWh/month assumption with your own household's bill and recompute the share for a 40 m² roof.
+2. Add a battery: if a house uses 40 % of its electricity at night, how many kWh of storage would it need to cover one night without PLN?
+3. Repeat the rooftop calculation for a district in Kupang. How much more does the sunnier climate give per building?
+4. Add distance to the nearest substation or main road to the land screen. How much of the 3,070 ha remains within 5 km?
