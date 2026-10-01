@@ -1,0 +1,42 @@
+# Mining Restoration: Is the Land Coming Back? {#sec-mining-restoration}
+
+::: {.chapter-goal}
+#### In this chapter
+You will find land laid bare by tin mining on Bangka in 34 years of Landsat, follow how its greenness recovered, classify its state today, and check with GEDI whether the vegetation that came back is anything like the vegetation that was lost. The chapter shows why a restoration report based on greenness alone tells only half the story.
+:::
+
+## Why measure restoration
+
+Mining companies in Indonesia must reclaim mined land, and governments, buyers and communities want to know whether they did. Field inspection of every pit is impossible; the satellite archive has watched all of them since the 1980s. Bangka, one of the world's main tin-producing islands, is a fair test: open pits, tailings and ponds are scattered across the island, at every stage from fresh to decades old.
+
+## Method
+
+1. **Find mined land.** A pixel counts as mined if it was vegetated in 1990–1994 (NDVI above 0.5) and its yearly NDVI fell below 0.15 (bare sand or water) at least once between 1995 and 2015. The first such year is the mining year. Permanent water is excluded.
+2. **Set a reference.** Pixels whose NDVI never fell below 0.6 from 1995 to 2023 are undisturbed vegetation: the target a restoration aims for.
+3. **Classify today.** In 2023: still bare or ponds (NDVI below 0.3), early regrowth (0.3–0.6), green again (0.6 or more).
+4. **Check structure.** GEDI canopy height on never-mined land and on mined land that is green again.
+
+{{< include _snippets/ch49_mining_restoration.qmd >}}
+
+## Reading the results
+
+**How much and where.** About 4,300 ha of central Bangka were laid bare between 1995 and 2015 by this definition. The year map shows mining moving across the landscape, block by block.
+
+**Today.** About a quarter (24 %) is still bare sand or ponds, 44 % is in early regrowth and about a third (32 %) is green again.
+
+**Recovery is slow.** For land mined in 2000–2008, the median NDVI stays between about 0.15 and 0.25 for fifteen years and more after mining, against 0.70 for land never mined. Bangka's tailings are nutrient-poor quartz sand that holds little water, and vegetation struggles on it without active reclamation.
+
+**Green is not grown.** Even where mined land is green again, its GEDI canopy height has a median of about 6 m, against about 16 m on never-mined land. Greenness returns with grass, ferns, shrubs or a fast-growing planted crop; height, biomass and the structure of the old vegetation take decades. A restoration report that shows only NDVI overstates success.
+
+## What an honest restoration report needs
+
+- **A reference**, so recovery is measured against what was lost, not against bare ground.
+- **Structure as well as greenness**: GEDI or airborne LiDAR height, or at least texture.
+- **Species and function** from the field: is it the planted species, natural regrowth, or weeds?
+- **The ponds counted**, since they are permanent changes, not land waiting to recover.
+
+## Exercises {.unnumbered}
+
+1. Change the "green again" threshold from 0.6 to 0.5. How sensitive is the share of recovered land?
+2. Compare pits mined before 2000 with pits mined after 2010. Does older mean more recovered?
+3. Use the ponds: how much new permanent water has mining created, from the JRC surface water dataset?

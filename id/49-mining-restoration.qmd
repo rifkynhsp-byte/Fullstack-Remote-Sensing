@@ -1,0 +1,42 @@
+# Reklamasi Tambang: Apakah Lahannya Pulih? {#sec-mining-restoration}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menemukan lahan yang dibuka tambang timah di Bangka dalam 34 tahun arsip Landsat, mengikuti bagaimana kehijauannya pulih, menggolongkan kondisinya hari ini, lalu mengecek dengan GEDI apakah vegetasi yang tumbuh kembali mirip dengan vegetasi yang hilang. Bab ini menunjukkan kenapa laporan reklamasi yang hanya berdasar kehijauan baru menceritakan separuh kisahnya.
+:::
+
+## Kenapa reklamasi perlu diukur
+
+Perusahaan tambang di Indonesia wajib mereklamasi lahan bekas tambang, dan pemerintah, pembeli, serta masyarakat ingin tahu apakah kewajiban itu dijalankan. Memeriksa setiap lubang tambang di lapangan tidak mungkin; arsip satelit sudah mengamati semuanya sejak 1980-an. Bangka, salah satu pulau penghasil timah utama di dunia, adalah ujian yang adil: lubang tambang terbuka, tailing, dan kolong tersebar di seluruh pulau, dalam segala tahap, dari yang baru sampai yang berumur puluhan tahun.
+
+## Metode
+
+1. **Temukan lahan bekas tambang.** Sebuah piksel dianggap pernah ditambang kalau bervegetasi pada 1990–1994 (NDVI di atas 0,5) dan NDVI tahunannya pernah turun di bawah 0,15 (pasir terbuka atau air) antara 1995 dan 2015. Tahun pertama kejadian itu adalah tahun penambangan. Air permanen dikeluarkan.
+2. **Tetapkan pembanding.** Piksel yang NDVI-nya tidak pernah turun di bawah 0,6 dari 1995 sampai 2023 adalah vegetasi yang tidak terganggu: sasaran yang ingin dicapai reklamasi.
+3. **Golongkan kondisi hari ini.** Pada 2023: masih terbuka atau kolong (NDVI di bawah 0,3), mulai tumbuh (0,3–0,6), hijau kembali (0,6 atau lebih).
+4. **Cek strukturnya.** Tinggi tajuk GEDI di lahan yang tidak pernah ditambang dan di lahan bekas tambang yang sudah hijau kembali.
+
+{{< include _snippets/ch49_mining_restoration.qmd >}}
+
+## Membaca hasilnya
+
+**Berapa luas dan di mana.** Menurut definisi ini, sekitar 4.300 ha lahan di Bangka bagian tengah dibuka antara 1995 dan 2015. Peta tahun memperlihatkan penambangan yang berpindah melintasi bentang lahan, blok demi blok.
+
+**Hari ini.** Sekitar seperempat (24 %) masih berupa pasir terbuka atau kolong, 44 % mulai tumbuh, dan sekitar sepertiga (32 %) sudah hijau kembali.
+
+**Pemulihannya lambat.** Untuk lahan yang ditambang pada 2000–2008, median NDVI-nya tetap di kisaran 0,15 sampai 0,25 selama lima belas tahun lebih setelah ditambang, dibandingkan 0,70 untuk lahan yang tidak pernah ditambang. Tailing Bangka berupa pasir kuarsa yang miskin hara dan sulit menahan air, sehingga vegetasi sulit tumbuh tanpa reklamasi yang aktif.
+
+**Hijau belum tentu tumbuh.** Bahkan di tempat lahan bekas tambang sudah hijau kembali, median tinggi tajuk GEDI-nya sekitar 6 m, dibandingkan sekitar 16 m di lahan yang tidak pernah ditambang. Kehijauan kembali bersama rumput, pakis, semak, atau tanaman penutup yang cepat tumbuh; tinggi, biomassa, dan struktur vegetasi asalnya butuh puluhan tahun. Laporan reklamasi yang hanya menampilkan NDVI melebih-lebihkan keberhasilan.
+
+## Yang dibutuhkan laporan reklamasi yang jujur
+
+- **Pembanding**, sehingga pemulihan diukur terhadap apa yang hilang, bukan terhadap tanah terbuka.
+- **Struktur selain kehijauan**: tinggi dari GEDI atau LiDAR udara, atau setidaknya tekstur.
+- **Jenis dan fungsi** dari lapangan: apakah itu tanaman reklamasi, tumbuhan alami, atau gulma?
+- **Kolong ikut dihitung**, karena kolong adalah perubahan permanen, bukan lahan yang menunggu pulih.
+
+## Latihan {.unnumbered}
+
+1. Ubah ambang "hijau kembali" dari 0,6 menjadi 0,5. Seberapa peka porsi lahan yang dianggap pulih?
+2. Bandingkan lubang tambang yang dibuka sebelum 2000 dengan yang dibuka setelah 2010. Apakah yang lebih tua lebih pulih?
+3. Hitung kolongnya: berapa luas air permanen baru yang tercipta akibat penambangan, menurut dataset air permukaan JRC?

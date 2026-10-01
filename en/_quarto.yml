@@ -105,6 +105,7 @@ book:
         - 24-flood.qmd
         - 39-sar-flood.qmd
         - 25-mining.qmd
+        - 49-mining-restoration.qmd
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
         - 45-paddy.qmd
@@ -112,6 +113,7 @@ book:
         - 48-land-suitability.qmd
         - 34-fire.qmd
         - 46-windstorm.qmd
+        - 50-landslide-simple.qmd
         - 37-peat.qmd
         - 35-urban-energy.qmd
     - part: "Environmental Science: Water, Carbon and Policy"

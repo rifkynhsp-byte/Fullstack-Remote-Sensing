@@ -1,0 +1,53 @@
+# Peta Longsor Pertama, dan Cara Mengujinya {#sec-landslide-simple}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan membuat peta kerawanan longsor paling sederhana yang masih layak dibuat, yaitu tumpang susun berbobot (weighted overlay) dari lereng, curah hujan, dan tutupan lahan untuk Jawa Barat, lalu mengujinya seperti yang dilakukan penelaah. Hasil ujinya sederhana saja, dan justru itu intinya: Anda akan belajar kenapa mutu catatan longsor menentukan apa yang bisa ditunjukkan model mana pun.
+:::
+
+## Kerawanan, bukan ramalan
+
+Peta kerawanan menunjukkan di mana longsor *lebih mungkin* terjadi, mengingat medan dan kondisinya. Peta ini tidak memberi tahu kapan. Kebanyakan pemula memulai dengan **tumpang susun berbobot**:
+
+1. pilih faktor yang membuat lereng runtuh (kecuraman, hujan, tutupan);
+2. beri skor setiap faktor dari 1 (rendah) sampai 5 (tinggi);
+3. jumlahkan dengan bobot sesuai pentingnya.
+
+Pilihannya di sini:
+
+| Faktor | 1 | 2 | 3 | 4 | 5 | Bobot |
+|---|---|---|---|---|---|---|
+| Lereng (°) | < 8 | 8–15 | 15–25 | 25–35 | > 35 | 0,5 |
+| Curah hujan tahunan (mm) | < 2.000 | 2.000–2.500 | 2.500–3.000 | 3.000–3.500 | > 3.500 | 0,3 |
+| Tutupan lahan | | pohon, terbangun | pertanian | rumput, semak | terbuka | 0,2 |
+
+Kelas dan bobot ini dipilih untuk keperluan belajar. Ini bukan nilai yang sudah diterbitkan; justru karena itulah semuanya harus diuji. Bab [-@sec-obia] dan aplikasi IJB (P6) menunjukkan versi machine learning-nya; bab ini adalah fondasi di bawahnya.
+
+{{< include _snippets/ch50_landslide_simple.qmd >}}
+
+## Ujiannya
+
+Sebuah peta hanya sebaik kecocokannya dengan longsor sungguhan. Data ujinya adalah NASA Global Landslide Catalog, 1970–2019: 71 kejadian di Jawa Barat dengan ketelitian lokasi 5 km atau lebih baik (hanya 16 yang dalam 1 km). Setiap catatan dibandingkan dengan rata-rata skor di dalam radius ketelitiannya, dan tempat-tempat acak dengan radius yang sama menjadi pembandingnya. **ROC AUC** meringkas seberapa baik skor memisahkan keduanya: 0,5 berarti tidak lebih baik dari kebetulan, 1 berarti sempurna.
+
+## Apa kata ujiannya
+
+**Terhadap katalog: tidak ada kemampuan.** AUC-nya sekitar 0,5, baik untuk tumpang susun maupun untuk lereng saja, entah pembandingnya tempat acak di mana saja atau tempat acak di dekat permukiman.
+
+Apakah petanya tidak berguna, atau ujiannya? Dua petunjuk mengarah ke ujiannya:
+
+- **Lokasi.** Sebagian besar catatan hanya teliti sampai 5 sampai 10 km, dan masing-masing berasal dari laporan berita. Lingkaran 5 km di Jawa Barat memuat lembah sekaligus punggungan, sehingga rata-rata skornya hampir tidak berkata apa-apa tentang lereng mana yang sebenarnya runtuh.
+- **Pelaporan.** Katalog mencatat longsor yang melukai orang atau memutus jalan. Lereng curam yang terpencil bisa longsor tanpa ada yang melaporkan.
+
+**Terhadap inventaris yang dipetakan: ada kemampuan.** Skor yang sama diuji pada longsor gempa Iburi (Bab [-@sec-obia]), yang dipetakan sebagai poligon dari citra, menghasilkan AUC sekitar 0,59, dengan lereng saja 0,55. Lemah, tetapi nyata. Iburi adalah kejadian gempa, bukan hujan, dan skor tutupan lahan serta curah hujan dibuat untuk Jawa Barat, jadi hasil yang sederhana memang wajar.
+
+## Pelajarannya
+
+- **Peta yang tidak bisa diuji hanyalah hipotesis.** Terbitkan ujiannya bersama petanya.
+- **Catatan kejadian menentukan apa yang bisa dipelajari.** Katalog titik yang disusun dari berita berguna untuk menghitung kejadian dan dampaknya, bukan untuk memvalidasi peta 30 m. Inventaris poligon yang dipetakan dari citra, seperti Iburi atau inventaris Lombok 2018 [@ferrario2019lombok], adalah pembanding yang semestinya dipakai untuk menguji model.
+- **Pastikan kerumitan sebanding manfaatnya.** Kalau lereng saja sama baiknya dengan tumpang susun berbobot, faktor-faktor tambahannya hanya hiasan.
+
+## Latihan {.unnumbered}
+
+1. Ganti bobotnya menjadi 0,7, 0,2, 0,1. Apakah AUC Iburi membaik?
+2. Tambahkan faktor "jarak ke sungai". Apakah membantu?
+3. Petakan sendiri longsor di satu lembah di Jawa Barat dari citra Sentinel-2 setelah kejadian yang diketahui, lalu uji tumpang susunnya pada poligon buatan Anda sendiri.
