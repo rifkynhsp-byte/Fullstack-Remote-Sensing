@@ -59,7 +59,7 @@ Ketika sebuah peta menjadi dasar instrumen keuangan, luas yang dilebihkan bukan 
 
 ## Logika yang sama, ranah yang berbeda
 
-Tidak ada satu pun bagian di atas yang khas konservasi. Bab [-@sec-vector] mengerjakan pemilihan lokasi komersial, menentukan di mana membuka kedai kopi di Kota Malang, dan logikanya identik secara struktural.
+Tidak ada satu pun bagian di atas yang khas konservasi. Bab [-@sec-vector] mengerjakan pemilihan lokasi komersial, menentukan di mana membuka minimarket di Kota Bandung, dan logikanya identik secara struktural.
 
 | | Pemantauan mangrove | Pemilihan lokasi |
 |---|---|---|

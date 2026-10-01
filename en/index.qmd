@@ -99,7 +99,7 @@ Something that only shows up in operational work, usually the hard way.
 
 ## Acknowledgements
 
-The foundational scripts in Part II descend from the EE101 teaching series by Noel Gorelick, David Gibson, Nicholas Clinton and Hadi, adapted here with gratitude. The mangrove and blue carbon material draws on field data and methodological work from the Indonesian conservation research community, including CIFOR plot data from West Papua. The business location chapter builds on module work by Rafli Ortega Jaya. Errors that remain are mine.
+The foundational scripts in Part II descend from the EE101 teaching series by Noel Gorelick, David Gibson, Nicholas Clinton and Hadi, adapted here with gratitude. The mangrove and blue carbon material draws on field data and methodological work from the Indonesian conservation research community, including CIFOR plot data from West Papua. Errors that remain are mine.
 
 ## Contact
 

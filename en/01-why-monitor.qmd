@@ -59,7 +59,7 @@ When a map is the basis of a financial instrument, an overstated extent is not a
 
 ## The same logic, a different domain
 
-Nothing in the preceding sections is specific to conservation. Chapter [-@sec-vector] works through commercial site selection, choosing where to open a coffee shop in Malang, and the logic is structurally identical.
+Nothing in the preceding sections is specific to conservation. Chapter [-@sec-vector] works through commercial site selection, choosing where to open a minimarket in Bandung, and the logic is structurally identical.
 
 | | Mangrove monitoring | Site selection |
 |---|---|---|

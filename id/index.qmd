@@ -99,7 +99,7 @@ Hal yang hanya muncul pada pekerjaan operasional, biasanya dengan cara yang meny
 
 ## Ucapan terima kasih
 
-Skrip dasar di Bagian II berasal dari seri pengajaran EE101 oleh Noel Gorelick, David Gibson, Nicholas Clinton dan Hadi, diadaptasi di sini dengan penuh terima kasih. Materi mangrove dan blue carbon memanfaatkan data lapangan serta kerja metodologis komunitas riset konservasi Indonesia, termasuk data plot CIFOR dari Papua Barat. Bab analisis lokasi bisnis berangkat dari modul karya Rafli Ortega Jaya. Kesalahan yang tersisa adalah milik saya.
+Skrip dasar di Bagian II berasal dari seri pengajaran EE101 oleh Noel Gorelick, David Gibson, Nicholas Clinton dan Hadi, diadaptasi di sini dengan penuh terima kasih. Materi mangrove dan blue carbon memanfaatkan data lapangan serta kerja metodologis komunitas riset konservasi Indonesia, termasuk data plot CIFOR dari Papua Barat. Kesalahan yang tersisa adalah milik saya.
 
 ## Kontak
 

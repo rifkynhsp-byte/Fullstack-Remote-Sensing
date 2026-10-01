@@ -1,10 +1,10 @@
 #| title: Vector GeoAI site selection (Python)
-#| description: Coffee-shop suitability in Kota Bandung on an H3 hexagon grid. OpenStreetMap proximity and density features, WorldPop population from Earth Engine, a manufactured presence/pseudo-absence label, the leakage trap, a Random Forest read with SHAP, and a transparent weighted score.
+#| description: Minimarket (convenience store) suitability in Kota Bandung on an H3 hexagon grid. OpenStreetMap proximity and density features, WorldPop population from Earth Engine, a manufactured presence/pseudo-absence label, the leakage trap, a Random Forest read with SHAP, and a transparent weighted score.
 
 """
 CHAPTER 22 | The same machine, a commercial question
 
-Score every part of a city for suitability as a coffee shop location, with the
+Score every part of a city for suitability as a minimarket location, with the
 same logic as the remote sensing chapters: build features, label examples,
 train a model, interpret it, produce a continuous score map. Swap reflectance
 for "distance to the nearest school" and pixel for hexagon, and the workflow
@@ -14,7 +14,8 @@ Environment (Colab or any Python 3.10+):
     pip install osmnx geopandas h3 shap scikit-learn earthengine-api matplotlib
 
 Data, all open:
-    OpenStreetMap (via osmnx)  city boundary, schools, tourism, cafes, roads
+    OpenStreetMap (via osmnx)  city boundary, schools, health facilities,
+                               minimarkets, roads
     WorldPop 2020 (via Earth Engine)  people per hexagon
 """
 
@@ -29,7 +30,7 @@ from shapely.geometry import Polygon
 
 PLACE = "Kota Bandung, Jawa Barat, Indonesia"
 # H3 resolution 9: hexagons about 175 m across, a two-minute walk, the right
-# unit for a coffee shop catchment. Resolution 8 (~460 m) suits a supermarket.
+# unit for a minimarket catchment. Resolution 8 (~460 m) suits a supermarket.
 H3_RESOLUTION = 9
 CRS_METRIC = "EPSG:32748"       # UTM 48S: distances in metres, never in degrees
 CRS_GEO = "EPSG:4326"
@@ -77,9 +78,8 @@ def build():
     outline = ox.geocode_to_gdf(PLACE).to_crs(CRS_GEO).geometry.iloc[0]
     layers = {
         "education": fetch_points({"amenity": ["school", "university", "college"]}),
-        "tourism": fetch_points({"tourism": ["attraction", "theme_park", "zoo", "museum",
-                                             "gallery", "viewpoint"]}),
-        "cafe": fetch_points({"amenity": ["cafe"]}),
+        "health": fetch_points({"amenity": ["hospital", "clinic", "doctors"]}),
+        "minimarket": fetch_points({"shop": ["convenience"]}),
     }
     roads = ox.features_from_place(PLACE, tags={"highway": ["primary", "secondary", "tertiary"]})
     roads = gpd.GeoDataFrame(roads[["geometry"]].reset_index(drop=True), geometry="geometry",
@@ -93,14 +93,14 @@ def build():
         near = gpd.sjoin_nearest(cent, layer.to_crs(CRS_METRIC), how="left", distance_col="d")
         grid[f"dist_{name}"] = near.groupby(near.index)["d"].min().values
     buffers = gpd.GeoDataFrame(geometry=cent.buffer(DENSITY_RADIUS_M), crs=CRS_METRIC)
-    for name in ("cafe", "education", "tourism"):
+    for name in ("minimarket", "education", "health"):
         grid[f"n_{name}_500m"] = count_within(buffers, layers[name].to_crs(CRS_METRIC))
     grid["population"] = worldpop_per_hex(grid)
 
-    # PART 4. Manufacturing a label: presence = a hexagon that already has a cafe;
+    # PART 4. Manufacturing a label: presence = a hexagon that already has a minimarket;
     # pseudo-absence = an equal random sample of empty hexagons ("typical
     # unoccupied", not "known bad").
-    occupied = gpd.sjoin(gm, layers["cafe"].to_crs(CRS_METRIC), how="inner",
+    occupied = gpd.sjoin(gm, layers["minimarket"].to_crs(CRS_METRIC), how="inner",
                          predicate="contains").index.unique()
     grid["label"] = np.nan
     grid.loc[occupied, "label"] = 1
@@ -111,9 +111,9 @@ def build():
     return _cache
 
 
-FEATURES_ALL = ["dist_education", "dist_tourism", "dist_cafe", "dist_road",
-                "n_cafe_500m", "n_education_500m", "n_tourism_500m", "population"]
-FEATURES = [f for f in FEATURES_ALL if f != "dist_cafe"]
+FEATURES_ALL = ["dist_education", "dist_health", "dist_minimarket", "dist_road",
+                "n_minimarket_500m", "n_education_500m", "n_health_500m", "population"]
+FEATURES = [f for f in FEATURES_ALL if f != "dist_minimarket"]
 
 
 def fit(features):
@@ -133,8 +133,8 @@ def fit(features):
 def leakage_table():
     c = build()
     rows = []
-    for name, feats in [("all features (includes distance to nearest cafe)", FEATURES_ALL),
-                        ("without distance to nearest cafe", FEATURES)]:
+    for name, feats in [("all features (includes distance to nearest minimarket)", FEATURES_ALL),
+                        ("without distance to nearest minimarket", FEATURES)]:
         _, _, _, s = fit(feats)
         rows.append({"model": name, **s})
     df = pd.DataFrame(rows)
@@ -189,12 +189,11 @@ def score():
 
 def score_figure():
     g = score()
-    cafes = build()["grid"]
     fig, ax = plt.subplots(figsize=(8, 8.5))
     g.plot(column="score", cmap="YlOrRd", linewidth=0.1, edgecolor="#555555", legend=True,
            legend_kwds={"label": "Suitability score (0 to 1)", "shrink": 0.6}, ax=ax)
     g[g.label == 1].boundary.plot(ax=ax, color="#1f2933", linewidth=0.6)
-    ax.set_title("Coffee-shop suitability, Kota Bandung (outlined: a cafe today)",
+    ax.set_title("Minimarket suitability, Kota Bandung (outlined: a minimarket today)",
                  loc="left", fontsize=10)
     ax.set_axis_off()
     return fig
@@ -207,7 +206,7 @@ def top_table():
     return pd.DataFrame({"rank": range(1, 11), "score": t.score.values,
                          "lat": c.y.round(5).values, "lon": c.x.round(5).values,
                          "people_in_hexagon": t.population.round().values,
-                         "cafes_within_500m": t.n_cafe_500m.values})
+                         "minimarkets_within_500m": t.n_minimarket_500m.values})
 
 
 def products():
@@ -215,7 +214,7 @@ def products():
         {"kind": "table", "name": "ch22-leakage", "data": leakage_table,
          "floatfmt": ("", ".3f", ".3f", ".3f", ",.0f", ",.0f"),
          "caption": "The leakage trap: the same Random Forest with and without the distance "
-                    "to the nearest cafe."},
+                    "to the nearest minimarket."},
         {"kind": "chart", "name": "ch22-shap", "data": shap_table, "plot": plot_shap,
          "caption": "SHAP weights of the honest model, coloured by the direction of each "
                     "feature's effect."},
@@ -224,10 +223,10 @@ def products():
          "caption": "Mean |SHAP| per feature, its direction, and the weight used in the score."},
         {"kind": "figure", "name": "ch22-score", "figure": score_figure,
          "caption": "Suitability score per H3 hexagon (resolution 9) from the SHAP-weighted "
-                    "features. Outlined hexagons already have a cafe in OpenStreetMap."},
+                    "features. Outlined hexagons already have a minimarket in OpenStreetMap."},
         {"kind": "table", "name": "ch22-top", "data": top_table,
          "floatfmt": ("", ".3f", ".5f", ".5f", ",.0f", ",.0f"),
-         "caption": "The ten highest-scoring hexagons without a cafe today: a shortlist to "
+         "caption": "The ten highest-scoring hexagons without a minimarket today: a shortlist to "
                     "visit, not a decision."},
     ]
 
