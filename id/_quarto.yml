@@ -130,6 +130,7 @@ book:
         - 53-biodiversity.qmd
         - 55-enforcement.qmd
         - 52-bathymetry.qmd
+        - 62-mangrove-change.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:
         - 28-map-production.qmd

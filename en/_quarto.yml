@@ -130,6 +130,7 @@ book:
         - 53-biodiversity.qmd
         - 55-enforcement.qmd
         - 52-bathymetry.qmd
+        - 62-mangrove-change.qmd
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:
         - 28-map-production.qmd

@@ -1,0 +1,55 @@
+[
+ {
+  "name": "ch62_mangrove_change-webmap",
+  "kind": "html",
+  "html": "images/real/ch62_mangrove_change-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch62-area",
+  "kind": "chart",
+  "caption": "Mangrove area each year from one model, against the Global Mangrove Watch 2020 baseline.",
+  "image": "images/real/ch62-area.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,mangrove_ha,gmw_2020_baseline_ha,holdout_accuracy_2020\n2017,13935,7510.9,0.96011\n2018,11135,7510.9,0.96011\n2019,9714.1,7510.9,0.96011\n2020,12029,7510.9,0.96011\n2021,12087,7510.9,0.96011\n2022,14194,7510.9,0.96011\n2023,10741,7510.9,0.96011\n2024,11913,7510.9,0.96011\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_area(df):\n    fig, ax = plt.subplots(figsize=(7.0, 3.4))\n    ax.bar(df.year, df.mangrove_ha, color=\"#00a884\", label=\"mangrove, this model\")\n    ax.plot(df.year, df.gmw_2020_baseline_ha, color=\"#1f2933\", lw=2, ls=\"--\",\n            label=\"GMW 2020 baseline\")\n    lo = min(df.mangrove_ha.min(), df.gmw_2020_baseline_ha.min())\n    ax.set_ylim(lo * 0.9, None)\n    ax.set_ylabel(\"Area (ha)\")\n    ax.set_title(\"Mangrove area vs. the GMW 2020 baseline, Segara Anakan\", loc=\"left\",\n                 fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_area(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch62-area-table",
+  "kind": "table",
+  "caption": "Mangrove area by year (ha) and the model's hold-out accuracy in 2020.",
+  "markdown": "|   year |   mangrove_ha |   gmw_2020_baseline_ha |   holdout_accuracy_2020 |\n|-------:|--------------:|-----------------------:|------------------------:|\n| 2017.0 |        13,935 |                  7,511 |                   0.960 |\n| 2018.0 |        11,135 |                  7,511 |                   0.960 |\n| 2019.0 |         9,714 |                  7,511 |                   0.960 |\n| 2020.0 |        12,029 |                  7,511 |                   0.960 |\n| 2021.0 |        12,087 |                  7,511 |                   0.960 |\n| 2022.0 |        14,194 |                  7,511 |                   0.960 |\n| 2023.0 |        10,741 |                  7,511 |                   0.960 |\n| 2024.0 |        11,913 |                  7,511 |                   0.960 |"
+ },
+ {
+  "name": "ch62-change",
+  "kind": "map",
+  "caption": "Gain and loss between 2017 and 2024; inside mangrove present in both years, the 2019-2024 NDMI trend (beyond ±0.005 per year).",
+  "image": "images/real/ch62-change.jpg"
+ },
+ {
+  "name": "ch62-change-table",
+  "kind": "table",
+  "caption": "Area in each change and condition class (ha).",
+  "markdown": "| class                    |    ha |   share_of_2017_mangrove_or_gain |\n|:-------------------------|------:|---------------------------------:|\n| gain (new mangrove)      |   654 |                               4% |\n| loss                     | 2,677 |                              18% |\n| stable, canopy degrading | 2,979 |                              20% |\n| stable, no clear trend   | 3,490 |                              24% |\n| stable, canopy improving | 4,789 |                              33% |"
+ },
+ {
+  "name": "ch62-after",
+  "kind": "chart",
+  "caption": "Dynamic World 2024 label of the mangrove lost since 2017.",
+  "image": "images/real/ch62-after.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"Dynamic World 2024,ha,share\ntrees,1126.7,0.42182\nflooded vegetation,785.76,0.29419\nwater,314.52,0.11776\ncrops,242.21,0.090685\nbuilt,108.85,0.040755\nshrub and scrub,61.127,0.022886\ngrass,31.456,0.011777\nbare,0.32494,0.00012166\nsnow,0,0\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_after(df):\n    fig, ax = plt.subplots(figsize=(5.2, 3.6))\n    cols = {\"water\": \"#419bdf\", \"trees\": \"#397d49\", \"grass\": \"#88b053\",\n            \"flooded vegetation\": \"#7a87c6\", \"crops\": \"#e49635\", \"shrub and scrub\": \"#dfc35a\",\n            \"built\": \"#c4281b\", \"bare\": \"#a59b8f\", \"snow\": \"#b39fe1\"}\n    ax.pie(df.ha, labels=df[\"Dynamic World 2024\"], colors=[cols[n] for n in df[\"Dynamic World 2024\"]],\n           autopct=\"%1.0f%%\", textprops={\"fontsize\": 8})\n    ax.set_title(\"What the lost mangrove is now\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_after(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch62-signature",
+  "kind": "chart",
+  "caption": "Median Sentinel-2 reflectance of mangrove and its neighbours, 2024.",
+  "image": "images/real/ch62-signature.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"class,B11,B12,B2,B3,B4,B5,B8\nmangrove,0.12596,0.05517,0.029763,0.055161,0.030743,0.095235,0.3066\nopen water,0.020484,0.016584,0.052708,0.064531,0.040997,0.037082,0.022435\nother trees,0.17481,0.079095,0.03021,0.057582,0.030197,0.098644,0.3457\ncrops and ponds edge,0.18649,0.10836,0.051261,0.079594,0.074687,0.12797,0.24408\nbuilt,0.2383,0.1836,0.06837,0.091761,0.099579,0.14258,0.24413\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_signature(df):\n    wl = [490, 560, 665, 705, 842, 1610, 2190]\n    fig, ax = plt.subplots(figsize=(6.6, 3.4))\n    for _, r in df.iterrows():\n        ax.plot(wl, [r[b] for b in [\"B2\", \"B3\", \"B4\", \"B5\", \"B8\", \"B11\", \"B12\"]], marker=\"o\",\n                label=r[\"class\"])\n    ax.set_xlabel(\"Wavelength (nm)\"); ax.set_ylabel(\"Surface reflectance (median)\")\n    ax.set_title(\"Spectral signatures by class, 2024\", loc=\"left\", fontsize=10)\n    ax.legend(frameon=False, fontsize=8)\n    return fig\n\nplot_signature(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch62-tuning",
+  "kind": "chart",
+  "caption": "Hold-out accuracy against the number of trees.",
+  "image": "images/real/ch62-tuning.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"trees,holdout_accuracy\n10,0.93447\n25,0.94872\n50,0.94872\n100,0.96296\n150,0.96011\n250,0.96011\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_tuning(df):\n    fig, ax = plt.subplots(figsize=(5.6, 3.0))\n    ax.plot(df.trees, df.holdout_accuracy, marker=\"o\", color=\"#2a78d6\")\n    ax.set_xlabel(\"Number of trees\"); ax.set_ylabel(\"Hold-out accuracy\")\n    ax.set_title(\"Random forest tuning\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_tuning(df)\nplt.show()\n"
+ }
+]

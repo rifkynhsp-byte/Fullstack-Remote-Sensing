@@ -1,0 +1,46 @@
+# Mangrove Growth and Degradation, Year by Year {#sec-mangrove-change}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map the mangroves of Segara Anakan, a lagoon in Cilacap on the south coast of Java, every year from 2017 to 2024 with one model, compare the result with the Global Mangrove Watch baseline, separate real loss from classification noise, and look *inside* the mangrove that stayed: is its canopy getting healthier or degrading? Area alone cannot answer that question.
+:::
+
+## Two kinds of change
+
+Mangrove reports usually give one number: hectares, this year against a baseline. That number hides two very different stories.
+
+- **Area change**: mangrove appears (new mudflats colonised, abandoned ponds regrowing) or disappears (cut for ponds, rice fields, settlements).
+- **Condition change**: the mangrove is still there, but its canopy thins and dries (cutting for wood, changed water flow, pollution, sedimentation), or it thickens as it recovers.
+
+Segara Anakan has both. The Citanduy and other rivers carry so much sediment that the lagoon is filling in and new land is colonised by mangrove, while people convert mangrove into ponds and fields at its edges.
+
+## The method
+
+This follows the approach of the author's interactive mangrove explorer: one model, every year, against a fixed baseline.
+
+1. **Labels**: mangrove inside the Global Mangrove Watch (GMW v3) 2020 polygons; non-mangrove more than 100 m outside them, so that the uncertain edge is not used for training.
+2. **Model**: a random forest on the 2020 satellite embeddings (Chapter [-@sec-embeddings]).
+3. **Every year**: the same model applied to the embeddings of 2017 to 2024.
+4. **Gain and loss** between 2017 and 2024.
+5. **Condition**: inside mangrove present in both years, the trend (Sen's slope) of the yearly median NDMI from Sentinel-2, 2019 to 2024. A slope beyond ±0.005 per year counts as degrading or improving. (Sentinel-2 surface reflectance is too sparse over Indonesia before 2019 for a reliable trend.)
+6. **After**: what Dynamic World 2024 calls the mangrove that was lost.
+
+{{< include _snippets/ch62_mangrove_change.qmd >}}
+
+## Reading the results
+
+**A good model, a noisy series.** The model scores 0.96 on held-out points in 2020, and the accuracy levels off at about 100 trees. Yet the yearly area jumps around: from about 9,700 ha (2019) to 14,200 ha (2022) and back to 10,700 ha (2023). Mangroves do not grow and vanish by a third in a year. These jumps come from the embeddings of each year differing a little, and from the edges between mangrove, other wetland trees and ponds. **A model that is 96 % accurate in one year can still produce a year-to-year series that is mostly noise.** Report a multi-year average or a trend with its uncertainty, never the difference between two single years.
+
+**More mangrove than GMW.** Every year, this model maps more mangrove than GMW 2020 (about 7,500 ha), between 1.3 and 1.9 times as much. The model has learned "dense wet coastal forest", and some swamp forest and old ponds overgrown with mangrove-like trees fall into it. GMW is stricter. Neither is the truth; the difference is the uncertainty in *what counts as mangrove*.
+
+**Most of the "loss" is not loss.** Between 2017 and 2024 the map shows about 650 ha of gain and 2,680 ha of loss. But look at what the "lost" mangrove is in 2024: 42 % is trees and 29 % flooded vegetation according to Dynamic World, so it is still vegetated wetland. Only about a quarter became open water (12 %), crops (9 %) or built land (4 %), the kinds of change that are likely to be real conversion. The rest is mostly the same noise as in the yearly series. A loss figure without this check would overstate the damage several times over.
+
+**Inside the mangrove: more improving than degrading.** Of the mangrove present in both years, about 4,800 ha has a rising moisture trend (improving canopy), 3,500 ha shows no clear trend, and about 3,000 ha is drying (degrading canopy). On the map the degrading canopy clusters near the lagoon edges and along channels, where cutting and changing water and sediment flow are most likely. That is where a field check would start.
+
+**What the signatures show.** Mangrove reflects strongly in the near infrared (about 0.31) like other trees, but less in the shortwave infrared (about 0.13 against 0.17 for other trees): its canopy holds more water. That small difference in SWIR, not greenness, is what separates mangrove from neighbouring forest, and why NDMI is a good condition index here.
+
+## Exercises {.unnumbered}
+
+1. Replace the yearly area by a three-year moving average. Does a trend appear?
+2. Change the condition threshold from 0.005 to 0.01 per year. How much of the degrading area survives a stricter rule?
+3. Count only loss that became water, crops or built land, and compare that number with the raw loss figure.

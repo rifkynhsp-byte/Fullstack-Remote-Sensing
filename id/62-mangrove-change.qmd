@@ -1,0 +1,46 @@
+# Pertumbuhan dan Degradasi Mangrove, Tahun demi Tahun {#sec-mangrove-change}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memetakan mangrove Segara Anakan, laguna di Cilacap di pantai selatan Jawa, setiap tahun dari 2017 sampai 2024 dengan satu model, membandingkan hasilnya dengan baseline Global Mangrove Watch, memisahkan kehilangan yang nyata dari derau klasifikasi, dan melihat *ke dalam* mangrove yang bertahan: apakah tajuknya makin sehat atau terdegradasi? Luas saja tidak bisa menjawab pertanyaan itu.
+:::
+
+## Dua jenis perubahan
+
+Laporan mangrove biasanya memberi satu angka: hektare, tahun ini dibanding baseline. Angka itu menyembunyikan dua cerita yang sangat berbeda.
+
+- **Perubahan luas**: mangrove muncul (dataran lumpur baru dikolonisasi, tambak terlantar tumbuh kembali) atau hilang (ditebang untuk tambak, sawah, permukiman).
+- **Perubahan kondisi**: mangrovenya masih ada, tetapi tajuknya menipis dan mengering (penebangan kayu, aliran air yang berubah, pencemaran, sedimentasi), atau menebal saat pulih.
+
+Segara Anakan mengalami keduanya. Sungai Citanduy dan sungai-sungai lain membawa begitu banyak sedimen sehingga laguna ini makin dangkal dan daratan baru dikolonisasi mangrove, sementara di tepinya orang mengubah mangrove menjadi tambak dan ladang.
+
+## Metodenya
+
+Ini mengikuti pendekatan aplikasi penjelajah mangrove milik penulis: satu model, setiap tahun, terhadap baseline yang tetap.
+
+1. **Label**: mangrove di dalam poligon Global Mangrove Watch (GMW v3) 2020; bukan-mangrove pada jarak lebih dari 100 m di luarnya, agar tepi yang tidak pasti tidak dipakai untuk melatih.
+2. **Model**: random forest pada satellite embeddings 2020 (Bab [-@sec-embeddings]).
+3. **Setiap tahun**: model yang sama diterapkan pada embedding 2017 sampai 2024.
+4. **Penambahan dan kehilangan** antara 2017 dan 2024.
+5. **Kondisi**: di dalam mangrove yang ada di kedua tahun, tren (Sen's slope) median NDMI tahunan dari Sentinel-2, 2019 sampai 2024. Kemiringan di luar ±0,005 per tahun dihitung sebagai terdegradasi atau membaik. (Reflektansi permukaan Sentinel-2 terlalu jarang di Indonesia sebelum 2019 untuk tren yang andal.)
+6. **Sesudahnya**: apa sebutan Dynamic World 2024 untuk mangrove yang hilang.
+
+{{< include _snippets/ch62_mangrove_change.qmd >}}
+
+## Membaca hasilnya
+
+**Model yang baik, deret yang berderau.** Model ini mencapai 0,96 pada titik uji yang disisihkan di 2020, dan akurasinya mendatar sekitar 100 pohon. Tetapi luas tahunannya melompat-lompat: dari sekitar 9.700 ha (2019) ke 14.200 ha (2022) lalu kembali ke 10.700 ha (2023). Mangrove tidak tumbuh lalu lenyap sepertiganya dalam setahun. Lompatan ini berasal dari embedding setiap tahun yang sedikit berbeda, dan dari tepi antara mangrove, pohon rawa lain, dan tambak. **Model yang akurasinya 96 % dalam satu tahun tetap bisa menghasilkan deret antartahun yang sebagian besar berupa derau.** Laporkan rata-rata beberapa tahun atau tren beserta ketidakpastiannya, jangan selisih dua tahun tunggal.
+
+**Lebih banyak mangrove daripada GMW.** Setiap tahun, model ini memetakan mangrove lebih luas daripada GMW 2020 (sekitar 7.500 ha), antara 1,3 dan 1,9 kali lipat. Model ini belajar "hutan pesisir yang rapat dan basah", sehingga sebagian hutan rawa dan tambak tua yang ditumbuhi pohon mirip mangrove ikut masuk. GMW lebih ketat. Tidak satu pun yang merupakan kebenaran; perbedaannya adalah ketidakpastian tentang *apa yang dihitung sebagai mangrove*.
+
+**Sebagian besar "kehilangan" bukan kehilangan.** Antara 2017 dan 2024, peta menunjukkan sekitar 650 ha penambahan dan 2.680 ha kehilangan. Tetapi lihat apa wujud mangrove yang "hilang" itu pada 2024: 42 % pohon dan 29 % vegetasi tergenang menurut Dynamic World, jadi masih berupa lahan basah bervegetasi. Hanya sekitar seperempatnya menjadi air terbuka (12 %), tanaman pertanian (9 %), atau lahan terbangun (4 %), jenis perubahan yang kemungkinan merupakan konversi sungguhan. Sisanya sebagian besar adalah derau yang sama seperti pada deret tahunan. Angka kehilangan tanpa pemeriksaan ini akan membesar-besarkan kerusakan beberapa kali lipat.
+
+**Di dalam mangrove: yang membaik lebih banyak daripada yang terdegradasi.** Dari mangrove yang ada di kedua tahun, sekitar 4.800 ha punya tren kelembapan naik (tajuk membaik), 3.500 ha tanpa tren yang jelas, dan sekitar 3.000 ha mengering (tajuk terdegradasi). Di peta, tajuk yang terdegradasi mengelompok di dekat tepi laguna dan di sepanjang alur, tempat penebangan serta perubahan aliran air dan sedimen paling mungkin terjadi. Di situlah pemeriksaan lapangan sebaiknya dimulai.
+
+**Apa yang ditunjukkan tanda spektral.** Mangrove memantul kuat di inframerah dekat (sekitar 0,31) seperti pohon lain, tetapi lebih rendah di inframerah gelombang pendek (sekitar 0,13 dibanding 0,17 untuk pohon lain): tajuknya menyimpan lebih banyak air. Perbedaan kecil di SWIR itulah, bukan kehijauan, yang memisahkan mangrove dari hutan di sebelahnya, dan alasan NDMI menjadi indeks kondisi yang baik di sini.
+
+## Latihan {.unnumbered}
+
+1. Ganti luas tahunan dengan rata-rata bergerak tiga tahun. Apakah muncul tren?
+2. Ubah ambang kondisi dari 0,005 menjadi 0,01 per tahun. Berapa luas yang terdegradasi yang bertahan dengan aturan yang lebih ketat?
+3. Hitung hanya kehilangan yang menjadi air, tanaman pertanian, atau lahan terbangun, lalu bandingkan dengan angka kehilangan mentah.
