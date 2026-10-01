@@ -1,0 +1,61 @@
+# MRV: Mengukur, Melaporkan, dan Memverifikasi Karbon Hutan {#sec-mrv}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menjalankan satu latihan MRV yang lengkap tetapi kecil untuk satu kabupaten: data aktivitas dari dua peta kehilangan hutan yang independen, faktor emisi dari biomassa GEDI, ketidakpastian dengan Monte Carlo, tingkat acuan, dan tabel hasil yang akan dimuat sebuah laporan. Sepanjang jalan Anda akan melihat keputusan-keputusan yang paling menggeser jawabannya, dan mana yang paling dulu ditanyakan verifikator.
+:::
+
+## Untuk apa MRV
+
+Ketika sebuah negara, provinsi, atau perusahaan menyatakan "kami menurunkan emisi dari deforestasi", ada pihak yang membayarnya, memperdagangkannya, atau menghitungnya untuk target nasional (Nationally Determined Contribution Indonesia, pembayaran berbasis hasil REDD+, pasar karbon sukarela). MRV adalah sistem yang membuat klaim itu bisa diperiksa:
+
+- **Pengukuran** (measurement): menaksir berapa luas hutan yang hilang atau bertambah (*data aktivitas*, AD) dan berapa karbon yang tersimpan di setiap hektare (*faktor emisi*, EF), lengkap dengan ketidakpastiannya.
+- **Pelaporan** (reporting): menyajikan taksiran dengan cara yang baku dan transparan, mengikuti Pedoman IPCC, sehingga pihak lain bisa mengulangnya.
+- **Verifikasi** (verification): pihak independen memeriksa metode, data, dan hitungannya.
+
+Penginderaan jauh adalah tulang punggung bagian pengukuran, karena hanya dengan cara itu perubahan hutan bisa diukur secara konsisten di seluruh negeri, tahun demi tahun.
+
+## Persamaan intinya
+
+Untuk deforestasi, metode *gain–loss* IPCC menjadi
+
+$$\text{Emisi} = \text{AD} \times \text{EF}$$
+
+$$\text{EF} = \text{AGB} \times (1 + R) \times CF \times \frac{44}{12}$$
+
+dengan AGB biomassa di atas tanah dari hutan yang ditebang, $R$ rasio akar terhadap tajuk (biomassa di bawah tanah), $CF$ fraksi karbon bahan kering, dan 44/12 mengubah karbon menjadi CO₂. Nilai baku IPCC 2006 untuk hutan hujan tropis adalah $R = 0,37$ dan $CF = 0,47$ (0,44–0,49).
+
+IPCC membedakan tiga **tier** dengan mutu yang makin tinggi: Tier 1 memakai nilai baku global; Tier 2 memakai nilai khusus negara (misalnya plot inventarisasi hutan nasional); Tier 3 memakai model rinci atau pengukuran berulang yang eksplisit secara spasial. Contoh ini berada di antara Tier 2 dan 3: peta satelit skala nasional untuk AD dan LiDAR antariksa (GEDI) untuk EF.
+
+## Contoh kerja: Kabupaten Tebo, Jambi
+
+Tebo terletak di dataran rendah Jambi, tempat hutan dikonversi menjadi karet, sawit, dan hutan tanaman industri sejak 1990-an. **Periode acuan** adalah 2013–2019, **periode pemantauan** 2020–2023. Tingkat acuan adalah rata-rata emisi tahunan pada periode acuan, yaitu tolok ukur untuk menilai tahun-tahun sesudahnya.
+
+{{< include _snippets/ch41_mrv.qmd >}}
+
+## Membaca hasilnya
+
+**Data aktivitas.** Kedua peta sepakat soal kecenderungannya: kehilangan turun dari sekitar 20.000 ha pada 2013 menjadi 3.000–6.000 ha pada 2020, lalu naik lagi. Keduanya berbeda soal jumlahnya, setiap tahun. Hansen GFC menghitung setiap kehilangan tutupan pohon di atas 30 %, termasuk panen kebun karet dan hutan tanaman. JRC TMF hanya menghitung konversi hutan lembap tropis. Bagi sistem MRV, perbedaan ini adalah pilihan definisi, bukan kesalahan: Anda harus memutuskan arti "hutan" (definisi nasional Indonesia, dengan batas minimum tutupan pohon dan luas) lalu memakai peta yang dibangun dengan definisi itu.
+
+**Faktor emisi.** GEDI L4B memberi rata-rata biomassa sekitar 296 Mg/ha di hutan utuh di Tebo, dengan galat baku sekitar 10 %. Dengan nilai baku IPCC, setiap hektare yang ditebang melepas sekitar 700 t CO₂. Memakai biomassa hutan utuh untuk setiap hektare yang hilang adalah asumsi terbesar dalam contoh ini. Sebagian besar yang dihitung Hansen adalah kebun atau hutan terdegradasi dengan biomassa jauh lebih rendah, sehingga emisi berbasis Hansen hampir pasti terlalu tinggi. EF yang lebih baik dibuat *berstrata*: nilai terpisah untuk hutan primer, hutan terdegradasi, dan hutan tanaman.
+
+**Emisi dan tingkat acuan.** Emisi bruto dari deforestasi turun dari tingkat acuan sekitar 9,2 Mt CO₂ per tahun (Hansen) atau 6,1 Mt (TMF) menjadi 6,3 dan 3,7 Mt pada periode pemantauan. Penurunannya 32 % atau 40 %. Kedua peta menceritakan kisah yang sama; besarnya berbeda sepertiga.
+
+## Yang akan ditanyakan verifikator
+
+1. **Definisi hutan yang mana, dan apakah petanya mengikutinya?** Perbedaan terbesar di sini berasal dari definisi, bukan dari satelitnya.
+2. **Bagaimana ketidakpastian AD ditaksir?** Membandingkan dua peta adalah tanda peringatan, bukan taksiran. Cara yang diterima adalah sampel acak berstrata dari titik-titik referensi yang ditafsirkan manusia dari citra resolusi tinggi, lalu penaksir luas yang tidak bias dengan selang kepercayaan (Bab [-@sec-accuracy]; @olofsson2014good). Hitungan piksel peta bias setiap kali kesalahan omisi dan komisi tidak seimbang.
+3. **Apakah EF cocok dengan yang benar-benar ditebang?** Biomassa hutan utuh yang dipakai untuk panen kebun membesar-besarkan emisi.
+4. **Apakah semua sumber karbon dan gas sudah masuk?** Contoh ini hanya mencakup biomassa di atas dan di bawah tanah. Oksidasi gambut setelah dikeringkan dan emisi kebakaran sering lebih besar di Sumatra dan Kalimantan (Bab [-@sec-peat]).
+5. **Apakah tingkat acuannya adil?** Periode acuan yang memuat tahun-tahun dengan kehilangan sangat tinggi membuat penurunan sesudahnya tampak lebih besar.
+6. **Bisakah diulang?** Setiap angka di sini berasal dari data terbuka dan skrip yang bisa dijalankan siapa saja. Itulah standar yang patut dituju.
+
+## Ketidakpastiannya, dengan jujur
+
+Selang Monte Carlo pada grafik emisi hanya memuat ketidakpastian EF: galat baku GEDI, rentang fraksi karbon dari IPCC, dan ±30 % pada rasio akar terhadap tajuk yang merupakan *asumsi* (IPCC tidak memberi rentang untuknya). Ketidakpastian AD, yang biasanya lebih besar, belum masuk sampai sampel referensi tersedia. Laporan MRV sungguhan menggabungkan keduanya, dengan propagasi galat (Pendekatan 1 IPCC) atau Monte Carlo (Pendekatan 2), lalu melaporkan selang kepercayaan 90 % dari hasilnya.
+
+## Latihan {.unnumbered}
+
+1. Ganti batas tutupan pohon 30 % pada data aktivitas Hansen menjadi 60 %. Seberapa besar tingkat acuan dan penurunannya berubah?
+2. Susun EF berstrata: hitung biomassa GEDI terpisah untuk hutan TMF "tidak terganggu" dan "terdegradasi", lalu terapkan masing-masing pada kehilangan yang sesuai.
+3. Ambil sampel acak berstrata 100 titik (hilang, hutan stabil, bukan hutan) untuk Tebo dan rencanakan cara melabelinya. Berapa titik per strata yang dibutuhkan untuk selang ±20 % pada luas kehilangan?

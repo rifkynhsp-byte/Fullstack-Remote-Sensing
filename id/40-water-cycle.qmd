@@ -1,0 +1,62 @@
+# Siklus Air Sebuah DAS {#sec-water-cycle}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan menyusun neraca air untuk satu daerah aliran sungai (DAS) utuh, yaitu DAS Kapuas di Kalimantan Barat, dari empat produk satelit dan reanalisis yang saling independen, lalu melihat seberapa dekat neraca itu tertutup. Anda akan mempelajari arti fisik setiap suku, instrumen yang mengukurnya, dan kenapa ilmuwan lingkungan hanya boleh mempercayai neraca ini sejauh neraca itu tertutup.
+:::
+
+## Neracanya
+
+Air di sebuah DAS tunduk pada satu aturan: yang masuk, dikurangi yang keluar, sama dengan yang tersimpan.
+
+$$P - ET - Q = \Delta S$$
+
+- $P$ adalah **presipitasi**: hujan yang jatuh di DAS.
+- $ET$ adalah **evapotranspirasi**: air yang kembali ke udara lewat penguapan dari tanah dan air serta lewat transpirasi daun. Di DAS berhutan tropis, inilah suku terbesar kedua.
+- $Q$ adalah **limpasan**: air yang keluar dari DAS lewat sungai.
+- $\Delta S$ adalah **perubahan simpanan**: kelembapan tanah, air tanah, danau, gambut, sungai, dan dataran banjir. Dalam jangka panjang rata-ratanya mendekati nol; dari bulan ke bulan nilainya besar.
+
+Setiap suku diukur oleh instrumen yang berbeda, dengan fisika dan kesalahan yang berbeda pula:
+
+| Suku | Produk | Cara mengukurnya | Piksel |
+|---|---|---|---|
+| P | CHIRPS v2 | suhu puncak awan dari inframerah, dikalibrasi dengan penakar hujan | ≈ 5 km |
+| ET | MODIS MOD16A2GF | model Penman–Monteith yang digerakkan data vegetasi MODIS dan cuaca | 500 m |
+| ΔS | Mascon GRACE dan GRACE-FO (JPL, filter CRI) | perubahan sangat kecil gravitasi bumi ketika massa air berpindah | jejak ≈ 300 km |
+| Q | ERA5-Land | model permukaan daratan yang digerakkan cuaca reanalisis | ≈ 9 km |
+
+Tidak ada suku yang diukur langsung di sungai. Limpasan ERA5-Land adalah keluaran model, dan untuk Kapuas tidak ada catatan debit jangka panjang yang terbuka di Earth Engine. Karena itulah uji ketertutupan di bawah ini penting.
+
+{{< include _snippets/ch40_water_cycle.qmd >}}
+
+## Membaca hasilnya
+
+**Rata-rata.** Selama 2003–2023, DAS Kapuas menerima sekitar 3.765 mm hujan per tahun. Evapotranspirasi mengembalikan sekitar 1.425 mm (38 %) ke atmosfer, dan ERA5-Land mengalirkan sekitar 2.035 mm ke sungai. Grafik bulanan menunjukkan DAS yang tidak punya musim kemarau dalam arti biasa: hujan tinggi sepanjang tahun, paling rendah pada Juni sampai Agustus. ET hampir datar, sekitar 100 sampai 130 mm per bulan, karena yang membatasinya lebih sering energi, bukan air.
+
+**Dari mana airnya.** Peta P − ET menunjukkan berapa banyak air yang diteruskan setiap piksel ke sungai, tanah, dan air tanah. Dataran tinggi pedalaman yang basah memasok sebagian besar air sungai. Penggunaan lahan di sana menentukan pasokan air bagi semua yang tinggal di hilir.
+
+**Simpanan.** GRACE mengukur massa air secara langsung, lewat gravitasi. Anomali simpanan turun tajam pada musim kemarau tahun-tahun El Niño dan Indian Ocean Dipole positif: 2006, 2009, 2015, 2019, dan, lebih ringan, 2023. Itu tahun-tahun yang sama ketika gambut Kalimantan terbakar (Bab [-@sec-peat]). Sejak sekitar 2019 simpanan berada di atas rata-rata jangka panjang. Apakah itu dekade yang lebih basah atau perubahan cara DAS menyimpan air adalah pertanyaan riset yang layak. Celah dari pertengahan 2017 sampai pertengahan 2018 adalah jeda antara misi GRACE dan GRACE-FO.
+
+## Apakah neracanya tertutup?
+
+Dalam jangka panjang simpanan seharusnya tidak banyak berubah, jadi rata-rata $P - ET - Q$ seharusnya mendekati nol. Kenyataannya rata-ratanya sekitar 305 mm per tahun, 8 % dari hujan. Dari bulan ke bulan, sisa neraca dan perubahan simpanan GRACE hanya berkorelasi lemah (r = 0,24), dengan RMSE sekitar 68 mm. Tiga produk independen yang masing-masing punya kesalahan 5 sampai 15 % dengan mudah menyisakan selisih sebesar ini. Kemungkinan penyebabnya:
+
+- **Hujan.** CHIRPS di pegunungan Borneo hanya punya sedikit penakar hujan untuk kalibrasi.
+- **ET.** MOD16 adalah model; di hutan tropis yang basah, model ini bisa menaksir terlalu rendah kehilangan intersepsi (hujan yang menguap dari daun basah).
+- **Limpasan.** ERA5-Land adalah model yang tidak mengenal sungai sungguhan, danau-danau dataran banjirnya, atau kubah gambutnya.
+- **Jejak GRACE** kira-kira seluas DAS itu sendiri, sehingga perubahan simpanan bocor masuk dan keluar melintasi batasnya.
+
+Kesimpulan jujurnya: produk satelit menggambarkan bentuk siklus air dengan baik (musim, kekeringan, suku-suku yang dominan), tetapi neracanya hanya tertutup sampai sekitar 10 %. Catatan debit sungguhan di muara akan menjadi tambahan yang paling berharga.
+
+## Kenapa ini penting bagi ilmuwan lingkungan
+
+- **Hutan dan air.** Mengubah hutan menjadi kebun mengubah ET dan waktu limpasan. Neraca air adalah cara mengukurnya.
+- **Gambut.** Gambut tetap basah hanya kalau simpanan tetap tinggi. Tahun-tahun kering menurut GRACE adalah tahun-tahun kebakaran.
+- **Banjir dan kekeringan.** Anomali simpanan adalah sinyal awal keduanya, berbulan-bulan sebelum sungai mencapai titik ekstrem.
+- **Jasa ekosistem.** Hasil air (P − ET) adalah inti setiap model jasa ekosistem air.
+
+## Latihan {.unnumbered}
+
+1. Ulangi neraca untuk DAS yang lebih kecil (misalnya Citarum). Apa yang terjadi pada suku GRACE, dan kenapa?
+2. Ganti CHIRPS dengan presipitasi ERA5-Land. Apakah neracanya lebih tertutup atau justru kurang?
+3. Hitung P − ET untuk piksel hutan dan piksel kebun secara terpisah (pakai peta tutupan lahan). Seberapa berbeda hasil airnya?

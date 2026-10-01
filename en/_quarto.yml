@@ -109,6 +109,10 @@ book:
         - 34-fire.qmd
         - 37-peat.qmd
         - 35-urban-energy.qmd
+    - part: "Environmental Science: Water, Carbon and Policy"
+      chapters:
+        - 40-water-cycle.qmd
+        - 41-mrv.qmd
     - part: "Part VIII: The Geospatial Data Scientist's Craft"
       chapters:
         - 28-map-production.qmd

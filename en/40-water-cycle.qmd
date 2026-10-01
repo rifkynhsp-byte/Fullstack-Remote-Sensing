@@ -1,0 +1,62 @@
+# The Water Cycle of a Basin {#sec-water-cycle}
+
+::: {.chapter-goal}
+#### In this chapter
+You will build a water balance for a whole river basin, the Kapuas in West Kalimantan, from four independent satellite and reanalysis products, and see how close it comes to closing. You will learn what each term means physically, which instrument measures it, and why an environmental scientist should trust the budget only as far as it closes.
+:::
+
+## The budget
+
+Water in a river basin obeys one rule: what comes in, minus what goes out, is what stays.
+
+$$P - ET - Q = \Delta S$$
+
+- $P$ is **precipitation**: rain falling on the basin.
+- $ET$ is **evapotranspiration**: water returned to the air by evaporation from soil and water and by transpiration through leaves. In a tropical forest basin it is the second largest term.
+- $Q$ is **runoff**: water leaving the basin through the river.
+- $\Delta S$ is the **change in storage**: soil moisture, groundwater, lakes, peat, rivers and floodplains. Over many years it averages close to zero; from month to month it is large.
+
+Each term is measured by a different instrument, with different physics and different errors:
+
+| Term | Product | How it is measured | Pixel |
+|---|---|---|---|
+| P | CHIRPS v2 | infrared cloud-top temperature, calibrated with rain gauges | ≈ 5 km |
+| ET | MODIS MOD16A2GF | a Penman–Monteith model driven by MODIS vegetation and weather data | 500 m |
+| ΔS | GRACE and GRACE-FO mascons (JPL, CRI filter) | tiny changes in the Earth's gravity as water mass moves | ≈ 300 km footprint |
+| Q | ERA5-Land | a land-surface model driven by reanalysis weather | ≈ 9 km |
+
+No term is measured directly at the river. ERA5-Land runoff is a model output, and for the Kapuas there is no public long gauge record in Earth Engine. That is exactly why the closure test below matters.
+
+{{< include _snippets/ch40_water_cycle.qmd >}}
+
+## Reading the results
+
+**The averages.** Over 2003–2023 the Kapuas basin receives about 3,765 mm of rain a year. Evapotranspiration returns about 1,425 mm (38 %) to the atmosphere, and ERA5-Land sends about 2,035 mm down the river. The monthly chart shows a basin with no dry season in the usual sense: rain is high all year, lowest in June to August. ET is almost flat, about 100 to 130 mm a month, because energy, not water, limits it most of the time.
+
+**Where the water comes from.** The P − ET map shows how much water each pixel hands on to rivers, soil and groundwater. The wet interior uplands supply most of the river. Land use there decides the water supply for everyone downstream.
+
+**Storage.** GRACE measures the mass of water directly, by gravity. The storage anomaly falls sharply in the dry seasons of El Niño and positive Indian Ocean Dipole years: 2006, 2009, 2015, 2019 and, less, 2023. These are the same years in which Kalimantan's peat burned (Chapter [-@sec-peat]). Since about 2019 storage has been above the long-term mean. Whether that is a wetter decade or a change in how the basin stores water is a fair research question. The gap from mid-2017 to mid-2018 is the time between the GRACE and GRACE-FO missions.
+
+## Does the budget close?
+
+Over the years, storage should change little, so $P - ET - Q$ should average near zero. It averages about 305 mm a year, 8 % of rainfall. Month by month, the residual and GRACE's storage change correlate weakly (r = 0.24), with an RMSE of about 68 mm. Three independent products, each with errors of 5 to 15 %, leave a gap of this size easily. Possible culprits:
+
+- **Rainfall.** CHIRPS over mountainous Borneo has few gauges to calibrate against.
+- **ET.** MOD16 is a model; over wet tropical forest it can underestimate interception loss (rain evaporating from wet leaves).
+- **Runoff.** ERA5-Land is a model with no knowledge of the real river, its floodplain lakes or its peat domes.
+- **GRACE's footprint** is about the size of the basin itself, so storage changes leak in and out across its boundary.
+
+The honest conclusion: satellite products describe the shape of the water cycle well (seasons, droughts, the dominant terms) but the budget closes only to within about 10 %. A real gauge record at the outlet would be the single most valuable addition.
+
+## Why this matters to an environmental scientist
+
+- **Forest and water.** Converting forest to plantation changes ET and the timing of runoff. The water balance is how you measure it.
+- **Peat.** Peat stays wet only if storage stays high. GRACE's drought years are the fire years.
+- **Floods and drought.** Storage anomalies are an early signal of both, months before rivers reach extremes.
+- **Ecosystem services.** Water yield (P − ET) is the core of every water ecosystem-service model.
+
+## Exercises {.unnumbered}
+
+1. Repeat the budget for a smaller basin (for example the Citarum). What happens to the GRACE term, and why?
+2. Replace CHIRPS with ERA5-Land precipitation. Does the budget close better or worse?
+3. Compute P − ET for forest pixels and for plantation pixels separately (use a land-cover map). How different is their water yield?

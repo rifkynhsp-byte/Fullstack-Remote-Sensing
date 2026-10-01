@@ -109,6 +109,10 @@ book:
         - 34-fire.qmd
         - 37-peat.qmd
         - 35-urban-energy.qmd
+    - part: "Ilmu Lingkungan: Air, Karbon, dan Kebijakan"
+      chapters:
+        - 40-water-cycle.qmd
+        - 41-mrv.qmd
     - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
       chapters:
         - 28-map-production.qmd

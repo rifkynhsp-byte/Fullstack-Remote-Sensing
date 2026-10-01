@@ -1,0 +1,61 @@
+# MRV: Measuring, Reporting and Verifying Forest Carbon {#sec-mrv}
+
+::: {.chapter-goal}
+#### In this chapter
+You will run a complete, small MRV exercise for one district: activity data from two independent forest-loss maps, an emission factor from GEDI biomass, Monte Carlo uncertainty, a reference level, and the results table a report would carry. Along the way you will see the decisions that move the answer most, and which of them a verifier will ask about first.
+:::
+
+## What MRV is for
+
+When a country, province or company says "we reduced emissions from deforestation", someone pays for it, trades it or counts it towards a national target (Indonesia's Nationally Determined Contribution, REDD+ results-based payments, voluntary carbon markets). MRV is the system that makes the claim checkable:
+
+- **Measurement**: estimate how much forest was lost or gained (*activity data*, AD) and how much carbon each hectare held (*emission factor*, EF), with their uncertainty.
+- **Reporting**: present the estimates in a standard, transparent way, following the IPCC Guidelines, so others can reproduce them.
+- **Verification**: an independent party checks the methods, data and calculations.
+
+Remote sensing is the backbone of the M, because it is the only way to measure forest change consistently over a whole country, year after year.
+
+## The core equation
+
+For deforestation, the IPCC *gain–loss* method reduces to
+
+$$\text{Emissions} = \text{AD} \times \text{EF}$$
+
+$$\text{EF} = \text{AGB} \times (1 + R) \times CF \times \frac{44}{12}$$
+
+where AGB is the above-ground biomass of the forest being cleared, $R$ the root-to-shoot ratio (below-ground biomass), $CF$ the carbon fraction of dry matter, and 44/12 converts carbon to CO₂. The IPCC 2006 defaults for tropical rainforest are $R = 0.37$ and $CF = 0.47$ (0.44–0.49).
+
+The IPCC describes three **tiers** of increasing quality: Tier 1 uses global default values; Tier 2 uses country-specific values (for example, national forest inventory plots); Tier 3 uses detailed models or repeated, spatially explicit measurement. This example sits between Tier 2 and 3: national-scale satellite maps for AD and spaceborne LiDAR (GEDI) for EF.
+
+## The worked example: Tebo district, Jambi
+
+Tebo lies in the lowlands of Jambi, where forest has been converted to rubber, oil palm and pulpwood since the 1990s. The **reference period** is 2013–2019, the **monitoring period** 2020–2023. The reference level is the mean annual emission in the reference period, the yardstick against which later years are judged.
+
+{{< include _snippets/ch41_mrv.qmd >}}
+
+## Reading the results
+
+**Activity data.** The two maps agree on the trend: loss fell from about 20,000 ha in 2013 to 3,000–6,000 ha in 2020, then rose again. They disagree on the amount, every year. Hansen GFC counts any loss of tree cover above 30 %, including the harvest of rubber and pulpwood plantations. JRC TMF counts only the conversion of tropical moist forest. For an MRV system the difference is a definition choice, not an error: you must decide what "forest" means (Indonesia's national definition, a minimum tree cover and area) and use a map built on that definition.
+
+**Emission factor.** GEDI L4B gives a mean biomass of about 296 Mg/ha over intact forest in Tebo, with a standard error near 10 %. With the IPCC defaults, each hectare cleared releases about 700 t CO₂. Using intact-forest biomass for every hectare lost is the biggest assumption in this example. Much of what Hansen counts is plantation or degraded forest with far less biomass, so the Hansen-based emissions are almost certainly too high. A better EF would be *stratified*: separate values for primary, degraded and plantation forest.
+
+**Emissions and the reference level.** Gross emissions from deforestation fall from a reference level of about 9.2 Mt CO₂ a year (Hansen) or 6.1 Mt (TMF) to 6.3 and 3.7 Mt in the monitoring period. That is a reduction of 32 % or 40 %. Both maps tell the same story; they differ by a third in its size.
+
+## What a verifier will ask
+
+1. **Which forest definition, and does the map follow it?** The largest difference here comes from the definition, not the satellite.
+2. **How was the AD uncertainty estimated?** Comparing two maps is a warning sign, not an estimate. The accepted method is a stratified random sample of reference points, interpreted by people from high-resolution imagery, and an unbiased area estimator with confidence intervals (Chapter [-@sec-accuracy]; @olofsson2014good). Map pixel counts are biased whenever omission and commission errors differ.
+3. **Does the EF match what was actually cleared?** Biomass of intact forest applied to plantation harvest overstates emissions.
+4. **Are all pools and gases included?** This example covers above- and below-ground biomass only. Peat oxidation after drainage and fire emissions are often larger in Sumatra and Kalimantan (Chapter [-@sec-peat]).
+5. **Is the reference level fair?** A reference period that includes unusually high loss years makes later reductions look larger.
+6. **Can it be reproduced?** Every number here comes from public data and a script anyone can run. That is the standard to aim for.
+
+## The uncertainty, honestly
+
+The Monte Carlo intervals in the emissions chart include only the EF uncertainty: GEDI's standard error, the IPCC range of the carbon fraction, and an *assumed* ±30 % on the root-to-shoot ratio (IPCC gives no range for it). The AD uncertainty, which is usually larger, is missing until a reference sample exists. A real MRV report combines both, by error propagation (IPCC Approach 1) or by Monte Carlo (Approach 2), and reports the 90 % confidence interval of the result.
+
+## Exercises {.unnumbered}
+
+1. Replace the 30 % tree-cover threshold in the Hansen activity data with 60 %. How much do the reference level and the reduction change?
+2. Build a stratified EF: compute GEDI biomass separately for TMF "undisturbed" and "degraded" forest and apply each to the matching loss.
+3. Draw a stratified random sample of 100 points (loss, stable forest, non-forest) for Tebo and plan how you would label them. How many points per stratum do you need for a ±20 % interval on loss area?
