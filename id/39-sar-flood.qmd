@@ -1,0 +1,65 @@
+# Banjir di Bawah Awan: Pemetaan Radar Terbimbing di Jakarta, 2020 {#sec-sar-flood}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memetakan banjir Tahun Baru 2020 di Jakarta dengan Sentinel-1 dan Random Forest yang dilatih pada poligon yang digambar tangan. Anda akan menemukan bug satu baris yang menyembunyikan banjir dari model, memperbaikinya, dan memahami kenapa akurasi pelatihan menyebut kedua versi sama-sama sangat baik padahal hanya satu yang benar.
+:::
+
+## Peristiwanya
+
+Pada jam-jam pertama tahun 2020, Jakarta diguyur salah satu hujan terlebat dalam catatannya. Sungai-sungai meluap dan sebagian besar Jabodetabek terendam pada 1 dan 2 Januari. Awan menutupi kota selama berhari-hari, sehingga satelit optis hampir tidak melihat apa-apa. Sentinel-1 melintas pada 2 Januari, sehari setelah puncaknya, dan memotret kota menembus awan (P5).
+
+Bab ini mengikuti skrip GEE101 penulis, "15 - Supervised SAR", yang dibuat untuk mengajar. Skrip ini memakai satu lintasan naik Sentinel-1 sebelum banjir (akhir Desember 2019) dan satu sesudahnya (2 Januari 2020), dihaluskan dengan rata-rata fokal 50 m untuk mengurangi speckle, serta 50 poligon yang digambar tangan, sepuluh per kelas:
+
+| Kode | Kelas | Isinya |
+|---|---|---|
+| 1 | air permanen | waduk, kolam, alur sungai |
+| 2 | vegetasi | lahan, taman, pohon yang tetap kering |
+| 3 | vegetasi terendam | lahan dan rumput yang terendam |
+| 4 | perkotaan | kawasan terbangun yang tetap kering |
+| 5 | perkotaan terendam | kawasan terbangun yang terendam |
+
+Poligonnya ada di folder `data/` repositori buku ini.
+
+## Bugnya: dua kanal dengan satu nama
+
+Skrip aslinya menumpuk dua tanggal dengan `ee.Image.cat(before, after)` lalu melatih model dengan kanal `'VV'`. Kelihatannya benar. Tetapi kedua citra sama-sama punya kanal bernama `VV` dan `VH`, padahal nama kanal harus unik. Earth Engine mempertahankan nama dari citra pertama dan mengganti nama kanal citra kedua menjadi `VV_1` dan `VH_1`. Akibatnya, memilih `'VV'` hanya mengambil citra **sebelum** banjir. Model diminta menemukan banjir tanpa pernah melihat citra yang diambil sesudahnya.
+
+Tidak ada peringatan apa pun. Skrip berjalan, petanya tampak masuk akal, dan akurasi yang dilaporkan 0,98. Inilah jenis kesalahan yang paling berbahaya: diam-diam, dan dikuatkan oleh angka yang tampak sangat bagus.
+
+Perbaikannya cukup dua baris: beri setiap kanal namanya sendiri (`VV_before`, `VV_after`, dan seterusnya) dan tambahkan perubahannya sendiri (`after − before`) sebagai fitur, karena banjir pada dasarnya adalah perubahan.
+
+{{< include _snippets/ch39_sar_flood.qmd >}}
+
+## Kenapa akurasi pelatihan berbohong
+
+Akurasi yang dicetak oleh `classifier.confusionMatrix()` diukur pada piksel yang sama dengan yang dipakai untuk melatih model. Random Forest bisa menghafal piksel itu hampir sempurna, sehingga angkanya hampir tidak berkata apa-apa tentang tempat baru. Kedua model mencapai 0,98 sampai 1,00 pada piksel pelatihannya.
+
+Uji yang jujur menyisihkan poligon utuh dari pelatihan. Di sini tiga poligon per kelas (15 seluruhnya) disisihkan, sehingga tidak ada piksel uji yang bersebelahan dengan piksel latih dari poligon yang sama (Bab [-@sec-sampling]). Hasilnya:
+
+- Model asli turun menjadi 0,75. Itu pun masih menyanjung. Piksel perkotaan mendominasi data uji, dan citra sebelum banjir memang bisa memisahkan perkotaan dari yang lain. Recall-nya untuk air permanen hanya 0,11, vegetasi 0,16, dan perkotaan terendam 0,15. Model itu tidak mungkin tahu apa yang terendam.
+- Model yang diperbaiki mencapai 0,96 (kappa 0,94). Kelas terlemahnya perkotaan terendam, dengan recall 0,41: sebagian besar kesalahannya masuk ke vegetasi terendam, yang tampak mirip sesudah banjir.
+
+Ada dua pelajaran umum. Jangan pernah melaporkan akurasi pelatihan sebagai akurasi peta. Dan baca recall per kelas, bukan hanya angka keseluruhan, karena angka keseluruhan mengikuti kelas yang paling besar.
+
+## Apa yang dilihat radar
+
+Grafik hamburan balik mengukur setiap piksel berlabel sebelum dan sesudah banjir. Kelas-kelas yang kering (perkotaan, vegetasi, air permanen) hampir tidak berubah. Kedua kelas terendam menjadi **lebih gelap**: vegetasi terendam turun dari sekitar −11 menjadi −20 dB di VV, perkotaan terendam dari sekitar −8 menjadi −15 dB. Air yang tenang di atas lahan dan jalan berperilaku seperti cermin dan mengirim energi radar menjauh (P5, pantulan spekular).
+
+Hasil kedua itu mengoreksi anggapan yang umum. Bangunan yang terendam sering disebut menjadi *lebih terang*, karena dinding dan air membentuk pemantul sudut (pantulan ganda). Itu terjadi kalau dinding menghadap radar dan airnya cukup dalam untuk membentuk sudut yang rapi. Di permukiman rendah yang bercampur seperti ini, genangan terbuka di antara rumah lebih dominan, sehingga pikselnya menjadi gelap. Hal yang sama berlaku untuk vegetasi: *hutan* yang tergenang menjadi terang (batang dan air), tetapi *lahan dan rumput* yang tergenang menjadi gelap. Fisikanya sama; yang menentukan hasilnya adalah geometri di permukaan.
+
+Komposit perubahan memperlihatkannya sekilas. Dengan citra sebelum di saluran merah serta citra sesudah di hijau dan biru, tempat yang menjadi gelap (terendam) tampak merah, tempat yang menjadi terang tampak sian, dan tempat yang tidak berubah tetap abu-abu.
+
+## Batasan
+
+- **Satu lintasan di tiap sisi.** Satu citra sesudah banjir hanyalah potret 2 Januari. Air yang sudah surut, atau yang datang belakangan, tidak terekam.
+- **Label menentukan jawaban.** Kelas-kelasnya adalah yang digambar penulis; daerah banjir yang tidak mirip poligon latih mana pun (misalnya air dalam di jalan sempit) bisa salah kelas.
+- **Bayangan dan layover radar** di sekitar gedung tinggi bisa mirip air atau mirip pantulan ganda. Model ketinggian atau jejak bangunan membantu memisahkannya (Bab [-@sec-flood]).
+- **Tabel luas** mewarisi semua kesalahan di atas. Angkanya taksiran awal untuk tanggap darurat, bukan penilaian kerusakan.
+
+## Latihan {.unnumbered}
+
+1. Jalankan pemilihan kanal asli dan yang sudah diperbaiki berdampingan, lalu bandingkan kedua petanya. Di mana keduanya paling berbeda?
+2. Ganti pembagian poligon (0–6 latih, 7–9 uji) dengan pembagian lain. Seberapa besar akurasi uji berubah?
+3. Tambahkan lintasan turun kalau ada untuk hari-hari yang sama. Apakah recall perkotaan terendam berubah?
+4. Bandingkan luas banjirnya dengan pendekatan banjir dari topografi di Bab [-@sec-flood]. Di mana kedua metode sepakat?

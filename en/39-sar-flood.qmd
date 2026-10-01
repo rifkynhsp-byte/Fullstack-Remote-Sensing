@@ -1,0 +1,65 @@
+# Flood Under Cloud: Supervised Radar Mapping of Jakarta, 2020 {#sec-sar-flood}
+
+::: {.chapter-goal}
+#### In this chapter
+You will map the Jakarta New Year flood of 2020 with Sentinel-1 and a Random Forest trained on hand-drawn polygons. You will find a one-line bug that hid the flood from the model, fix it, and learn why training accuracy said both versions were excellent when only one of them was.
+:::
+
+## The event
+
+In the first hours of 2020, Jakarta received some of the heaviest rainfall on its record. Rivers overflowed and large parts of Greater Jakarta were under water on 1 and 2 January. Clouds covered the city for days, so optical satellites saw almost nothing. Sentinel-1 passed over on 2 January, one day after the peak, and imaged the city through the cloud (P5).
+
+This chapter follows the author's GEE101 script "15 - Supervised SAR", written for teaching. It uses one ascending Sentinel-1 pass before the flood (late December 2019) and one after (2 January 2020), smoothed with a 50 m focal mean to reduce speckle, and 50 polygons drawn by hand, ten per class:
+
+| Code | Class | What it is |
+|---|---|---|
+| 1 | permanent water | reservoirs, ponds, river channels |
+| 2 | vegetation | fields, parks, trees that stayed dry |
+| 3 | flooded vegetation | fields and grass under water |
+| 4 | urban | built-up areas that stayed dry |
+| 5 | flooded urban | built-up areas under water |
+
+The polygons are in the book's `data/` folder.
+
+## The bug: two bands with one name
+
+The original script stacked the two dates with `ee.Image.cat(before, after)` and trained on the band `'VV'`. That looks right. But both images have bands called `VV` and `VH`, and a band name must be unique. Earth Engine keeps the first image's names and renames the second image's bands to `VV_1` and `VH_1`. Selecting `'VV'` therefore picks the **before** image only. The model was asked to find a flood without ever seeing the image taken after it.
+
+Nothing warned about it. The script ran, the map looked plausible, and the reported accuracy was 0.98. This is the most dangerous kind of error: silent, and confirmed by a number that looks excellent.
+
+The fix takes two lines: give every band its own name (`VV_before`, `VV_after` and so on) and add the change itself (`after − before`) as a feature, since change is what a flood is.
+
+{{< include _snippets/ch39_sar_flood.qmd >}}
+
+## Why training accuracy lied
+
+The accuracy printed by `classifier.confusionMatrix()` is measured on the same pixels the model was trained on. A Random Forest can memorise those almost perfectly, so the number says very little about new places. Both models reach 0.98 to 1.00 on their training pixels.
+
+The honest test keeps whole polygons out of training. Here three polygons per class (15 in all) are held out, so no pixel from a test polygon sits next to a training pixel from the same polygon (Chapter [-@sec-sampling]). On those:
+
+- The original model drops to 0.75. Even that flatters it. Urban pixels dominate the test set and the before image separates urban from the rest well. Its recall for permanent water is 0.11, for vegetation 0.16 and for flooded urban 0.15. It cannot know what flooded.
+- The fixed model reaches 0.96 (kappa 0.94). Its weak class is flooded urban, with a recall of 0.41: most of its errors go to flooded vegetation, which looks similar after the flood.
+
+Two lessons generalise. Never report training accuracy as map accuracy. And read per-class recall, not only the overall number, because the overall number follows the biggest class.
+
+## What the radar saw
+
+The backscatter chart measures every labelled pixel before and after. The dry classes (urban, vegetation, permanent water) hardly change. Both flooded classes get **darker**: flooded vegetation drops from about −11 to −20 dB in VV, flooded urban from about −8 to −15 dB. Calm water over fields and streets acts as a mirror and sends the radar energy away (P5, specular reflection).
+
+That second result corrects a common expectation. Flooded buildings are often described as *brighter*, because walls and water form a corner reflector (double bounce). That happens when walls face the radar and the water is deep enough to form a clean corner. In these low-rise, mixed neighbourhoods, open water between houses dominated, and the pixels went dark. The same goes for vegetation: flooded *forest* brightens (trunks and water), but flooded *fields and grass* go dark. The physics is the same; what decides the result is the geometry on the ground.
+
+The change composite shows this at a glance. With the before image in red and the after image in green and blue, places that turned dark (flooded) appear red, places that brightened appear cyan, and unchanged places stay grey.
+
+## Limits
+
+- **One pass each side.** A single after image is a snapshot of 2 January. Water that had drained, or arrived later, is missed.
+- **The labels define the answer.** The classes are what the author drew; flooded areas that look unlike any training polygon (deep water in narrow streets, for example) may be misclassified.
+- **Radar shadow and layover** around tall buildings can look like water or like double bounce. A height model or building footprints help separate them (Chapter [-@sec-flood]).
+- **The area table** inherits all the errors above. It is a first estimate for response, not a damage assessment.
+
+## Exercises {.unnumbered}
+
+1. Run the original band selection and the fixed one side by side and compare the two maps. Where do they disagree most?
+2. Replace the polygon split (0–6 train, 7–9 test) with a different split. How much does held-out accuracy move?
+3. Add a descending pass if one exists for the same days. Does it change the flooded-urban recall?
+4. Compare the flooded area with the flood-from-terrain approach in Chapter [-@sec-flood]. Where do the two methods agree?

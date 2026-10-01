@@ -102,6 +102,7 @@ book:
     - part: "Part VII: Industry Applications"
       chapters:
         - 24-flood.qmd
+        - 39-sar-flood.qmd
         - 25-mining.qmd
         - 26-forestry-eudr.qmd
         - 27-agriculture.qmd
