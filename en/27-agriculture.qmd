@@ -22,6 +22,11 @@ The image is a 3.7 cm drone orthophoto from OpenAerialMap, published under CC BY
 There is no field count for this block, so the book does not report an accuracy. The spacing chart is the evidence that is available. Planted palms stand at a known distance. If most counted crowns have a neighbour near that distance, the method is finding palms and not noise. For a report to a client, count every palm in two or three sample plots on the ground and compare.
 :::
 
+::: {.callout-warning}
+## Correction: not every crown is a palm
+The nearest-neighbour test above is weaker than it looks: a bush next to a palm also has a neighbour at 8 m. Chapter [-@sec-palm-health] applies a stricter test (at least three neighbours at 7 to 11 m, as on a planting grid) and shows a gallery of what fails it. About half of the 2,585 detections fail, and the random sample of them is bushes and mixed vegetation. The true palm count in this image lies between about 1,300 and 2,585, and only a field count can say where.
+:::
+
 ## Exercises {.unnumbered}
 
 1. Change `MIN_SPACING_M` from 5.5 to 4 and to 7. Watch the spacing histogram. Which setting starts double counting?

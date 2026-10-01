@@ -1,0 +1,45 @@
+# Palm Health from a Drone {#sec-palm-health}
+
+::: {.chapter-goal}
+#### In this chapter
+You will take the palms counted from a drone orthophoto in Chapter [-@sec-agriculture], give each crown a greenness score, and group them into healthy, moderate and poor. On the way, a gallery of example crowns reveals that half of the "palms" were never palms at all, and you will learn why the first question of any per-tree analysis is *is this object what I think it is?*
+:::
+
+## Why a drone
+
+A satellite pixel of 10 m holds one palm and the ground around it. A drone pixel of a few centimetres shows the fronds. Plantation managers use drones to count palms, find gaps to replant, and spot palms that look unwell before a field crew walks the block. Ordinary drones carry an RGB camera only, so this chapter asks what can honestly be said from colour alone.
+
+## The method
+
+The image is the same OpenAerialMap orthophoto of smallholder oil palm near Banjarbaru, South Kalimantan, read at 0.3 m (CC BY 4.0). The crown centres come from the counting chapter: excess green, a blur and local maxima.
+
+1. **Is it a palm?** Palms are planted on a grid, about 9 m apart. A real palm has several neighbours at that distance; a bush or a forest tree does not. Here an object counts as a palm if it has at least three other detections between 7 and 11 m away.
+2. **How green is it?** For a 4 m circle around each palm: the green leaf index, GLI = (2G − R − B)/(2G + R + B), and VARI = (G − R)/(G + R − B), averaged over the green pixels. Both measure greenness from RGB; VARI is less sensitive to haze.
+3. **How full is it?** The share of the circle covered by green canopy.
+4. **Groups**: k-means with three groups on the standardised scores, ordered by GLI into healthy, moderate and poor.
+5. **A check by eye**: six random crowns from every group, at full resolution.
+
+{{< include _snippets/ch61_palm_health_drone.qmd >}}
+
+## Reading the results
+
+**The gallery caught the biggest error.** In the first version of this script, without step 1, the "healthiest" group was not palms at all: it was shrubs, forest trees and undergrowth, which are greener than any palm. Greenness ranks a bush above a palm. The grid test removes about half of all detections (1,279 of 2,585), and the random crowns from that excluded group are all bushes and mixed vegetation. That also corrects the counting chapter: its 2,585 "palms" include many detections that are not palms. Some real palms at block edges and next to gaps fail the grid test too, so the true count lies between 1,306 (palms that pass) and 2,585. Counting them in two or three field plots would settle it.
+
+**Among the palms, the groups are a gradient.** Of the 1,306 palms that pass, about 487 fall in the healthy group, 779 in the moderate group and 40 in the poor group. In the gallery, healthy crowns have bright green centres, while the poor ones show more brown between the fronds and slightly yellower leaves. The difference is real but gradual: the three groups are three bands of one continuum, not three distinct conditions.
+
+**Crown fullness says little here.** At 8.7 m spacing, mature crowns touch, so almost every 4 m circle is full of green. Fullness only drops for the poorest crowns. In a younger block, with gaps between crowns, it would carry more information.
+
+**Colour is a symptom, not a diagnosis.** A yellow or thin crown can mean nutrient deficiency (often potassium or magnesium), drought, waterlogging, pests, old fronds not yet pruned, or *Ganoderma* basal stem rot, the most serious disease of oil palm in Southeast Asia. RGB cannot tell these apart, and early *Ganoderma* infection often shows no crown symptom at all. What this map can do is send a field crew to the 40 palms in the poor group first.
+
+## Doing better
+
+- **Multispectral drones** carry red-edge and near-infrared bands. NDVI and red-edge indices respond to chlorophyll and leaf structure, not only to colour, and are less fooled by soil showing between the fronds.
+- **Repeat flights**: a palm that drops from one group to a worse one between two flights is far more suspicious than one that is merely less green than its neighbours.
+- **Labels from the field**: a few hundred palms checked on the ground (healthy, deficient, diseased) turn this unsupervised grouping into a supervised classifier, and give it an accuracy.
+- **Deep learning** for detection: a crown detector trained on labelled palms (Chapter [-@sec-deeplearning]) would not need the grid test to reject bushes.
+
+## Exercises {.unnumbered}
+
+1. Change the grid rule to two neighbours, then to four. How many detections are excluded, and what do the excluded crowns in the gallery look like?
+2. Replace k-means with fixed thresholds on GLI (for example the 10th and 50th percentiles). Do the maps differ much?
+3. Map the palms in the poor group. Are they scattered, or clustered in one part of the block? A cluster would suggest something that spreads or a soil problem; scattered palms suggest individual causes.

@@ -22,6 +22,11 @@ Citranya adalah ortofoto drone beresolusi 3,7 cm dari OpenAerialMap dengan lisen
 Tidak ada data hitungan lapangan untuk blok ini, jadi buku ini tidak melaporkan akurasi. Grafik jarak tanam adalah bukti yang tersedia. Sawit ditanam dengan jarak yang sudah diketahui. Kalau sebagian besar tajuk yang terhitung punya tetangga di sekitar jarak itu, berarti metode ini menemukan sawit, bukan derau. Untuk laporan ke klien, hitung semua pohon di dua atau tiga plot contoh di lapangan, lalu bandingkan.
 :::
 
+::: {.callout-warning}
+## Koreksi: tidak setiap tajuk adalah sawit
+Uji tetangga terdekat di atas lebih lemah daripada kelihatannya: semak di samping sawit juga punya tetangga pada jarak 8 m. Bab [-@sec-palm-health] menerapkan uji yang lebih ketat (setidaknya tiga tetangga pada jarak 7 sampai 11 m, seperti pada grid tanam) dan menampilkan galeri objek yang gagal. Sekitar separuh dari 2.585 deteksi gagal, dan sampel acaknya berupa semak dan vegetasi campuran. Jumlah sawit sebenarnya di citra ini berada di antara sekitar 1.300 dan 2.585, dan hanya hitungan lapangan yang bisa memastikannya.
+:::
+
 ## Latihan {.unnumbered}
 
 1. Ubah `MIN_SPACING_M` dari 5,5 menjadi 4 dan 7. Perhatikan histogram jarak tanamnya. Pengaturan mana yang mulai menghitung ganda?

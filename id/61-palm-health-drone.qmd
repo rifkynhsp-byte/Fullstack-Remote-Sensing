@@ -1,0 +1,45 @@
+# Kesehatan Sawit dari Drone {#sec-palm-health}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan mengambil pohon sawit yang dihitung dari ortofoto drone di Bab [-@sec-agriculture], memberi setiap tajuk skor kehijauan, lalu mengelompokkannya menjadi sehat, sedang, dan buruk. Di tengah jalan, galeri contoh tajuk mengungkap bahwa separuh "sawit" itu sebenarnya bukan sawit, dan Anda akan belajar kenapa pertanyaan pertama dalam setiap analisis per pohon adalah *apakah objek ini memang yang saya kira?*
+:::
+
+## Kenapa drone
+
+Satu piksel satelit berukuran 10 m memuat satu pohon sawit beserta tanah di sekitarnya. Satu piksel drone berukuran beberapa sentimeter memperlihatkan pelepahnya. Pengelola kebun memakai drone untuk menghitung pohon, menemukan titik kosong untuk disisip, dan menandai pohon yang tampak kurang sehat sebelum tim lapangan menyusuri blok. Drone biasa hanya membawa kamera RGB, jadi bab ini bertanya apa yang bisa dikatakan secara jujur dari warna saja.
+
+## Metodenya
+
+Citranya adalah ortofoto OpenAerialMap yang sama, kebun sawit rakyat di dekat Banjarbaru, Kalimantan Selatan, dibaca pada 0,3 m (CC BY 4.0). Titik pusat tajuk berasal dari bab penghitungan: excess green, pengaburan, dan maksimum lokal.
+
+1. **Apakah ini sawit?** Sawit ditanam dalam grid, berjarak sekitar 9 m. Sawit sungguhan punya beberapa tetangga pada jarak itu; semak atau pohon hutan tidak. Di sini sebuah objek dihitung sebagai sawit kalau punya setidaknya tiga deteksi lain yang berjarak 7 sampai 11 m.
+2. **Seberapa hijau?** Untuk lingkaran 4 m di sekitar setiap pohon: green leaf index, GLI = (2G − R − B)/(2G + R + B), dan VARI = (G − R)/(G + R − B), dirata-ratakan pada piksel yang hijau. Keduanya mengukur kehijauan dari RGB; VARI kurang peka terhadap kabut.
+3. **Seberapa penuh?** Bagian lingkaran yang tertutup tajuk hijau.
+4. **Kelompok**: k-means dengan tiga kelompok pada skor yang distandardisasi, diurutkan menurut GLI menjadi sehat, sedang, dan buruk.
+5. **Pemeriksaan dengan mata**: enam tajuk acak dari setiap kelompok, pada resolusi penuh.
+
+{{< include _snippets/ch61_palm_health_drone.qmd >}}
+
+## Membaca hasilnya
+
+**Galeri menangkap kesalahan terbesar.** Pada versi pertama skrip ini, tanpa langkah 1, kelompok "paling sehat" sama sekali bukan sawit: isinya semak, pohon hutan, dan tumbuhan bawah, yang lebih hijau daripada sawit mana pun. Kehijauan menempatkan semak di atas sawit. Uji grid membuang sekitar separuh seluruh deteksi (1.279 dari 2.585), dan tajuk acak dari kelompok yang dibuang itu semuanya semak dan vegetasi campuran. Ini sekaligus mengoreksi bab penghitungan: 2.585 "sawit" di sana mencakup banyak deteksi yang bukan sawit. Sebagian sawit sungguhan di tepi blok dan di samping titik kosong juga gagal uji grid, jadi jumlah sebenarnya berada di antara 1.306 (yang lolos) dan 2.585. Menghitung di dua atau tiga plot lapangan akan menuntaskannya.
+
+**Di antara sawit, kelompoknya berupa gradasi.** Dari 1.306 sawit yang lolos, sekitar 487 masuk kelompok sehat, 779 kelompok sedang, dan 40 kelompok buruk. Di galeri, tajuk sehat punya bagian tengah hijau terang, sedangkan yang buruk memperlihatkan lebih banyak warna cokelat di antara pelepah dan daun yang sedikit lebih kuning. Perbedaannya nyata tetapi bertahap: tiga kelompok itu adalah tiga pita dari satu kontinum, bukan tiga kondisi yang berbeda tegas.
+
+**Kepenuhan tajuk tidak banyak bicara di sini.** Pada jarak tanam 8,7 m, tajuk sawit dewasa saling bersentuhan, sehingga hampir setiap lingkaran 4 m penuh warna hijau. Kepenuhan hanya turun pada tajuk yang paling buruk. Di blok yang lebih muda, dengan celah di antara tajuk, ukuran ini akan lebih berguna.
+
+**Warna adalah gejala, bukan diagnosis.** Tajuk yang kuning atau tipis bisa berarti kekurangan hara (sering kalium atau magnesium), kekeringan, tergenang, hama, pelepah tua yang belum dipangkas, atau busuk pangkal batang *Ganoderma*, penyakit sawit paling serius di Asia Tenggara. RGB tidak bisa membedakan semua itu, dan infeksi *Ganoderma* tahap awal sering tidak menunjukkan gejala di tajuk sama sekali. Yang bisa dilakukan peta ini adalah mengirim tim lapangan ke 40 pohon di kelompok buruk lebih dulu.
+
+## Supaya lebih baik
+
+- **Drone multispektral** membawa kanal red-edge dan inframerah dekat. NDVI dan indeks red-edge peka terhadap klorofil dan struktur daun, bukan hanya warna, dan tidak mudah tertipu tanah yang terlihat di antara pelepah.
+- **Penerbangan berulang**: pohon yang turun ke kelompok lebih buruk di antara dua penerbangan jauh lebih mencurigakan daripada pohon yang sekadar kurang hijau dibanding tetangganya.
+- **Label dari lapangan**: beberapa ratus pohon yang diperiksa di lapangan (sehat, kurang hara, sakit) mengubah pengelompokan tanpa label ini menjadi klasifikasi terbimbing, sekaligus memberinya akurasi.
+- **Deep learning** untuk deteksi: pendeteksi tajuk yang dilatih dengan sawit berlabel (Bab [-@sec-deeplearning]) tidak lagi membutuhkan uji grid untuk membuang semak.
+
+## Latihan {.unnumbered}
+
+1. Ubah aturan grid menjadi dua tetangga, lalu empat. Berapa deteksi yang dibuang, dan seperti apa tajuk yang dibuang di galeri?
+2. Ganti k-means dengan ambang tetap pada GLI (misalnya persentil ke-10 dan ke-50). Apakah petanya banyak berbeda?
+3. Petakan sawit di kelompok buruk. Apakah tersebar, atau mengelompok di satu bagian blok? Pengelompokan menunjukkan sesuatu yang menular atau masalah tanah; yang tersebar menunjukkan penyebab per pohon.
