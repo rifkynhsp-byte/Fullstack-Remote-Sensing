@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_46c87e9f43338e8070b57abf4185dfc4 {
+                #map_ff40130f6048354c61c77abcddf40626 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -102,14 +102,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_46c87e9f43338e8070b57abf4185dfc4" ></div>
+            <div class="folium-map" id="map_ff40130f6048354c61c77abcddf40626" ></div>
         
 </body>
 <script>
     
     
-            var map_46c87e9f43338e8070b57abf4185dfc4 = L.map(
-                "map_46c87e9f43338e8070b57abf4185dfc4",
+            var map_ff40130f6048354c61c77abcddf40626 = L.map(
+                "map_ff40130f6048354c61c77abcddf40626",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -121,13 +121,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_46c87e9f43338e8070b57abf4185dfc4);
+            L.control.scale().addTo(map_ff40130f6048354c61c77abcddf40626);
 
             
 
         
     
-            var tile_layer_febaa8f55c514e3922a29da72200b228 = L.tileLayer(
+            var tile_layer_241203d9050873d702b85c7821031848 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -144,10 +144,10 @@
             );
         
     
-            tile_layer_febaa8f55c514e3922a29da72200b228.addTo(map_46c87e9f43338e8070b57abf4185dfc4);
+            tile_layer_241203d9050873d702b85c7821031848.addTo(map_ff40130f6048354c61c77abcddf40626);
         
     
-            var tile_layer_e90cdb987a5b88c403bf4ea42f79ab37 = L.tileLayer(
+            var tile_layer_3ba666bfd19c5210cd3d2241239128e4 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -164,10 +164,10 @@
             );
         
     
-            tile_layer_e90cdb987a5b88c403bf4ea42f79ab37.addTo(map_46c87e9f43338e8070b57abf4185dfc4);
+            tile_layer_3ba666bfd19c5210cd3d2241239128e4.addTo(map_ff40130f6048354c61c77abcddf40626);
         
     
-            var image_overlay_20c5937b0ac29be84d124b10c314cfbd = L.imageOverlay(
+            var image_overlay_31cf6c6cf8de0014f41d2d871ee5d058 = L.imageOverlay(
                 "raw/ch43-landcover.png",
                 [[-7.35, 107.3], [-6.75, 107.95]],
                 {
@@ -178,10 +178,10 @@
             );
         
     
-            image_overlay_20c5937b0ac29be84d124b10c314cfbd.addTo(map_46c87e9f43338e8070b57abf4185dfc4);
+            image_overlay_31cf6c6cf8de0014f41d2d871ee5d058.addTo(map_ff40130f6048354c61c77abcddf40626);
         
     
-            var image_overlay_8710cfd0affb1fe8aff923a2837b39ad = L.imageOverlay(
+            var image_overlay_c07a50f582653fdf76b67be82a5d5e21 = L.imageOverlay(
                 "raw/ch43-water-yield.png",
                 [[-7.35, 107.3], [-6.75, 107.95]],
                 {
@@ -192,7 +192,7 @@
             );
         
     
-            var image_overlay_c8504049ab51eea989c2598e46810357 = L.imageOverlay(
+            var image_overlay_a0a951a6453ab01bf19bc9f854122eea = L.imageOverlay(
                 "raw/ch43-hotspots.png",
                 [[-7.35, 107.3], [-6.75, 107.95]],
                 {
@@ -203,26 +203,26 @@
             );
         
     
-            var layer_control_56bba5813e99f9ed10ea520fcbeaa27e_layers = {
+            var layer_control_7dc433188d2ddbdf2f0432a1ab2e771a_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_febaa8f55c514e3922a29da72200b228,
-                    "Satellite basemap" : tile_layer_e90cdb987a5b88c403bf4ea42f79ab37,
+                    "Street map" : tile_layer_241203d9050873d702b85c7821031848,
+                    "Satellite basemap" : tile_layer_3ba666bfd19c5210cd3d2241239128e4,
                 },
                 overlays :  {
-                    "Bandung basin land cover, 2021" : image_overlay_20c5937b0ac29be84d124b10c314cfbd,
-                    "Water yield" : image_overlay_8710cfd0affb1fe8aff923a2837b39ad,
-                    "Where the services stack up" : image_overlay_c8504049ab51eea989c2598e46810357,
+                    "Bandung basin land cover, 2021" : image_overlay_31cf6c6cf8de0014f41d2d871ee5d058,
+                    "Water yield" : image_overlay_c07a50f582653fdf76b67be82a5d5e21,
+                    "Where the services stack up" : image_overlay_a0a951a6453ab01bf19bc9f854122eea,
                 },
             };
-            let layer_control_56bba5813e99f9ed10ea520fcbeaa27e = L.control.layers(
-                layer_control_56bba5813e99f9ed10ea520fcbeaa27e_layers.base_layers,
-                layer_control_56bba5813e99f9ed10ea520fcbeaa27e_layers.overlays,
+            let layer_control_7dc433188d2ddbdf2f0432a1ab2e771a = L.control.layers(
+                layer_control_7dc433188d2ddbdf2f0432a1ab2e771a_layers.base_layers,
+                layer_control_7dc433188d2ddbdf2f0432a1ab2e771a_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_46c87e9f43338e8070b57abf4185dfc4);
+            ).addTo(map_ff40130f6048354c61c77abcddf40626);
 
         
     
@@ -233,10 +233,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_46c87e9f43338e8070b57abf4185dfc4);
+            ).addTo(map_ff40130f6048354c61c77abcddf40626);
         
     
-            map_46c87e9f43338e8070b57abf4185dfc4.fitBounds(
+            map_ff40130f6048354c61c77abcddf40626.fitBounds(
                 [[-7.35, 107.3], [-6.75, 107.95]],
                 {}
             );

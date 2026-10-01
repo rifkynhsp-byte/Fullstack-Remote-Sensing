@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_bc2459840e2780a66c2a9232ed640fde {
+                #map_585de4b2d91d77e48429447b2d8880b2 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -103,14 +103,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_bc2459840e2780a66c2a9232ed640fde" ></div>
+            <div class="folium-map" id="map_585de4b2d91d77e48429447b2d8880b2" ></div>
         
 </body>
 <script>
     
     
-            var map_bc2459840e2780a66c2a9232ed640fde = L.map(
-                "map_bc2459840e2780a66c2a9232ed640fde",
+            var map_585de4b2d91d77e48429447b2d8880b2 = L.map(
+                "map_585de4b2d91d77e48429447b2d8880b2",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -122,13 +122,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            L.control.scale().addTo(map_585de4b2d91d77e48429447b2d8880b2);
 
             
 
         
     
-            var tile_layer_8a830ef90f8deab25099c561665a9b36 = L.tileLayer(
+            var tile_layer_9450c746a5d3e805fba06b7adad1b454 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -145,10 +145,10 @@
             );
         
     
-            tile_layer_8a830ef90f8deab25099c561665a9b36.addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            tile_layer_9450c746a5d3e805fba06b7adad1b454.addTo(map_585de4b2d91d77e48429447b2d8880b2);
         
     
-            var tile_layer_b9386ddc91305725f82e84a7d7af3c1a = L.tileLayer(
+            var tile_layer_dc3f772e706a676c2bf81f51962e4993 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -165,10 +165,10 @@
             );
         
     
-            tile_layer_b9386ddc91305725f82e84a7d7af3c1a.addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            tile_layer_dc3f772e706a676c2bf81f51962e4993.addTo(map_585de4b2d91d77e48429447b2d8880b2);
         
     
-            var image_overlay_6fe00b851100295e728ad9e9e059fcbd = L.imageOverlay(
+            var image_overlay_9a6296bb06aa63e54ded2004d0e5b17e = L.imageOverlay(
                 "raw/ch21-palu-before.png",
                 [[-0.9750000593889967, 119.895], [-0.9399999999999745, 119.93499999999999]],
                 {
@@ -179,10 +179,10 @@
             );
         
     
-            image_overlay_6fe00b851100295e728ad9e9e059fcbd.addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            image_overlay_9a6296bb06aa63e54ded2004d0e5b17e.addTo(map_585de4b2d91d77e48429447b2d8880b2);
         
     
-            var image_overlay_db0e6ebe927cba0619e216130d9744f3 = L.imageOverlay(
+            var image_overlay_f460779fb13a405325a1b79d285efc0d = L.imageOverlay(
                 "raw/ch21-palu-after.png",
                 [[-0.9750000593889967, 119.895], [-0.9399999999999745, 119.93499999999999]],
                 {
@@ -193,7 +193,7 @@
             );
         
     
-            var image_overlay_b2f59356314d040f2be50b700d9e1de3 = L.imageOverlay(
+            var image_overlay_b5def22bf56449579f176ac3499e3a13 = L.imageOverlay(
                 "raw/ch21-palu-change.png",
                 [[-0.9800003730837465, 119.84], [-0.8699999999999745, 119.94000000000003]],
                 {
@@ -204,31 +204,31 @@
             );
         
     
-            var side_by_side_layers_ec8529e5cd3b0119180b56a842a67f8b = L.control.sideBySide(
-                image_overlay_6fe00b851100295e728ad9e9e059fcbd, image_overlay_db0e6ebe927cba0619e216130d9744f3
-            ).addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            var side_by_side_layers_1b77c4435f975e88b0159e554e054d94 = L.control.sideBySide(
+                image_overlay_9a6296bb06aa63e54ded2004d0e5b17e, image_overlay_f460779fb13a405325a1b79d285efc0d
+            ).addTo(map_585de4b2d91d77e48429447b2d8880b2);
         
     
-            var layer_control_fcb8e56a43a919acad934c7bf012641b_layers = {
+            var layer_control_f9796890c424be691a3070d1349660a0_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_8a830ef90f8deab25099c561665a9b36,
-                    "Satellite basemap" : tile_layer_b9386ddc91305725f82e84a7d7af3c1a,
+                    "Street map" : tile_layer_9450c746a5d3e805fba06b7adad1b454,
+                    "Satellite basemap" : tile_layer_dc3f772e706a676c2bf81f51962e4993,
                 },
                 overlays :  {
-                    "Petobo, before (July to September 2018)" : image_overlay_6fe00b851100295e728ad9e9e059fcbd,
-                    "Petobo, after (October to November 2018)" : image_overlay_db0e6ebe927cba0619e216130d9744f3,
-                    "Change zones across Palu" : image_overlay_b2f59356314d040f2be50b700d9e1de3,
+                    "Petobo, before (July to September 2018)" : image_overlay_9a6296bb06aa63e54ded2004d0e5b17e,
+                    "Petobo, after (October to November 2018)" : image_overlay_f460779fb13a405325a1b79d285efc0d,
+                    "Change zones across Palu" : image_overlay_b5def22bf56449579f176ac3499e3a13,
                 },
             };
-            let layer_control_fcb8e56a43a919acad934c7bf012641b = L.control.layers(
-                layer_control_fcb8e56a43a919acad934c7bf012641b_layers.base_layers,
-                layer_control_fcb8e56a43a919acad934c7bf012641b_layers.overlays,
+            let layer_control_f9796890c424be691a3070d1349660a0 = L.control.layers(
+                layer_control_f9796890c424be691a3070d1349660a0_layers.base_layers,
+                layer_control_f9796890c424be691a3070d1349660a0_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            ).addTo(map_585de4b2d91d77e48429447b2d8880b2);
 
         
     
@@ -239,10 +239,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_bc2459840e2780a66c2a9232ed640fde);
+            ).addTo(map_585de4b2d91d77e48429447b2d8880b2);
         
     
-            map_bc2459840e2780a66c2a9232ed640fde.fitBounds(
+            map_585de4b2d91d77e48429447b2d8880b2.fitBounds(
                 [[-0.9800003730837465, 119.84], [-0.8699999999999745, 119.94000000000003]],
                 {}
             );
