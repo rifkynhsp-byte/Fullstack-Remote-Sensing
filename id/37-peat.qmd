@@ -1,17 +1,40 @@
-# Lahan Gambut: Kemarau, Kanal, dan Api {#sec-peat}
+# Kebakaran: dari Hutan hingga Lahan Gambut {#sec-peat}
 
 ::: {.chapter-goal}
 #### Di bab ini
-Anda akan memetakan gambut di Kalimantan Tengah, menghitung berapa bagian dari area terbakar di tahun-tahun kebakaran yang jatuh di atas gambut, dan menguji bagaimana api bulanan mengikuti curah hujan. Semua memakai data terbuka, jadi bisa diulang untuk bentang gambut mana pun.
+Kebakaran adalah satu bencana yang dilihat dengan dua cara. Pertama, api di atas permukaan: Anda menjawab tiga pertanyaan yang selalu diajukan lembaga penanggulangan kebakaran dan perusahaan asuransi setelah kebakaran besar (seberapa kering bahan bakarnya, bagaimana api menyebar, seberapa parah terbakarnya) untuk Black Summer 2019–20 di Blue Mountains, lalu mengeceknya dengan produk kedua. Kedua, api di bawah permukaan: Anda memetakan gambut di Kalimantan Tengah, menghitung berapa bagian area terbakar di tahun-tahun kebakaran yang jatuh di atas gambut, dan menguji bagaimana api bulanan mengikuti curah hujan. Semua memakai data terbuka.
 :::
 
-## Kenapa gambut berbeda
+## Bagian 1. Kebakaran hutan: tiga pertanyaan {#sec-fire}
+
+### Tiga pertanyaan, tiga dataset
+
+| Pertanyaan | Data | Yang diukur |
+|---|---|---|
+| Seberapa kering bahan bakarnya? | NDMI MODIS, bulanan | kandungan air di tajuk, sebagai anomali dari kondisi normal |
+| Bagaimana api menyebar? | area terbakar MODIS (MCD64A1) dan titik api FIRMS | tanggal setiap lokasi terbakar; deteksi api harian |
+| Seberapa parah terbakarnya? | dNBR Sentinel-2 | penurunan normalised burn ratio dari sebelum ke sesudah |
+
+Ketiganya adalah komponen dasar pemantau kebakaran hutan buatan penulis untuk New South Wales. Di sini diterapkan pada salah satu kebakaran terbesar musim Black Summer 2019–20, di Wollemi dan Blue Mountains.
+
+### Contoh nyata: Wollemi dan Blue Mountains, 2019–20
+
+{{< include _snippets/ch34_bushfire_wollemi.qmd >}}
+
+::: {.callout-important}
+### Integritas ilmiah: kelas keparahan itu pinjaman, dan luas terbakar punya dua jawaban
+Kelas dNBR berasal dari protokol lapangan Key dan Benson untuk hutan di Amerika Utara. Kelas ini belum dikalibrasi untuk hutan eukaliptus, jadi baca "keparahan tinggi" sebagai "perubahan NBR yang besar", bukan dampak terukur pada pohon. Luas area terbakar juga tergantung sensornya. Peta Sentinel-2 20 m dan produk MODIS 500 m sepakat di sekitar 626 ribu ha, tetapi keduanya berbeda di 377 ribu ha lainnya. Laporkan luas yang tumpang tindih, bukan hanya satu angka.
+:::
+
+## Bagian 2. Gambut: kemarau, kanal, dan api
+
+### Kenapa gambut berbeda
 
 Gambut tropis adalah tanah dari sisa tumbuhan yang tidak membusuk karena terus tergenang air. Lapisannya bertambah satu sampai dua milimeter per tahun, sampai membentuk kubah setebal beberapa meter. Karbon yang tersimpan per hektare jauh lebih banyak daripada di hutan yang tumbuh di atasnya.
 
 Begitu dikeringkan dengan kanal untuk pertanian atau kebun, lapisan atasnya mengering. Gambut kering mudah terbakar, dan apinya terus menjalar di bawah permukaan, tempat yang tidak terjangkau hujan dan tidak terlihat satelit optis. Kebakaran tahun 1997 di Indonesia diperkirakan melepas 0,81 sampai 2,57 miliar ton karbon, setara 13 sampai 40 % emisi bahan bakar fosil dunia per tahun saat itu, sebagian besar dari gambut [@page2002carbon]. Kalimantan Tengah, di sekitar Palangka Raya, adalah tempat banyak bukti itu dikumpulkan. Proyek Lahan Gambut Sejuta Hektare (PLG) menggali ribuan kilometer kanal di sana pada 1990-an, dan sebagian wilayahnya masih terbakar setiap kali kemarau panjang.
 
-## Datanya
+### Datanya
 
 | Lapisan | Sumber | Ukuran sel |
 |---|---|---|
@@ -24,7 +47,7 @@ Peta gambutnya kasar. Pada resolusi 1 km, peta ini cukup untuk menjawab "apakah 
 
 {{< include _snippets/ch37_peat_fire.qmd >}}
 
-## Apa kata angkanya
+### Apa kata angkanya
 
 Gambut menutupi sekitar 73 % kotak ini, tetapi 99 % area terbakar pada 2015, 2019, dan 2023 berada di atasnya. Tanah mineral di bagian utara hampir tidak terbakar pada kemarau yang sama. MCD64A1 melewatkan api kecil dan api permukaan yang lambat, jadi luas terbakar ini adalah batas bawah. Namun, perbandingan gambut dan bukan gambut terlalu timpang untuk sekadar kebetulan dari datanya.
 
@@ -33,14 +56,14 @@ Deret bulanan memperlihatkan watak api gambut. Hampir sepanjang tahun nilainya m
 Hujan satu bulan saja kurang bisa diandalkan, karena gambut mengering dalam hitungan minggu. Jumlah hujan bulan itu ditambah dua bulan sebelumnya jauh lebih baik: 17 dari 21 bulan dengan lebih dari 1.000 piksel-hari api terjadi setelah hujan tiga bulan kurang dari 450 mm, sementara bulan yang tenang hanya 4. Garis 450 mm dibaca dari grafik ini. Angka itu patokan kasar untuk kotak ini saja, bukan ambang yang sudah diterbitkan. Uji dulu di tahun dan tempat lain sebelum dipakai untuk peringatan dini.
 
 ::: {.callout-tip}
-## Kalau mau mengerjakannya di bentang gambut Anda sendiri
+### Kalau mau mengerjakannya di bentang gambut Anda sendiri
 - Pakai peta gambut terbaik yang ada. Peta nasional atau peta proyek lebih baik daripada peta global 1 km untuk apa pun di bawah skala bentang lahan.
 - Hitung api sebagai piksel-hari, bukan kejadian terpisah: satu api gambut bisa membara di piksel yang sama berminggu-minggu.
 - Lihat hujan beberapa bulan, bukan satu bulan.
 - Laporkan luas terbakar sebagai batas bawah, dan sebutkan produk yang dipakai.
 :::
 
-## Yang tidak terlihat dari satelit
+### Yang tidak terlihat dari satelit
 
 Ada tiga hal yang paling penting untuk gambut tetapi sulit didapat dari data optis terbuka:
 
@@ -49,3 +72,11 @@ Ada tiga hal yang paling penting untuk gambut tetapi sulit didapat dari data opt
 3. **Kedalaman bakaran.** Banyaknya karbon yang lepas tergantung seberapa dalam gambut terbakar. Perlu LiDAR sebelum dan sesudah kebakaran, atau pengukuran lapangan.
 
 Masing-masing cukup besar untuk menjadi satu tesis.
+
+## Latihan {.unnumbered}
+
+1. Geser jendela "sebelum" ke bulan yang sama dua tahun lebih awal. Berapa bagian sinyal dNBR yang sebenarnya akibat kekeringan, bukan api?
+2. Plot deteksi FIRMS terhadap anomali NDMI per bulan. Apakah musim kebakaran dimulai ketika tajuk mengering?
+3. Cari lokasi yang terbakar menurut Sentinel-2 tetapi tidak menurut MODIS. Apakah itu petak kecil, tepi, atau perbedaan yang nyata?
+4. Ulangi pembagian api di gambut untuk sebuah kotak di Riau atau Sumatra Selatan. Apakah bagian area terbakar di atas gambut tetap mendekati 99 %?
+5. Hitung dNBR untuk kebakaran Kalimantan Tengah 2019. Mengapa nilainya meremehkan kerusakan di gambut dibandingkan Blue Mountains?

@@ -37,17 +37,22 @@ Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode 
 | Bagian | Bab | Setelah selesai Anda mampu |
 |--------|-----|----------------------------|
 | Prinsip | P1 sampai P6 | Menjelaskan cara sensor optik, termal, dan radar membentuk citra, dan memakai aplikasi IJB tanpa kode |
-| I. Fondasi, tujuan dan fisika | 1 sampai 4 | Menjelaskan apa yang diukur satu piksel dan memilih sensor yang tepat |
-| II. Platform | 5 sampai 7 | Menulis dan men-debug skrip Earth Engine dengan percaya diri |
-| III. Data siap analisis | 8 sampai 11 | Membangun komposit dari data optik, radar dan topografi |
-| IV. Rekayasa fitur | 12 sampai 15 | Mengubah reflektansi menjadi prediktor yang bermakna secara ekologis |
-| V. Pembelajaran mesin | 16 sampai 18 | Melatih, memvalidasi dan mempertahankan sebuah klasifikasi |
-| VI. GeoAI dan dampak | 19 sampai 24 | Memakai embedding model fondasi dan merilis aplikasi yang benar benar jalan |
-| VII. Aplikasi industri | — | Memetakan banjir, tambang, kebun, sawah, kebakaran, badai, dan longsor, serta menyatakan seberapa yakin Anda |
-| Ilmu lingkungan | — | Melacak air, karbon, jasa ekosistem, habitat, dan kedalaman perairan dangkal |
-| VIII. Keterampilan data scientist | — | Membuat laporan peta, menjelajah data, menguji klaim secara statistik, dan mencoba deep learning |
-| IX. LiDAR untuk kehutanan | — | Mengklasifikasi point cloud, menemukan pohon, dan menskalakan biomassa plot dengan GEDI |
-| X. Garda depan riset | — | Memulai tesis dari baseline yang bisa dijalankan dan jujur |
+| I. Fondasi, tujuan dan fisika | 4 bab | Menjelaskan apa yang diukur satu piksel dan memilih sensor yang tepat |
+| II. Platform | 3 | Menulis dan men-debug skrip Earth Engine dengan percaya diri |
+| III. Data siap analisis | 4 | Membangun komposit dari data optik, radar dan topografi |
+| IV. Rekayasa fitur | 4 | Mengubah reflektansi menjadi prediktor yang bermakna secara ekologis |
+| V. Belajar dari data | 6 | Menjelajah data, menguji klaim secara statistik, lalu melatih, memvalidasi, dan mempertahankan klasifikasi |
+| VI. GeoAI dan waktu | 7 | Memakai embedding model fondasi, regresi, deep learning, dan deret waktu |
+| VII. Bencana | 5 | Memetakan banjir, longsor, badai, dan kebakaran, serta menyatakan seberapa yakin Anda |
+| VIII. Pangan dan perkebunan | 6 | Memantau tanaman, sawah, kesesuaian lahan, dan sawit, dari satelit hingga drone |
+| IX. Hutan, karbon, dan alam | 7 | Melacak deforestasi, karbon, jasa ekosistem, dan habitat, serta mendukung penegakan hukum |
+| X. Pertambangan | 3 | Memetakan tambang, reklamasinya, serta biaya dan manfaatnya |
+| XI. Air dan pesisir | 3 | Mengikuti siklus air, memetakan kedalaman perairan dangkal dan perubahan mangrove |
+| XII. Energi surya | 4 | Mengubah sinar matahari, atap, dan ladang surya menjadi keputusan |
+| XIII. Manusia, tempat, dan bisnis | 4 | Menjawab pertanyaan lokasi, transportasi, dan ekonomi dengan data terbuka |
+| XIV. Mengomunikasikan hasil | 4 | Merancang grafik dan peta yang menjelaskan, membuat laporan peta, dan merilis aplikasi |
+| XV. LiDAR: kehutanan dan lainnya | 4 | Mengklasifikasi point cloud, menemukan pohon, dan menskalakan biomassa plot dengan GEDI |
+| XVI. Garda depan riset | 1 | Memulai tesis dari baseline yang bisa dijalankan dan jujur |
 
 : Jalur membaca {.striped}
 

@@ -86,73 +86,82 @@ book:
         - 13-visualisation.qmd
         - 14-texture.qmd
         - 15-sampling.qmd
-    - part: "Bagian V: Pembelajaran Mesin"
+    - part: "Bagian V: Belajar dari Data"
       chapters:
+        - 38-eda-graphs.qmd
+        - 70-statistics.qmd
+        - 30-statistics.qmd
         - 16-supervised.qmd
         - 17-accuracy.qmd
-        - 70-statistics.qmd
         - 18-obia.qmd
-    - part: "Bagian VI: GeoAI dan Dampak"
+    - part: "Bagian VI: GeoAI dan Waktu"
       chapters:
         - 19-embeddings.qmd
         - 51-save-apply-model.qmd
         - 56-auto-landcover.qmd
         - 59-ensemble-landcover.qmd
         - 20-regression-biomass.qmd
+        - 31-deep-learning.qmd
         - 21-time-series.qmd
-        - 22-vector-geoai.qmd
-        - 65-ooh-sydney.qmd
-        - 23-apps-mrv.qmd
-    - part: "Bagian VII: Penerapan di Industri"
+    - part: "Bagian VII: Bencana"
       chapters:
         - 24-flood.qmd
         - 39-sar-flood.qmd
-        - 25-mining.qmd
-        - 49-mining-restoration.qmd
-        - 63-mining-cost-benefit.qmd
-        - 26-forestry-eudr.qmd
+        - 50-landslide-simple.qmd
+        - 46-windstorm.qmd
+        - 37-peat.qmd
+    - part: "Bagian VIII: Pangan dan Perkebunan"
+      chapters:
         - 27-agriculture.qmd
-        - 61-palm-health-drone.qmd
         - 45-paddy.qmd
+        - 48-land-suitability.qmd
         - 44-oil-palm-age.qmd
         - 60-oil-palm-yield.qmd
-        - 48-land-suitability.qmd
-        - 34-fire.qmd
-        - 46-windstorm.qmd
-        - 58-forest-dieback.qmd
-        - 50-landslide-simple.qmd
-        - 37-peat.qmd
-        - 35-urban-energy.qmd
-        - 57-solar-pv.qmd
-        - 64-solar-resource.qmd
-    - part: "Ilmu Lingkungan: Air, Karbon, dan Kebijakan"
+        - 61-palm-health-drone.qmd
+    - part: "Bagian IX: Hutan, Karbon, dan Alam"
       chapters:
-        - 40-water-cycle.qmd
+        - 26-forestry-eudr.qmd
+        - 58-forest-dieback.qmd
         - 42-carbon-balance.qmd
         - 41-mrv.qmd
         - 43-ecosystem-services.qmd
         - 53-biodiversity.qmd
         - 55-enforcement.qmd
+    - part: "Bagian X: Pertambangan"
+      chapters:
+        - 25-mining.qmd
+        - 49-mining-restoration.qmd
+        - 63-mining-cost-benefit.qmd
+    - part: "Bagian XI: Air dan Pesisir"
+      chapters:
+        - 40-water-cycle.qmd
         - 52-bathymetry.qmd
         - 62-mangrove-change.qmd
-    - part: "Bagian VIII: Keahlian Ilmuwan Data Geospasial"
+    - part: "Bagian XII: Energi Surya"
       chapters:
-        - 28-map-production.qmd
-        - 38-eda-graphs.qmd
-        - 29-dataviz.qmd
+        - 64-solar-resource.qmd
+        - 35-urban-energy.qmd
+        - 57-solar-pv.qmd
         - 66-solar-insight.qmd
+    - part: "Bagian XIII: Manusia, Tempat, dan Bisnis"
+      chapters:
+        - 22-vector-geoai.qmd
+        - 65-ooh-sydney.qmd
         - 67-transit-access.qmd
         - 68-leontief.qmd
+    - part: "Bagian XIV: Mengomunikasikan Hasil"
+      chapters:
+        - 29-dataviz.qmd
         - 69-beyond-choropleth.qmd
-        - 30-statistics.qmd
-        - 31-deep-learning.qmd
-    - part: "Bagian IX: LiDAR untuk Kehutanan"
+        - 28-map-production.qmd
+        - 23-apps-mrv.qmd
+    - part: "Bagian XV: LiDAR — Kehutanan dan Lainnya"
       chapters:
         - 32-lidar-trees.qmd
         - 54-lidar-classification.qmd
         - 33-height-scaling.qmd
         - 47-gedi-structure.qmd
-    - part: "Bagian X: Garis Depan Riset"
+    - part: "Bagian XVI: Garis Depan Riset"
       chapters:
         - 36-thesis-bank.qmd
     - dashboard.qmd

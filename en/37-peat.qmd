@@ -1,17 +1,40 @@
-# Peatland: Drought, Drainage and Fire {#sec-peat}
+# Fire: from Bushfire to Peatland {#sec-peat}
 
 ::: {.chapter-goal}
 #### In this chapter
-You will map peat in Central Kalimantan, measure how much of the burned area in fire years lies on peat, and test how monthly fire follows rainfall. Everything uses open data, so you can repeat it for any peat landscape.
+Fire is one hazard seen two ways. First, a forest fire above ground: you answer the three questions every fire agency and insurer asks after a large fire (how dry was the fuel, how did the fire spread, how badly did it burn) for the 2019–20 Black Summer in the Blue Mountains, and check the answer against a second product. Then fire below ground: you map peat in Central Kalimantan, measure how much of the burned area in fire years lies on it, and test how monthly fire follows rainfall. Everything uses open data.
 :::
 
-## Why peat is different
+## Part 1. A forest fire: three questions {#sec-fire}
+
+### Three questions, three datasets
+
+| Question | Data | What it measures |
+|---|---|---|
+| How dry was the fuel? | MODIS NDMI, monthly | water in the canopy, as an anomaly from normal |
+| How did the fire spread? | MODIS burned area (MCD64A1) and FIRMS active fire | the date each place burned; daily fire detections |
+| How badly did it burn? | Sentinel-2 dNBR | the drop in the normalised burn ratio, before to after |
+
+These are the building blocks of the author's bushfire monitors for New South Wales. Here they are applied to one of the largest fires of the 2019–20 Black Summer, in the Wollemi and Blue Mountains.
+
+### A working example: Wollemi and Blue Mountains, 2019–20
+
+{{< include _snippets/ch34_bushfire_wollemi.qmd >}}
+
+::: {.callout-important}
+### Scientific integrity: severity classes are borrowed, and burned area has two answers
+The dNBR classes come from Key and Benson's field protocol for North American forest. They have not been calibrated for eucalypt forest, so read "high severity" as "large change in NBR", not as a measured effect on trees. Burned area also depends on the sensor. The 20 m Sentinel-2 map and the 500 m MODIS product agree on about 626,000 ha, but the two disagree on another 377,000 ha. Report the overlap, not just one number.
+:::
+
+## Part 2. Peat: drought, drainage and fire
+
+### Why peat is different
 
 Tropical peat is soil made of plant material that has not rotted, because it stays waterlogged. It builds up by a millimetre or two a year, into domes several metres thick. It stores far more carbon per hectare than the forest standing on it.
 
 Drain it with canals for farming or plantations, and the top dries. Dry peat burns, and it keeps burning under the surface, where rain cannot reach it and optical satellites cannot see it. The 1997 fires in Indonesia released an estimated 0.81 to 2.57 billion tonnes of carbon, equal to 13 to 40 % of the world's yearly fossil fuel emissions at the time, most of it from peat [@page2002carbon]. Central Kalimantan, around Palangka Raya, is where much of that evidence was gathered. The former Mega Rice Project dug thousands of kilometres of canals there in the 1990s, and parts of it still burn in dry years.
 
-## The data
+### The data
 
 | Layer | Source | Cell size |
 |---|---|---|
@@ -24,7 +47,7 @@ The peat map is coarse. At 1 km it is fine for "is this landscape mostly peat?" 
 
 {{< include _snippets/ch37_peat_fire.qmd >}}
 
-## What the numbers say
+### What the numbers say
 
 Peat covers about 73 % of the box, but 99 % of the burned area in 2015, 2019 and 2023 lies on it. The mineral uplands in the north barely burned in the same droughts. MCD64A1 misses small and slow surface fires, so the burned areas are lower bounds, but the split between peat and non-peat is too lopsided to be an artefact.
 
@@ -33,14 +56,14 @@ The monthly series shows how fire on peat behaves. It stays near zero for most o
 A single month's rain is a weak guide, because peat dries over weeks. The rain of the month plus the two before it works much better: 17 of the 21 months with more than 1,000 fire pixel-days came after less than 450 mm in three months, and only 4 quiet months did. The 450 mm line was read off this chart. It is a local rule of thumb for this box, not a published threshold, and you would test it on other years and places before using it for a warning.
 
 ::: {.callout-tip}
-## Doing this for your own peat landscape
+### Doing this for your own peat landscape
 - Use the best peat map you have. A national or project map is better than the 1 km global one for anything below landscape scale.
 - Count fire as pixel-days, not as separate events: one peat fire can smoulder in the same pixel for weeks.
 - Look at rain over several months, not one.
 - Report burned area as a lower bound, and say which product you used.
 :::
 
-## What satellites do not see here
+### What satellites do not see here
 
 Three things matter most for peat and are hard to get from open optical data:
 
@@ -49,3 +72,11 @@ Three things matter most for peat and are hard to get from open optical data:
 3. **Burn depth.** How much carbon a fire released depends on how deep it burned. It needs LiDAR before and after, or field measurement.
 
 Each is a thesis-sized question.
+
+## Exercises {.unnumbered}
+
+1. Move the "pre" window to the same months two years earlier. How much of the dNBR signal is drought, not fire?
+2. Plot FIRMS detections against the NDMI anomaly month by month. Did the fire season start when the canopy dried?
+3. Find where Sentinel-2 says burned and MODIS does not. Are those small patches, edges, or real disagreements?
+4. Repeat the peat-fire split for a box in Riau or South Sumatra. Does the share of burned area on peat stay near 99 %?
+5. Compute dNBR for the 2019 Central Kalimantan fires. Why does it understate the damage on peat compared with the Blue Mountains?

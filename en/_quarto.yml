@@ -86,73 +86,82 @@ book:
         - 13-visualisation.qmd
         - 14-texture.qmd
         - 15-sampling.qmd
-    - part: "Part V: Machine Learning"
+    - part: "Part V: Learning from Data"
       chapters:
+        - 38-eda-graphs.qmd
+        - 70-statistics.qmd
+        - 30-statistics.qmd
         - 16-supervised.qmd
         - 17-accuracy.qmd
-        - 70-statistics.qmd
         - 18-obia.qmd
-    - part: "Part VI: GeoAI and Impact"
+    - part: "Part VI: GeoAI and Time"
       chapters:
         - 19-embeddings.qmd
         - 51-save-apply-model.qmd
         - 56-auto-landcover.qmd
         - 59-ensemble-landcover.qmd
         - 20-regression-biomass.qmd
+        - 31-deep-learning.qmd
         - 21-time-series.qmd
-        - 22-vector-geoai.qmd
-        - 65-ooh-sydney.qmd
-        - 23-apps-mrv.qmd
-    - part: "Part VII: Industry Applications"
+    - part: "Part VII: Hazards"
       chapters:
         - 24-flood.qmd
         - 39-sar-flood.qmd
-        - 25-mining.qmd
-        - 49-mining-restoration.qmd
-        - 63-mining-cost-benefit.qmd
-        - 26-forestry-eudr.qmd
+        - 50-landslide-simple.qmd
+        - 46-windstorm.qmd
+        - 37-peat.qmd
+    - part: "Part VIII: Food and Plantations"
+      chapters:
         - 27-agriculture.qmd
-        - 61-palm-health-drone.qmd
         - 45-paddy.qmd
+        - 48-land-suitability.qmd
         - 44-oil-palm-age.qmd
         - 60-oil-palm-yield.qmd
-        - 48-land-suitability.qmd
-        - 34-fire.qmd
-        - 46-windstorm.qmd
-        - 58-forest-dieback.qmd
-        - 50-landslide-simple.qmd
-        - 37-peat.qmd
-        - 35-urban-energy.qmd
-        - 57-solar-pv.qmd
-        - 64-solar-resource.qmd
-    - part: "Environmental Science: Water, Carbon and Policy"
+        - 61-palm-health-drone.qmd
+    - part: "Part IX: Forests, Carbon and Nature"
       chapters:
-        - 40-water-cycle.qmd
+        - 26-forestry-eudr.qmd
+        - 58-forest-dieback.qmd
         - 42-carbon-balance.qmd
         - 41-mrv.qmd
         - 43-ecosystem-services.qmd
         - 53-biodiversity.qmd
         - 55-enforcement.qmd
+    - part: "Part X: Mining"
+      chapters:
+        - 25-mining.qmd
+        - 49-mining-restoration.qmd
+        - 63-mining-cost-benefit.qmd
+    - part: "Part XI: Water and Coasts"
+      chapters:
+        - 40-water-cycle.qmd
         - 52-bathymetry.qmd
         - 62-mangrove-change.qmd
-    - part: "Part VIII: The Geospatial Data Scientist's Craft"
+    - part: "Part XII: Solar Energy"
       chapters:
-        - 28-map-production.qmd
-        - 38-eda-graphs.qmd
-        - 29-dataviz.qmd
+        - 64-solar-resource.qmd
+        - 35-urban-energy.qmd
+        - 57-solar-pv.qmd
         - 66-solar-insight.qmd
+    - part: "Part XIII: People, Places and Business"
+      chapters:
+        - 22-vector-geoai.qmd
+        - 65-ooh-sydney.qmd
         - 67-transit-access.qmd
         - 68-leontief.qmd
+    - part: "Part XIV: Communicating Results"
+      chapters:
+        - 29-dataviz.qmd
         - 69-beyond-choropleth.qmd
-        - 30-statistics.qmd
-        - 31-deep-learning.qmd
-    - part: "Part IX: LiDAR for Forestry"
+        - 28-map-production.qmd
+        - 23-apps-mrv.qmd
+    - part: "Part XV: LiDAR — Forestry and Beyond"
       chapters:
         - 32-lidar-trees.qmd
         - 54-lidar-classification.qmd
         - 33-height-scaling.qmd
         - 47-gedi-structure.qmd
-    - part: "Part X: Research Frontiers"
+    - part: "Part XVI: Research Frontiers"
       chapters:
         - 36-thesis-bank.qmd
     - dashboard.qmd

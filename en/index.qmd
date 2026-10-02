@@ -37,17 +37,22 @@ The text and discussion of the whole book as one Word document, with a link to t
 | Part | Chapters | You finish able to |
 |------|----------|--------------------|
 | Principles | P1 to P6 | Explain how optical, thermal and radar sensors form an image, and use the IJB app without code |
-| I. Foundations, purpose and physics | 1 to 4 | Explain what a pixel measures and choose the right sensor for a question |
-| II. The platform | 5 to 7 | Write and debug Earth Engine scripts with confidence |
-| III. Analysis ready data | 8 to 11 | Build composites from optical, radar and terrain sources |
-| IV. Feature engineering | 12 to 15 | Turn reflectance into ecologically meaningful predictors |
-| V. Machine learning | 16 to 18 | Train, validate and defend a classification |
-| VI. GeoAI and impact | 19 to 24 | Use foundation model embeddings and ship a working application |
-| VII. Industry applications | — | Map floods, mines, plantations, paddy, fire, storms and landslides, and say how sure you are |
-| Environmental science | — | Track water, carbon, ecosystem services, habitat and shallow-water depth |
-| VIII. The data scientist's craft | — | Make map reports, explore data, test claims statistically, and try deep learning |
-| IX. LiDAR for forestry | — | Classify point clouds, find trees, and scale plot biomass with GEDI |
-| X. Research frontiers | — | Start a thesis from a runnable, honest baseline |
+| I. Foundations, purpose and physics | 4 chapters | Explain what a pixel measures and choose the right sensor for a question |
+| II. The platform | 3 | Write and debug Earth Engine scripts with confidence |
+| III. Analysis ready data | 4 | Build composites from optical, radar and terrain sources |
+| IV. Feature engineering | 4 | Turn reflectance into ecologically meaningful predictors |
+| V. Learning from data | 6 | Explore data, test claims statistically, then train, validate and defend a classification |
+| VI. GeoAI and time | 7 | Use foundation-model embeddings, regression, deep learning and time series |
+| VII. Hazards | 5 | Map floods, landslides, storms and fire, and say how sure you are |
+| VIII. Food and plantations | 6 | Monitor crops, paddy, land suitability and oil palm, from satellite to drone |
+| IX. Forests, carbon and nature | 7 | Track deforestation, carbon, ecosystem services and habitat, and support enforcement |
+| X. Mining | 3 | Map mining, its restoration, and its costs and benefits |
+| XI. Water and coasts | 3 | Follow the water cycle, map shallow-water depth and mangrove change |
+| XII. Solar energy | 4 | Turn sunlight, rooftops and solar farms into a decision |
+| XIII. People, places and business | 4 | Answer location, transport and economic questions with open data |
+| XIV. Communicating results | 4 | Design charts and maps that explain, produce map reports, and ship an app |
+| XV. LiDAR: forestry and beyond | 4 | Classify point clouds, find trees, and scale plot biomass with GEDI |
+| XVI. Research frontiers | 1 | Start a thesis from a runnable, honest baseline |
 
 : Reading pathways {.striped}
 
