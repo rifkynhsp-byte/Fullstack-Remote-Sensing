@@ -1,0 +1,45 @@
+[
+ {
+  "name": "ch69-totals-rates",
+  "kind": "figure",
+  "caption": "Insight 1. Totals against rates.",
+  "image": "images/real/ch69-totals-rates.png"
+ },
+ {
+  "name": "ch69-classification",
+  "kind": "figure",
+  "caption": "Insight 2. Three classification schemes for the same data.",
+  "image": "images/real/ch69-classification.png"
+ },
+ {
+  "name": "ch69-classes",
+  "kind": "table",
+  "caption": "Provinces per class under each scheme, and the class upper bounds (people per km²).",
+  "markdown": "| scheme         |   class 1 |   class 2 |   class 3 |   class 4 |   class 5 | upper bounds                        |\n|:---------------|----------:|----------:|----------:|----------:|----------:|:------------------------------------|\n| Equal interval |        37 |         0 |         0 |         0 |         1 | 2,874, 5,742, 8,611, 11,479, 14,347 |\n| Quantile       |         8 |         7 |         8 |         7 |         8 | 32, 73, 105, 272, 14,347            |\n| Natural breaks |        25 |         6 |         3 |         3 |         1 | 113, 301, 842, 1,303, 14,347        |"
+ },
+ {
+  "name": "ch69-bivariate",
+  "kind": "figure",
+  "caption": "Insight 3. Bivariate choropleth: density against night light per resident.",
+  "image": "images/real/ch69-bivariate.png"
+ },
+ {
+  "name": "ch69-symbols",
+  "kind": "figure",
+  "caption": "Insight 4. Proportional symbols and a Dorling cartogram.",
+  "image": "images/real/ch69-symbols.png"
+ },
+ {
+  "name": "ch69-dots",
+  "kind": "figure",
+  "caption": "Insight 5. Dot-density map of population.",
+  "image": "images/real/ch69-dots.png"
+ },
+ {
+  "name": "ch69-sankey",
+  "kind": "chart",
+  "caption": "Insight 6. Riau land-cover change 2004-2024 as a Sankey diagram.",
+  "image": "images/real/ch69-sankey.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"from,to,km2\nForest,Forest,34193\nForest,Savanna & shrub,18258\nSavanna & shrub,Savanna & shrub,16058\nSavanna & shrub,Forest,10455\n\"Other (wetland, crops, grass, urban, water)\",\"Other (wetland, crops, grass, urban, water)\",4493.9\n\"Other (wetland, crops, grass, urban, water)\",Savanna & shrub,2259.8\n\"Other (wetland, crops, grass, urban, water)\",Forest,2069.3\nForest,\"Other (wetland, crops, grass, urban, water)\",1104.4\nSavanna & shrub,\"Other (wetland, crops, grass, urban, water)\",912.05\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_sankey(df):\n    \"\"\"Two-column Sankey: each ribbon is a transition, its width the area.\"\"\"\n    from matplotlib.path import Path as MPath\n    from matplotlib.patches import PathPatch\n    order = [k for k in SANKEY_COLOURS if k in set(df[\"from\"]) | set(df[\"to\"])]\n    left = df.groupby(\"from\").km2.sum().reindex(order).fillna(0); right = df.groupby(\"to\").km2.sum().reindex(order).fillna(0)\n    total = left.sum(); gap = 0.02 * total\n    def stack(s):\n        y, pos = 0.0, {}\n        for k, v in s.items():\n            pos[k] = y; y += v + (gap if v > 0 else 0)\n        return pos\n    yl, yr = stack(left), stack(right)\n    fig, ax = plt.subplots(figsize=(9.5, 6.2))\n    ax.set_position([0.08, 0.04, 0.84, 0.78])\n    offl, offr = dict(yl), dict(yr)\n    for r in df.sort_values([\"from\", \"to\"], key=lambda s: s.map({k: i for i, k in enumerate(order)})).itertuples():\n        y0, y1 = offl[r._1], offr[r.to]; h = r.km2\n        verts = [(0.1, y0), (0.5, y0), (0.5, y1), (0.9, y1), (0.9, y1 + h), (0.5, y1 + h), (0.5, y0 + h), (0.1, y0 + h), (0.1, y0)]\n        codes = [MPath.MOVETO, MPath.CURVE4, MPath.CURVE4, MPath.CURVE4, MPath.LINETO, MPath.CURVE4, MPath.CURVE4, MPath.CURVE4, MPath.CLOSEPOLY]\n        ax.add_patch(PathPatch(MPath(verts, codes), color=SANKEY_COLOURS[r._1], alpha=0.45, lw=0))\n        offl[r._1] += h; offr[r.to] += h\n    for side, s, pos, x in [(\"l\", left, yl, 0.1), (\"r\", right, yr, 0.9)]:\n        for k, v in s.items():\n            if v <= 0: continue\n            ax.add_patch(plt.Rectangle((x - 0.02 if side == \"l\" else x, pos[k]), 0.02, v, color=SANKEY_COLOURS[k]))\n            ax.text(x - 0.03 if side == \"l\" else x + 0.03, pos[k] + v / 2, f\"{k}\\n{v:,.0f} km²\", ha=\"right\" if side == \"l\" else \"left\",\n                    va=\"center\", fontsize=7.5)\n    ax.text(0.1, -0.04 * total, \"2004\", ha=\"center\", fontsize=9, fontweight=\"bold\"); ax.text(0.9, -0.04 * total, \"2024\", ha=\"center\", fontsize=9, fontweight=\"bold\")\n    ax.set_xlim(-0.25, 1.25); ax.set_ylim(-0.07 * total, total + gap * len(order)); ax.invert_yaxis(); ax.set_axis_off()\n    f2s = df[(df[\"from\"] == \"Forest\") & (df.to == \"Savanna & shrub\")].km2.sum()\n    s2f = df[(df[\"from\"] == \"Savanna & shrub\") & (df.to == \"Forest\")].km2.sum()\n    lost = left.get(\"Forest\", 0) - right.get(\"Forest\", 0)\n    insight(fig, f\"Insight 6: Riau's mapped forest shrank by {lost:,.0f} km² net; the big flows run both ways between forest \"\n                 f\"and savanna & shrub ({f2s:,.0f} and {s2f:,.0f} km²)\",\n            \"MODIS MCD12Q1 land cover (IGBP classes grouped), 2004 on the left, 2024 on the right; ribbon width is area. \"\n            \"At 500 m, MODIS confuses plantations, regrowth and forest, so read the two-way flows as uncertainty, not as change.\",\n            top=0.86)\n    return fig\n\nplot_sankey(df)\nplt.show()\n"
+ }
+]

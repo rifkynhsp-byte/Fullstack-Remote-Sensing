@@ -1,0 +1,55 @@
+# Peta yang Menjawab Pertanyaan: Melampaui Peta Koroplet {#sec-beyond-choropleth}
+
+::: {.chapter-goal}
+#### Di bab ini
+Peta koroplet, wilayah yang diarsir menurut nilai, adalah peta yang pertama kali digambar semua orang, dan sering kali peta yang salah. Dengan 38 provinsi Indonesia, populasi dari WorldPop, dan cahaya malam dari VIIRS, Anda akan melihat bagaimana peta total menyesatkan, bagaimana tiga skema klasifikasi mengubah angka yang sama menjadi tiga cerita berbeda, bagaimana menaruh dua variabel dalam satu warna, kapan memakai ukuran simbol alih-alih arsiran wilayah, bagaimana titik memperlihatkan apa yang disembunyikan provinsi, dan bagaimana diagram Sankey memperlihatkan perubahan antara dua peta satelit. Python dan R berdampingan; setiap peta tetap memakai garis lintang-bujur (gratikul).
+:::
+
+## Pertanyaan menentukan petanya
+
+Setiap peta di bab ini memakai beberapa angka yang sama untuk setiap provinsi, dihitung di Earth Engine: populasi WorldPop 2020, radiansi cahaya malam tahunan VIIRS 2024 yang dijumlahkan per provinsi, dan luasnya dalam proyeksi sama-luas. Yang berubah dari peta ke peta adalah pertanyaannya, dan bersama itu bentuk petanya. Batas provinsinya adalah FAO GAUL 2025, yang sudah memuat provinsi-provinsi baru di Papua.
+
+{{< include _snippets/ch69_beyond_choropleth.qmd >}}
+
+## *Insight* 1: total dan rasio
+
+Peta koroplet membuat pembaca membandingkan warna, dan mata membaca warna sebagai intensitas: provinsi yang gelap tampak *lebih banyak* sesuatu. Itu berhasil untuk rasio (orang per km², pendapatan per orang) dan gagal untuk total, karena provinsi yang luas mengumpulkan total besar semata karena luas. Riau memperlihatkannya paling jelas: dengan 7,1 juta penduduk, Riau masuk kelas tergelap di peta total, tetapi dengan 80 orang per km² ia berada di tengah peta kepadatan. Aturannya pendek. Arsir wilayah dengan rasio; tampilkan total dengan sesuatu yang ukurannya bisa membesar, seperti di *Insight* 4.
+
+## *Insight* 2: satu dataset, tiga peta
+
+Lima kelas warna membutuhkan empat titik batas, dan letaknya adalah pilihan. **Interval sama** memotong rentang nilai menjadi langkah-langkah yang sama; karena kepadatan Jakarta (14.347 per km²) sepuluh kali lipat provinsi lain mana pun, 37 dari 38 provinsi jatuh ke kelas terendah dan petanya nyaris tidak mengatakan apa-apa. **Kuantil** menaruh jumlah provinsi yang sama di setiap kelas (8, 7, 8, 7, 8), yang selalu menghasilkan peta yang hidup tetapi bisa memisahkan nilai yang hampir sama dan menyatukan nilai yang sangat berbeda. **Natural breaks** (algoritme Fisher–Jenks) menaruh batas pada celah terbesar dalam data, di sini pada 113, 301, 842, dan 1.303 orang per km², sehingga setiap kelas semirip mungkin di dalamnya.
+
+Tidak satu pun dari ketiganya benar secara umum. Kuantil cocok untuk peringkat ("provinsi mana di seperlima teratas?"), *natural breaks* cocok untuk menggambarkan kelompok, dan interval sama cocok untuk data yang tersebar merata di rentangnya, hal yang jarang terjadi pada data sosial yang miring. Kewajibannya adalah memilih dengan sengaja dan menyebut skema mana yang dipakai legenda.
+
+## *Insight* 3: dua variabel dalam satu warna
+
+**Koroplet bivariat** menyilangkan dua variabel, masing-masing dibagi tiga kelas, menjadi kisi warna 3 × 3: satu rona untuk setiap variabel dan campurannya ketika keduanya tinggi. Di sini variabelnya adalah kepadatan dan cahaya malam per 1.000 penduduk, gambaran kasar elektrifikasi dan kegiatan ekonomi per orang. Legendanya berupa kotak kecil yang dibaca sebagai dua sumbu.
+
+Jawa, Bali, dan provinsi-provinsi padat di Sumatra dan Sulawesi jatuh di sudut merah muda: padat, tetapi redup per orang, karena cahayanya dibagi oleh banyak orang. Sebelas provinsi berpenduduk jarang di Kalimantan, Papua, Maluku Utara, dan Sulawesi Tengah jatuh di sudut seberangnya, dengan cahaya terbanyak per penduduk, dipimpin Papua Selatan dengan sekitar 50 satuan per 1.000 orang. Itu bukan karena provinsi-provinsi ini lebih kaya. Di tempat yang sedikit penduduknya, satu tambang, pelabuhan, atau kota sudah menaikkan rasionya. Peta bivariat mengundang pembacaan kedua seperti ini, dan itulah kekuatannya; ia juga menuntut pembaca yang mau mempelajari legendanya, dan itulah ongkosnya.
+
+## *Insight* 4: ukuran untuk jumlah (simbol proporsional dan kartogram Dorling)
+
+Untuk menampilkan total dengan jujur, pakailah ukuran. **Peta simbol proporsional** menaruh lingkaran di setiap provinsi dengan luas, bukan jari-jari, sebanding dengan populasi, sehingga provinsi dengan empat kali penduduk mendapat lingkaran dua kali lebih lebar. Namun lingkaran provinsi-provinsi Jawa saling bertumpuk, dan pulau-pulau kecil tenggelam di bawahnya.
+
+**Kartogram Dorling** mengatasi tumpang tindih itu dengan membiarkan lingkaran bergerak: setiap lingkaran mulai di provinsinya lalu didorong menjauh dari tetangganya sampai tidak ada yang bertumpuk, sehingga geografi kasarnya tetap terjaga sementara setiap provinsi mendapat ukuran sebanding dengan penduduknya. Mewarnai lingkaran menurut kepadatan menambahkan variabel kedua. Jika digambar menurut manusia alih-alih daratan, bentuk Indonesia berubah: enam provinsi terpadat menampung 59 persen penduduk Indonesia, dan tiga provinsi besar di Jawa mengisi tengah peta yang menurut luas dikuasai Kalimantan dan Papua.
+
+## *Insight* 5: kepadatan titik
+
+Setiap peta provinsi berasumsi bahwa penduduk suatu provinsi tersebar merata di seluruhnya. Kenyataannya tidak. **Peta kepadatan titik** menaruh satu titik per 20.000 orang di tempat mereka benar-benar tinggal, memakai grid populasi (GPW v4.11, diagregasi menjadi sekitar 5 km) dan menyebar titik setiap sel secara acak di dalam sel itu. Titik-titiknya memenuhi Jawa hampir padat, menelusuri pesisir dan lembah sungai Sumatra, Kalimantan, dan Sulawesi, serta membiarkan pedalaman Kalimantan dan Papua nyaris kosong. Pilih jumlah orang per titik sedemikian rupa sehingga kawasan terpadat tidak menjadi gumpalan pekat dan kawasan terjarang tetap mendapat titik; 20.000 adalah kompromi untuk skala ini.
+
+## *Insight* 6: perubahan antara dua peta (diagram Sankey)
+
+Dua peta tutupan lahan dari tempat yang sama paling baik dibandingkan bukan berdampingan, melainkan sebagai **aliran**: berapa banyak dari setiap kelas pada tahun pertama yang berakhir di setiap kelas pada tahun kedua. **Diagram Sankey** menggambar setiap kelas sebagai batang pada setiap tanggal dan setiap transisi sebagai pita yang lebarnya adalah luas yang berpindah.
+
+Untuk Riau, produk tutupan lahan MODIS menunjukkan hutan turun dari 53.555 km² pada 2004 menjadi 46.717 km² pada 2024, kehilangan bersih 6.838 km². Diagram ini menambahkan apa yang disembunyikan angka bersih: 18.258 km² berpindah dari hutan ke sabana dan semak, dan 10.455 km² berpindah ke arah sebaliknya. Pada resolusi 500 m, MODIS tidak bisa dengan andal memisahkan hutan alam, perkebunan akasia dan sawit, serta hutan sekunder, sehingga perkebunan yang sudah tua bisa tampak sebagai hutan pada satu tahun dan sabana berkayu pada tahun lain. Aliran besar ke dua arah antara dua kelas yang mirip karena itu adalah tanda ketidakpastian klasifikasi, bukan perubahan nyata, dan Sankey membuat ketidakpastian itu terlihat, sementara satu angka bersih akan menyembunyikannya. Kelas-kelas kecil (lahan basah, pertanian, padang rumput, permukiman, air) digabung menjadi satu simpul, karena batangnya terlalu tipis untuk diberi label.
+
+## Apa yang bukan peta ini
+
+Nilai provinsi hanya sebaik masukan grid-nya: WorldPop membagi hitungan sensus dengan model, radiansi VIIRS juga menangkap suar gas dan kapal ikan selain kota, dan tutupan lahan MODIS adalah klasifikasi 500 m dengan kerancuan yang sudah diketahui antarjenis hutan. Provinsi itu luas dan tidak setara, sehingga setiap peta provinsi menyembunyikan variasi di dalamnya, dan karena itulah *Insight* 5 ada. Setiap pilihan klasifikasi dan warna di bab ini dibuat untuk satu pertanyaan; pertanyaan yang berbeda layak mendapat peta yang berbeda.
+
+## Latihan {.unnumbered}
+
+1. Gambar ulang *Insight* 2 dengan tujuh kelas alih-alih lima. Skema mana yang paling berubah?
+2. Ganti cahaya malam per penduduk di peta bivariat dengan cahaya malam per km². Provinsi mana yang berpindah sudut, dan mengapa?
+3. Ubah nilai titik menjadi 5.000 dan 100.000 orang. Jelaskan apa yang disembunyikan setiap versi.
+4. Gambar Sankey Riau dengan ESA WorldCover (10 m) untuk 2020 dan 2021 alih-alih MODIS. Apakah aliran dua arahnya menyusut?

@@ -1,0 +1,55 @@
+# Maps That Answer Questions: Beyond the Choropleth {#sec-beyond-choropleth}
+
+::: {.chapter-goal}
+#### In this chapter
+The choropleth, areas shaded by value, is the map everyone draws first, and it is often the wrong one. Using Indonesia's 38 provinces with population from WorldPop and night lights from VIIRS, you will see how a map of totals misleads, how three classification schemes turn the same numbers into three different stories, how to put two variables in one colour, when to size symbols instead of shading areas, how dots show what provinces hide, and how a Sankey diagram shows change between two satellite maps. Python and R side by side; every map keeps its graticule.
+:::
+
+## The question decides the map
+
+Every map in this chapter uses the same few numbers per province, computed in Earth Engine: the 2020 WorldPop population, the 2024 VIIRS annual night-light radiance summed over the province, and its area in an equal-area projection. What changes from map to map is the question, and with it the form. The provinces are the FAO GAUL 2025 boundaries, which include Indonesia's newer Papuan provinces.
+
+{{< include _snippets/ch69_beyond_choropleth.qmd >}}
+
+## Insight 1: totals against rates
+
+A choropleth makes the reader compare colours, and the eye reads colour as intensity: a dark province looks *more* of something. That works for a rate (people per km², income per person) and fails for a total, because a large province collects a large total simply by being large. Riau shows it best: with 7.1 million people it is in the darkest class of the totals map, yet at 80 people per km² it sits in the middle of the density map. The rule is short. Shade areas by rates; show totals with something whose size can grow, as in Insight 4.
+
+## Insight 2: one dataset, three maps
+
+Five colour classes need four break points, and where they go is a choice. **Equal intervals** cut the range into equal steps; because Jakarta's density (14,347 per km²) is ten times any other province's, 37 of the 38 provinces fall into the lowest class and the map says almost nothing. **Quantiles** put the same number of provinces in each class (8, 7, 8, 7, 8), which always produces a lively map but can split near-identical values and merge very different ones. **Natural breaks** (the Fisher–Jenks algorithm) place the breaks at the largest gaps in the data, here at 113, 301, 842 and 1,303 people per km², so that each class is as internally similar as possible.
+
+None of the three is correct in general. Quantiles suit ranking ("which provinces are in the top fifth?"), natural breaks suit describing groups, and equal intervals suit data spread evenly over its range, which skewed social data rarely is. The obligation is to choose deliberately and to say which scheme the legend uses.
+
+## Insight 3: two variables in one colour
+
+A **bivariate choropleth** crosses two variables, each split into three classes, into a 3 × 3 grid of colours: one hue for each variable and their mix where both are high. Here the variables are density and night light per 1,000 residents, a rough proxy for electrification and economic activity per person. The legend is a small square, read as two axes.
+
+Java, Bali and the crowded provinces of Sumatra and Sulawesi fall in the pink corner: crowded, but dim per person, because the light is shared by many people. Eleven sparsely settled provinces of Kalimantan, Papua, North Maluku and Central Sulawesi fall in the opposite corner, with the most light per resident, led by South Papua at about 50 units per 1,000 people. That is not because these provinces are richer. Where few people live, one mine, port or town raises the ratio. A bivariate map invites such second readings, which is its strength, and it needs a reader willing to study the legend, which is its cost.
+
+## Insight 4: size for counts (proportional symbols and a Dorling cartogram)
+
+To show a total honestly, use size. A **proportional-symbol map** places a circle on each province with area, not radius, proportional to population, so a province with four times the people gets a circle twice as wide. Circles of Java's provinces overlap, though, and small islands vanish under them.
+
+A **Dorling cartogram** solves the overlap by letting the circles move: each starts at its province and is pushed away from its neighbours until none overlap, keeping the map's rough geography while giving every province a size proportional to its people. Shading the circles by density adds a second variable. Drawn by people instead of land, Indonesia changes shape: the six most populous provinces hold 59 per cent of all Indonesians, and Java's three large provinces fill the middle of the map that Kalimantan and Papua dominate by area.
+
+## Insight 5: dot density
+
+Every provincial map assumes that the people of a province are spread evenly across it. They are not. A **dot-density map** places one dot per 20,000 people where they actually live, using a population grid (GPW v4.11, aggregated to about 5 km) and scattering each cell's dots at random within the cell. The dots fill Java almost solidly, trace the coasts and river valleys of Sumatra, Kalimantan and Sulawesi, and leave the interiors of Kalimantan and Papua nearly empty. Choose the number of people per dot so that the densest areas are not a solid blot and the sparsest still get a dot; 20,000 is a compromise at this scale.
+
+## Insight 6: change between two maps (Sankey diagram)
+
+Two land-cover maps of the same place are best compared not side by side but as **flows**: how much of each class in the first year ended up in each class in the second. A **Sankey diagram** draws each class as a bar at each date and each transition as a ribbon whose width is the area that moved.
+
+For Riau, the MODIS land-cover product shows forest falling from 53,555 km² in 2004 to 46,717 km² in 2024, a net loss of 6,838 km². The diagram adds what the net figure hides: 18,258 km² moved from forest to savanna and shrub, and 10,455 km² moved the other way. At 500 m resolution, MODIS cannot reliably separate natural forest, plantations of acacia and oil palm, and regrowth, so a mature plantation can appear as forest one year and woody savanna another. Large flows in both directions between two similar classes are therefore a sign of classification uncertainty, not of real change, and the Sankey makes that uncertainty visible where a single net number would hide it. Small classes (wetland, cropland, grassland, urban, water) are merged into one node, because their bars would be too thin to label.
+
+## What these maps are not
+
+The provincial values are only as good as the gridded inputs: WorldPop distributes census counts with a model, VIIRS radiance responds to gas flares and fishing fleets as well as towns, and MODIS land cover is a 500 m classification with known confusion between forest types. Provinces are large and unequal, so every provincial map hides variation within provinces, which is why Insight 5 is there. And every classification and colour choice in this chapter was made for one question; a different question deserves a different map.
+
+## Exercises {.unnumbered}
+
+1. Redraw Insight 2 with seven classes instead of five. Which scheme changes most?
+2. Replace night light per resident in the bivariate map with night light per km². Which provinces move corners, and why?
+3. Change the dot value to 5,000 and to 100,000 people. Describe what each version hides.
+4. Draw the Riau Sankey with ESA WorldCover (10 m) for 2020 and 2021 instead of MODIS. Do the two-way flows shrink?

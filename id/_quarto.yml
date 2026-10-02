@@ -142,6 +142,7 @@ book:
         - 66-solar-insight.qmd
         - 67-transit-access.qmd
         - 68-leontief.qmd
+        - 69-beyond-choropleth.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
     - part: "Bagian IX: LiDAR untuk Kehutanan"
