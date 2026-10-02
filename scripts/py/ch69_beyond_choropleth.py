@@ -33,6 +33,20 @@ import pandas as pd
 import requests
 
 DATA = Path(os.environ.get("MAP_DATA", "data/maps_indonesia")); DATA.mkdir(parents=True, exist_ok=True)
+
+SNAPSHOT = "https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing/releases/download/data-v1/ch69_maps_indonesia_inputs.zip"
+
+
+def snapshot():
+    """The exact inputs used for the book (frozen 2 October 2026), downloaded once if they are not here.
+    Rebuild them from the live sources instead with the data-building step described in the chapter."""
+    if not (DATA / "provinces.gpkg").exists():
+        import io, zipfile, requests
+        DATA.mkdir(parents=True, exist_ok=True)
+        zipfile.ZipFile(io.BytesIO(requests.get(SNAPSHOT, timeout=600).content)).extractall(DATA)
+
+
+snapshot()
 EQ = "EPSG:6933"                    # equal-area projection for densities and areas
 IGBP = {1: "Evergreen needleleaf forest", 2: "Evergreen broadleaf forest", 3: "Deciduous needleleaf forest",
         4: "Deciduous broadleaf forest", 5: "Mixed forest", 6: "Closed shrubland", 7: "Open shrubland",

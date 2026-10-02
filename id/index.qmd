@@ -6,6 +6,12 @@ Hampir semua tutorial Google Earth Engine gratis membuka Code Editor di halaman 
 
 Karena itu buku ini memulai dari tempat lain. Buku ini dibuka dengan enam bab Prinsip, berangkat dari kuliah universitas, tentang cara sensor benar-benar melihat: radiasi, orbit, pemindai, resolusi, dan radar, lalu tur aplikasi IJB tanpa kode bagi pembaca yang ingin hasil sebelum kode. Bagian I sama sekali tidak berisi kode. Bagian ini menjawab mengapa kita memandang Bumi dari orbit, apa sebenarnya yang diukur satelit ketika merekam satu piksel, dan mengapa pengukuran itu berperilaku berbeda di atas daun, lumpur pasang surut, dan permukaan air. Baru setelah itu kita membuka Code Editor, di Bagian II. Urutan ini bukan pilihan gaya. Ini urutan yang, setelah enam tahun mengajarkan materi ini, terbukti menghasilkan analis yang mampu men-debug petanya sendiri, bukan yang bertanya mengapa klasifikasinya salah.
 
+## Mengapa buku ini gratis
+
+Saya menempuh studi Master di UNSW Sydney dengan beasiswa dari LPDP, Lembaga Pengelola Dana Pendidikan. Beasiswa itu dibiayai oleh pembayar pajak Indonesia, dan saya menganggapnya sebagai hak istimewa yang perlu saya kembalikan. Buku ini adalah bagian dari cara saya mengembalikannya: semua yang saya pelajari, dari kuliah di kampus sampai bertahun-tahun pekerjaan proyek, dituliskan dan dibagikan, agar setiap mahasiswa, aparatur, dan insinyur Indonesia, juga siapa pun yang menginginkannya, bisa mempelajarinya tanpa beasiswa, biaya kursus, atau akun perusahaan.
+
+Kebutuhannya nyata. Indonesia adalah negara dengan lebih dari tujuh belas ribu pulau, dan banyak persoalan tersulitnya bersifat spasial: di mana hutan hilang, lereng mana yang akan longsor pada hujan berikutnya, permukiman mana yang akan banjir, di mana jalan atau perkebunan baru boleh dan tidak boleh dibangun. Data satelit untuk menjawab pertanyaan-pertanyaan itu kini tersedia dan gratis, tetapi pertanyaannya sering tetap tak terjawab, karena wilayahnya sangat luas, datanya sangat besar, data lapangan setempat langka, dan terlalu sedikit orang yang terlatih untuk mengubah keduanya menjadi keputusan. Setiap insinyur geospasial yang belajar mengerjakan ini dengan baik menjadi pengganda: satu orang bisa memetakan satu provinsi, melatih satu tim, dan membuat keputusan berikutnya sedikit lebih berbasis data. Jika buku ini membantu lahirnya lebih banyak dari mereka, tugasnya sudah terpenuhi.
+
 ::: {.callout-tip}
 ## Edisi baca (Word)
 Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode dan hasil setiap bab: [unduh (.docx)](../downloads/planetary-scale-cloud-gis-id.docx).
@@ -56,6 +62,8 @@ Tiga jalan pintas, tergantung alasan Anda datang ke sini.
 ## Cara kode di buku ini bekerja
 
 Setiap listing adalah berkas nyata dari folder `scripts/`, yang disisipkan ke halaman saat proses build. Salin mana saja ke Code Editor lalu tekan Run. Tidak ada pseudokode di sini, dan tidak ada potongan yang hanya jalan bila konteksnya lengkap.
+
+Di bawah setiap listing ada keluaran yang dihasilkan kode itu ketika buku dibangun: peta, grafik, dan tabel yang nyata, bukan tangkapan layar dan bukan ilustrasi. Ini disengaja. Anda bisa mencocokkan hasil Anda sendiri dengannya, tidak ada hasil yang diceritakan tanpa benar-benar dihasilkan kode, dan ketika sebuah angka di teks tampak mengejutkan, Anda bisa melihat asalnya. Bila sebuah bab membutuhkan data yang tidak ada di Earth Engine atau di arsip publik yang stabil, seperti citra drone atau jadwal yang dibekukan, skripnya mengunduh berkas persis yang dipakai untuk buku ini, sehingga hasil Anda bisa sama dengan yang tercetak.
 
 Komentar di dalam skrip itu adalah bagian dari pengajaran, bukan hiasan. Ketika sebuah baris memuat keputusan yang sebenarnya bisa diambil secara lain, komentarnya menyebutkan alternatif apa yang ada dan mengapa yang ini yang dipilih. Membaca skrip dari atas ke bawah seharusnya terasa seperti duduk di samping seseorang yang menarasikan alasannya.
 

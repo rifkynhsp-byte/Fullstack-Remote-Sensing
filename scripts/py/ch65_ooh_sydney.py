@@ -18,7 +18,9 @@ Three steps, the same three an out-of-home (OOH) media planner takes:
 Environment (Colab or any Python 3.10+):
     pip install geopandas rasterio exactextract scikit-learn xgboost cubist matplotlib
 
-Data: all open, built by scripts/py/ch65_ooh_data.py into OOH_DATA - City of
+Data: all open. The exact files used for the book download automatically
+(snapshot() below); scripts/py/ch65_ooh_data.py rebuilds them from the live
+sources into OOH_DATA - City of
 Sydney walking counts, employment survey, bus shelters and banners;
 OpenStreetMap points of interest, roads, stops and bus routes; GHSL building
 surface and volume, VIIRS night lights and WorldPop age structure (Earth
@@ -35,6 +37,20 @@ import pandas as pd
 from exactextract import exact_extract
 
 DATA = Path(os.environ.get("OOH_DATA", "data/ooh_sydney"))
+
+SNAPSHOT = "https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing/releases/download/data-v1/ch65_ooh_sydney_inputs.zip"
+
+
+def snapshot():
+    """The exact inputs used for the book (frozen 2 October 2026), downloaded once if they are not here.
+    Rebuild them from the live sources instead with the data-building step described in the chapter."""
+    if not (DATA / "counts.gpkg").exists():
+        import io, zipfile, requests
+        DATA.mkdir(parents=True, exist_ok=True)
+        zipfile.ZipFile(io.BytesIO(requests.get(SNAPSHOT, timeout=600).content)).extractall(DATA)
+
+
+snapshot()
 SEED = 12345
 TARGET = "weekday_count"
 SURFACES = ["poi", "road_density", "nighttime", "bus_station", "building_surface",

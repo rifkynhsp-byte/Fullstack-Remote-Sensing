@@ -16,7 +16,9 @@ unequally it is spread, and who can reach it.
                             stop with a bus at least every h minutes?
 
 Data: TransJakarta GTFS (public, no key); WorldPop 2020 100 m population and
-FAO GAUL 2015 city boundaries (Earth Engine). The Earth Engine layers are
+FAO GAUL 2015 city boundaries (Earth Engine). By default the feed and layers as
+they were on 2 October 2026 are downloaded, so results match the book; set
+TRANSIT_LIVE=1 to use today's feed. The Earth Engine layers are
 saved to TRANSIT_DATA so the R twin reads the same files.
 
 Environment: pip install pandas geopandas matplotlib scipy rasterio requests earthengine-api
@@ -37,6 +39,21 @@ from shapely.geometry import LineString
 
 FEED = "https://gtfs.transjakarta.co.id/files/file_gtfs.zip"
 DATA = Path(os.environ.get("TRANSIT_DATA", "data/transit_jakarta")); DATA.mkdir(parents=True, exist_ok=True)
+
+SNAPSHOT = "https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing/releases/download/data-v1/ch67_transit_jakarta_inputs.zip"
+
+
+def snapshot():
+    """The exact inputs used for the book (frozen 2 October 2026), downloaded once if they are not here.
+    Rebuild them from the live sources instead with the data-building step described in the chapter."""
+    if not (DATA / "transjakarta_gtfs.zip").exists():
+        import io, zipfile, requests
+        DATA.mkdir(parents=True, exist_ok=True)
+        zipfile.ZipFile(io.BytesIO(requests.get(SNAPSHOT, timeout=600).content)).extractall(DATA)
+
+
+if not os.environ.get("TRANSIT_LIVE"):        # TRANSIT_LIVE=1 uses today's feed and Earth Engine instead
+    snapshot()
 CRS = "EPSG:32748"                      # UTM 48S, metres
 HOUR = 8 * 3600                         # the weekday morning hour we describe (08:00)
 WALK = 500                              # walking distance to a stop (m)

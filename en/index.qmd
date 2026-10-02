@@ -6,6 +6,12 @@ Almost every free Google Earth Engine tutorial opens the Code Editor on page one
 
 So this book starts somewhere else. It opens with six Principles chapters, drawn from university lectures, on how a sensor actually sees: radiation, orbits, scanners, resolution and radar, then a point-and-click tour of the IJB app for readers who want results before code. Part I contains no code at all. It answers why we look at the Earth from orbit in the first place, what a satellite is actually measuring when it records a pixel, and how that measurement behaves differently over a leaf, a mudflat and a sheet of water. Only after that do we open the Code Editor, in Part II. That sequence is not a stylistic choice. It is the sequence that six years of teaching this material has shown produces analysts who can debug their own maps instead of asking why the classifier is wrong.
 
+## Why this book is free
+
+I studied for my Master's at UNSW Sydney on a scholarship from LPDP, the Indonesia Endowment Fund for Education. It is paid for by Indonesian taxpayers, and I count it as a privilege I owe back. This book is part of repaying it: everything I have learned, from university lectures to years of project work, written down and given away, so that any Indonesian student, officer or engineer, and anyone else who wants it, can learn it without a scholarship, a course fee or a company account.
+
+The need is real. Indonesia is a country of more than seventeen thousand islands, and many of its hardest problems are spatial: where forest is being lost, which hillsides will slide in the next rain, which neighbourhoods will flood, where a new road or plantation should and should not go. Satellite data to answer those questions now exists and is free, yet the questions often still go unanswered, because the area is vast, the data are heavy, local ground data are scarce, and there are too few people trained to turn the two into decisions. Every geospatial engineer who learns to do this work well becomes a multiplier: one person can map a whole province, train a team, and make the next decision a little better informed. If this book helps produce more of them, it has done its job.
+
 ::: {.callout-tip}
 ## Reading edition (Word)
 The text and discussion of the whole book as one Word document, with a link to the code and results of every chapter: [download (.docx)](../downloads/planetary-scale-cloud-gis-en.docx).
@@ -56,6 +62,8 @@ Three shortcuts through the material, depending on why you came.
 ## How the code works
 
 Every listing is a real file from `scripts/`, generated into the page at build time. Copy any of them into the Code Editor and press Run. Nothing here is pseudocode and nothing is a fragment that only works in context.
+
+Under each listing is the output that code produced when the book was built: the real maps, charts and tables, not screenshots and not illustrations. That is deliberate. You can check your own run against it, a result is never described that the code did not actually produce, and when a number in the text looks surprising you can see where it came from. Where a chapter needs data that is not in Earth Engine or in a stable public archive, such as a drone image or a frozen timetable, the script downloads the exact files used for the book, so your run can match the printed one.
 
 The comments inside those scripts are the teaching, not decoration. Where a line encodes a decision that could reasonably have gone another way, the comment says which alternatives exist and why this one won. Reading a script top to bottom should feel like sitting beside someone narrating their reasoning.
 

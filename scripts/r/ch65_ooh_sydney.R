@@ -30,6 +30,11 @@ library(gbm)
 library(ggplot2)
 
 DATA <- Sys.getenv("OOH_DATA", "data/ooh_sydney")
+# The exact inputs used for the book (frozen 2 October 2026), downloaded once if not here
+if (!file.exists(file.path(DATA, "counts.gpkg"))) {
+  dir.create(DATA, FALSE, TRUE); tmp <- tempfile(fileext = ".zip")
+  download.file("https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing/releases/download/data-v1/ch65_ooh_sydney_inputs.zip", tmp, mode = "wb"); unzip(tmp, exdir = DATA)
+}
 p <- function(...) file.path(DATA, ...)
 set.seed(12345)
 
