@@ -1,19 +1,13 @@
-# Apps, MRV and Democratisation {#sec-apps}
+# Apps: Turning an Analysis into a Tool {#sec-apps}
 
 ::: {.chapter-goal}
 #### In this chapter
-You will learn what the three words in this chapter's title mean in practice. An **app** turns your script into a tool someone else can operate. **MRV** is what turns a map into a number that governments and carbon markets will accept. **Democratisation** is what free data and free tools make possible, and what they make easy to get wrong. You will build a small Earth Engine App, look at a district dashboard made from the same data, and see what MRV demands beyond a good map.
+Every chapter so far ended with a map on *your* screen. This one ends with a tool on someone else's. You will learn the three parts of an Earth Engine App, the habits that keep one responsive and honest, and then build a complete one: a liveability explorer for Greater Bandung that combines seven public datasets, lets the user decide what matters through sliders, and explains any place they click.
 :::
 
-## Three words, one idea
+## Why build an app
 
-Every chapter so far has ended with a map on *your* screen. That map changes nothing until someone else uses it: a district officer deciding where to send a flood team, a ministry reporting its forest emissions, a village checking whether the plantation next door crossed its boundary.
-
-- **App**: a script wrapped in buttons, menus and a map, so that a person who does not code can run it on their own area and dates. In Earth Engine this is an *Earth Engine App*, built with the `ui` library and published as a web page.
-- **MRV**: *Monitoring, Reporting and Verification*. It is the procedure by which a country, company or project proves a claim about land or carbon: what was measured, how, with what uncertainty, and whether an independent party can check it.
-- **Democratisation**: free satellite data and free computing mean that anyone with a browser can now do what only space agencies and large companies could do twenty years ago. That is a huge gain and a responsibility.
-
-The three belong together. An app puts the analysis in other people's hands; MRV sets the standard the analysis must meet when money or law depends on it; democratisation is why both matter now.
+A map changes nothing until someone uses it: a family choosing where to rent, a planner deciding where the next park should go, a student comparing neighbourhoods for a thesis. None of them will open the Code Editor. An **app** is your script wrapped in buttons, sliders and a map, published as a web page, so that a person who does not code can ask their own question of your analysis.
 
 ## From script to app
 
@@ -71,13 +65,35 @@ A tool that lets anyone choose the scale, the threshold and the dates will be us
 
 P6 shows a complete app of this kind, module by module, with no code at all.
 
-## A working example: West Java at a glance
+## A working example: where is it liveable?
 
-The listing below joins the two halves of this chapter. Earth Engine computes four indicators for every district of West Java in 2024: greenness (MODIS NDVI), daytime land surface temperature (MODIS LST), the share of built-up land (Dynamic World) and population (WorldPop). The JavaScript tab turns them into a click-to-explore Code Editor app and exports the table. The Python tab turns the same table into a web dashboard: one HTML file you can email, host on a website, or open offline (except for the chart library).
+"Where is it pleasant and safe to live?" is a question everyone asks and no single dataset answers. It is a good first app because the answer depends on the person asking: a family with young children may care most about heat and flooding, a student about being near shops and transport. The app does not decide for them. It measures seven things from public satellite and model data, and lets the user weight them.
 
-Why these four? Because together they answer a question a district planner actually asks: *which districts are hot, crowded and losing green space?* The chart shows one such pattern: greener districts run cooler. It is a pattern across districts, not proof that planting trees in one district will cool it by a given amount, and an app should say so next to the chart.
+| Indicator | What it measures | Data | Better when |
+|---|---|---|---|
+| Heat | Dry-season land surface temperature, June to September | Landsat 8/9 Collection 2 | cooler |
+| Greenery | Probability of trees or grass within 300 m | Dynamic World, 2024 | greener |
+| Flooding | Height above the nearest drainage line (HAND) | MERIT Hydro | higher |
+| Slopes | Terrain slope, a landslide and access concern | Copernicus DEM | flatter |
+| Air | Tropospheric NO₂, mostly from traffic and industry | Sentinel-5P, 2024 mean | lower |
+| Services | Night-time light, a proxy for shops, jobs and roads | VIIRS, 2024 | brighter |
+| Crowding | People per hectare | WorldPop 2020 | fewer |
 
-{{< include _snippets/ch23_westjava_dashboard.qmd >}}
+Each indicator is rescaled from its worst value (0) to its best (1) between two stated limits, for example 40 °C to 25 °C for heat, and the score is the weighted average. The limits are written in the code and checked against the data: the table under the listing shows each indicator's 5th, 50th and 95th percentile over the area beside the limits used. Writing them down matters more than the exact values. A user who disagrees with a limit can see it and change it, which is impossible if the rescaling is hidden inside a min–max of whatever the screen shows.
+
+The JavaScript tab is the app itself: copy it into the Code Editor, press **Run**, and then **Apps → New App** to publish it. The Python tab computes the same layers with the app's default weights, which is how the maps and the chart below were made.
+
+{{< include _snippets/ch23_liveability_app.qmd >}}
+
+### What the app shows
+
+With the default weights (heat, greenery, flooding and services counted twice, the others once), the city centre and the industrial and residential belt to its east and south score lowest: hot, crowded, low on greenery and with the highest NO₂. The uplands to the north and south score highest, cooler, greener and well above any drainage line. Thin red lines follow every stream: land a metre or two above a channel is exactly where water goes first, and the flood indicator is right to mark it.
+
+The click panel is where the app earns its keep, because the same score can hide very different places. Braga in the city centre scores 0.36 and Dayeuhkolot on the Citarum flood plain 0.34, almost the same, for different reasons: Braga has the best access to services in the area and the worst air and crowding, while Dayeuhkolot's low score comes from heat and its position barely above the river. Lembang in the northern hills scores 0.62, cooler, cleaner and well clear of flooding. A single number would have made Braga and Dayeuhkolot look alike. The profile shows a family which compromise each one asks of them.
+
+### What it is not
+
+The indicators are proxies. Night light measures brightness, not the quality of a school or a clinic; NO₂ from Sentinel-5P is a column average over several kilometres, not the air on one street; HAND says where water would go, not how often it has. And a liveability score is a summary of the user's weights, not a verdict on a neighbourhood or the people who live there. The app says so on its panel, and any app built on proxies should.
 
 ## When the app needs more than Earth Engine
 
@@ -89,72 +105,28 @@ Earth Engine is a data-preparation and classical machine-learning environment, a
 
 The reason to hand off is the model or the integration, not the words "machine learning": a random forest or a gradient-boosted tree runs well inside Earth Engine (Chapters [-@sec-supervised] and [-@sec-embeddings]).
 
-## MRV: more than a map
-
-When a map supports a claim that money or law depends on, such as "our district reduced deforestation", "this project avoided 50,000 t CO₂" or "Indonesia's forests are a net sink", it enters the world of MRV.
-
-**Monitoring** means measuring the same thing the same way, again and again: the same definitions (what counts as forest), the same data sources or documented changes between them, the same method every year. A beautiful map made once is not monitoring.
-
-**Reporting** means presenting results in the format a framework requires, with the uncertainty stated. For countries, this is the Paris Agreement's Enhanced Transparency Framework, through Biennial Transparency Reports; for forests in developing countries, it is REDD+, where results are measured against a Forest Reference Emission Level reviewed under the UNFCCC. Indonesia's FOLU Net Sink 2030 target, a net removal of carbon by the forestry and land-use sector by 2030, is reported this way. In the voluntary carbon market, standards such as Verra's VCS publish their own methodologies.
-
-**Verification** means an independent party can check the claim: by repeating the method on the same data, by visiting a sample of sites, or by comparing with another source. This is why every chapter in this book keeps its scripts, data versions and accuracy assessments.
-
-What MRV adds to a map, in practice:
-
-| A good map has | MRV also requires |
-|---|---|
-| A classification with an accuracy | Area estimates with confidence intervals from a probability sample (Chapter [-@sec-accuracy]) |
-| One year | A consistent time series with the same definitions every year |
-| A method in a script | A documented, versioned method a third party can rerun |
-| Biomass or carbon on a map | Emission factors and their sources (IPCC tiers), and how each number was derived |
-| Results | A verification step, and a record of what changed after it |
-
-Chapter [-@sec-mrv] works through the numbers of a forest-carbon MRV example step by step, and Chapter [-@sec-carbon-balance] does the same for a peat landscape.
-
-## Democratisation: what free data gives and what it risks
-
-In 2008 the United States Geological Survey made the whole Landsat archive free. The European Copernicus programme made Sentinel data free and open from the start. Earth Engine made the computing free for research, education and non-profit work. Together they mean that a student in Bandung, an officer in Jambi and a journalist in Jakarta can now map their own landscape with the same data as a space agency.
-
-The gains are real: local people can check claims made about their land (Chapter [-@sec-enforcement]); small organisations can monitor what once needed a consultancy; teaching no longer depends on buying software or images.
-
-So are the risks. Easy maps are easy to get wrong, and a wrong map published with confidence can do more harm than no map: a false flood extent in an emergency, or a "deforestation" that was a harvest of a plantation planted decades ago. Free tools also mean that coordinates of small farms, indigenous land and vulnerable people can be published by anyone. The safeguards are the habits this book repeats: state the method and the uncertainty, validate with something independent, and think about who could be harmed before publishing.
 
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch23-apps",
   "questions": [
     {
-      "q": "What is the main design consideration when an Earth Engine App will be operated by a district officer rather than by you?",
-      "options": [
-        "Exposing every parameter so nothing is hidden",
-        "Sensible defaults, guard rails, and uncertainty shown honestly, so the tool cannot be driven into a wrong answer",
-        "Making the interface look like the code editor",
-        "Removing the map to reduce confusion"
-      ],
+      "q": "Inside an Earth Engine App, why use evaluate() rather than getInfo()?",
+      "options": ["evaluate() is more accurate", "getInfo() blocks the page until the server answers; evaluate() returns at once and runs a callback", "getInfo() does not work in apps at all", "evaluate() caches results"],
       "answer": 1,
-      "why": "A tool that lets a non specialist choose a scale, a threshold and a date range will be used with the wrong ones. Defaults that are defensible, limits that prevent nonsense, and a visible statement of confidence are what make an app usable by someone who is not going to read the methods."
+      "why": "A blocked page looks broken. evaluate() keeps the app responsive while Earth Engine computes."
     },
     {
-      "q": "MRV requires more than a map. What is the additional requirement?",
-      "options": [
-        "Higher spatial resolution",
-        "A documented, repeatable procedure with stated accuracy, so the same method produces a comparable number next year and a third party can check it",
-        "A commercial imagery licence",
-        "Annual publication in a journal"
-      ],
+      "q": "Why does the liveability app rescale each indicator between fixed, stated limits instead of the minimum and maximum of the map?",
+      "options": ["It is faster", "So a user can see and argue with each choice, and the score does not change when the map is panned", "Earth Engine cannot compute minima", "To make every indicator normally distributed"],
       "answer": 1,
-      "why": "Monitoring, reporting and verification is about the audit trail as much as the measurement. A number nobody can reproduce or check has no institutional weight, however good the underlying map is."
+      "why": "Hidden, data-dependent rescaling makes the same place score differently depending on the view, and hides a judgement the user should be able to question."
     },
     {
-      "q": "When should a workflow move off Earth Engine to Vertex AI or a similar service?",
-      "options": [
-        "As soon as the analysis involves machine learning",
-        "When the problem genuinely needs a custom neural network architecture that the platform's classifiers cannot express",
-        "When the imagery exceeds one gigabyte",
-        "Whenever an app is required"
-      ],
+      "q": "Two places both score 0.35. What should the app show next?",
+      "options": ["Nothing: they are equally liveable", "The profile of each indicator, because the same score can come from different strengths and weaknesses", "A higher-resolution score", "The rank of each place"],
       "answer": 1,
-      "why": "Earth Engine is a data preparation and classical machine learning environment, and it is very good at that. The hand off is justified by the model architecture, not by the presence of the words machine learning."
+      "why": "A composite score hides trade-offs. The click panel shows them."
     }
   ]
 }
@@ -162,7 +134,7 @@ So are the risks. Easy maps are easy to get wrong, and a wrong map published wit
 
 ## Exercises {.unnumbered}
 
-1. Run the minimal app above, then add a second indicator (for example daytime LST) and a `ui.Select` that switches between them.
-2. Add a guard rail: if the user picks a district whose mean NDVI cannot be computed, show a clear message instead of `NaN`.
-3. Publish the app as a restricted Earth Engine App and share it with one colleague. What do they misunderstand on first use?
-4. Take any map from this book and write the MRV table above for it: what would still be missing before a ministry could report it?
+1. Run the app and set every weight to zero except heat. Then add flooding. Which parts of the basin change most, and why?
+2. Add an eighth indicator: distance to the nearest school or clinic from OpenStreetMap, uploaded as an asset. Where in the code does it go, and what limits would you choose?
+3. Add a guard rail: if the user sets every weight to zero, show a message instead of a blank map.
+4. Publish the app and give it to someone who does not use GIS. Ask them to find a place to live. Write down the first thing they misunderstand.

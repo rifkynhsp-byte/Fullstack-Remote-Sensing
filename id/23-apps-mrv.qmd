@@ -1,19 +1,13 @@
-# Aplikasi, MRV dan Demokratisasi {#sec-apps}
+# Aplikasi: Mengubah Analisis Menjadi Alat {#sec-apps}
 
 ::: {.chapter-goal}
-#### Dalam bab ini
-Anda akan mempelajari arti praktis tiga kata dalam judul bab ini. **Aplikasi** mengubah skrip Anda menjadi alat yang bisa dijalankan orang lain. **MRV** adalah yang mengubah peta menjadi angka yang diterima pemerintah dan pasar karbon. **Demokratisasi** adalah apa yang dimungkinkan oleh data dan alat gratis, dan apa yang jadi mudah dikerjakan dengan keliru. Anda akan membuat Earth Engine App kecil, melihat dashboard kabupaten yang dibuat dari data yang sama, dan melihat apa yang dituntut MRV di luar peta yang bagus.
+#### Di bab ini
+Setiap bab sejauh ini berakhir dengan peta di layar *Anda*. Bab ini berakhir dengan alat di layar orang lain. Anda akan mempelajari tiga bagian Earth Engine App, kebiasaan yang membuatnya tetap responsif dan jujur, lalu membangun satu aplikasi lengkap: penjelajah kelayakan huni untuk Bandung Raya yang menggabungkan tujuh dataset publik, membiarkan pengguna menentukan apa yang penting lewat *slider*, dan menjelaskan setiap tempat yang mereka klik.
 :::
 
-## Tiga kata, satu gagasan
+## Mengapa membangun aplikasi
 
-Setiap bab sejauh ini berakhir dengan peta di layar *Anda*. Peta itu tidak mengubah apa pun sampai orang lain memakainya: petugas kabupaten yang memutuskan ke mana mengirim tim banjir, kementerian yang melaporkan emisi hutannya, warga desa yang memeriksa apakah kebun di sebelahnya melewati batas.
-
-- **Aplikasi**: skrip yang dibungkus tombol, menu, dan peta, sehingga orang yang tidak bisa koding dapat menjalankannya untuk wilayah dan tanggalnya sendiri. Di Earth Engine ini disebut *Earth Engine App*, dibangun dengan pustaka `ui` dan diterbitkan sebagai halaman web.
-- **MRV**: *Monitoring, Reporting and Verification* (pemantauan, pelaporan, dan verifikasi). Ini prosedur yang dipakai negara, perusahaan, atau proyek untuk membuktikan sebuah klaim tentang lahan atau karbon: apa yang diukur, bagaimana caranya, seberapa besar ketidakpastiannya, dan apakah pihak independen bisa memeriksanya.
-- **Demokratisasi**: data satelit gratis dan komputasi gratis berarti siapa pun yang punya peramban kini bisa mengerjakan apa yang dua puluh tahun lalu hanya bisa dikerjakan badan antariksa dan perusahaan besar. Itu kemajuan besar sekaligus tanggung jawab.
-
-Ketiganya saling terkait. Aplikasi menaruh analisis di tangan orang lain; MRV menetapkan standar yang harus dipenuhi analisis itu ketika uang atau hukum bergantung padanya; demokratisasi adalah alasan keduanya penting sekarang.
+Peta tidak mengubah apa pun sampai ada yang memakainya: keluarga yang memilih tempat menyewa rumah, perencana yang memutuskan di mana taman berikutnya, mahasiswa yang membandingkan kawasan untuk skripsinya. Tidak satu pun dari mereka akan membuka Code Editor. **Aplikasi** adalah skrip Anda yang dibungkus tombol, *slider*, dan peta, diterbitkan sebagai halaman web, sehingga orang yang tidak bisa koding dapat mengajukan pertanyaannya sendiri kepada analisis Anda.
 
 ## Dari skrip menjadi aplikasi
 
@@ -71,13 +65,35 @@ Alat yang membiarkan siapa pun memilih skala, ambang, dan tanggal akan dipakai d
 
 P6 menunjukkan aplikasi lengkap semacam ini, modul demi modul, tanpa kode sama sekali.
 
-## Contoh nyata: Jawa Barat sekilas pandang
+## Contoh nyata: di mana layak huni?
 
-Listing di bawah menyatukan dua bagian bab ini. Earth Engine menghitung empat indikator untuk setiap kabupaten dan kota di Jawa Barat pada 2024: kehijauan (NDVI MODIS), suhu permukaan siang hari (LST MODIS), persentase lahan terbangun (Dynamic World), dan jumlah penduduk (WorldPop). Tab JavaScript mengubahnya menjadi aplikasi Code Editor yang bisa diklik, lalu mengekspor tabelnya. Tab Python mengubah tabel yang sama menjadi dashboard web: satu berkas HTML yang bisa dikirim lewat email, dipasang di situs, atau dibuka tanpa internet (kecuali untuk memuat pustaka grafiknya).
+"Di mana tempat yang nyaman dan aman untuk tinggal?" adalah pertanyaan yang diajukan semua orang dan tidak bisa dijawab oleh satu dataset saja. Pertanyaan ini cocok untuk aplikasi pertama karena jawabannya bergantung pada siapa yang bertanya: keluarga dengan anak kecil mungkin paling peduli pada panas dan banjir, mahasiswa pada kedekatan dengan toko dan transportasi. Aplikasinya tidak memutuskan untuk mereka. Aplikasi mengukur tujuh hal dari data satelit dan model publik, lalu membiarkan pengguna memberi bobot.
 
-Kenapa empat indikator ini? Karena bersama-sama keempatnya menjawab pertanyaan yang benar-benar diajukan perencana daerah: *kabupaten mana yang panas, padat, dan kehilangan ruang hijau?* Grafiknya menunjukkan salah satu pola: kabupaten yang lebih hijau lebih sejuk. Ini pola antarkabupaten, bukan bukti bahwa menanam pohon di satu kabupaten akan mendinginkannya sekian derajat, dan aplikasi sebaiknya menuliskan hal itu di samping grafiknya.
+| Indikator | Yang diukur | Data | Lebih baik bila |
+|---|---|---|---|
+| Panas | Suhu permukaan lahan musim kemarau, Juni sampai September | Landsat 8/9 Collection 2 | lebih sejuk |
+| Kehijauan | Peluang pohon atau rumput dalam radius 300 m | Dynamic World, 2024 | lebih hijau |
+| Banjir | Ketinggian di atas garis drainase terdekat (HAND) | MERIT Hydro | lebih tinggi |
+| Lereng | Kemiringan lahan, terkait longsor dan akses | Copernicus DEM | lebih landai |
+| Udara | NO₂ troposfer, terutama dari lalu lintas dan industri | Sentinel-5P, rata-rata 2024 | lebih rendah |
+| Layanan | Cahaya malam, gambaran toko, pekerjaan, dan jalan | VIIRS, 2024 | lebih terang |
+| Kepadatan | Orang per hektare | WorldPop 2020 | lebih sedikit |
 
-{{< include _snippets/ch23_westjava_dashboard.qmd >}}
+Setiap indikator diskalakan ulang dari nilai terburuknya (0) ke terbaiknya (1) di antara dua batas yang dinyatakan, misalnya 40 °C sampai 25 °C untuk panas, dan skornya adalah rata-rata berbobot. Batas-batas itu ditulis di kode dan diperiksa terhadap data: tabel di bawah listing menampilkan persentil ke-5, ke-50, dan ke-95 setiap indikator di wilayah ini di samping batas yang dipakai. Menuliskannya lebih penting daripada nilai persisnya. Pengguna yang tidak setuju dengan suatu batas bisa melihat dan mengubahnya, hal yang mustahil jika penskalaan disembunyikan di balik min–maks dari apa pun yang tampak di layar.
+
+Tab JavaScript adalah aplikasinya: salin ke Code Editor, tekan **Run**, lalu **Apps → New App** untuk menerbitkannya. Tab Python menghitung lapisan yang sama dengan bobot bawaan aplikasi, dan dengan cara itulah peta dan grafik di bawah dibuat.
+
+{{< include _snippets/ch23_liveability_app.qmd >}}
+
+### Apa yang ditampilkan aplikasi
+
+Dengan bobot bawaan (panas, kehijauan, banjir, dan layanan dihitung dua kali, sisanya sekali), pusat kota serta sabuk industri dan permukiman di timur dan selatannya mendapat skor terendah: panas, padat, minim hijau, dan NO₂-nya paling tinggi. Dataran tinggi di utara dan selatan mendapat skor tertinggi, lebih sejuk, lebih hijau, dan jauh di atas garis drainase mana pun. Garis-garis merah tipis mengikuti setiap sungai: lahan satu atau dua meter di atas saluran adalah tempat air datang lebih dulu, dan indikator banjir benar menandainya.
+
+Panel klik adalah tempat aplikasi ini menunjukkan nilainya, karena skor yang sama bisa menyembunyikan tempat yang sangat berbeda. Braga di pusat kota mendapat skor 0,36 dan Dayeuhkolot di dataran banjir Citarum 0,34, hampir sama, dengan alasan berbeda: Braga punya akses layanan terbaik di wilayah ini tetapi udara dan kepadatan terburuk, sementara skor rendah Dayeuhkolot datang dari panas dan letaknya yang nyaris tidak lebih tinggi dari sungai. Lembang di perbukitan utara mendapat skor 0,62, lebih sejuk, lebih bersih, dan jauh dari banjir. Satu angka akan membuat Braga dan Dayeuhkolot tampak serupa. Profilnya memperlihatkan kepada sebuah keluarga kompromi apa yang diminta masing-masing.
+
+### Apa yang bukan aplikasi ini
+
+Indikatornya adalah proksi. Cahaya malam mengukur terang, bukan mutu sekolah atau klinik; NO₂ dari Sentinel-5P adalah rata-rata kolom selebar beberapa kilometer, bukan udara di satu jalan; HAND menunjukkan ke mana air akan mengalir, bukan seberapa sering banjir terjadi. Dan skor kelayakan huni adalah ringkasan bobot pengguna, bukan penilaian atas sebuah kawasan atau orang yang tinggal di sana. Aplikasi menyatakannya di panelnya, dan setiap aplikasi yang dibangun dari proksi semestinya begitu.
 
 ## Ketika aplikasi butuh lebih dari Earth Engine
 
@@ -89,72 +105,28 @@ Earth Engine adalah lingkungan penyiapan data dan pembelajaran mesin klasik, dan
 
 Alasan untuk berpindah adalah modelnya atau integrasinya, bukan kata "machine learning": random forest atau gradient-boosted tree berjalan baik di dalam Earth Engine (Bab [-@sec-supervised] dan [-@sec-embeddings]).
 
-## MRV: lebih dari sekadar peta
-
-Ketika sebuah peta mendukung klaim yang menyangkut uang atau hukum, misalnya "kabupaten kami menurunkan deforestasi", "proyek ini menghindari 50.000 t CO₂", atau "hutan Indonesia adalah penyerap bersih", peta itu masuk ke dunia MRV.
-
-**Pemantauan** berarti mengukur hal yang sama dengan cara yang sama, berulang-ulang: definisi yang sama (apa yang dihitung sebagai hutan), sumber data yang sama atau perubahan sumber yang didokumentasikan, metode yang sama setiap tahun. Peta indah yang dibuat sekali bukanlah pemantauan.
-
-**Pelaporan** berarti menyajikan hasil dalam format yang diminta sebuah kerangka kerja, beserta ketidakpastiannya. Bagi negara, ini adalah Enhanced Transparency Framework dalam Persetujuan Paris, melalui Biennial Transparency Report; untuk hutan di negara berkembang, ini adalah REDD+, di mana hasil diukur terhadap Forest Reference Emission Level yang ditinjau di bawah UNFCCC. Target FOLU Net Sink 2030 Indonesia, yaitu penyerapan karbon bersih oleh sektor kehutanan dan penggunaan lahan pada 2030, dilaporkan dengan cara ini. Di pasar karbon sukarela, standar seperti VCS dari Verra menerbitkan metodologinya sendiri.
-
-**Verifikasi** berarti pihak independen bisa memeriksa klaimnya: dengan mengulang metode pada data yang sama, mengunjungi sampel lokasi, atau membandingkannya dengan sumber lain. Inilah alasan setiap bab di buku ini menyimpan skrip, versi data, dan penilaian akurasinya.
-
-Yang ditambahkan MRV pada sebuah peta, dalam praktik:
-
-| Peta yang baik punya | MRV juga menuntut |
-|---|---|
-| Klasifikasi dengan akurasinya | Estimasi luas dengan selang kepercayaan dari sampel probabilitas (Bab [-@sec-accuracy]) |
-| Satu tahun | Deret waktu yang konsisten dengan definisi yang sama setiap tahun |
-| Metode dalam skrip | Metode yang terdokumentasi dan berversi, yang bisa dijalankan ulang pihak ketiga |
-| Biomassa atau karbon di peta | Faktor emisi dan sumbernya (tier IPCC), serta asal-usul setiap angka |
-| Hasil | Langkah verifikasi, dan catatan apa yang berubah sesudahnya |
-
-Bab [-@sec-mrv] mengerjakan angka-angka contoh MRV karbon hutan langkah demi langkah, dan Bab [-@sec-carbon-balance] melakukan hal yang sama untuk bentang lahan gambut.
-
-## Demokratisasi: apa yang diberikan data gratis, dan apa risikonya
-
-Pada 2008 United States Geological Survey membuka seluruh arsip Landsat secara gratis. Program Copernicus Eropa membuat data Sentinel gratis dan terbuka sejak awal. Earth Engine membuat komputasinya gratis untuk riset, pendidikan, dan kerja nirlaba. Bersama-sama, ini berarti mahasiswa di Bandung, petugas di Jambi, dan wartawan di Jakarta kini bisa memetakan bentang lahannya sendiri dengan data yang sama dengan badan antariksa.
-
-Manfaatnya nyata: warga bisa memeriksa klaim yang dibuat tentang lahan mereka (Bab [-@sec-enforcement]); organisasi kecil bisa memantau hal yang dulu butuh konsultan; pengajaran tidak lagi bergantung pada pembelian perangkat lunak atau citra.
-
-Risikonya juga nyata. Peta yang mudah dibuat juga mudah keliru, dan peta keliru yang diterbitkan dengan percaya diri bisa lebih merugikan daripada tidak ada peta sama sekali: sebaran banjir palsu dalam keadaan darurat, atau "deforestasi" yang ternyata panen kebun yang ditanam puluhan tahun lalu. Alat gratis juga berarti koordinat kebun kecil, tanah adat, dan kelompok rentan bisa diterbitkan oleh siapa saja. Pengamannya adalah kebiasaan yang terus diulang buku ini: nyatakan metode dan ketidakpastiannya, validasi dengan sesuatu yang independen, dan pikirkan siapa yang bisa dirugikan sebelum menerbitkan.
 
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch23-apps",
   "questions": [
     {
-      "q": "Apa pertimbangan rancangan utama ketika sebuah Earth Engine App akan dioperasikan oleh aparat kabupaten, bukan oleh Anda?",
-      "options": [
-        "Menampakkan setiap parameter supaya tidak ada yang disembunyikan",
-        "Nilai bawaan yang masuk akal, pagar pembatas, dan ketidakpastian yang ditampilkan dengan jujur, sehingga alatnya tidak bisa didorong ke jawaban yang salah",
-        "Membuat antarmukanya menyerupai code editor",
-        "Menghilangkan petanya untuk mengurangi kebingungan"
-      ],
+      "q": "Di dalam Earth Engine App, mengapa memakai evaluate() dan bukan getInfo()?",
+      "options": ["evaluate() lebih akurat", "getInfo() membekukan halaman sampai server menjawab; evaluate() langsung kembali dan menjalankan callback", "getInfo() sama sekali tidak bisa dipakai di aplikasi", "evaluate() menyimpan hasil di cache"],
       "answer": 1,
-      "why": "Alat yang membiarkan orang bukan spesialis memilih scale, ambang, dan rentang tanggal akan dipakai dengan pilihan yang salah. Nilai bawaan yang bisa dipertahankan, batas yang mencegah kenonsensan, dan pernyataan keyakinan yang terlihat itulah yang membuat sebuah app bisa dipakai oleh orang yang tidak akan membaca bagian metode."
+      "why": "Halaman yang membeku tampak rusak. evaluate() menjaga aplikasi tetap responsif selama Earth Engine menghitung."
     },
     {
-      "q": "MRV menuntut lebih dari sebuah peta. Apa tuntutan tambahannya?",
-      "options": [
-        "Resolusi spasial yang lebih tinggi",
-        "Prosedur yang terdokumentasi dan dapat diulang dengan akurasi yang dinyatakan, sehingga metode yang sama menghasilkan angka yang sebanding tahun depan dan pihak ketiga bisa memeriksanya",
-        "Lisensi citra komersial",
-        "Penerbitan tahunan di jurnal"
-      ],
+      "q": "Mengapa aplikasi kelayakan huni menskalakan setiap indikator di antara batas tetap yang dinyatakan, bukan minimum dan maksimum peta?",
+      "options": ["Lebih cepat", "Agar pengguna bisa melihat dan memperdebatkan setiap pilihan, dan skor tidak berubah saat peta digeser", "Earth Engine tidak bisa menghitung minimum", "Agar setiap indikator berdistribusi normal"],
       "answer": 1,
-      "why": "Monitoring, reporting, dan verification sama sama soal jejak audit dan soal pengukuran. Angka yang tidak bisa direproduksi atau diperiksa siapa pun tidak punya bobot kelembagaan, sebaik apa pun peta yang mendasarinya."
+      "why": "Penskalaan tersembunyi yang bergantung pada data membuat tempat yang sama mendapat skor berbeda menurut tampilan, dan menyembunyikan penilaian yang seharusnya bisa dipertanyakan pengguna."
     },
     {
-      "q": "Kapan sebuah alur kerja sebaiknya keluar dari Earth Engine ke Vertex AI atau layanan serupa?",
-      "options": [
-        "Segera setelah analisisnya melibatkan machine learning",
-        "Ketika persoalannya benar benar memerlukan arsitektur jaringan saraf khusus yang tidak bisa dinyatakan oleh classifier platform ini",
-        "Ketika citranya melebihi satu gigabita",
-        "Setiap kali sebuah app dibutuhkan"
-      ],
+      "q": "Dua tempat sama-sama mendapat skor 0,35. Apa yang sebaiknya ditampilkan aplikasi berikutnya?",
+      "options": ["Tidak ada: keduanya sama layak huni", "Profil setiap indikator, karena skor yang sama bisa berasal dari kekuatan dan kelemahan yang berbeda", "Skor beresolusi lebih tinggi", "Peringkat setiap tempat"],
       "answer": 1,
-      "why": "Earth Engine adalah lingkungan penyiapan data dan machine learning klasik, dan ia sangat baik untuk itu. Perpindahannya dibenarkan oleh arsitektur modelnya, bukan oleh munculnya kata machine learning."
+      "why": "Skor gabungan menyembunyikan kompromi. Panel klik memperlihatkannya."
     }
   ]
 }
@@ -162,7 +134,7 @@ Risikonya juga nyata. Peta yang mudah dibuat juga mudah keliru, dan peta keliru 
 
 ## Latihan {.unnumbered}
 
-1. Jalankan aplikasi minimal di atas, lalu tambahkan indikator kedua (misalnya LST siang hari) dan sebuah `ui.Select` untuk berganti di antara keduanya.
-2. Tambahkan pagar pengaman: kalau pengguna memilih kabupaten yang rerata NDVI-nya tidak bisa dihitung, tampilkan pesan yang jelas, bukan `NaN`.
-3. Terbitkan aplikasinya sebagai Earth Engine App terbatas dan bagikan kepada satu rekan. Apa yang mereka salah pahami pada pemakaian pertama?
-4. Ambil peta mana pun dari buku ini dan isi tabel MRV di atas untuknya: apa yang masih kurang sebelum sebuah kementerian bisa melaporkannya?
+1. Jalankan aplikasinya dan atur semua bobot menjadi nol kecuali panas. Lalu tambahkan banjir. Bagian cekungan mana yang paling berubah, dan mengapa?
+2. Tambahkan indikator kedelapan: jarak ke sekolah atau klinik terdekat dari OpenStreetMap, diunggah sebagai aset. Di bagian kode mana indikator itu ditaruh, dan batas apa yang akan Anda pilih?
+3. Tambahkan pagar pengaman: jika pengguna mengatur semua bobot menjadi nol, tampilkan pesan alih-alih peta kosong.
+4. Terbitkan aplikasinya dan berikan kepada seseorang yang tidak memakai GIS. Minta mereka mencari tempat tinggal. Catat hal pertama yang mereka salah pahami.

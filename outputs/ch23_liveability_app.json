@@ -1,0 +1,34 @@
+[
+ {
+  "name": "ch23_liveability_app-webmap",
+  "kind": "html",
+  "html": "images/real/ch23_liveability_app-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch23-limits",
+  "kind": "table",
+  "caption": "Each indicator over Greater Bandung (5th, 50th and 95th percentile) and the limits used to rescale it from worst (0) to best (1).",
+  "markdown": "| indicator   |         p5 |    median |         p95 |   worst limit |   best limit |\n|:------------|-----------:|----------:|------------:|--------------:|-------------:|\n| heat        | 21.38      | 29.37     |  38.13      |        40     |     25       |\n| greenery    |  0.07615   |  0.4591   |   0.7597    |         0     |      0.6     |\n| flooding    |  1.653     | 33.99     | 209.9       |         0     |     15       |\n| slopes      |  0.3714    |  7.127    |  23.63      |        30     |      0       |\n| air         |  1.455e-05 |  2.55e-05 |   4.931e-05 |         5e-05 |      1.5e-05 |\n| services    |  0.4057    |  1.23     |  18.74      |         0     |     20       |\n| crowding    |  1.162     |  6.997    | 123         |       150     |      0       |"
+ },
+ {
+  "name": "ch23-score",
+  "kind": "map",
+  "caption": "The score the app draws when it opens: heat, greenery, flooding and services weighted 2, the rest 1.",
+  "image": "images/real/ch23-score.jpg"
+ },
+ {
+  "name": "ch23-heat",
+  "kind": "map",
+  "caption": "One of the seven layers: the city centre and industrial south are hottest.",
+  "image": "images/real/ch23-heat.jpg"
+ },
+ {
+  "name": "ch23-profile",
+  "kind": "chart",
+  "caption": "The click panel for three places: the same score can hide very different strengths.",
+  "image": "images/real/ch23-profile.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"place,heat,greenery,flooding,slopes,air,services,crowding,score\nBraga (city centre),0.070341,0.10719,0.35214,0.84787,0,1,0,0.3552\nDayeuhkolot (flood plain),0.092372,0.12685,0.22984,0.93652,0.19851,0.79608,0.14494,0.34275\nLembang (northern hills),0.38442,0.14883,1,0.87574,0.77511,0.86464,0.42786,0.62495\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_profile(df):\n    \"\"\"The app's click panel, drawn for three places: one bar per indicator.\"\"\"\n    keys = list(LIMITS); fig, ax = plt.subplots(figsize=(9, 4))\n    w = 0.26\n    for i, (r, c) in enumerate(zip(df.itertuples(), [\"#d73027\", \"#4575b4\", \"#1a9850\"])):\n        ax.bar(np.arange(len(keys)) + (i - 1) * w, [getattr(r, k) for k in keys], width=w, color=c,\n               label=f\"{r.place}: score {r.score:.2f}\")\n    ax.set_xticks(range(len(keys)), keys); ax.set_ylim(0, 1); ax.set_ylabel(\"0 = worst, 1 = best\")\n    ax.legend(fontsize=8, loc=\"upper center\", bbox_to_anchor=(0.5, -0.12), ncol=3, frameon=False)\n    ax.set_title(\"What the app shows when you click: three places, seven indicators\", loc=\"left\", fontsize=10)\n    fig.tight_layout()\n    return fig\n\nplot_profile(df)\nplt.show()\n"
+ }
+]
