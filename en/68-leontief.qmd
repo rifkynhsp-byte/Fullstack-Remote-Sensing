@@ -1,0 +1,77 @@
+# How a Spending Shock Travels Through an Economy: The Leontief Model of Indonesia {#sec-leontief}
+
+::: {.chapter-goal}
+#### In this chapter
+When a dollar is spent on a road, it does not stop at the builder. This chapter builds Wassily Leontief's input-output model of Indonesia from an open national table, computes how much output, value added, employment and imports each sector's demand sets in motion, follows a USD 1 billion construction programme round by round, and finds the "key sectors" that tie the economy together. It is also a gallery of chart forms: a matrix heatmap, stacked rounds with a convergence line, lollipops, a quadrant bubble chart, a radar chart and a dumbbell chart, each chosen for the question it answers. Python and R side by side.
+:::
+
+## The idea
+
+An input-output table records, for one year, who sold how much to whom. Its rows are selling sectors, its columns buying sectors, and each cell *z*~ij~ is the value of goods and services sector *i* sold to sector *j* to make its output. To the right sit the sales to final users (households, government, investment and exports, together called final demand *f*), and below sit the payments that are not purchases from other sectors: wages and profits (value added) and imports.
+
+Leontief's step was to divide each column by the buying sector's total output *x*~j~. The result, *a*~ij~ = *z*~ij~ / *x*~j~, is a **technical coefficient**: the input from sector *i* needed per dollar of sector *j*'s output. If the coefficients are stable, output must satisfy
+
+*x* = *A x* + *f*,  so  *x* = (*I* − *A*)^−1^ *f* = *L f*.
+
+*L*, the **Leontief inverse**, answers in one matrix the question this chapter is about: if final demand for a sector rises by one dollar, how much must every sector produce, counting suppliers, suppliers' suppliers and so on without end? Each column sum of *L* is that sector's **output multiplier**.
+
+## The data
+
+The table is the national input-output table of Indonesia from the World Input-Output Database (WIOD, 2016 release): 56 industries, domestic and imported flows kept apart, in millions of US dollars, for every year from 2000 to 2014 (Timmer et al. 2015). Its companion Socio-Economic Accounts give persons engaged by industry. Both are free to download from DataverseNL without registration, and the script fetches them itself. The 56 industries are grouped into 28 sectors, following the same lines as Statistics Indonesia's own grouping.
+
+Two honest limits before any result. The latest year is 2014, so this is a teaching model of Indonesia's economic structure a decade ago, not a forecast of today's. And the official table, Statistics Indonesia's 2016 input-output table, is published only through a web page that cannot be downloaded by a script; the method below applies to it unchanged, and Exercise 4 asks you to use it.
+
+{{< include _snippets/ch68_leontief.qmd >}}
+
+## Insight 1: who buys from whom (heatmap)
+
+A 28 × 28 matrix of coefficients is 784 numbers. A **heatmap** shows them all at once: dark cells are strong input links, pale ones weak. Ordering rows and columns by sector size keeps the big sectors in the top-left corner. The darkest cells off the diagonal are raw materials going into processing: mining (crude oil) into petroleum refining, 0.38 dollars per dollar of refinery output, and crops into food and beverages, 0.29. Trade forms a dark row across almost every column, because the margin of the traders who move goods between sectors is itself an input. The diagonal is dark too, but much of that is an artefact of grouping (electricity generation and gas distribution sit in one sector and sell to each other).
+
+## Insight 2: the multiplier, round by round (stacked bars and a convergence line)
+
+The inverse hides the mechanism that makes it work. Writing *L* as a series makes the mechanism visible:
+
+*L f* = *f* + *A f* + *A*^2^ *f* + *A*^3^ *f* + …
+
+The first term is the construction itself; *A f* is what the builders buy (round 1); *A*^2^ *f* is what their suppliers buy (round 2), and so on. A **stacked bar** per round shows which sectors each round reaches, and a **cumulative line** shows the total converging on the multiplier.
+
+USD 1 billion of construction generates USD 1.82 billion of output in total. Round 1 adds 508 million, mainly from trade (100 million), metals (90), rubber, plastic and mineral products such as cement (72) and mining (56). Round 2 adds 199 million, and each later round about a third of the one before. Within two rounds, 87 per cent of the knock-on effect has already happened; the "infinite" chain of suppliers is in practice short.
+
+## Insight 3: output, value added and jobs (lollipops)
+
+Three multipliers answer three different policy questions. The **output multiplier** says how much activity a dollar of demand sets in motion. The **value-added multiplier** says how much of it becomes income in Indonesia; the rest leaks out as imports or product taxes, and for construction the two account for each other almost exactly: 0.77 of each dollar becomes domestic value added, 0.21 goes on imports. The **employment multiplier** says how many people are engaged per million dollars of demand.
+
+**Lollipops**, a dot on a thin stem, carry three sorted panels with less ink than bars. Sorting each panel separately makes the point of the chart: the rankings are almost opposite. Electricity and gas has the highest output multiplier (2.45) and one of the lowest job counts; fishing, forestry and crops have the lowest output multipliers (about 1.2) and the most jobs, around 400 persons per million dollars against 106 for construction and 25 for petroleum refining. Part of that gap is low productivity and informal work in farming, so jobs per dollar is not a measure of job quality.
+
+## Insight 4: key sectors (quadrant bubble chart)
+
+Two linkages classify sectors. The **backward linkage** is a sector's output multiplier relative to the average: how strongly it pulls on its suppliers. The **forward linkage** (from the Ghosh model, built on row shares instead of column shares) measures how strongly the sector's output feeds other sectors. A **scatter with quadrant lines** at the average sorts sectors into four groups, and bubble area adds sector size as a third variable.
+
+Eight sectors are above average on both and count as **key sectors**: electricity and gas, wood and paper, metals, chemicals and pharmaceuticals, rubber, plastic and mineral products, transport, petroleum refining and other services. Mining, finance and forestry supply others strongly but buy little; food, construction and hotels pull on suppliers but sell mostly to final users. The largest sectors, trade and construction, are not key sectors, which is the chart's most useful warning: size and connectedness are different things.
+
+## Insight 5: the shape of a sector (radar chart)
+
+A **radar chart** draws several indicators of one item on spokes from a centre, so that the item becomes a shape. It suits a small number of items compared on the same handful of indicators, each rescaled to a common 0 to 1 range, and it fails when items are many or indicators are on different scales. Here six sectors are compared on six indicators: output multiplier, value-added multiplier, jobs, size, forward linkage and domestic content. Each sector has its own panel, with the other five in grey behind it, because six overlapping polygons in one panel are unreadable.
+
+No sector wins on every axis. Crops and livestock is a wide shape on jobs, value added and domestic content and almost nothing on output multiplier: farming keeps its money at home but buys little from other sectors. Electronics and machinery is a small, spiky shape with the lowest domestic content of all: 40 cents of every dollar of demand leaks out as imported components. Mining is strong on value added, domestic content and forward linkage, and weak on jobs. Construction and food are large and moderately linked.
+
+One design choice deserves mention. Backward linkage was left off the radar, because it is the output multiplier divided by its average, and after rescaling the two spokes would be identical. Two spokes that say the same thing make every shape look more lopsided than it is.
+
+## Insight 6: change over time (dumbbell chart)
+
+A **dumbbell chart** compares the same quantity at two dates: a dot for each, joined by a line. It shows direction and size of change for many items at once. Between 2000 and 2014, 15 of the 28 sectors' output multipliers rose: their final demand now pulls more domestic output through the supply chain. Electricity and gas rose most (1.86 to 2.45), and other services and mining rose too. Textiles fell (1.72 to 1.54), as did water and waste. A falling multiplier usually means a sector buys more of its inputs from abroad or makes more of them in-house, and the dumbbell cannot say which; the import-leakage column of the table can.
+
+## What the model is not
+
+The Leontief model assumes fixed technical coefficients, no capacity limits and no price response: a billion dollars of extra demand is met by proportionally more of every input, at today's prices, without crowding anything else out. It describes the structure of the economy in one year, not its behaviour in a boom. The multipliers here are Type I, which count suppliers but not the extra household spending of the workers they employ (Type II multipliers, which do, are larger). The year is 2014. Within those limits, it remains the clearest way to show how a dollar spent in one place becomes income in many others.
+
+## Reference {.unnumbered}
+
+Timmer, M. P., Dietzenbacher, E., Los, B., Stehrer, R. and de Vries, G. J. (2015). An illustrated user guide to the World Input–Output Database: the case of global automotive production. *Review of International Economics*, 23, 575–605.
+
+## Exercises {.unnumbered}
+
+1. Replace the construction shock with USD 1 billion of food and beverages. Which sectors appear in round 1 that did not before?
+2. Add households to the model (close it for consumption, using wages as a row and household consumption as a column) to compute Type II multipliers. How much larger is construction's?
+3. Draw the radar chart for the eight key sectors. Is there a shape they share?
+4. Download Statistics Indonesia's 2016 input-output table (17 sectors, domestic transactions) by hand and run the same model. Do the key sectors agree with WIOD's for 2014?

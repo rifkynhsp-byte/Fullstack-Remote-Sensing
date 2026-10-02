@@ -141,6 +141,7 @@ book:
         - 29-dataviz.qmd
         - 66-solar-insight.qmd
         - 67-transit-access.qmd
+        - 68-leontief.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
     - part: "Part IX: LiDAR for Forestry"

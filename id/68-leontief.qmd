@@ -1,0 +1,77 @@
+# Bagaimana Guncangan Belanja Menjalar dalam Perekonomian: Model Leontief untuk Indonesia {#sec-leontief}
+
+::: {.chapter-goal}
+#### Di bab ini
+Ketika satu dolar dibelanjakan untuk membangun jalan, uang itu tidak berhenti di kontraktor. Bab ini membangun model input-output Wassily Leontief untuk Indonesia dari tabel nasional yang terbuka, menghitung berapa output, nilai tambah, lapangan kerja, dan impor yang digerakkan permintaan setiap sektor, mengikuti program konstruksi senilai USD 1 miliar putaran demi putaran, dan menemukan "sektor kunci" yang mengikat perekonomian. Bab ini juga galeri bentuk grafik: *heatmap* matriks, batang bertumpuk per putaran dengan garis konvergensi, *lollipop*, diagram gelembung kuadran, diagram radar, dan diagram *dumbbell*, masing-masing dipilih untuk pertanyaan yang dijawabnya. Python dan R berdampingan.
+:::
+
+## Gagasannya
+
+Tabel input-output mencatat, untuk satu tahun, siapa menjual berapa kepada siapa. Barisnya adalah sektor penjual, kolomnya sektor pembeli, dan setiap sel *z*~ij~ adalah nilai barang dan jasa yang dijual sektor *i* kepada sektor *j* untuk membuat outputnya. Di sebelah kanan ada penjualan kepada pengguna akhir (rumah tangga, pemerintah, investasi, dan ekspor, bersama-sama disebut permintaan akhir *f*), dan di bawah ada pembayaran yang bukan pembelian dari sektor lain: upah dan laba (nilai tambah) serta impor.
+
+Langkah Leontief adalah membagi setiap kolom dengan total output sektor pembeli *x*~j~. Hasilnya, *a*~ij~ = *z*~ij~ / *x*~j~, adalah **koefisien teknis**: input dari sektor *i* yang dibutuhkan per dolar output sektor *j*. Jika koefisiennya stabil, output harus memenuhi
+
+*x* = *A x* + *f*,  sehingga  *x* = (*I* − *A*)^−1^ *f* = *L f*.
+
+*L*, **invers Leontief**, menjawab dalam satu matriks pertanyaan inti bab ini: jika permintaan akhir untuk suatu sektor naik satu dolar, berapa yang harus diproduksi setiap sektor, menghitung pemasok, pemasoknya pemasok, dan seterusnya tanpa akhir? Jumlah setiap kolom *L* adalah **pengganda output** sektor itu.
+
+## Data
+
+Tabelnya adalah tabel input-output nasional Indonesia dari World Input-Output Database (WIOD, rilis 2016): 56 industri, arus domestik dan impor dipisahkan, dalam juta dolar AS, untuk setiap tahun dari 2000 sampai 2014 (Timmer dkk. 2015). Pendampingnya, Socio-Economic Accounts, memberi jumlah tenaga kerja per industri. Keduanya bebas diunduh dari DataverseNL tanpa registrasi, dan skripnya mengunduh sendiri. Ke-56 industri dikelompokkan menjadi 28 sektor, mengikuti garis pengelompokan Badan Pusat Statistik.
+
+Dua batasan jujur sebelum hasil apa pun. Tahun terakhirnya 2014, sehingga ini adalah model pengajaran tentang struktur ekonomi Indonesia satu dekade lalu, bukan ramalan tentang hari ini. Dan tabel resmi, Tabel Input-Output Indonesia 2016 dari BPS, hanya diterbitkan melalui halaman web yang tidak bisa diunduh oleh skrip; metode di bawah berlaku tanpa perubahan untuknya, dan Latihan 4 meminta Anda memakainya.
+
+{{< include _snippets/ch68_leontief.qmd >}}
+
+## *Insight* 1: siapa membeli dari siapa (*heatmap*)
+
+Matriks koefisien berukuran 28 × 28 berisi 784 angka. *Heatmap* menampilkan semuanya sekaligus: sel gelap adalah keterkaitan input yang kuat, sel pucat yang lemah. Mengurutkan baris dan kolom menurut besar sektor menaruh sektor-sektor besar di pojok kiri atas. Sel tergelap di luar diagonal adalah bahan mentah yang masuk ke pengolahan: pertambangan (minyak mentah) ke kilang minyak, 0,38 dolar per dolar output kilang, dan tanaman pangan ke industri makanan dan minuman, 0,29. Perdagangan membentuk baris gelap di hampir semua kolom, karena marjin pedagang yang memindahkan barang antarsektor adalah input juga. Diagonalnya juga gelap, tetapi sebagian besar itu adalah efek pengelompokan (pembangkit listrik dan distribusi gas berada dalam satu sektor dan saling menjual).
+
+## *Insight* 2: pengganda, putaran demi putaran (batang bertumpuk dan garis konvergensi)
+
+Invers menyembunyikan mekanisme yang membuatnya bekerja. Menuliskan *L* sebagai deret membuat mekanisme itu terlihat:
+
+*L f* = *f* + *A f* + *A*^2^ *f* + *A*^3^ *f* + …
+
+Suku pertama adalah konstruksi itu sendiri; *A f* adalah apa yang dibeli kontraktor (putaran 1); *A*^2^ *f* adalah apa yang dibeli pemasok mereka (putaran 2), dan seterusnya. **Batang bertumpuk** per putaran memperlihatkan sektor mana yang dijangkau setiap putaran, dan **garis kumulatif** memperlihatkan total yang mendekati pengganda.
+
+USD 1 miliar konstruksi menghasilkan total output USD 1,82 miliar. Putaran 1 menambah 508 juta, terutama dari perdagangan (100 juta), logam (90), produk karet, plastik, dan mineral seperti semen (72), dan pertambangan (56). Putaran 2 menambah 199 juta, dan setiap putaran berikutnya kira-kira sepertiga dari sebelumnya. Dalam dua putaran, 87 persen efek lanjutan sudah terjadi; rantai pemasok yang "tak berujung" ternyata pendek dalam praktiknya.
+
+## *Insight* 3: output, nilai tambah, dan lapangan kerja (*lollipop*)
+
+Tiga pengganda menjawab tiga pertanyaan kebijakan yang berbeda. **Pengganda output** menyatakan berapa banyak kegiatan yang digerakkan satu dolar permintaan. **Pengganda nilai tambah** menyatakan berapa bagian yang menjadi pendapatan di Indonesia; sisanya bocor sebagai impor atau pajak produk, dan untuk konstruksi keduanya hampir saling melengkapi: 0,77 dari setiap dolar menjadi nilai tambah domestik, 0,21 untuk impor. **Pengganda tenaga kerja** menyatakan berapa orang yang terlibat per juta dolar permintaan.
+
+***Lollipop***, titik di atas tangkai tipis, memuat tiga panel terurut dengan tinta lebih sedikit daripada batang. Mengurutkan setiap panel terpisah menunjukkan inti grafik ini: peringkatnya hampir berlawanan. Listrik dan gas punya pengganda output tertinggi (2,45) dan salah satu jumlah pekerja terendah; perikanan, kehutanan, dan tanaman pangan punya pengganda output terendah (sekitar 1,2) dan pekerja terbanyak, sekitar 400 orang per juta dolar, dibanding 106 untuk konstruksi dan 25 untuk kilang minyak. Sebagian selisih itu adalah produktivitas rendah dan kerja informal di pertanian, sehingga pekerja per dolar bukan ukuran mutu pekerjaan.
+
+## *Insight* 4: sektor kunci (diagram gelembung kuadran)
+
+Dua keterkaitan mengelompokkan sektor. **Keterkaitan ke belakang** adalah pengganda output suatu sektor relatif terhadap rata-rata: seberapa kuat sektor itu menarik pemasoknya. **Keterkaitan ke depan** (dari model Ghosh, yang dibangun dari bagian baris, bukan bagian kolom) mengukur seberapa kuat output sektor itu memasok sektor lain. **Diagram pencar dengan garis kuadran** pada nilai rata-rata membagi sektor menjadi empat kelompok, dan luas gelembung menambahkan besar sektor sebagai variabel ketiga.
+
+Delapan sektor berada di atas rata-rata pada keduanya dan tergolong **sektor kunci**: listrik dan gas, kayu dan kertas, logam, kimia dan farmasi, produk karet, plastik, dan mineral, transportasi, kilang minyak, dan jasa lainnya. Pertambangan, keuangan, dan kehutanan banyak memasok sektor lain tetapi sedikit membeli; makanan, konstruksi, dan hotel menarik pemasok tetapi sebagian besar menjual ke pengguna akhir. Sektor terbesar, perdagangan dan konstruksi, bukan sektor kunci, dan itulah peringatan paling berguna dari grafik ini: besar dan terkait adalah dua hal yang berbeda.
+
+## *Insight* 5: bentuk sebuah sektor (diagram radar)
+
+**Diagram radar** menggambar beberapa indikator dari satu hal pada jari-jari dari titik pusat, sehingga hal itu menjadi sebuah bentuk. Diagram ini cocok untuk sedikit hal yang dibandingkan pada beberapa indikator yang sama, masing-masing diskalakan ulang ke rentang 0 sampai 1, dan gagal ketika halnya banyak atau indikatornya berbeda skala. Di sini enam sektor dibandingkan pada enam indikator: pengganda output, pengganda nilai tambah, pekerja, besar sektor, keterkaitan ke depan, dan kandungan domestik. Setiap sektor punya panelnya sendiri, dengan lima lainnya berwarna abu-abu di belakang, karena enam poligon yang bertumpuk dalam satu panel tidak terbaca.
+
+Tidak ada sektor yang unggul di semua sumbu. Tanaman pangan dan peternakan berbentuk lebar pada pekerja, nilai tambah, dan kandungan domestik, tetapi hampir nol pada pengganda output: pertanian menahan uangnya di dalam negeri tetapi sedikit membeli dari sektor lain. Elektronik dan mesin berbentuk kecil dan runcing dengan kandungan domestik terendah dari semua sektor: 40 sen dari setiap dolar permintaan bocor sebagai komponen impor. Pertambangan kuat pada nilai tambah, kandungan domestik, dan keterkaitan ke depan, tetapi lemah pada pekerja. Konstruksi dan makanan besar dan cukup terkait.
+
+Satu pilihan desain perlu disebut. Keterkaitan ke belakang tidak dimasukkan ke radar, karena nilainya adalah pengganda output dibagi rata-ratanya, dan setelah diskalakan ulang kedua jari-jari itu akan identik. Dua jari-jari yang mengatakan hal yang sama membuat setiap bentuk tampak lebih timpang daripada sebenarnya.
+
+## *Insight* 6: perubahan dari waktu ke waktu (diagram *dumbbell*)
+
+**Diagram *dumbbell*** membandingkan besaran yang sama pada dua waktu: satu titik untuk masing-masing, dihubungkan oleh garis. Diagram ini memperlihatkan arah dan besar perubahan untuk banyak hal sekaligus. Antara 2000 dan 2014, pengganda output 15 dari 28 sektor naik: permintaan akhirnya kini menarik lebih banyak output domestik melalui rantai pasok. Listrik dan gas naik paling tinggi (1,86 menjadi 2,45), dan jasa lainnya serta pertambangan juga naik. Tekstil turun (1,72 menjadi 1,54), begitu pula air dan pengelolaan limbah. Pengganda yang turun biasanya berarti sektor itu membeli lebih banyak input dari luar negeri atau membuatnya sendiri, dan *dumbbell* tidak bisa membedakan keduanya; kolom kebocoran impor di tabel bisa.
+
+## Apa yang bukan model ini
+
+Model Leontief mengasumsikan koefisien teknis yang tetap, tanpa batas kapasitas, dan tanpa respons harga: tambahan permintaan satu miliar dolar dipenuhi oleh lebih banyak setiap input secara proporsional, pada harga saat ini, tanpa menggeser kegiatan lain. Model ini menggambarkan struktur ekonomi dalam satu tahun, bukan perilakunya saat ekonomi memanas. Pengganda di sini adalah Tipe I, yang menghitung pemasok tetapi tidak menghitung tambahan belanja rumah tangga dari pekerja yang mereka pekerjakan (pengganda Tipe II, yang menghitungnya, lebih besar). Tahunnya 2014. Dalam batas-batas itu, model ini tetap cara paling jelas untuk memperlihatkan bagaimana satu dolar yang dibelanjakan di satu tempat menjadi pendapatan di banyak tempat lain.
+
+## Referensi {.unnumbered}
+
+Timmer, M. P., Dietzenbacher, E., Los, B., Stehrer, R. and de Vries, G. J. (2015). An illustrated user guide to the World Input–Output Database: the case of global automotive production. *Review of International Economics*, 23, 575–605.
+
+## Latihan {.unnumbered}
+
+1. Ganti guncangan konstruksi dengan USD 1 miliar untuk makanan dan minuman. Sektor mana yang muncul di putaran 1 yang sebelumnya tidak ada?
+2. Masukkan rumah tangga ke dalam model (tutup model untuk konsumsi, dengan upah sebagai baris dan konsumsi rumah tangga sebagai kolom) untuk menghitung pengganda Tipe II. Seberapa besar pengganda konstruksi bertambah?
+3. Gambar diagram radar untuk kedelapan sektor kunci. Adakah bentuk yang sama di antara mereka?
+4. Unduh Tabel Input-Output Indonesia 2016 dari BPS (17 lapangan usaha, transaksi domestik) secara manual dan jalankan model yang sama. Apakah sektor kuncinya sama dengan hasil WIOD untuk 2014?
