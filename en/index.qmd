@@ -103,11 +103,13 @@ The foundational scripts in Part II descend from the EE101 teaching series by No
 
 ## About the author
 
-**Rifky Nauval Hendrawan** is a remote sensing specialist who builds geospatial workflows that measure natural capital, from satellite imagery and UAV LiDAR to the machine-learning models and dashboards that turn them into decisions. This book is written from that work.
+![](images/author.jpg){.author-photo width="170" fig-alt="Rifky Nauval Hendrawan"}
 
-- **Industry.** Senior Remote Sensing Specialist at Asia Pacific Resources International Holdings (APRIL), integrating UAV LiDAR and satellite data across about 200,000 hectares of plantation forest for digital forestry, harvest planning and carbon estimation. Before that, Senior Geospatial Lead at Pleno GmbH, a German climate-technology start-up, where he developed carbon measurement, reporting and verification (MRV) models and led the design of the *Carbon Farming Explorer*, an Earth Engine application that cuts project feasibility assessment from weeks to hours.
-- **Projects.** Machine-learning detection of deforestation and peat-depth calibration with the Centre for Nature-based Climate Solutions at the National University of Singapore; an automated, one-click LiDAR processing pipeline for forest inventory with Bracell in Brazil; and, with the DRPRS laboratory at Universitas Padjadjaran, the IJB Landslide Explorer for disaster-preparedness stakeholders.
-- **Research and teaching.** Master of Engineering Science (Environmental Engineering) at UNSW Sydney, completing in December 2026, with research on generative individual-tree detection from LiDAR; Bachelor of Geophysics with honours from Universitas Padjadjaran, where he was a remote sensing lecture assistant. Publications on shoreline change in Jakarta Bay (2021) and land suitability from soil electrical properties and remote sensing (2023); two registered intellectual-property web GIS applications (Indraja Buana, MataBDG); former Officer for Big Data and Remote Sensing in the Indonesian geophysics association.
+I'm **Rifky Nauval Hendrawan**, a remote sensing specialist from Indonesia, now living in Sydney. I use satellites, drones and data to help people understand and look after forests, land and the communities that depend on them.
+
+My work has taken me from plantation forests in Riau to carbon projects with a climate start-up in Germany, research with partners in Singapore and forestry teams in Brazil. Today I am a Senior Remote Sensing Specialist at APRIL, and I am finishing a Master of Engineering Science at UNSW Sydney (December 2026).
+
+I wrote this book because the most useful lessons in this field are learned on real projects, often the hard way, and they deserve to be shared freely, in English and in Bahasa Indonesia.
 
 ## Work with me
 

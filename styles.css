@@ -131,3 +131,7 @@
 }
 .real-output h4 { margin-top: 0.25rem; font-size: 1rem; }
 .real-output img { border-radius: 4px; }
+
+/* Author portrait in the preface: round, beside the text; centred above it on phones */
+img.author-photo { border-radius: 50%; float: right; margin: 0.2rem 0 1rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+@media (max-width: 600px) { img.author-photo { float: none; display: block; margin: 0 auto 1rem; } }

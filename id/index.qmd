@@ -103,11 +103,13 @@ Skrip dasar di Bagian II berasal dari seri pengajaran EE101 oleh Noel Gorelick, 
 
 ## Tentang penulis
 
-**Rifky Nauval Hendrawan** adalah spesialis penginderaan jauh yang membangun alur kerja geospasial untuk mengukur modal alam, dari citra satelit dan LiDAR UAV sampai model *machine learning* dan *dashboard* yang mengubahnya menjadi keputusan. Buku ini ditulis dari pekerjaan itu.
+![](images/author.jpg){.author-photo width="170" fig-alt="Rifky Nauval Hendrawan"}
 
-- **Industri.** Senior Remote Sensing Specialist di Asia Pacific Resources International Holdings (APRIL), mengintegrasikan data LiDAR UAV dan satelit di sekitar 200.000 hektare hutan tanaman untuk kehutanan digital, perencanaan panen, dan estimasi karbon. Sebelumnya, Senior Geospatial Lead di Pleno GmbH, perusahaan rintisan teknologi iklim asal Jerman, tempat ia mengembangkan model pengukuran, pelaporan, dan verifikasi (MRV) karbon serta memimpin perancangan *Carbon Farming Explorer*, aplikasi Earth Engine yang memangkas penilaian kelayakan proyek dari hitungan minggu menjadi jam.
-- **Proyek.** Deteksi deforestasi berbasis *machine learning* dan kalibrasi kedalaman gambut bersama Centre for Nature-based Climate Solutions, National University of Singapore; *pipeline* pengolahan LiDAR otomatis satu klik untuk inventarisasi hutan bersama Bracell di Brasil; dan, bersama laboratorium DRPRS Universitas Padjadjaran, IJB Landslide Explorer untuk para pemangku kepentingan kesiapsiagaan bencana.
-- **Riset dan pengajaran.** Master of Engineering Science (Teknik Lingkungan) di UNSW Sydney, selesai Desember 2026, dengan riset deteksi pohon individu generatif dari LiDAR; Sarjana Geofisika dengan pujian dari Universitas Padjadjaran, tempat ia menjadi asisten dosen penginderaan jauh. Publikasi tentang perubahan garis pantai Teluk Jakarta (2021) dan kesesuaian lahan dari sifat listrik tanah dan penginderaan jauh (2023); dua aplikasi web GIS berhak kekayaan intelektual terdaftar (Indraja Buana, MataBDG); pernah menjadi pengurus bidang Big Data dan Penginderaan Jauh di asosiasi geofisika Indonesia.
+Saya **Rifky Nauval Hendrawan**, spesialis penginderaan jauh dari Indonesia yang kini tinggal di Sydney. Saya memakai satelit, drone, dan data untuk membantu orang memahami dan menjaga hutan, lahan, serta masyarakat yang bergantung padanya.
+
+Pekerjaan saya membawa saya dari hutan tanaman di Riau ke proyek karbon bersama perusahaan rintisan iklim di Jerman, riset bersama mitra di Singapura, dan tim kehutanan di Brasil. Kini saya bekerja sebagai Senior Remote Sensing Specialist di APRIL, dan sedang menyelesaikan Master of Engineering Science di UNSW Sydney (Desember 2026).
+
+Saya menulis buku ini karena pelajaran paling berguna di bidang ini dipetik dari proyek nyata, sering kali dengan cara yang sulit, dan pelajaran itu layak dibagikan secara gratis, dalam bahasa Indonesia dan Inggris.
 
 ## Bekerja sama
 
