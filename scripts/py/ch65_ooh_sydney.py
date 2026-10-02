@@ -47,6 +47,32 @@ def buffer_mean(raster, gdf, metres):
     return exact_extract(str(raster), polys, "mean", output="pandas")["mean"].values
 
 
+def graticule(ax, crs, n=4):
+    """Latitude/longitude lines and edge labels on a map drawn in projected
+    coordinates (metres), so every map can be located on the globe."""
+    from pyproj import Transformer
+    to_ll = Transformer.from_crs(crs, 4326, always_xy=True); to_xy = Transformer.from_crs(4326, crs, always_xy=True)
+    (x0, x1), (y0, y1) = ax.get_xlim(), ax.get_ylim()
+    lon, lat = to_ll.transform([x0, x1, x0, x1], [y0, y0, y1, y1])
+    span = max(max(lon) - min(lon), max(lat) - min(lat))
+    step = next(s for s in (0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5) if span / s <= n + 1)
+    fmt = lambda v, pos, neg: f"{abs(v):.{max(0, -int(np.floor(np.log10(step))))}f}°{pos if v >= 0 else neg}"
+    for lo in np.arange(np.ceil(min(lon) / step) * step, max(lon), step):
+        xs, ys = to_xy.transform(np.full(50, lo), np.linspace(min(lat) - step, max(lat) + step, 50))
+        ax.plot(xs, ys, color="#888888", lw=0.4, ls="--", zorder=0.5)
+        bx, _ = to_xy.transform(lo, min(lat))
+        ax.text(bx, y0, fmt(lo, "E", "W"), ha="center", va="top", fontsize=7, color="#555555")
+    for la in np.arange(np.ceil(min(lat) / step) * step, max(lat), step):
+        xs, ys = to_xy.transform(np.linspace(min(lon) - step, max(lon) + step, 50), np.full(50, la))
+        ax.plot(xs, ys, color="#888888", lw=0.4, ls="--", zorder=0.5)
+        _, by = to_xy.transform(min(lon), la)
+        ax.text(x0, by, fmt(la, "N", "S") + " ", ha="right", va="center", fontsize=7, color="#555555")
+    ax.set_xlim(x0, x1); ax.set_ylim(y0, y1)
+    ax.set_xticks([]); ax.set_yticks([]); ax.set_xlabel(""); ax.set_ylabel("")
+    for s in ax.spines.values():
+        s.set_visible(True); s.set_color("#999999"); s.set_linewidth(0.6)
+
+
 # PART 1. Training points and predictor surfaces --------------------------------
 _cache = {}
 
@@ -290,7 +316,7 @@ def map_figure():
         site.plot(ax=ax, column=k, cmap=cmap, markersize=2, legend=True,
                   legend_kwds={"shrink": 0.6, "label": "score (0-1)"})
         ax.set_title(f"{k.replace('MCDA_', '').title()}: scored locations, best route in red", loc="left", fontsize=9)
-        ax.set_axis_off()
+        graticule(ax, site.crs, n=4)
     fig.tight_layout()
     return fig
 
@@ -306,12 +332,12 @@ def surfaces_figure():
         with rasterio.open(DATA / "surfaces" / f"{name}.tif") as src:
             r, b = src.read(1), src.bounds
         ax.imshow(np.log1p(np.clip(r, 0, None)), extent=[b.left, b.right, b.bottom, b.top], cmap="magma")
-        ax.set_title(name.replace("_", " "), loc="left", fontsize=9); ax.set_axis_off()
+        ax.set_title(name.replace("_", " "), loc="left", fontsize=9); graticule(ax, "EPSG:7856", n=4)
     ax = axs.flat[-1]
     ok = counts[TARGET].notna()
     counts[ok].plot(ax=ax, column=TARGET, cmap="viridis", markersize=4 + 60 * counts[ok][TARGET] / counts[TARGET].max(),
                     legend=True, legend_kwds={"shrink": 0.6, "label": "weekday pedestrians"})
-    ax.set_title("target: weekday walking count", loc="left", fontsize=9); ax.set_axis_off()
+    ax.set_title("target: weekday walking count", loc="left", fontsize=9); graticule(ax, counts.crs, n=4)
     fig.suptitle("Predictor surfaces (log scale) and the counted sites", x=0.01, ha="left", fontsize=11)
     fig.tight_layout()
     return fig
