@@ -31,7 +31,7 @@ book:
   subtitle: "Earth Engine dan GeoAI, diajarkan seperti yang benar benar dipraktikkan"
   author:
     - name: "Rifky Nauval Hendrawan"
-      affiliation: "Spesialis Penginderaan Jauh · Mahasiswa Master of Engineering Science, UNSW Sydney"
+      affiliation: "Senior Remote Sensing Specialist, APRIL · Master of Engineering Science, UNSW Sydney (2026)"
   date: today
   date-format: "MMMM YYYY"
   repo-url: https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing
