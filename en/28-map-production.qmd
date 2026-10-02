@@ -32,8 +32,43 @@ The first map takes an afternoon. The fifteenth identical map for the fifteenth 
 Use the Code Editor to explore and to export styled GeoTIFFs. Use Python when the product is a document: page layout, inset maps, tables, multi-page PDFs and anything that has to be regenerated every month without clicking.
 :::
 
+## Colour that tells the truth
+
+The colour map is the part of a map that readers trust most and question least. Three families cover almost every case:
+
+- **Sequential** maps (light to dark, or dark to light) for quantities that run from low to high: temperature, biomass, population.
+- **Diverging** maps (dark, light, dark in two hues) for quantities with a meaningful middle: change around zero, anomaly around a long-term mean.
+- **Qualitative** maps (distinct hues of similar lightness) for classes with no order: land cover types.
+
+The eye reads *order* from lightness, not from hue. The first figure measures the CIELAB lightness L* along four colour maps. Viridis and cividis climb steadily from dark to light, so a warmer pixel always looks lighter. Jet, the old rainbow default, climbs to near white in the middle (cyan to yellow) and falls again at both ends, so the coolest and the hottest pixels have similar lightness. Printed in grey, or seen by a reader with red-green colour vision deficiency (up to about one man in twelve, depending on the population), the hottest districts of Bandung become hard to tell from the coolest; the grey version of viridis keeps the order intact.
+
+The same measurement says something uncomfortable about this chapter's own palette, a diverging blue-yellow-red: it is lightest at 34 °C, the centre of the 22-46 °C range. That is correct only if 34 °C *means* something, which it does not. A diverging palette on temperature implies "above and below normal". For the report it is a deliberate choice, because readers expect red for hot; the honest version would centre it on the seasonal median, or use a sequential map such as inferno. Choose the family first and the colours second.
+
+## One range for the whole series
+
+The rule in the code, one fixed range on every page, is easy to state and easy to break. The second figure shows why it matters. On top, Kota Bekasi and Garut each have a range from their own 2nd to 98th percentile: both maps run from blue to deep red, and a reader would conclude that both are equally hot. Below, with one shared range, Bekasi is almost all red and Garut mostly blue: Bekasi's median ground temperature is 12.9 °C higher.
+
+The shared range must also be *wide enough*. The first version of this chapter used 22-42 °C, chosen by looking at Bandung, and Kota Bekasi, whose hottest tenth is above 44 °C, saturated into one flat red that hid all its internal variation. The fix is to set the range from all districts together before drawing any page (Exercise 3), and to check the summary table for any district whose 10th or 90th percentile lies outside it.
+
+## What the scale bar assumes
+
+A scale bar is only true where the map's scale is constant. Web maps, including the Earth Engine Code Editor, use **Web Mercator**, which stretches lengths by 1/cos(latitude) and areas by its square. Near the equator this hardly matters: at Jakarta lengths are 0.6 % too long. At Sydney they are 20 % too long and areas 45 % too large, and at Oslo areas are almost four times too large. That is why the maps in this book are drawn in plain longitude-latitude for small Indonesian areas and in UTM for measurements, why the scale bar is computed from the latitude of the map's centre, and why an area must never be measured on a web-map screenshot.
+
+## Before you send it
+
+A final check that takes two minutes and catches most of the errors clients notice:
+
+1. Does the title say what, where and when, in the client's language?
+2. Do the legend's numbers have units, and is the range the same on every page?
+3. Does any district saturate at either end of the colour range?
+4. Is the colour map readable in grey (print one page in black and white)?
+5. Do the coordinates on the frame match the client's GIS when typed in?
+6. Do the summary numbers on the page match the table, and the table the data?
+7. Is the data credit complete, with the acquisition dates, not only the product name?
+
 ## Exercises {.unnumbered}
 
 1. Add all 27 districts to `DISTRICTS`. How long does the report take, and which step is slowest?
 2. Add a second page per district with the temperature histogram. What does it show that the map does not?
-3. Give each district its own colour range. Then put two pages side by side and explain the error a reader could make.
+3. Compute the colour range from the 2nd and 98th percentiles of all districts pooled, before drawing any page, and use it for the whole report. Which districts would have saturated with the old 22-42 °C range?
+4. Redraw the report with the inferno colour map and print one page in grey. What changes in what a reader can see?

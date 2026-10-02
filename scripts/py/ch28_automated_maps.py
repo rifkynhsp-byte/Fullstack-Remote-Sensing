@@ -25,7 +25,9 @@ from PIL import Image
 
 DISTRICTS = ["Kota Bandung", "Kota Bekasi", "Garut"]
 PALETTE = ["313695", "74add1", "ffffbf", "f46d43", "a50026"]
-VMIN, VMAX = 22, 42                      # °C, the same for every page
+# °C, the same for every page. It must cover the hottest district too: the first version used
+# 22-42 and Kota Bekasi (90th percentile 44 °C) saturated into one flat red.
+VMIN, VMAX = 22, 46
 
 gaul = ee.FeatureCollection("FAO/GAUL/2025/level2")
 java = gaul.filter(ee.Filter.eq("GAUL1_NAME", "Jawa Barat"))
@@ -178,6 +180,91 @@ def table():
                                           "lst_p90": "p90_C"})
 
 
+# PART 4. Colour, ranges and projection: three ways a correct map misleads -----------------------
+def lst_array(name, scale=150):
+    """The district's LST as a numpy array (NaN outside), for the colour experiments."""
+    region = gaul.filter(ee.Filter.eq("GAUL2_NAME", name)).geometry()
+    img = landsat_lst(region).unmask(-999).reproject("EPSG:32748", None, scale)
+    a = np.array(img.sampleRectangle(region.bounds(), defaultValue=-999).get("lst").getInfo(), float)
+    a[a < -100] = np.nan
+    xs, ys = zip(*region.bounds().coordinates().getInfo()[0])
+    return a, (min(xs), max(xs), min(ys), max(ys))          # array and its lon/lat extent, for the graticule
+
+
+def lightness(cmap, n=256):
+    """CIELAB lightness L* along a colour map: what the map looks like in greyscale or to the eye's brightness channel."""
+    from skimage.color import rgb2lab
+    rgb = plt.get_cmap(cmap)(np.linspace(0, 1, n))[:, :3] if isinstance(cmap, str) else cmap(np.linspace(0, 1, n))[:, :3]
+    return rgb2lab(rgb[None, :, :])[0, :, 0]
+
+
+def colour_figure():
+    """Rainbow against perceptually uniform colour maps, on the same data."""
+    ours = LinearSegmentedColormap.from_list("ours", ["#" + c for c in PALETTE])
+    a, ext = lst_array("Kota Bandung")
+    fig = plt.figure(figsize=(11, 7))
+    ax = fig.add_subplot(2, 1, 1)
+    for name, cm, col in [("jet (rainbow)", "jet", "#d62728"), ("viridis", "viridis", "#440154"),
+                          ("cividis", "cividis", "#00204d"), ("this chapter's diverging palette", ours, "#f46d43")]:
+        ax.plot(np.linspace(VMIN, VMAX, 256), lightness(cm), label=name, color=col, lw=2)
+    ax.set_xlabel("data value mapped to the colour (°C)"); ax.set_ylabel("lightness L* (0 black, 100 white)")
+    ax.legend(frameon=False, fontsize=8, ncol=4, loc="lower center")
+    ax.set_title("Lightness along each colour map: a good sequential map climbs steadily; jet rises and falls",
+                 loc="left", fontsize=9)
+    ax.spines[["top", "right"]].set_visible(False)
+    for i, (cm, title) in enumerate([("jet", "jet in colour"), ("viridis", "viridis in colour")]):
+        for j, grey in enumerate([False, True]):
+            axm = fig.add_subplot(2, 4, 5 + 2 * i + j)
+            rgba = plt.get_cmap(cm)(plt.Normalize(VMIN, VMAX)(a))
+            if grey:
+                from skimage.color import rgb2lab
+                lab = rgb2lab(np.nan_to_num(rgba[..., :3]))
+                show = np.where(np.isnan(a), np.nan, lab[..., 0])
+                axm.imshow(show, cmap="gray", vmin=0, vmax=100, extent=ext)
+                axm.set_title(f"{cm} printed in grey", fontsize=8)
+            else:
+                rgba[np.isnan(a)] = (1, 1, 1, 0)
+                axm.imshow(rgba, extent=ext)
+                axm.set_title(title, fontsize=8)
+            graticule(axm); axm.tick_params(labelsize=6)
+    fig.suptitle(f"Kota Bandung LST, {VMIN}-{VMAX} °C: in grey, jet's hottest and coolest pixels look alike; viridis keeps its order",
+                 x=0.01, ha="left", fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
+def range_trap_figure():
+    """Two districts, drawn with their own colour ranges and with one shared range."""
+    cmap = LinearSegmentedColormap.from_list("lst", ["#" + c for c in PALETTE])
+    got = {n: lst_array(n, 200) for n in ["Kota Bekasi", "Garut"]}      # 200 m keeps Garut under the sample limit
+    arrs = {n: v[0] for n, v in got.items()}
+    fig, axes = plt.subplots(2, 2, figsize=(10, 8.5))
+    for j, (n, a) in enumerate(arrs.items()):
+        for i, (lo, hi, row) in enumerate([(np.nanpercentile(a, 2), np.nanpercentile(a, 98), "own range"),
+                                           (VMIN, VMAX, "shared range")]):
+            ax = axes[i, j]
+            im = ax.imshow(a, cmap=cmap, vmin=lo, vmax=hi, extent=got[n][1])
+            fig.colorbar(im, ax=ax, shrink=0.7, label="°C")
+            ax.set_title(f"{n}, {row} ({lo:.0f}-{hi:.0f} °C); median {np.nanmedian(a):.1f} °C", fontsize=9)
+            graticule(ax)
+    med = {n: np.nanmedian(a) for n, a in arrs.items()}
+    fig.suptitle(f"Top: each district red at its own hottest, so both look equally hot. Bottom: one range shows "
+                 f"Bekasi's median is {med['Kota Bekasi'] - med['Garut']:.1f} °C hotter",
+                 x=0.01, ha="left", fontweight="bold", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
+def mercator_table():
+    """Web Mercator, the projection of every web map, stretches lengths by 1/cos(latitude) and areas by its square."""
+    import pandas as pd
+    places = [("Banda Aceh", 5.55), ("Jakarta", -6.21), ("Kupang", -10.18), ("Sydney", -33.87),
+              ("Hobart", -42.88), ("Oslo", 59.91)]
+    rows = [{"place": n, "latitude": la, "length scale factor": 1 / math.cos(math.radians(la)),
+             "area scale factor": 1 / math.cos(math.radians(la)) ** 2} for n, la in places]
+    return pd.DataFrame(rows)
+
+
 def products():
     return [
         {"kind": "figure", "name": "ch28-map-page", "figure": first_page,
@@ -187,6 +274,12 @@ def products():
         {"kind": "table", "name": "ch28-report-table", "data": table,
          "columns": ["district", "p10_C", "median_C", "p90_C"], "floatfmt": ("", ".1f", ".1f", ".1f"),
          "caption": "The numbers printed on each page, for all three districts."},
+        {"kind": "figure", "name": "ch28-colour", "figure": colour_figure,
+         "caption": "Lightness (CIELAB L*) along four colour maps, and the same LST map in colour and printed in grey."},
+        {"kind": "figure", "name": "ch28-range-trap", "figure": range_trap_figure,
+         "caption": "The same two districts with their own colour ranges (top) and one shared range (bottom)."},
+        {"kind": "table", "name": "ch28-mercator", "data": mercator_table, "floatfmt": ("", ".2f", ".3f", ".3f"),
+         "caption": "How much Web Mercator enlarges lengths and areas at six latitudes."},
     ]
 
 

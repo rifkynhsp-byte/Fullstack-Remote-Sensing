@@ -32,8 +32,43 @@ Peta pertama bisa menghabiskan satu sore. Peta kelima belas yang sama persis unt
 Gunakan Code Editor untuk eksplorasi dan mengekspor GeoTIFF yang sudah bergaya. Gunakan Python kalau produknya berupa dokumen: tata letak halaman, peta inset, tabel, PDF banyak halaman, dan apa pun yang harus dibuat ulang setiap bulan tanpa perlu klik.
 :::
 
+## Warna yang jujur
+
+Peta warna adalah bagian peta yang paling dipercaya pembaca dan paling jarang dipertanyakan. Tiga keluarga mencakup hampir semua kasus:
+
+- Peta **berurutan** (terang ke gelap, atau sebaliknya) untuk besaran dari rendah ke tinggi: suhu, biomassa, penduduk.
+- Peta **divergen** (gelap, terang, gelap dalam dua rona) untuk besaran yang titik tengahnya bermakna: perubahan di sekitar nol, anomali di sekitar rata-rata jangka panjang.
+- Peta **kualitatif** (rona berbeda dengan kecerahan mirip) untuk kelas tanpa urutan: jenis tutupan lahan.
+
+Mata membaca *urutan* dari kecerahan, bukan dari rona. Gambar pertama mengukur kecerahan CIELAB L* di sepanjang empat peta warna. Viridis dan cividis naik terus dari gelap ke terang, sehingga piksel yang lebih panas selalu tampak lebih terang. Jet, pelangi bawaan lama, naik hampir putih di tengah (sian ke kuning) lalu turun lagi di kedua ujung, sehingga piksel paling dingin dan paling panas punya kecerahan yang mirip. Bila dicetak abu-abu, atau dilihat oleh pembaca dengan buta warna merah-hijau (hingga sekitar satu dari dua belas laki-laki, tergantung populasinya), bagian terpanas Bandung sulit dibedakan dari yang terdingin; versi abu-abu viridis tetap menjaga urutannya.
+
+Pengukuran yang sama mengungkap hal yang kurang nyaman tentang palet bab ini sendiri, palet divergen biru-kuning-merah: paling terang di 34 °C, titik tengah rentang 22-46 °C. Itu benar hanya bila 34 °C *bermakna*, padahal tidak. Palet divergen untuk suhu menyiratkan "di atas dan di bawah normal". Untuk laporan ini palet itu pilihan yang disengaja, karena pembaca mengharapkan merah untuk panas; versi yang jujur akan memusatkannya pada median musiman, atau memakai peta berurutan seperti inferno. Pilih keluarganya dulu, warnanya kemudian.
+
+## Satu rentang untuk seluruh seri
+
+Aturan di kode, satu rentang tetap di setiap halaman, mudah diucapkan dan mudah dilanggar. Gambar kedua menunjukkan mengapa penting. Di atas, Kota Bekasi dan Garut masing-masing memakai rentang dari persentil ke-2 sampai ke-98 miliknya sendiri: kedua peta berjalan dari biru ke merah tua, dan pembaca akan menyimpulkan keduanya sama panasnya. Di bawah, dengan satu rentang bersama, Bekasi hampir seluruhnya merah dan Garut sebagian besar biru: median suhu permukaan Bekasi 12,9 °C lebih tinggi.
+
+Rentang bersama juga harus *cukup lebar*. Versi pertama bab ini memakai 22-42 °C, dipilih dengan melihat Bandung, dan Kota Bekasi, yang sepersepuluh terpanasnya di atas 44 °C, jenuh menjadi satu warna merah rata yang menyembunyikan semua variasi di dalamnya. Perbaikannya adalah menetapkan rentang dari semua wilayah sekaligus sebelum menggambar halaman mana pun (Latihan 3), dan memeriksa tabel ringkasan untuk wilayah yang persentil ke-10 atau ke-90-nya berada di luar rentang.
+
+## Apa yang diasumsikan skala
+
+Skala hanya benar di tempat skala peta konstan. Peta web, termasuk Code Editor Earth Engine, memakai **Web Mercator**, yang memanjangkan jarak sebesar 1/cos(lintang) dan luas sebesar kuadratnya. Di dekat khatulistiwa hal ini hampir tidak berpengaruh: di Jakarta jarak hanya 0,6 % terlalu panjang. Di Sydney jarak 20 % terlalu panjang dan luas 45 % terlalu besar, dan di Oslo luas hampir empat kali terlalu besar. Karena itulah peta di buku ini digambar dalam bujur-lintang biasa untuk wilayah Indonesia yang kecil dan dalam UTM untuk pengukuran, mengapa skala dihitung dari lintang pusat peta, dan mengapa luas tidak boleh diukur dari tangkapan layar peta web.
+
+## Sebelum dikirim
+
+Pemeriksaan akhir dua menit yang menangkap sebagian besar kesalahan yang disadari klien:
+
+1. Apakah judul menyebut apa, di mana, dan kapan, dalam bahasa klien?
+2. Apakah angka di legenda punya satuan, dan apakah rentangnya sama di setiap halaman?
+3. Apakah ada wilayah yang jenuh di salah satu ujung rentang warna?
+4. Apakah peta warnanya terbaca dalam abu-abu (cetak satu halaman hitam-putih)?
+5. Apakah koordinat di tepi peta cocok dengan GIS klien bila diketik?
+6. Apakah angka ringkasan di halaman cocok dengan tabel, dan tabel dengan datanya?
+7. Apakah kredit data lengkap, dengan tanggal akuisisi, bukan hanya nama produk?
+
 ## Latihan {.unnumbered}
 
 1. Tambahkan ke-27 kabupaten dan kota ke `DISTRICTS`. Berapa lama laporannya selesai, dan langkah mana yang paling lambat?
 2. Tambahkan halaman kedua untuk setiap wilayah berisi histogram suhu. Apa yang ditunjukkan histogram yang tidak terlihat di peta?
-3. Beri setiap wilayah rentang warnanya sendiri. Lalu letakkan dua halaman berdampingan dan jelaskan kesalahan apa yang bisa dibuat pembaca.
+3. Hitung rentang warna dari persentil ke-2 dan ke-98 semua wilayah yang digabung, sebelum menggambar halaman mana pun, lalu pakai untuk seluruh laporan. Wilayah mana yang akan jenuh dengan rentang lama 22-42 °C?
+4. Gambar ulang laporan dengan peta warna inferno dan cetak satu halaman dalam abu-abu. Apa yang berubah dari apa yang bisa dilihat pembaca?

@@ -10,5 +10,23 @@
   "kind": "table",
   "caption": "The numbers printed on each page, for all three districts.",
   "markdown": "| district     |   p10_C |   median_C |   p90_C |\n|:-------------|--------:|-----------:|--------:|\n| Kota Bandung |    33.8 |       38.4 |    40.8 |\n| Kota Bekasi  |    38.1 |       41.7 |    44.1 |\n| Garut        |    22.4 |       28.9 |    33.9 |"
+ },
+ {
+  "name": "ch28-colour",
+  "kind": "figure",
+  "caption": "Lightness (CIELAB L*) along four colour maps, and the same LST map in colour and printed in grey.",
+  "image": "images/real/ch28-colour.png"
+ },
+ {
+  "name": "ch28-range-trap",
+  "kind": "figure",
+  "caption": "The same two districts with their own colour ranges (top) and one shared range (bottom).",
+  "image": "images/real/ch28-range-trap.png"
+ },
+ {
+  "name": "ch28-mercator",
+  "kind": "table",
+  "caption": "How much Web Mercator enlarges lengths and areas at six latitudes.",
+  "markdown": "| place      |   latitude |   length scale factor |   area scale factor |\n|:-----------|-----------:|----------------------:|--------------------:|\n| Banda Aceh |       5.55 |                 1.005 |               1.009 |\n| Jakarta    |      -6.21 |                 1.006 |               1.012 |\n| Kupang     |     -10.18 |                 1.016 |               1.032 |\n| Sydney     |     -33.87 |                 1.204 |               1.451 |\n| Hobart     |     -42.88 |                 1.365 |               1.862 |\n| Oslo       |      59.91 |                 1.995 |               3.978 |"
  }
 ]

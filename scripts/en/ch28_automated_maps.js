@@ -13,7 +13,7 @@
 
 var DISTRICTS = ['Kota Bandung', 'Kota Bekasi', 'Garut'];
 var PALETTE = ['313695', '74add1', 'ffffbf', 'f46d43', 'a50026'];
-var VIS = {min: 22, max: 42, palette: PALETTE};          // the same for every map
+var VIS = {min: 22, max: 46, palette: PALETTE};          // the same for every map, wide enough for the hottest
 
 var gaul = ee.FeatureCollection('FAO/GAUL/2025/level2');
 
@@ -67,5 +67,5 @@ DISTRICTS.forEach(function (name) {
 // ---------------------------------------------------------------------------
 // 1. Add all 27 West Java districts to the loop. What must stay fixed across
 //    the series for the maps to be comparable?
-// 2. Replace the fixed 22 to 42 °C range with each district's own 2nd to
+// 2. Replace the fixed 22 to 46 °C range with each district's own 2nd to
 //    98th percentile. What does a reader lose?
