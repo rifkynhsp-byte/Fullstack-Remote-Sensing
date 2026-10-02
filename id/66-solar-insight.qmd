@@ -1,0 +1,67 @@
+# Satu Grafik, Satu Pertanyaan: Memvisualisasikan Sumber Daya Surya {#sec-solar-insight}
+
+::: {.chapter-goal}
+#### Di bab ini
+Sepuluh tahun data surya per jam untuk dua kota di Indonesia, 175.000 baris, diubah menjadi lima grafik. Setiap grafik dipilih untuk menjawab satu pertanyaan, dan setiap grafik membawa judul utama yang menyatakan jawabannya. Anda akan belajar mengapa *heatmap* mengalahkan grafik garis untuk setahun data per jam, bagaimana membuat diagram pencar memeriksa hukum fisika, mengapa *box plot* perlu digambari nilai ekstremnya, dan bagaimana *small multiples* membuat mata bisa membandingkan tanpa membaca angka. Kodenya tersedia dalam Python dan R berdampingan.
+:::
+
+## Gaya *insight*
+
+Grafik dalam laporan punya satu tugas: membuat pembaca melihat sebuah temuan lebih cepat daripada lewat tabel. Kebanyakan grafik gagal karena alasan yang sama. Grafik itu menampilkan data, lalu membiarkan pembaca menebak sendiri apa artinya.
+
+Grafik di bab ini mengikuti gaya sederhana. Masing-masing punya **judul utama** tebal yang menyatakan temuannya dengan kata-kata ("Kupang menghasilkan energi lebih banyak daripada Bandung setiap bulan"), dan **subjudul** biasa yang menyebut apa yang digambar, untuk periode apa, dan cara membacanya. Judul utama ditulis paling akhir, setelah melihat grafiknya, dan harus benar terhadap grafik di bawahnya. Jika Anda tidak bisa menulis judul yang benar, grafik itu belum menemukan apa-apa, dan itu pun informasi yang berguna.
+
+Aturan kedua: setiap grafik menjawab **satu pertanyaan**, dan bentuknya dipilih untuk pertanyaan itu. Lima pertanyaan di bawah ini adalah yang diajukan siapa pun yang menilai sumber daya surya, sesuai urutan biasanya.
+
+| *Insight* | Pertanyaan | Bentuk grafik | Mengapa bentuk ini |
+|---|---|---|---|
+| 1 | Kapan ada matahari, dan kapan datanya hilang? | *Heatmap*, hari × jam | Setahun berisi 8.760 nilai per jam; *heatmap* menampilkan semuanya sekaligus, termasuk celah datanya |
+| 2 | Apakah datanya mungkin secara fisika? | Diagram pencar di ruang indeks kecerahan, dengan batasnya digambar | Batas fisika menjadi garis lurus; jam yang mustahil jatuh di luarnya |
+| 3 | Seberapa cepat sumber dayanya berubah? | *Box plot* per jam, nilai ekstrem ditumpangkan | Kotak menunjukkan rentang normal, tanda silang menunjukkan kejadian langka yang dikhawatirkan operator jaringan listrik |
+| 4 | Berapa produksi sistem PV, dan seberapa bervariasi? | Batang bulanan berkelompok dengan *whisker* rentang antartahun | Total per bulan adalah yang dibaca pemberi pinjaman; *whisker* memperlihatkan tahun buruk |
+| 5 | Bagaimana dua iklim berbeda sepanjang tahun? | *Small multiples*, satu panel per bulan | Sumbu yang sama di semua panel, sehingga mata membandingkan bentuk, bukan membaca angka |
+
+## Data
+
+Datanya adalah deret iradiasi per jam dari Photovoltaic Geographical Information System milik Komisi Eropa (PVGIS v5.3), yang diambil dari reanalisis ERA5, untuk 2014 sampai 2023. PVGIS gratis dan tidak memerlukan akun atau kunci API. Dua lokasi dengan iklim berbeda membuat perbandingannya layak digambar: **Kupang**, di Pulau Timor, Nusa Tenggara Timur, dengan musim kemarau yang panjang, dan **Bandung**, kota dataran tinggi Jawa Barat yang lebih basah dan berawan. Permintaan yang sama, dengan sistem PV ditentukan, menghasilkan keluaran per jam dari panel 1 kWp yang dimiringkan 10° ke arah khatulistiwa dengan rugi-rugi sistem 14 persen.
+
+Satu jebakan perlu disebut sebelum menggambar apa pun: stempel waktu PVGIS dalam UTC. Grafik "jam dalam sehari" berbasis UTC menaruh tengah hari Kupang pada pukul 04.00. Kedua skrip mengubahnya ke waktu setempat (UTC+8 untuk Kupang, UTC+7 untuk Bandung) sebelum apa pun dikelompokkan per jam.
+
+{{< include _snippets/ch66_solar_insight.qmd >}}
+
+## *Insight* 1: *heatmap*
+
+Grafik garis dari 8.760 nilai per jam hanyalah blok tinta pekat. *Heatmap* melipat nilai yang sama menjadi kisi, hari ke samping dan jam ke atas, sehingga siklus harian menjadi pita mendatar dan musim menjadi perubahan di sepanjang pita itu. Dua hal yang tak terlihat di grafik garis menjadi tampak. Hari berawan muncul sebagai garis vertikal gelap di dalam pita; musim hujan Kupang, dari Desember sampai April, penuh dengannya. Dan data yang hilang akan muncul sebagai blok abu-abu tua, karena peta warnanya menyisihkan warna itu khusus untuk celah. Karena itu *heatmap* adalah grafik pertama yang perlu digambar untuk deret waktu apa pun: sekaligus pemeriksaan mutu dan ringkasan iklim. Pada 2023, pekan-pekan paling terang di Kupang berlangsung dari September sampai November, tepat sebelum hujan.
+
+## *Insight* 2: diagram pencar ruang-k
+
+Dua rasio menggambarkan setiap jam siang. Indeks kecerahan *k*~t~ adalah iradiasi yang sampai ke tanah dibagi iradiasi yang tiba di puncak atmosfer; fraksi difus *k*~d~ adalah bagian iradiasi di tanah yang datang dari langit, bukan langsung dari matahari. Keduanya harus berada antara 0 dan 1: tanah tidak bisa menerima lebih dari yang tiba di puncak atmosfer, dan bagian difus tidak bisa melebihi keseluruhannya. Jika digambar satu terhadap yang lain, batas-batas itu menjadi garis lurus, dan jam yang mustahil jelas jatuh di luarnya.
+
+Grafiknya memperlihatkan bahwa tidak ada satu jam pun di kedua lokasi yang melanggar batas (tabel mutu di bawah kode menghitung nol). Grafik ini juga memperlihatkan iklimnya. Jam-jam Kupang berkumpul di sudut langit cerah, dengan *k*~t~ tinggi dan *k*~d~ rendah: sepertiga jam siangnya punya *k*~t~ di atas 0,65. Jam-jam Bandung menyebar ke sudut mendung: 22 persen jam siangnya punya *k*~t~ di bawah 0,3, dibanding 9 persen di Kupang.
+
+Reanalisis seperti ERA5 konsisten secara internal sejak dibuat, sehingga plot ruang-k yang bersih di sini memang diharapkan. Grafik yang sama baru benar-benar berguna jika diterapkan pada data stasiun ukur: sensor yang tidak datar, instrumen difus yang terhalang bayangan, atau pergeseran stempel waktu akan muncul sebagai sekumpulan titik di luar garis merah.
+
+## *Insight* 3: perubahan cepat (*ramp*)
+
+Operator jaringan listrik lebih khawatir tentang seberapa cepat daya surya berubah daripada seberapa banyak jumlahnya. *Ramp* adalah perubahan iradiasi dari satu jam ke jam berikutnya. *Box plot* per jam memperlihatkan rentang *ramp* yang normal, naik di pagi hari dan turun di sore hari. Sendirian, grafik ini akan menyembunyikan kejadian yang penting, karena *box plot* memperlakukannya sebagai pencilan. Menggambar 0,1 persen jam paling ekstrem di atasnya sebagai tanda silang mengembalikan kejadian itu.
+
+Bacalah grafiknya dengan satu catatan. Perubahan per jam mencampur dua hal: lintasan matahari sendiri, yang membuat setiap jam sore lebih rendah daripada jam sebelumnya, dan awan. Rata-rata *ramp* sore di Kupang sekitar −150 W/m² per jam; tanda silang pada pukul 13.00 dan 14.00 tiga sampai empat kali lebih besar, yaitu awan yang tumbuh di atas pulau pada sore hari. Analisis yang lebih cermat akan menggambar perubahan indeks kecerahan, yang menghilangkan pengaruh lintasan matahari; Latihan 2 meminta Anda melakukannya.
+
+## *Insight* 4: hasil energi bulanan
+
+Bagi pembeli atau pemberi pinjaman, pertanyaannya adalah energi per bulan dan seberapa buruk tahun yang buruk. Batang berkelompok menjawab yang pertama, dan *whisker* yang membentang dari tahun terendah sampai tertinggi dari sepuluh tahun menjawab yang kedua. Sistem 1 kWp di Kupang menghasilkan sekitar 1.596 kWh per tahun dibanding 1.318 kWh di Bandung, 21 persen lebih banyak, dan unggul di setiap bulan, paling besar pada Oktober dan November. *Whisker* terlebar Bandung ada di bulan Oktober: Oktober terburuknya menghasilkan sekitar 90 kWh/kWp, yang terbaik hampir 150, hal yang penting bagi siapa pun yang membiayai sistem dengan cicilan bulanan.
+
+## *Insight* 5: *small multiples*
+
+Untuk membandingkan hari rata-rata di dua lokasi sepanjang tahun, satu grafik berisi 24 garis tidak akan terbaca. Dua belas panel kecil, satu per bulan, masing-masing dengan sumbu yang sama, membuat mata bisa membandingkan bentuk secara langsung. Setiap panel menampilkan rata-rata iradiasi per jam sebagai garis dan rentang sampai persentil ke-90 sebagai arsiran. Dari Juni sampai Agustus, musim kemarau di kedua lokasi, hari rata-rata keduanya hampir sama. Dari Oktober sampai Maret keduanya berpisah, karena sore hari Bandung berawan sepanjang musim hujannya yang panjang, sementara musim hujan Kupang yang lebih pendek membuatnya cerah lebih lama dalam setahun. Sumbu yang sama itulah intinya: dengan sumbu bebas, setiap panel akan tampak sama tinggi dan perbandingannya hilang.
+
+## Apa yang bukan grafik ini
+
+Grafik ini menggambarkan reanalisis, bukan pengukuran. ERA5 adalah model cuaca yang dibatasi pengamatan pada resolusi sekitar 30 km; ia menghaluskan awan lokal, sehingga lokasi nyata akan menunjukkan *ramp* yang lebih tajam dan jam yang lebih ekstrem daripada *Insight* 3. Hasil energi PV juga sebuah model, dengan kemiringan dan rugi-rugi yang diasumsikan. Untuk studi kelayakan, grafik ini adalah pandangan pertama yang baik; untuk penilaian yang layak dibiayai bank, grafik ini adalah templat tempat data stasiun ukur dituangkan.
+
+## Latihan {.unnumbered}
+
+1. Gambar ulang *Insight* 1 untuk Bandung pada tahun yang sama. Tulis judul utama yang benar sebelum membaca judul buatan orang lain.
+2. Ganti *ramp* GHI pada *Insight* 3 dengan perubahan indeks kecerahan dari jam ke jam. Bagaimana nilai ekstrem sore hari berubah, dan mengapa?
+3. Ubah kemiringan PV menjadi 0° dan 20°. Bulan mana yang bertambah dan mana yang berkurang, dan mengapa jawabannya berbeda antara Kupang (10° LS) dan Bandung (7° LS)?
+4. Gambar ulang *Insight* 5 dengan sumbu y bebas (`sharey=False` di Python, `scales = "free_y"` di R). Perbandingan mana yang menjadi mustahil?

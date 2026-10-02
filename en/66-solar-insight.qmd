@@ -1,0 +1,67 @@
+# One Chart, One Question: Visualising a Solar Resource {#sec-solar-insight}
+
+::: {.chapter-goal}
+#### In this chapter
+Ten years of hourly solar data for two Indonesian cities, 175,000 rows, turned into five charts. Each chart is chosen to answer one question, and each carries a headline that states its answer. You will learn why a heatmap beats a line plot for a year of hours, how to make a scatter plot check physics, why box plots need their extremes drawn on top, and how small multiples let the eye compare without reading numbers. The code is in Python and R side by side.
+:::
+
+## The insight style
+
+A chart in a report has one job: to let the reader see a finding faster than a table would. Most charts fail at it for the same reason. They show data, and leave the reader to work out what it says.
+
+The charts in this chapter follow a simple house style. Each has a **headline** in bold that states the finding in words ("Kupang out-yields Bandung in every month"), and a **subtitle** in plain type that says what is plotted, over what period, and how to read it. The headline is written last, after looking at the chart, and it must be true of the chart beneath it. If you cannot write a true headline, the chart has not found anything yet, and that is useful to know.
+
+The second rule is that each chart answers **one question**, and its form is chosen for that question. The five questions below are the ones anyone assessing a solar resource asks, in the order they ask them.
+
+| Insight | Question | Chart form | Why this form |
+|---|---|---|---|
+| 1 | When is there sun, and when is it missing? | Heatmap, day × hour | A year of hours is 8,760 values; a heatmap shows all of them at once, with gaps visible |
+| 2 | Is the data physically possible? | Scatter in clearness-index space, with limits drawn | Physical limits become straight lines; any impossible hour falls outside them |
+| 3 | How fast does the resource change? | Box plots by hour, extremes overlaid | Boxes show the normal range, crosses show the rare events a grid operator worries about |
+| 4 | What will a PV system produce, and how variable is it? | Grouped monthly bars with year-range whiskers | Totals by month are what a financier reads; whiskers show the bad year |
+| 5 | How do two climates differ through the year? | Small multiples, one panel per month | The same axes everywhere, so the eye compares shapes instead of reading numbers |
+
+## The data
+
+The data are the hourly irradiance series of the European Commission's Photovoltaic Geographical Information System (PVGIS v5.3), drawn from the ERA5 reanalysis, for 2014 to 2023. PVGIS is free and needs no account or key. Two sites in different climates make the comparisons worth drawing: **Kupang**, on Timor in Nusa Tenggara Timur, with a long dry season, and **Bandung**, a wetter, cloudier city in the West Java highlands. The same request, with a PV system specified, returns the hourly output of a 1 kWp array tilted 10° towards the equator with 14 per cent system losses.
+
+One trap is worth naming before any plotting: PVGIS timestamps are in UTC. A chart of "hour of day" in UTC puts Kupang's noon at 04:00. Both scripts convert to local time (UTC+8 for Kupang, UTC+7 for Bandung) before anything is grouped by hour.
+
+{{< include _snippets/ch66_solar_insight.qmd >}}
+
+## Insight 1: the heatmap
+
+A line plot of 8,760 hourly values is a solid block of ink. A heatmap folds the same values into a grid, days across and hours up, so that the daily cycle becomes a horizontal band and the seasons become changes along it. Two things become visible that no line plot shows. Cloudy days appear as dark vertical streaks inside the band; Kupang's wet season, from December to April, is full of them. And missing data would appear as dark grey blocks, because the colour map reserves that colour for gaps. A heatmap is therefore the first chart to draw for any time series: it is a quality check and a climate summary at once. In 2023, Kupang's brightest weeks run from September to November, just before the rains.
+
+## Insight 2: the k-space scatter
+
+Two ratios describe every daylight hour. The clearness index *k*~t~ is the irradiance reaching the ground divided by the irradiance arriving at the top of the atmosphere; the diffuse fraction *k*~d~ is the share of the ground irradiance that comes from the sky rather than directly from the sun. Both must lie between 0 and 1: the ground cannot receive more than arrives at the top of the atmosphere, and the diffuse part cannot exceed the whole. Plotted against each other, those limits become straight lines, and any impossible hour falls visibly outside them.
+
+The chart shows that no hour at either site breaks a limit (the quality table below the code counts zero). It also shows the climates. Kupang's hours crowd the clear-sky corner at high *k*~t~ and low *k*~d~: a third of its daylight hours have *k*~t~ above 0.65. Bandung's spread towards the overcast corner: 22 per cent of its daylight hours have *k*~t~ below 0.3, against 9 per cent in Kupang.
+
+A reanalysis such as ERA5 is internally consistent by construction, so a clean k-space plot here is expected. The same chart applied to measured station data is where it earns its place: a mis-levelled sensor, a shaded diffuse instrument or a timestamp shift shows up as a cloud of points beyond a red line.
+
+## Insight 3: ramps
+
+A grid operator worries less about how much solar power there is than about how fast it changes. The ramp is the change in irradiance from one hour to the next. A box plot by hour shows the normal range of ramps, rising in the morning and falling in the afternoon. On its own it would hide the events that matter, because a box plot treats them as outliers. Drawing the most extreme 0.1 per cent of hours on top as crosses puts them back.
+
+Read the chart with one caution. An hourly change mixes two things: the sun's own path, which makes every afternoon hour lower than the one before, and clouds. The mean afternoon ramp in Kupang is about −150 W/m² per hour; the crosses at 13:00 and 14:00 are three to four times larger, which is cloud building over the island in the afternoon. A more careful analysis would plot the change in clearness index instead, which removes the sun's path; Exercise 2 asks you to do it.
+
+## Insight 4: monthly yield
+
+For a buyer or a lender, the question is energy per month and how bad a bad year can be. Grouped bars answer the first, and whiskers spanning the lowest and highest of the ten years answer the second. A 1 kWp system in Kupang produces about 1,596 kWh a year against 1,318 kWh in Bandung, 21 per cent more, and it out-yields Bandung in every month, by the most in October and November. Bandung's widest whiskers are in October: its worst October produced around 90 kWh/kWp, its best nearly 150, which matters to anyone financing a system on monthly repayments.
+
+## Insight 5: small multiples
+
+To compare the average day at two sites through the year, one chart with 24 lines would be unreadable. Twelve small panels, one per month, each with the same axes, let the eye compare shapes directly. Each panel shows the mean irradiance by hour as a line and the range up to the 90th percentile as shading. From June to August, in the dry season at both sites, the two days are almost identical. From October to March they part, because Bandung's afternoons cloud over in its long wet season, while Kupang's shorter wet season leaves it clearer for more of the year. The shared axes are the whole point: with free axes, every panel would look the same height and the comparison would be lost.
+
+## What these charts are not
+
+They describe a reanalysis, not a measurement. ERA5 is a weather model constrained by observations at about 30 km resolution; it smooths local cloud, so real sites will show sharper ramps and more extreme hours than Insight 3. The PV yield is a model too, with an assumed tilt and loss. For a feasibility study the charts are a sound first view; for a bankable assessment they are the template into which measured station data should be poured.
+
+## Exercises {.unnumbered}
+
+1. Redraw Insight 1 for Bandung in the same year. Write a true headline for it before reading anyone else's.
+2. Replace the GHI ramp in Insight 3 with the hour-to-hour change in clearness index. How do the afternoon extremes change, and why?
+3. Change the PV tilt to 0° and to 20°. Which months gain and which lose, and why does the answer differ between Kupang (10° S) and Bandung (7° S)?
+4. Redraw Insight 5 with free y axes (`sharey=False` in Python, `scales = "free_y"` in R). Which comparison becomes impossible?

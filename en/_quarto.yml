@@ -139,6 +139,7 @@ book:
         - 28-map-production.qmd
         - 38-eda-graphs.qmd
         - 29-dataviz.qmd
+        - 66-solar-insight.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
     - part: "Part IX: LiDAR for Forestry"
