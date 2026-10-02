@@ -147,6 +147,93 @@ def summary_frame():
     }])
 
 
+# ---------------------------------------------------------------------------
+# From drone to satellite: does a 10 m palm map see the same block?
+# ---------------------------------------------------------------------------
+PALMS_PER_HA = 10000 / (9 * 9 * np.sin(np.radians(60)))      # 9 m triangular planting: about 143 palms/ha
+
+
+def cells_frame():
+    """Drone palms/ha and the Forest Data Partnership oil palm probability in every 50 m cell."""
+    if "cells" in _cache:
+        return _cache["cells"]
+    import ee
+    grid = density_frame()
+    with rasterio.open("/vsicurl/" + URL) as src:
+        left, top = src.bounds.left, src.bounds.top
+    _, res = load()
+    cell_m = int(50 / res) * res                                # the exact cell size used by density_frame
+    feats = []
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            x0, y1 = left + j * cell_m, top - i * cell_m
+            g = ee.Geometry.Rectangle([x0, y1 - cell_m, x0 + cell_m, y1], "EPSG:3857", False)
+            feats.append(ee.Feature(g, {"row": i, "col": j, "drone_per_ha": float(grid[i, j])}))
+    fdp = lambda y: (ee.ImageCollection("projects/forestdatapartnership/assets/palm/model_2026a")
+                     .filterDate(f"{y}-01-01", f"{y + 1}-01-01").mosaic().select("probability").rename(f"p{y}"))
+    img = fdp(2020).addBands(fdp(2024))
+    out = img.reduceRegions(ee.FeatureCollection(feats), ee.Reducer.mean(), 10).getInfo()["features"]
+    d = pd.DataFrame([f["properties"] for f in out])
+    _cache["cells"] = d
+    return d
+
+
+def crosscheck_table():
+    d = cells_frame()
+    from scipy import stats
+    planted = d.drone_per_ha > 60                              # the drone's own "planted" rule, as in the summary
+    sat = d.p2024 > 0.5
+    rows = [
+        ("50 m cells in the image", len(d)),
+        ("cells the drone calls planted (> 60 palms/ha)", int(planted.sum())),
+        ("cells the satellite calls oil palm (p > 0.5, 2024)", int(sat.sum())),
+        ("both agree: planted", int((planted & sat).sum())),
+        ("both agree: not planted", int((~planted & ~sat).sum())),
+        ("Spearman r, drone palms/ha vs satellite probability", stats.spearmanr(d.drone_per_ha, d.p2024)[0]),
+        ("satellite palm area (ha)", sat.sum() * 0.25),
+        (f"palms expected at {PALMS_PER_HA:.0f}/ha on that area", sat.sum() * 0.25 * PALMS_PER_HA),
+        ("drone count: all detections", len(count_palms())),
+        ("drone count: inside satellite palm cells", int(d.loc[sat, "drone_per_ha"].sum() * 0.25)),
+    ]
+    out = pd.DataFrame(rows, columns=["measure", "value"])
+    out["shown"] = [f"{v:.2f}" if isinstance(v, float) and v < 1 else f"{v:,.0f}" for v in out.value]
+    return out
+
+
+def plot_crosscheck(t):
+    d = cells_frame()
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(11, 3.8))
+    shape = (d.row.max() + 1, d.col.max() + 1)
+    m1 = np.full(shape, np.nan); m2 = np.full(shape, np.nan)
+    m1[d.row, d.col] = d.drone_per_ha; m2[d.row, d.col] = d.p2024
+    from rasterio.warp import transform_bounds
+    with rasterio.open("/vsicurl/" + URL) as src:
+        w, so, e, n = transform_bounds(src.crs, "EPSG:4326", *src.bounds)
+    _, res = load()
+    cell_deg = (e - w) * (int(50 / res) * res) / ((src.bounds.right - src.bounds.left))
+    ext = [w, w + shape[1] * cell_deg, n - shape[0] * cell_deg, n]          # the 50 m grid's own extent
+    im1 = a1.imshow(m1, cmap="YlGn", vmin=0, vmax=200, extent=ext); fig.colorbar(im1, ax=a1, shrink=0.75, label="palms/ha")
+    a1.set_title("Drone: palms per hectare", loc="left", fontsize=9)
+    im2 = a2.imshow(m2, cmap="YlOrBr", vmin=0, vmax=1, extent=ext); fig.colorbar(im2, ax=a2, shrink=0.75, label="probability")
+    a2.set_title("Satellite: oil palm probability 2024", loc="left", fontsize=9)
+    from matplotlib.ticker import FuncFormatter, MaxNLocator
+    for a in (a1, a2):                                                       # graticule: every map gets coordinates
+        a.xaxis.set_major_locator(MaxNLocator(3)); a.yaxis.set_major_locator(MaxNLocator(3))
+        a.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{abs(v):.3f}°E"))
+        a.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{abs(v):.3f}°S"))
+        a.grid(True, color="#333333", lw=0.3, ls="--", alpha=0.6); a.tick_params(labelsize=7)
+    a3.scatter(d.p2024, d.drone_per_ha, s=14, color="#2a78d6", alpha=0.7)
+    a3.axhline(60, color="grey", ls=":"); a3.axvline(0.5, color="grey", ls=":")
+    a3.set_xlabel("satellite probability"); a3.set_ylabel("drone palms/ha")
+    a3.spines[["top", "right"]].set_visible(False)
+    tt = t.set_index("measure").value
+    a3.set_title(f"Spearman r = {tt.iloc[5]:.2f}", loc="left", fontsize=9)
+    agree = (tt.iloc[3] + tt.iloc[4]) / tt.iloc[0]
+    fig.suptitle(f"Drone and 10 m satellite map agree on {agree:.0%} of the 50 m cells", x=0.01, ha="left", fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "figure", "name": "ch27-palm-crowns", "figure": figure_crowns,
@@ -165,6 +252,10 @@ def products():
          "floatfmt": (".0f", ".1f", ".1f", ".2f", ".0f"),
          "caption": "The count in numbers. Without field counts this is not an "
                     "accuracy; the spacing check is the evidence available."},
+        {"kind": "table", "name": "ch27-crosscheck", "data": crosscheck_table, "columns": ["measure", "shown"],
+         "caption": "The drone count against the Forest Data Partnership oil palm model (Sentinel-based, 10 m), cell by cell."},
+        {"kind": "chart", "name": "ch27-crosscheck-chart", "data": crosscheck_table, "plot": plot_crosscheck, "live": False,
+         "caption": "Left and centre: the same 50 m grid seen by the drone and by the satellite model. Right: every cell, one against the other."},
     ]
 
 

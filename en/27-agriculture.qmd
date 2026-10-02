@@ -27,8 +27,26 @@ There is no field count for this block, so the book does not report an accuracy.
 The nearest-neighbour test above is weaker than it looks: a bush next to a palm also has a neighbour at 8 m. Chapter [-@sec-palm-health] applies a stricter test (at least three neighbours at 7 to 11 m, as on a planting grid) and shows a gallery of what fails it. About half of the 2,585 detections fail, and the random sample of them is bushes and mixed vegetation. The true palm count in this image lies between about 1,300 and 2,585, and only a field count can say where.
 :::
 
+## From drone to satellite: a second, independent count
+
+A drone covers a block; a satellite covers the country. The two can check each other. The Forest Data Partnership publishes a yearly 10 m probability map of oil palm plantation, trained on Sentinel-1 and Sentinel-2 imagery, for EUDR due diligence (Chapter [-@sec-eudr] uses its rubber twin). It knows nothing about this drone image, which makes it a fair second opinion.
+
+The script lays the same 50 m grid used for the density map over the satellite map and averages the 2024 probability in each cell. Then it asks three questions.
+
+**Do they agree on where the palms are?** Of 144 cells, the drone calls 61 planted (more than 60 palms per hectare) and the satellite 53 (probability above 0.5). They agree on 128 cells, 89 %: 49 planted on both, 79 not planted on both. The rank correlation between the drone's palms per hectare and the satellite probability is 0.70. The scatter plot shows why the agreement is good but not perfect: the cells split into two clouds, and the drone's "not planted" cells still hold 25 to 70 detections per hectare. Those are the bushes and trees the local-maximum filter also finds, the problem the correction box above describes.
+
+**How many palms are there?** Inside the 53 satellite palm cells (13.25 ha), the drone found 1,302 crowns. That number was not tuned to match anything, yet it lands at the lower bound that Chapter [-@sec-palm-health] reached by a completely different route, the planting-grid test. Two independent methods meeting at about 1,300 palms is the strongest evidence this chapter can offer without a field count.
+
+**Is the block fully stocked?** A standard 9 m triangular planting holds about 143 palms per hectare, so 13.25 ha should carry about 1,890 palms. The drone finds 1,302, about 69 % of that, and the median planted cell holds 96 palms per hectare, not 143. The gaps are visible in the density map: missing palms, young replants too small to detect at 0.3 m, and edges. For an estate manager this is the useful number, because it says where to look for replanting needs.
+
+::: {.callout-tip}
+## When to fly, when to use the satellite
+The satellite map finds the block, every year, for free; it cannot count palms or see gaps smaller than a few 10 m pixels. The drone counts palms and gaps, but covers a few tens of hectares per flight. Use the satellite to choose where to fly, and the drone to measure what the satellite can only flag.
+:::
+
 ## Exercises {.unnumbered}
 
 1. Change `MIN_SPACING_M` from 5.5 to 4 and to 7. Watch the spacing histogram. Which setting starts double counting?
 2. Draw a polygon around the planted block only and count inside it. Compare the palms per hectare with a standard 9 m triangular planting.
 3. Run the method on the town scene "kebun_sawit_SPP" from the same survey. What does it count that is not a palm?
+4. Repeat the cross-check with the 2020 satellite map (`p2020` is already in the cell table). Which cells changed, and does the drone show young palms there?

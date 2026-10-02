@@ -27,8 +27,26 @@ Tidak ada data hitungan lapangan untuk blok ini, jadi buku ini tidak melaporkan 
 Uji tetangga terdekat di atas lebih lemah daripada kelihatannya: semak di samping sawit juga punya tetangga pada jarak 8 m. Bab [-@sec-palm-health] menerapkan uji yang lebih ketat (setidaknya tiga tetangga pada jarak 7 sampai 11 m, seperti pada grid tanam) dan menampilkan galeri objek yang gagal. Sekitar separuh dari 2.585 deteksi gagal, dan sampel acaknya berupa semak dan vegetasi campuran. Jumlah sawit sebenarnya di citra ini berada di antara sekitar 1.300 dan 2.585, dan hanya hitungan lapangan yang bisa memastikannya.
 :::
 
+## Dari drone ke satelit: hitungan kedua yang independen
+
+Drone mencakup satu blok; satelit mencakup satu negara. Keduanya bisa saling memeriksa. Forest Data Partnership menerbitkan peta peluang perkebunan sawit tahunan beresolusi 10 m, dilatih dengan citra Sentinel-1 dan Sentinel-2, untuk uji tuntas EUDR (Bab [-@sec-eudr] memakai saudaranya untuk karet). Peta itu tidak tahu apa pun tentang citra drone ini, sehingga menjadi pendapat kedua yang adil.
+
+Skrip meletakkan grid 50 m yang sama dengan peta kerapatan di atas peta satelit dan merata-ratakan peluang 2024 di setiap sel. Lalu ia mengajukan tiga pertanyaan.
+
+**Apakah keduanya sepakat tentang letak sawit?** Dari 144 sel, drone menyebut 61 tertanam (lebih dari 60 pohon per hektare) dan satelit 53 (peluang di atas 0,5). Keduanya sepakat pada 128 sel, 89 %: 49 tertanam menurut keduanya, 79 tidak tertanam menurut keduanya. Korelasi peringkat antara jumlah pohon per hektare dari drone dan peluang satelit adalah 0,70. Diagram sebar menunjukkan mengapa kesepakatannya baik tetapi tidak sempurna: sel-sel terbelah menjadi dua awan, dan sel "tidak tertanam" menurut drone masih berisi 25 sampai 70 deteksi per hektare. Itulah semak dan pohon yang juga ditemukan filter maksimum lokal, masalah yang dijelaskan kotak koreksi di atas.
+
+**Berapa banyak sawitnya?** Di dalam 53 sel sawit menurut satelit (13,25 ha), drone menemukan 1.302 tajuk. Angka itu tidak disetel agar cocok dengan apa pun, tetapi jatuh tepat di batas bawah yang dicapai Bab [-@sec-palm-health] melalui jalan yang sama sekali berbeda, yaitu uji grid tanam. Dua metode independen yang bertemu di sekitar 1.300 pohon adalah bukti terkuat yang bisa diberikan bab ini tanpa hitungan lapangan.
+
+**Apakah bloknya terisi penuh?** Pola tanam segitiga baku 9 m memuat sekitar 143 pohon per hektare, jadi 13,25 ha seharusnya memuat sekitar 1.890 pohon. Drone menemukan 1.302, sekitar 69 % dari itu, dan sel tertanam di nilai tengah berisi 96 pohon per hektare, bukan 143. Celahnya terlihat di peta kerapatan: pohon yang hilang, tanaman ulang yang masih terlalu kecil untuk terdeteksi pada 0,3 m, dan tepi blok. Bagi manajer kebun inilah angka yang berguna, karena menunjukkan di mana mencari kebutuhan penyisipan.
+
+::: {.callout-tip}
+## Kapan menerbangkan drone, kapan memakai satelit
+Peta satelit menemukan bloknya, setiap tahun, gratis; ia tidak bisa menghitung pohon atau melihat celah yang lebih kecil dari beberapa piksel 10 m. Drone menghitung pohon dan celah, tetapi hanya mencakup beberapa puluh hektare per penerbangan. Pakai satelit untuk memilih di mana terbang, dan drone untuk mengukur apa yang hanya bisa ditandai satelit.
+:::
+
 ## Latihan {.unnumbered}
 
 1. Ubah `MIN_SPACING_M` dari 5,5 menjadi 4 dan 7. Perhatikan histogram jarak tanamnya. Pengaturan mana yang mulai menghitung ganda?
 2. Buat poligon hanya di sekitar blok yang ditanami, lalu hitung di dalamnya. Bandingkan jumlah pohon per hektar dengan pola tanam segitiga 9 m yang umum.
 3. Jalankan metode ini pada citra kota "kebun_sawit_SPP" dari survei yang sama. Apa saja yang ikut terhitung padahal bukan sawit?
+4. Ulangi pemeriksaan silang dengan peta satelit 2020 (`p2020` sudah ada di tabel sel). Sel mana yang berubah, dan apakah drone menunjukkan sawit muda di sana?

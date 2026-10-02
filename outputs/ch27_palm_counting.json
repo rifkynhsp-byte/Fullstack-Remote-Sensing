@@ -23,5 +23,17 @@
   "kind": "table",
   "caption": "The count in numbers. Without field counts this is not an accuracy; the spacing check is the evidence available.",
   "markdown": "|   palms_counted |   image_area_ha |   median_spacing_m |   share_spacing_7_to_11_m |   median_density_per_ha_in_planted_cells |\n|----------------:|----------------:|-------------------:|--------------------------:|-----------------------------------------:|\n|            2585 |            37.7 |                8.7 |                      0.81 |                                       96 |"
+ },
+ {
+  "name": "ch27-crosscheck",
+  "kind": "table",
+  "caption": "The drone count against the Forest Data Partnership oil palm model (Sentinel-based, 10 m), cell by cell.",
+  "markdown": "| measure                                             |      shown |\n|:----------------------------------------------------|-----------:|\n| 50 m cells in the image                             | 144        |\n| cells the drone calls planted (> 60 palms/ha)       |  61        |\n| cells the satellite calls oil palm (p > 0.5, 2024)  |  53        |\n| both agree: planted                                 |  49        |\n| both agree: not planted                             |  79        |\n| Spearman r, drone palms/ha vs satellite probability |   0.7      |\n| satellite palm area (ha)                            |  13        |\n| palms expected at 143/ha on that area               |   1.89e+03 |\n| drone count: all detections                         |   2.58e+03 |\n| drone count: inside satellite palm cells            |   1.3e+03  |"
+ },
+ {
+  "name": "ch27-crosscheck-chart",
+  "kind": "chart",
+  "caption": "Left and centre: the same 50 m grid seen by the drone and by the satellite model. Right: every cell, one against the other.",
+  "image": "images/real/ch27-crosscheck-chart.png"
  }
 ]
