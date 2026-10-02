@@ -130,7 +130,15 @@ touch docs/.nojekyll
 # discussion only, with each listing and its outputs replaced by links to the
 # online chapter and the script. Runs after docs/ is assembled.
 echo "==> Building the Word reading editions"
-python3 tools/build_docx.py
+# The Mermaid diagrams start a headless Chrome, which has hung on the CI runner
+# until the job's 20-minute limit and cancelled the whole deploy. Give it 7
+# minutes; if it hangs, build the Word files with a pointer to the online
+# diagrams instead, so the site and the downloads still publish.
+if ! timeout 420 python3 tools/build_docx.py; then
+  echo "    Word build with diagrams failed or timed out; rebuilding without Mermaid"
+  pkill -f chrome || true
+  python3 tools/build_docx.py --skip-mermaid
+fi
 
 # Uncomment and set your domain if you use one.
 # echo "gee.example.com" > docs/CNAME
