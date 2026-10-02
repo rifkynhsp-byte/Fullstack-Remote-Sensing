@@ -13,7 +13,7 @@ Deep learning earns its place where this breaks: young palms under weeds, overla
 
 ## A working example: a smallholder block near Banjarbaru
 
-The image is a 3.7 cm drone orthophoto from OpenAerialMap, published under CC BY 4.0. Python reads it straight from the cloud at 0.3 m, the resolution the author's Earth Engine method was built for. In the JavaScript tab the same recipe runs in the Code Editor once you upload the image as your own asset.
+The image is a 3.7 cm drone orthophoto from OpenAerialMap, published under CC BY 4.0. Python reads it straight from the cloud at 0.3 m, the resolution the author's Earth Engine method was built for. The book also publishes it as a public Earth Engine asset at 0.3 m (`projects/shaped-producer-482312-m0/assets/fullstack_rs/drone_oilpalm_banjarbaru_30cm`), so the JavaScript tab runs in the Code Editor as it is. Run there, the same recipe counts 3,252 crowns rather than 2,585: Earth Engine's local maximum uses a circular 5.5 m window and splits flat-topped crowns differently from the Python filter. Two implementations of one method disagreeing by a quarter is the strongest argument in this chapter for a field reference.
 
 {{< include _snippets/ch27_palm_counting.qmd >}}
 

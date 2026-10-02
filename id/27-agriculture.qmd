@@ -13,7 +13,7 @@ Deep learning baru berguna ketika cara ini gagal: sawit muda yang tertutup gulma
 
 ## Contoh nyata: kebun petani di dekat Banjarbaru
 
-Citranya adalah ortofoto drone beresolusi 3,7 cm dari OpenAerialMap dengan lisensi CC BY 4.0. Python membacanya langsung dari cloud pada resolusi 0,3 m, resolusi yang dipakai metode Earth Engine penulis. Di tab JavaScript, resep yang sama dijalankan di Code Editor setelah citra diunggah sebagai asset milik Anda sendiri.
+Citranya adalah ortofoto drone beresolusi 3,7 cm dari OpenAerialMap dengan lisensi CC BY 4.0. Python membacanya langsung dari cloud pada resolusi 0,3 m, resolusi yang dipakai metode Earth Engine penulis. Buku ini juga menerbitkannya sebagai asset Earth Engine publik beresolusi 0,3 m (`projects/shaped-producer-482312-m0/assets/fullstack_rs/drone_oilpalm_banjarbaru_30cm`), sehingga tab JavaScript langsung berjalan di Code Editor. Bila dijalankan di sana, resep yang sama menghitung 3.252 tajuk, bukan 2.585: maksimum lokal Earth Engine memakai jendela lingkaran 5,5 m dan memecah tajuk berpuncak datar secara berbeda dari filter Python. Dua implementasi dari satu metode yang berselisih seperempat adalah argumen terkuat di bab ini untuk rujukan lapangan.
 
 {{< include _snippets/ch27_palm_counting.qmd >}}
 

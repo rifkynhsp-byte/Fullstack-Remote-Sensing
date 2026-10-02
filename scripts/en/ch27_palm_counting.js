@@ -5,21 +5,20 @@
  * CHAPTER 27 | One point per crown, in the Code Editor
  * ---------------------------------------------------------------------------
  * The same recipe as the Python tab, as the author runs it in Earth Engine
- * (sawitML and GEE101 PalmOil_Detection). Earth Engine has no public drone
- * imagery of Indonesian plantations, so first bring your own:
- *   1. Download the orthophoto from OpenAerialMap (CC BY 4.0), or use your
- *      own drone or Pleiades image.
- *   2. Assets > New > Image upload (GeoTIFF). Name it as below.
+ * (sawitML and GEE101 PalmOil_Detection). The drone orthophoto (OpenAerialMap,
+ * CC BY 4.0) is published with this book as a public Earth Engine asset at
+ * 0.3 m, so it runs as it is. To use your own drone or Pleiades image instead,
+ * upload it (Assets > New > Image upload) and change the asset id below.
  * At 0.3 m a mature palm crown is about 25 pixels across.
  */
 
-var ortho = ee.Image('users/your_name/kebun_sawit_bangkal_baru');   // <- your asset
+var ortho = ee.Image('projects/shaped-producer-482312-m0/assets/fullstack_rs/drone_oilpalm_banjarbaru_30cm');
 var area = ortho.geometry();
 
-// 1. Excess green: (2G - R - B) / (R + G + B). Bands b1, b2, b3 = R, G, B.
-var rgb = ortho.select(['b1', 'b2', 'b3']).toFloat();
+// 1. Excess green: (2G - R - B) / (R + G + B).
+var rgb = ortho.select(['R', 'G', 'B']).toFloat();
 var exg = rgb.expression('(2 * G - R - B) / (R + G + B)',
-  {R: rgb.select('b1'), G: rgb.select('b2'), B: rgb.select('b3')}).rename('exg');
+  {R: rgb.select('R'), G: rgb.select('G'), B: rgb.select('B')}).rename('exg');
 
 // 2. Blur about a third of a crown radius, so each crown has one summit.
 var smooth = exg.convolve(ee.Kernel.gaussian({radius: 3, sigma: 3, units: 'pixels'}));
@@ -34,7 +33,7 @@ var points = crowns.reduceToVectors({geometry: area, scale: 0.3, geometryType: '
 print('Palms counted:', points.size());
 
 Map.centerObject(area, 17);
-Map.addLayer(ortho, {bands: ['b1', 'b2', 'b3'], min: 0, max: 255}, 'Orthophoto');
+Map.addLayer(ortho, {bands: ['R', 'G', 'B'], min: 0, max: 255}, 'Orthophoto');
 Map.addLayer(points, {color: 'ff2d55'}, 'Crowns');
 
 // ---------------------------------------------------------------------------
