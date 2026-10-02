@@ -28,6 +28,28 @@ Each rule is one pair of panels: on the left the graph that most reports contain
 
 {{< include _snippets/ch38_eda_graphs.qmd >}}
 
+## Question 4 in practice: season, trend and remainder
+
+The fourth question, whether the data has a rhythm, deserves a tool of its own. **STL** (seasonal-trend decomposition using LOESS) splits a series into three parts that add back up to it: a *season* that repeats every year, a *trend* that moves slowly, and a *remainder* that is everything else. Rainfall is strongly skewed, so the figure decomposes its square root, which keeps the wettest months from dominating.
+
+For Kupang, the season and trend together explain 85 % of the month-to-month variation. That is the first finding: most of what happens in a rainfall series is the calendar. The trend wanders between dry and wet spells of several years, with no steady rise or fall. The remainder is where the interesting months live. The three largest are November 2021 and November 2022, both far wetter than the season predicts, and February 2024, far drier. The first two fall in the long La Niña of 2020-2023, the last in the El Niño of 2023-24. The decomposition does not know about ENSO; it only isolates the months that need an explanation. That is what exploration is for.
+
+## Relationships: does the Pacific decide the dry season?
+
+A correlation matrix (above) shows which cities move together. A more useful question asks what moves them. The Niño 3.4 index, the sea-surface temperature anomaly in the central Pacific published monthly by NOAA, is the standard measure of El Niño (warm) and La Niña (cold).
+
+Comparing July-October rainfall with the Niño 3.4 anomaly over the same months, 1991-2024, gives a negative rank correlation in all six cities, from -0.60 in Padang to -0.82 in Makassar. In the ten El Niño years (anomaly at least +0.5 °C), the median July-October rainfall was 31 % below normal in Padang and Pontianak, and 66-68 % below normal in Jakarta and Makassar. In the six La Niña years it was above normal everywhere. The small multiples make the pattern visible at once because every panel shares the same axes; with separate axes the reader would compare tick labels instead of points.
+
+Three cautions keep this honest. First, the comparison is between the same months, so it describes association, not a forecast; a forecast would use the Pacific in May or June. Second, percentages of a small number are large: Kupang's dry season is so dry that one wet La Niña year can read as +200 %, which is why the table reports medians. Third, 34 years hold only ten El Niño and six La Niña years. The Spearman correlations are very unlikely to be chance (p < 0.001 everywhere), but the El Niño and La Niña medians rest on few years each.
+
+## Question 3 in practice: values that cannot be right
+
+Satellite data has its own impossible values, and the best place to learn to see them is a single pixel over a single year. The figure shows every daytime land surface temperature that MODIS Terra recorded for one pixel in central Bandung in 2023: 155 days out of 365, because the rest were cloudy.
+
+The product carries a quality flag for every value. In the humid tropics almost every value is "produced, check the other flags", so the useful part of the flag is the estimated error: 135 of the 155 days (87 %) have an estimated error of 2 K or less. A second, independent check comes from the data itself: compare each day with the median of the 15 days around it, scale by the median absolute deviation, and call anything more than three robust standard deviations away an outlier. Six days fail that test, all of them several degrees colder than their neighbours, which is the signature of thin cloud or a cloud edge that the cloud mask missed. Three of the six passed the quality flag.
+
+The lesson generalises. A product's quality flags are the first filter, not the last. A robust check against the series' own context (a moving median and MAD, not a mean and standard deviation, which the outliers themselves would distort) catches what the flags miss. And always look at the plot: the cold dots are obvious to the eye long before any rule is written.
+
 ::: {.callout-tip}
 ## A checklist before any graph leaves your desk
 - Can someone who has not read the text say what it shows?
@@ -43,3 +65,5 @@ Each rule is one pair of panels: on the left the graph that most reports contain
 1. Pick any chart from a report you wrote last year. Apply the checklist and redraw it.
 2. Redo Rule 2 for Ambon. What does the band show that the average hid?
 3. Make the correlation matrix with the season left in. Why does almost everything become strongly correlated?
+4. Repeat the ENSO comparison with the Niño 3.4 anomaly of May-June instead of July-October. How much of the relationship survives as a forecast?
+5. Apply the moving-median rule to the whole of 2019-2024 for the same Bandung pixel. Do the outliers cluster in particular months?

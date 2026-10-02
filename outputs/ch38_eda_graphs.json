@@ -40,5 +40,29 @@
   "kind": "figure",
   "caption": "Correlation of monthly rainfall anomalies (season removed). Cities in the same rainfall regime move together (Makassar and Kupang 0.44, Padang and Pontianak 0.38), but no pair passes 0.5: most of each city's wet and dry months are its own.",
   "image": "images/real/ch38-correlation.png"
+ },
+ {
+  "name": "ch38-stl",
+  "kind": "figure",
+  "caption": "STL decomposition of Kupang's monthly rainfall (square-root scale): a fixed season, a slow trend, and the remainder where unusual months stand out.",
+  "image": "images/real/ch38-stl.png"
+ },
+ {
+  "name": "ch38-enso",
+  "kind": "table",
+  "caption": "July-October rainfall against the Niño 3.4 sea-surface temperature anomaly, 1991-2024: rank correlation, and the median departure from normal in El Niño (≥ +0.5 °C) and La Niña (≤ -0.5 °C) years.",
+  "markdown": "| city      |   Spearman r |       p |   El Niño years (%) |   La Niña years (%) |   n El Niño |   n La Niña |\n|:----------|-------------:|--------:|--------------------:|--------------------:|------------:|------------:|\n| Padang    |        -0.60 | 0.00017 |                 -31 |                  30 |          10 |           6 |\n| Pontianak |        -0.77 | 1.3e-07 |                 -31 |                  22 |          10 |           6 |\n| Jakarta   |        -0.72 | 1.7e-06 |                 -66 |                  20 |          10 |           6 |\n| Makassar  |        -0.82 | 3.7e-09 |                 -68 |                  68 |          10 |           6 |\n| Kupang    |        -0.61 | 0.00012 |                 -35 |                  15 |          10 |           6 |\n| Ambon     |        -0.69 | 5.8e-06 |                 -56 |                  47 |          10 |           6 |"
+ },
+ {
+  "name": "ch38-enso-chart",
+  "kind": "figure",
+  "caption": "One panel per city, same axes. Red: El Niño years; blue: La Niña years.",
+  "image": "images/real/ch38-enso-chart.png"
+ },
+ {
+  "name": "ch38-lst-outliers",
+  "kind": "figure",
+  "caption": "MODIS Terra daily LST at one pixel in central Bandung, with the product's own quality flag and a robust (median and MAD) outlier rule.",
+  "image": "images/real/ch38-lst-outliers.png"
  }
 ]

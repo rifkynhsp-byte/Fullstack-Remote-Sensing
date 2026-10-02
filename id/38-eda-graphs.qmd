@@ -28,6 +28,28 @@ Setiap aturan ditunjukkan sebagai satu pasang panel: di kiri grafik yang biasa a
 
 {{< include _snippets/ch38_eda_graphs.qmd >}}
 
+## Pertanyaan 4 dalam praktik: musim, tren, dan sisa
+
+Pertanyaan keempat, apakah data punya irama, layak mendapat alatnya sendiri. **STL** (dekomposisi musim-tren dengan LOESS) memecah sebuah deret menjadi tiga bagian yang bila dijumlahkan kembali menjadi deret itu: *musim* yang berulang setiap tahun, *tren* yang bergerak lambat, dan *sisa* yang berisi semua hal lain. Curah hujan sangat menceng, jadi gambar ini mendekomposisi akar kuadratnya, agar bulan-bulan terbasah tidak mendominasi.
+
+Untuk Kupang, musim dan tren bersama-sama menjelaskan 85 % variasi dari bulan ke bulan. Itulah temuan pertama: sebagian besar yang terjadi pada deret curah hujan adalah kalender. Trennya berkelana di antara periode kering dan basah selama beberapa tahun, tanpa kenaikan atau penurunan yang mantap. Sisa adalah tempat bulan-bulan menarik berada. Tiga yang terbesar adalah November 2021 dan November 2022, keduanya jauh lebih basah dari perkiraan musim, dan Februari 2024, jauh lebih kering. Dua yang pertama jatuh dalam La Niña panjang 2020-2023, yang terakhir dalam El Niño 2023-24. Dekomposisi tidak tahu apa-apa tentang ENSO; ia hanya memisahkan bulan-bulan yang perlu dijelaskan. Untuk itulah eksplorasi dilakukan.
+
+## Hubungan: apakah Pasifik menentukan musim kemarau?
+
+Matriks korelasi (di atas) menunjukkan kota mana yang bergerak bersama. Pertanyaan yang lebih berguna adalah apa yang menggerakkannya. Indeks Niño 3.4, anomali suhu permukaan laut di Pasifik tengah yang diterbitkan NOAA setiap bulan, adalah ukuran baku El Niño (hangat) dan La Niña (dingin).
+
+Membandingkan curah hujan Juli-Oktober dengan anomali Niño 3.4 pada bulan yang sama, 1991-2024, memberi korelasi peringkat negatif di keenam kota, dari -0,60 di Padang sampai -0,82 di Makassar. Pada sepuluh tahun El Niño (anomali minimal +0,5 °C), median curah hujan Juli-Oktober 31 % di bawah normal di Padang dan Pontianak, dan 66-68 % di bawah normal di Jakarta dan Makassar. Pada enam tahun La Niña, curah hujan di atas normal di semua kota. Small multiples membuat polanya langsung terlihat karena setiap panel memakai sumbu yang sama; dengan sumbu terpisah, pembaca akan membandingkan label sumbu, bukan titik.
+
+Tiga catatan menjaga kejujurannya. Pertama, perbandingannya antara bulan yang sama, jadi menggambarkan asosiasi, bukan ramalan; ramalan akan memakai kondisi Pasifik pada Mei atau Juni. Kedua, persentase dari angka kecil menjadi besar: musim kemarau Kupang begitu kering sehingga satu tahun La Niña yang basah bisa terbaca +200 %, itulah sebabnya tabel melaporkan median. Ketiga, 34 tahun hanya memuat sepuluh tahun El Niño dan enam tahun La Niña. Korelasi Spearman sangat kecil kemungkinannya kebetulan (p < 0,001 di semua kota), tetapi median El Niño dan La Niña masing-masing bersandar pada sedikit tahun.
+
+## Pertanyaan 3 dalam praktik: nilai yang tidak mungkin benar
+
+Data satelit punya nilai mustahilnya sendiri, dan tempat terbaik untuk belajar melihatnya adalah satu piksel selama satu tahun. Gambar ini menampilkan setiap suhu permukaan lahan siang hari yang direkam MODIS Terra untuk satu piksel di pusat Bandung pada 2023: 155 hari dari 365, karena sisanya berawan.
+
+Produk ini membawa penanda kualitas untuk setiap nilai. Di daerah tropis lembap hampir setiap nilai berstatus "dihasilkan, periksa penanda lain", jadi bagian penanda yang berguna adalah perkiraan galatnya: 135 dari 155 hari (87 %) punya perkiraan galat 2 K atau kurang. Pemeriksaan kedua yang independen datang dari data itu sendiri: bandingkan setiap hari dengan median 15 hari di sekitarnya, skalakan dengan median absolute deviation, dan sebut apa pun yang lebih dari tiga simpangan baku robust sebagai pencilan. Enam hari gagal dalam uji itu, semuanya beberapa derajat lebih dingin dari tetangganya, ciri awan tipis atau tepi awan yang lolos dari masker awan. Tiga dari enam itu lolos penanda kualitas.
+
+Pelajarannya berlaku umum. Penanda kualitas produk adalah saringan pertama, bukan yang terakhir. Pemeriksaan robust terhadap konteks deretnya sendiri (median dan MAD bergerak, bukan rata-rata dan simpangan baku, yang justru akan dirusak oleh pencilan) menangkap apa yang terlewat oleh penanda. Dan selalu lihat plotnya: titik-titik dingin itu jelas terlihat oleh mata jauh sebelum aturan apa pun ditulis.
+
 ::: {.callout-tip}
 ## Daftar cek sebelum grafik dikirim
 - Bisakah orang yang belum membaca teksnya mengatakan apa yang ditunjukkan grafik ini?
@@ -43,3 +65,5 @@ Setiap aturan ditunjukkan sebagai satu pasang panel: di kiri grafik yang biasa a
 1. Ambil satu grafik dari laporan yang Anda tulis tahun lalu. Terapkan daftar cek di atas dan gambar ulang.
 2. Ulangi Aturan 2 untuk Ambon. Apa yang ditunjukkan pita rentang yang tadinya tersembunyi oleh rata rata?
 3. Buat matriks korelasi tanpa menghilangkan musim. Kenapa hampir semuanya jadi berkorelasi kuat?
+4. Ulangi perbandingan ENSO dengan anomali Niño 3.4 bulan Mei-Juni, bukan Juli-Oktober. Berapa besar hubungan itu yang tersisa sebagai ramalan?
+5. Terapkan aturan median bergerak pada seluruh 2019-2024 untuk piksel Bandung yang sama. Apakah pencilan mengumpul di bulan-bulan tertentu?

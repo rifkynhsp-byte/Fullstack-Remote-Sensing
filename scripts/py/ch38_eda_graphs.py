@@ -11,6 +11,8 @@ right, the graph that answers the question. The code for both is here, so
 you can see how small the difference in effort is.
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -200,6 +202,150 @@ def correlation_figure():
     return fig
 
 
+# ---------------------------------------------------------------------------
+# Question 4: the rhythm. Season, trend and what is left (STL decomposition)
+# ---------------------------------------------------------------------------
+def stl_figure(place="Kupang"):
+    """Split one city's monthly rainfall into a repeating season, a slow trend and a remainder."""
+    from statsmodels.tsa.seasonal import STL
+    df = monthly_frame()
+    s = (df[df.place == place].assign(date=lambda d: pd.to_datetime(dict(year=d.year, month=d.month, day=1)))
+         .set_index("date")["rain_mm"].asfreq("MS"))
+    r = STL(np.sqrt(s), period=12, robust=True).fit()          # square root tames the wet-season spikes
+    fig, axes = plt.subplots(4, 1, figsize=(9, 7), sharex=True)
+    for ax, y, lab, c in zip(axes, [np.sqrt(s), r.seasonal, r.trend, r.resid],
+                             ["observed", "season", "trend", "remainder"], ["#444444", BLUE, RED, GREY]):
+        ax.plot(y.index, y, color=c, lw=0.9)
+        ax.set_ylabel(f"{lab}\n(√mm)", fontsize=8)
+        ax.spines[["top", "right"]].set_visible(False)
+    big = r.resid.abs().nlargest(3)
+    for d in big.index:
+        axes[3].annotate(d.strftime("%b %Y"), (d, r.resid[d]), fontsize=7, xytext=(3, 3), textcoords="offset points")
+    share = 1 - r.resid.var() / np.sqrt(s).var()
+    fig.suptitle(f"{place}: the season and trend explain {share:.0%} of the month-to-month variation in √rainfall",
+                 x=0.01, ha="left", fontweight="bold", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# Relationships: does the Pacific decide the dry season? (ENSO, Niño 3.4)
+# ---------------------------------------------------------------------------
+NINO_URL = "https://psl.noaa.gov/data/correlation/nina34.anom.data"
+NINO_CSV = Path(__file__).resolve().parents[2] / "data" / "ch38_nino34.csv" if "__file__" in globals() else Path("data/ch38_nino34.csv")
+
+
+def nino34():
+    """Monthly Niño 3.4 SST anomaly (NOAA PSL, ERSST), saved once to data/ for reproducibility."""
+    if NINO_CSV.exists():
+        return pd.read_csv(NINO_CSV)
+    import requests
+    txt = requests.get(NINO_URL, timeout=60, headers={"User-Agent": "fullstack-remote-sensing-book"}).text
+    rows = []
+    for line in txt.splitlines()[1:]:
+        parts = line.split()
+        if len(parts) == 13 and parts[0].isdigit():
+            rows += [{"year": int(parts[0]), "month": m + 1, "nino34": float(v)} for m, v in enumerate(parts[1:]) if float(v) > -99]
+    d = pd.DataFrame(rows)
+    NINO_CSV.parent.mkdir(parents=True, exist_ok=True)
+    d.to_csv(NINO_CSV, index=False)
+    return d
+
+
+DRY = [7, 8, 9, 10]          # July-October: the dry season south of the equator, and the ENSO peak build-up
+
+
+def enso_frame():
+    df = monthly_frame()
+    rain = df[df.month.isin(DRY)].groupby(["place", "year"]).rain_mm.sum().reset_index()
+    rain["anomaly_pct"] = rain.groupby("place").rain_mm.transform(lambda x: 100 * (x / x.mean() - 1))
+    n = nino34()
+    n = n[n.month.isin(DRY)].groupby("year").nino34.mean().reset_index()
+    return rain.merge(n, on="year")
+
+
+def enso_table():
+    from scipy import stats
+    d = enso_frame()
+    rows = []
+    for p in ORDER:
+        g = d[d.place == p]
+        r, pv = stats.spearmanr(g.nino34, g.anomaly_pct)
+        el, la = g[g.nino34 >= 0.5], g[g.nino34 <= -0.5]    # the usual ±0.5 °C ENSO thresholds
+        rows.append({"city": p, "Spearman r": r, "p": pv, "El Niño years (%)": el.anomaly_pct.median(),
+                     "La Niña years (%)": la.anomaly_pct.median(), "n El Niño": len(el), "n La Niña": len(la)})
+    return pd.DataFrame(rows)
+
+
+def enso_figure():
+    d = enso_frame()
+    t = enso_table().set_index("city")
+    fig, axes = plt.subplots(2, 3, figsize=(10, 6), sharex=True, sharey=True)
+    for ax, p in zip(axes.flat, ORDER):
+        g = d[d.place == p]
+        c = np.where(g.nino34 >= 0.5, RED, np.where(g.nino34 <= -0.5, BLUE, GREY))
+        ax.scatter(g.nino34, g.anomaly_pct, c=c, s=18)
+        ax.axhline(0, color="k", lw=0.5); ax.axvline(0, color="k", lw=0.5)
+        for _, row in g[(g.nino34 >= 1.5)].iterrows():
+            ax.annotate(int(row.year), (row.nino34, row.anomaly_pct), fontsize=6.5, xytext=(2, 2), textcoords="offset points")
+        ax.set_title(f"{p}  (r = {t.loc[p, 'Spearman r']:.2f})", fontsize=9, loc="left")
+        ax.spines[["top", "right"]].set_visible(False)
+    for ax in axes[1]:
+        ax.set_xlabel("Niño 3.4 anomaly, Jul-Oct (°C)")
+    for ax in axes[:, 0]:
+        ax.set_ylabel("Jul-Oct rain vs normal (%)")
+    strongest = t["Spearman r"].idxmin()
+    fig.suptitle(f"El Niño dries July to October in all six cities, most strongly in {strongest}",
+                 x=0.01, ha="left", fontweight="bold", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# Question 3: values that cannot be right. Daily satellite LST, raw and quality-filtered
+# ---------------------------------------------------------------------------
+def lst_frame():
+    """MODIS Terra daily daytime LST at one Bandung pixel, 2023, with its quality flags."""
+    import ee
+    pt = ee.Geometry.Point([107.6098, -6.9147])
+    col = ee.ImageCollection("MODIS/061/MOD11A1").filterDate("2023-01-01", "2024-01-01").select(["LST_Day_1km", "QC_Day"])
+    fc = col.map(lambda im: ee.Feature(None, im.reduceRegion(ee.Reducer.first(), pt, 1000)).set("date", im.date().format("YYYY-MM-dd")))
+    d = pd.DataFrame([f["properties"] for f in fc.getInfo()["features"]]).dropna(subset=["LST_Day_1km"])
+    d["lst_c"] = d.LST_Day_1km * 0.02 - 273.15
+    qc = d.QC_Day.astype(int)
+    # Bits 0-1: 00 good, 01 produced but check the other bits. In the humid tropics almost every
+    # day is 01, so the useful split is bits 6-7, the estimated LST error: 00 <= 1 K, 01 <= 2 K.
+    d["good"] = ((qc & 3) <= 1) & (((qc // 64) & 3) <= 1)
+    d["date"] = pd.to_datetime(d.date)
+    med = d.lst_c.rolling(15, center=True, min_periods=5).median()
+    mad = (d.lst_c - med).abs().rolling(15, center=True, min_periods=5).median()
+    d["robust_z"] = (d.lst_c - med) / (1.4826 * mad)
+    return d
+
+
+def lst_figure():
+    d = lst_frame()
+    flag = d.robust_z.abs() > 3
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 3.8), gridspec_kw={"width_ratios": [2.2, 1]})
+    a1.scatter(d.date[~d.good], d.lst_c[~d.good], s=10, color=GREY, label=f"error > 2 K or not produced ({(~d.good).sum()} days)")
+    a1.scatter(d.date[d.good], d.lst_c[d.good], s=10, color=BLUE, label=f"error ≤ 2 K ({d.good.sum()} days)")
+    a1.scatter(d.date[flag], d.lst_c[flag], s=40, facecolor="none", edgecolor=RED, label=f"robust |z| > 3 ({flag.sum()})")
+    a1.set_ylabel("daytime LST (°C)"); a1.legend(frameon=False, fontsize=7.5, loc="lower left")
+    a1.set_title("One Bandung pixel, every clear-enough day of 2023", loc="left", fontsize=9)
+    bins = np.arange(np.floor(d.lst_c.min()), np.ceil(d.lst_c.max()) + 1, 1)
+    a2.hist([d.lst_c[d.good], d.lst_c[~d.good]], bins=bins, color=[BLUE, GREY], stacked=True,
+            label=["error ≤ 2 K", "error > 2 K"])
+    a2.set_xlabel("°C"); a2.legend(frameon=False, fontsize=7.5)
+    a2.set_title("Where the uncertain days sit", loc="left", fontsize=9)
+    for a in (a1, a2):
+        a.spines[["top", "right"]].set_visible(False)
+    passed = int((flag & d.good).sum())
+    fig.suptitle(f"The quality flag keeps {d.good.mean():.0%} of the days, yet {passed} of the {int(flag.sum())} cold outliers pass it",
+                 x=0.01, ha="left", fontweight="bold", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "table", "name": "ch38-summary", "data": summary_table,
@@ -225,6 +371,14 @@ def products():
                     "in the same rainfall regime move together (Makassar and Kupang 0.44, "
                     "Padang and Pontianak 0.38), but no pair passes 0.5: most of each "
                     "city's wet and dry months are its own."},
+        {"kind": "figure", "name": "ch38-stl", "figure": stl_figure,
+         "caption": "STL decomposition of Kupang's monthly rainfall (square-root scale): a fixed season, a slow trend, and the remainder where unusual months stand out."},
+        {"kind": "table", "name": "ch38-enso", "data": enso_table, "floatfmt": ("", ".2f", ".2g", ".0f", ".0f", ".0f", ".0f"),
+         "caption": "July-October rainfall against the Niño 3.4 sea-surface temperature anomaly, 1991-2024: rank correlation, and the median departure from normal in El Niño (≥ +0.5 °C) and La Niña (≤ -0.5 °C) years."},
+        {"kind": "figure", "name": "ch38-enso-chart", "figure": enso_figure,
+         "caption": "One panel per city, same axes. Red: El Niño years; blue: La Niña years."},
+        {"kind": "figure", "name": "ch38-lst-outliers", "figure": lst_figure,
+         "caption": "MODIS Terra daily LST at one pixel in central Bandung, with the product's own quality flag and a robust (median and MAD) outlier rule."},
     ]
 
 
