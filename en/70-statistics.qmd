@@ -1,4 +1,4 @@
-# Statistics Every Remote Sensing Analyst Needs {#sec-statistics}
+# Statistics Every Remote Sensing Analyst Needs {#sec-stats-basics}
 
 ::: {.chapter-goal}
 #### In this chapter

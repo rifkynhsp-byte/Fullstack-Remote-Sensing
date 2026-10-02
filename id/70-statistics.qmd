@@ -1,4 +1,4 @@
-# Statistika yang Perlu Dikuasai Setiap Analis Penginderaan Jauh {#sec-statistics}
+# Statistika yang Perlu Dikuasai Setiap Analis Penginderaan Jauh {#sec-stats-basics}
 
 ::: {.chapter-goal}
 #### Di bab ini

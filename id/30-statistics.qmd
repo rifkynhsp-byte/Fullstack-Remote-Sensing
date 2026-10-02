@@ -5,6 +5,8 @@
 Anda akan memeriksa deret waktu satelit seperti analis yang teliti memeriksa data stasiun cuaca. Lalu Anda akan membuat tren yang bisa dipertanggungjawabkan, dan mengukur seberapa jauh jarak antar sampel sebelum sampel itu berhenti saling mengulang informasi.
 :::
 
+Dasar-dasarnya (rata-rata dan median, sebaran, skor-z dan pencilan, teorema limit pusat, selang kepercayaan, uji t, Mann–Whitney, dan Kolmogorov–Smirnov, serta diagnostik regresi) ada di Bab [-@sec-stats-basics]. Bab ini membangun di atasnya untuk data deret waktu dan spasial.
+
 ## Pertama, apa yang hilang dan kenapa
 
 Sebelum menghitung rata rata, tren, atau model apa pun, hitung dulu apa yang tidak ada. Untuk sensor optis dan termal di daerah tropis, sebagian besar data yang hilang disebabkan awan, dan awan tidak muncul secara acak. Awan mengikuti musim hujan. Rata rata dari hari hari yang tersisa menggambarkan hari cerah, bukan semua hari. Itu bias, dan tidak ada metode statistik yang bisa menghapusnya setelahnya.
