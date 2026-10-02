@@ -90,6 +90,7 @@ book:
       chapters:
         - 16-supervised.qmd
         - 17-accuracy.qmd
+        - 70-statistics.qmd
         - 18-obia.qmd
     - part: "Part VI: GeoAI and Impact"
       chapters:

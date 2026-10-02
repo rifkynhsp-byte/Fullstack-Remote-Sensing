@@ -1,0 +1,80 @@
+# Statistics Every Remote Sensing Analyst Needs {#sec-statistics}
+
+::: {.chapter-goal}
+#### In this chapter
+A confusion matrix tells you how often a map is right. It does not tell you whether two places really differ, how sure you are of an average, what counts as unusual, or how much one thing changes with another. This chapter teaches the statistics that answer those questions, all on one real question: **how much hotter is built-up land in Greater Bandung, and does greenery cool it?** You will meet the mean and the median, the standard deviation and the interquartile range, z-scores and outliers, the central limit theorem, confidence intervals and the bootstrap, the t, Mann–Whitney and Kolmogorov–Smirnov tests, and regression with the diagnostic plots that should come before believing it. Python and R side by side.
+:::
+
+## The data
+
+The sample is 2,400 Landsat pixels (30 m) across Greater Bandung, drawn at random in equal numbers, 600 each, from four Dynamic World land covers: trees, grass, crops and built-up land. Equal numbers per group is called a **stratified** sample; it guarantees enough pixels of every class, where a simple random sample would be dominated by the most common one. For each pixel the sample records its dry-season land surface temperature (LST, June to September 2023–2024, Landsat 8 and 9), the greenery around it (the Dynamic World probability of trees or grass within 300 m) and its population density (WorldPop). The Python tab draws the sample from Earth Engine once and saves it to `data/ch70_bandung_lst_sample.csv`, so every method below runs on that file, in Python or R, without Earth Engine.
+
+{{< include _snippets/ch70_statistics.qmd >}}
+
+## Where is the middle, and how wide is the spread?
+
+**Central tendency** is the "typical" value. The **mean** is the arithmetic average; the **median** is the middle value when the data are sorted. They agree when the distribution is symmetric and part when it is skewed, because the mean is pulled towards the long tail and the median is not. **Skewness** measures that asymmetry: zero for a symmetric distribution, positive for a long right tail.
+
+**Spread** has three common measures. The **standard deviation (SD)** is the typical distance from the mean, and it is sensitive to extreme values. The **interquartile range (IQR)** is the distance between the 25th and 75th percentiles, the width of the middle half of the data, and extreme values do not move it. The **median absolute deviation (MAD)**, scaled to match the SD for normal data, is a second robust measure.
+
+The table under the code reports all of them. The medians climb from trees (26.0 °C) through grass (29.5) and crops (31.5) to built-up land (34.3): **built-up land is about 8 °C hotter than tree cover in the dry season**. Mean and median agree within a degree in every class, because these temperatures are close to symmetric (skewness between −0.01 and 0.32). Crops have the narrowest spread (SD 2.4 °C, IQR 3.0): flat, irrigated fields behave alike. Grass has the widest (IQR 7.2), because "grass" spans shaded slopes and bare-sun fields. The density plot shows all of this at once, which is why it should come before the table, not after.
+
+## What counts as unusual? IQR fences and z-scores
+
+Two rules are in everyday use. The **IQR rule** (the one behind a box plot's whiskers) calls a value an outlier if it lies more than 1.5 × IQR below the first quartile or above the third. The **z-score** expresses a value in standard deviations from the mean, *z* = (*x* − mean) / SD, and calls |*z*| > 3, or sometimes > 2, unusual.
+
+They do not agree, and the difference is instructive. Within each land cover, the IQR rule flags only 10 of 2,400 pixels, nine of them crop pixels, because crops have such a narrow IQR that a warm field stands out. The |*z*| > 2 rule flags 69, or 2.9 per cent; in perfectly normal data it would flag about 5 per cent, so "unusual" at |*z*| > 2 is not rare at all. The choice of rule decides what you call an anomaly, and so does the reference group. The map colours each pixel by its z-score against the *whole* area, and there the hot core of the city and the cool southern uplands separate clearly, which is a statement about place, not about errors.
+
+::: {.callout-warning}
+## Common failure: deleting "outliers" that are the finding
+An outlier rule finds values that are far from the rest. It cannot tell you whether they are mistakes. A pixel 10 °C hotter than its neighbours may be a cloud edge, or it may be a factory roof, which is exactly what a heat study is looking for. Inspect outliers on the map before removing any.
+:::
+
+## The central limit theorem
+
+Many tests and confidence intervals assume a normal distribution, and a great deal of real data is nowhere near normal. Population density is a good example: most pixels hold a few people per hectare and a few hold hundreds, a distribution with skewness 3.4. The **central limit theorem** says that the *average* of a sample still behaves normally once the sample is large enough, whatever the shape of the data, and that its spread, the **standard error**, shrinks as σ/√*n*.
+
+The script shows it rather than asserting it. It treats the 2,400 population values as a population, draws 5,000 random samples of size *n*, and plots the 5,000 means. For *n* = 2 the means are still badly skewed (skewness 2.4). By *n* = 30 the skewness has fallen to 0.6 and by *n* = 100 to 0.3, the histogram sits on the normal curve, and the spread of the means matches σ/√*n* to within one per cent (9.15 against 9.13 people per hectare at *n* = 30). This is why a mean from a large sample can carry a normal confidence interval even when the data themselves are skewed, and why "*n* = 30" is quoted as a rule of thumb: it is roughly where moderately skewed data start to behave, and strongly skewed data need more.
+
+## How sure are we? Confidence intervals and the bootstrap
+
+The difference between built-up and tree-covered land is 8.35 °C in this sample. A different sample would give a slightly different number, and a **95 per cent confidence interval** says how different: an interval that, over many repeated samples, would contain the true difference 95 times in 100. Using the standard error of the difference and the normal approximation the central limit theorem justifies, the interval is 7.94 to 8.77 °C.
+
+The **bootstrap** reaches the same answer without the formula: resample each group with replacement thousands of times, recompute the difference each time, and take the middle 95 per cent of the results. Here it gives 7.95 to 8.76 °C, practically identical, as it should for large, well-behaved samples. Its value shows in the cases the formula handles badly, such as medians, ratios and small or skewed samples.
+
+## Do two groups really differ? Three tests
+
+A test asks how surprising the observed difference would be if there were no real difference. Three tests ask that question about different things:
+
+- **Welch's t-test** compares *means*, without assuming equal variances. It relies on the central limit theorem for its normality.
+- The **Mann–Whitney U test** compares *ranks*: whether a random pixel from one group tends to be hotter than one from the other. It assumes nothing about the shape of the distribution.
+- The **two-sample Kolmogorov–Smirnov (KS) test** compares *whole distributions*. Its statistic *D* is the largest vertical gap between the two empirical cumulative distribution functions (ECDFs), so it detects differences in spread or shape as well as in location.
+
+Built-up against trees differ on every test, with *D* = 0.73: at the temperature where the two ECDFs are furthest apart, the share of pixels below that temperature differs by 73 percentage points between the two groups. The more interesting pair is crops against grass. Their means differ by only 1.1 °C, yet *D* = 0.32 is large, because crops are tightly bunched around 31 °C while grass spreads from cool slopes to hot fields. A t-test sees a small difference in the middle; the KS test sees that the two distributions have different shapes. Plot the ECDFs and both facts are visible.
+
+::: {.callout-important}
+## Scientific integrity: significance is not size, and pixels are not independent
+With 600 pixels per group, every p-value here is vanishingly small, even for a difference of one degree. A small p-value says a difference is unlikely to be zero, not that it is large or important; report the difference and its interval, not only the p-value. And all three tests assume independent observations. Neighbouring pixels are not independent (a hot street makes the next pixel hot too), so with spatial data the true uncertainty is larger than the tests suggest. Spread samples apart, or use spatial blocks, as Chapter [-@sec-sampling] explains.
+:::
+
+## How much does greenery cool? Regression and its diagnostics
+
+**Regression** estimates how much one variable changes with another. An ordinary least squares fit of LST on greenery gives
+
+LST ≈ 37.5 − 17.3 × greenery,
+
+so each +0.1 of greenery (ten percentage points more probability of trees or grass within 300 m) goes with **1.7 °C cooler land surface**, with a 95 per cent confidence interval of 1.68 to 1.78 °C. Greenery alone explains 65 per cent of the variation in temperature (*R*² = 0.65), and the typical prediction error is 2.7 °C (the RMSE). Adding population density, on a log scale because it is so skewed, raises *R*² only to 0.67 and shrinks the greenery effect a little, to 1.5 °C per 0.1, because crowded places are also less green.
+
+The fit is not the end of the analysis. Two plots come first:
+
+- **Residuals against fitted values**: if the model is adequate, the residuals form a shapeless band around zero. Here a vertical stripe appears at the coolest fitted values, where greenery is near its maximum: the effect of greenery levels off in dense forest, so a straight line is too simple at that end.
+- **The Q–Q plot** compares the residuals with a normal distribution: points on the line mean normal residuals. Here the upper tail bends away: a few pixels are much hotter than the model predicts, the factory roofs and bare fields of the outlier section.
+
+Neither problem changes the main conclusion, that greenery and temperature are strongly related in Bandung. Both say how to improve the model: a curved term or a log transform for greenery, and a look at the hottest residuals on the map. And regression on observational data measures association, not cause. Greener places in this basin may also be higher and further from the city, so part of the "greenery effect" could be elevation; Exercise 4 tests that.
+
+## Exercises {.unnumbered}
+
+1. Recompute the summary table using only pixels with population above 50 people per hectare. Does the built-minus-trees gap grow or shrink?
+2. Draw the central-limit simulation for greenery instead of population density. At what *n* do the means look normal, and why sooner?
+3. Thin the sample so that no two pixels are closer than 1 km, and rerun the t-test for crops against grass. How does the p-value change, and what does that say about spatial independence?
+4. Add elevation (Copernicus DEM) to the regression. How much of the greenery effect remains?

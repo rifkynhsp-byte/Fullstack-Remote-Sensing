@@ -1,0 +1,80 @@
+# Statistika yang Perlu Dikuasai Setiap Analis Penginderaan Jauh {#sec-statistics}
+
+::: {.chapter-goal}
+#### Di bab ini
+Matriks konfusi memberi tahu seberapa sering sebuah peta benar. Matriks itu tidak memberi tahu apakah dua tempat benar-benar berbeda, seberapa yakin Anda terhadap sebuah rata-rata, apa yang tergolong tidak biasa, atau seberapa besar satu hal berubah bersama hal lain. Bab ini mengajarkan statistika yang menjawab pertanyaan-pertanyaan itu, semuanya pada satu pertanyaan nyata: **seberapa lebih panas lahan terbangun di Bandung Raya, dan apakah kehijauan mendinginkannya?** Anda akan bertemu rata-rata dan median, simpangan baku dan rentang antarkuartil, skor-z dan pencilan, teorema limit pusat, selang kepercayaan dan *bootstrap*, uji t, Mann–Whitney, dan Kolmogorov–Smirnov, serta regresi dengan plot diagnostik yang semestinya dilihat sebelum memercayainya. Python dan R berdampingan.
+:::
+
+## Data
+
+Sampelnya adalah 2.400 piksel Landsat (30 m) di Bandung Raya, diambil secara acak dalam jumlah sama, masing-masing 600, dari empat tutupan lahan Dynamic World: pohon, rumput, tanaman pertanian, dan lahan terbangun. Jumlah yang sama per kelompok disebut sampel **berstrata**; cara ini menjamin cukup piksel dari setiap kelas, sementara sampel acak sederhana akan didominasi kelas yang paling umum. Untuk setiap piksel, sampel mencatat suhu permukaan lahan musim kemarau (LST, Juni sampai September 2023–2024, Landsat 8 dan 9), kehijauan di sekitarnya (peluang pohon atau rumput Dynamic World dalam radius 300 m), dan kepadatan penduduknya (WorldPop). Tab Python mengambil sampel dari Earth Engine sekali dan menyimpannya ke `data/ch70_bandung_lst_sample.csv`, sehingga setiap metode di bawah berjalan dengan berkas itu, di Python maupun R, tanpa Earth Engine.
+
+{{< include _snippets/ch70_statistics.qmd >}}
+
+## Di mana tengahnya, dan seberapa lebar sebarannya?
+
+**Ukuran pemusatan** adalah nilai "khas". **Rata-rata** adalah rerata aritmetika; **median** adalah nilai tengah ketika data diurutkan. Keduanya sama bila distribusinya simetris dan berpisah bila miring, karena rata-rata tertarik ke ekor yang panjang sedangkan median tidak. **Kemiringan** (*skewness*) mengukur asimetri itu: nol untuk distribusi simetris, positif untuk ekor kanan yang panjang.
+
+**Sebaran** punya tiga ukuran yang umum. **Simpangan baku (SD)** adalah jarak khas dari rata-rata, dan peka terhadap nilai ekstrem. **Rentang antarkuartil (IQR)** adalah jarak antara persentil ke-25 dan ke-75, lebar separuh bagian tengah data, dan nilai ekstrem tidak menggesernya. **Simpangan mutlak median (MAD)**, diskalakan agar setara SD untuk data normal, adalah ukuran tangguh yang kedua.
+
+Tabel di bawah kode melaporkan semuanya. Median naik dari pohon (26,0 °C) ke rumput (29,5), tanaman pertanian (31,5), sampai lahan terbangun (34,3): **lahan terbangun sekitar 8 °C lebih panas daripada tutupan pohon di musim kemarau**. Rata-rata dan median berbeda kurang dari satu derajat di setiap kelas, karena suhu ini hampir simetris (kemiringan antara −0,01 dan 0,32). Tanaman pertanian punya sebaran tersempit (SD 2,4 °C, IQR 3,0): sawah yang datar dan berair berperilaku serupa. Rumput punya yang terlebar (IQR 7,2), karena "rumput" mencakup lereng teduh sampai lapangan terbuka di bawah terik. Plot densitas memperlihatkan semua ini sekaligus, dan karena itu sebaiknya dibuat sebelum tabel, bukan sesudahnya.
+
+## Apa yang tergolong tidak biasa? Pagar IQR dan skor-z
+
+Dua aturan dipakai sehari-hari. **Aturan IQR** (yang menjadi dasar kumis *box plot*) menyebut sebuah nilai pencilan bila ia lebih dari 1,5 × IQR di bawah kuartil pertama atau di atas kuartil ketiga. **Skor-z** menyatakan nilai dalam satuan simpangan baku dari rata-rata, *z* = (*x* − rata-rata) / SD, dan menyebut |*z*| > 3, atau kadang > 2, tidak biasa.
+
+Keduanya tidak sepakat, dan perbedaannya mendidik. Di dalam setiap tutupan lahan, aturan IQR hanya menandai 10 dari 2.400 piksel, sembilan di antaranya piksel tanaman pertanian, karena IQR tanaman pertanian begitu sempit sehingga sawah yang hangat langsung menonjol. Aturan |*z*| > 2 menandai 69, atau 2,9 persen; pada data yang benar-benar normal aturan ini akan menandai sekitar 5 persen, jadi "tidak biasa" pada |*z*| > 2 sama sekali tidak langka. Pilihan aturan menentukan apa yang Anda sebut anomali, begitu pula kelompok pembandingnya. Peta mewarnai setiap piksel menurut skor-z-nya terhadap *seluruh* wilayah, dan di sana inti kota yang panas dan dataran tinggi selatan yang sejuk terpisah dengan jelas, sebuah pernyataan tentang tempat, bukan tentang kesalahan.
+
+::: {.callout-warning}
+## Kegagalan umum: menghapus "pencilan" yang justru temuannya
+Aturan pencilan menemukan nilai yang jauh dari yang lain. Aturan itu tidak bisa memberi tahu apakah nilainya keliru. Piksel yang 10 °C lebih panas dari tetangganya bisa saja tepi awan, atau atap pabrik, yang justru dicari dalam studi panas. Periksa pencilan di peta sebelum menghapus satu pun.
+:::
+
+## Teorema limit pusat
+
+Banyak uji dan selang kepercayaan mengasumsikan distribusi normal, dan banyak data nyata jauh dari normal. Kepadatan penduduk adalah contoh yang baik: sebagian besar piksel berisi beberapa orang per hektare dan sebagian kecil berisi ratusan, distribusi dengan kemiringan 3,4. **Teorema limit pusat** menyatakan bahwa *rata-rata* sebuah sampel tetap berperilaku normal bila sampelnya cukup besar, apa pun bentuk datanya, dan sebarannya, yaitu **galat baku**, menyusut sebesar σ/√*n*.
+
+Skrip memperlihatkannya alih-alih sekadar menyatakannya. Skrip memperlakukan 2.400 nilai kepadatan sebagai populasi, mengambil 5.000 sampel acak berukuran *n*, lalu menggambar 5.000 rata-ratanya. Untuk *n* = 2, rata-ratanya masih sangat miring (kemiringan 2,4). Pada *n* = 30 kemiringannya turun menjadi 0,6 dan pada *n* = 100 menjadi 0,3, histogramnya duduk di atas kurva normal, dan sebaran rata-ratanya cocok dengan σ/√*n* dalam selisih satu persen (9,15 dibanding 9,13 orang per hektare pada *n* = 30). Inilah sebabnya rata-rata dari sampel besar boleh memakai selang kepercayaan normal meskipun datanya miring, dan mengapa "*n* = 30" disebut sebagai patokan: kira-kira di situlah data yang cukup miring mulai berperilaku baik, sementara data yang sangat miring butuh lebih banyak.
+
+## Seberapa yakin? Selang kepercayaan dan *bootstrap*
+
+Selisih antara lahan terbangun dan tutupan pohon adalah 8,35 °C dalam sampel ini. Sampel lain akan memberi angka yang sedikit berbeda, dan **selang kepercayaan 95 persen** menyatakan seberapa berbeda: selang yang, dalam banyak pengambilan sampel berulang, akan memuat selisih sebenarnya 95 kali dari 100. Dengan galat baku selisih dan pendekatan normal yang dibenarkan teorema limit pusat, selangnya 7,94 sampai 8,77 °C.
+
+***Bootstrap*** mencapai jawaban yang sama tanpa rumus: ambil ulang setiap kelompok dengan pengembalian ribuan kali, hitung ulang selisihnya setiap kali, lalu ambil 95 persen hasil di tengah. Di sini hasilnya 7,95 sampai 8,76 °C, praktis identik, sebagaimana mestinya untuk sampel besar yang berperilaku baik. Nilainya terlihat pada kasus yang ditangani rumus dengan buruk, seperti median, rasio, serta sampel kecil atau miring.
+
+## Apakah dua kelompok benar-benar berbeda? Tiga uji
+
+Sebuah uji menanyakan seberapa mengejutkan selisih yang teramati jika sebenarnya tidak ada perbedaan. Tiga uji menanyakan hal itu tentang hal yang berbeda:
+
+- **Uji t Welch** membandingkan *rata-rata*, tanpa mengasumsikan varians yang sama. Normalitasnya bersandar pada teorema limit pusat.
+- **Uji U Mann–Whitney** membandingkan *peringkat*: apakah piksel acak dari satu kelompok cenderung lebih panas daripada piksel dari kelompok lain. Uji ini tidak mengasumsikan apa pun tentang bentuk distribusi.
+- **Uji Kolmogorov–Smirnov (KS) dua sampel** membandingkan *seluruh distribusi*. Statistiknya, *D*, adalah celah vertikal terbesar antara dua fungsi distribusi kumulatif empiris (ECDF), sehingga uji ini menangkap perbedaan sebaran atau bentuk selain perbedaan letak.
+
+Lahan terbangun dan pohon berbeda pada setiap uji, dengan *D* = 0,73: pada suhu tempat kedua ECDF paling berjauhan, bagian piksel di bawah suhu itu berbeda 73 poin persentase antara kedua kelompok. Pasangan yang lebih menarik adalah tanaman pertanian dan rumput. Rata-ratanya hanya berbeda 1,1 °C, tetapi *D* = 0,32 cukup besar, karena tanaman pertanian berkumpul rapat di sekitar 31 °C sementara rumput tersebar dari lereng sejuk sampai lapangan panas. Uji t melihat selisih kecil di tengah; uji KS melihat bahwa kedua distribusi berbeda bentuk. Gambarlah ECDF-nya dan kedua fakta itu terlihat.
+
+::: {.callout-important}
+## Integritas ilmiah: signifikan bukan berarti besar, dan piksel tidak saling bebas
+Dengan 600 piksel per kelompok, setiap nilai p di sini nyaris nol, bahkan untuk selisih satu derajat. Nilai p yang kecil menyatakan bahwa selisihnya kecil kemungkinannya nol, bukan bahwa selisihnya besar atau penting; laporkan selisih dan selangnya, bukan hanya nilai p. Ketiga uji juga mengasumsikan pengamatan yang saling bebas. Piksel bertetangga tidak saling bebas (jalan yang panas membuat piksel di sebelahnya panas juga), sehingga pada data spasial ketidakpastian sebenarnya lebih besar daripada yang ditunjukkan uji. Jarangkan sampel, atau pakai blok spasial, seperti dijelaskan Bab [-@sec-sampling].
+:::
+
+## Seberapa besar kehijauan mendinginkan? Regresi dan diagnostiknya
+
+**Regresi** memperkirakan seberapa besar satu variabel berubah bersama variabel lain. Pencocokan kuadrat terkecil biasa (OLS) LST terhadap kehijauan menghasilkan
+
+LST ≈ 37,5 − 17,3 × kehijauan,
+
+sehingga setiap +0,1 kehijauan (sepuluh poin persentase lebih tinggi peluang pohon atau rumput dalam radius 300 m) sejalan dengan **permukaan lahan 1,7 °C lebih sejuk**, dengan selang kepercayaan 95 persen 1,68 sampai 1,78 °C. Kehijauan saja menjelaskan 65 persen variasi suhu (*R*² = 0,65), dan galat prediksi khasnya 2,7 °C (RMSE). Menambahkan kepadatan penduduk, dalam skala log karena sangat miring, hanya menaikkan *R*² menjadi 0,67 dan sedikit mengecilkan efek kehijauan menjadi 1,5 °C per 0,1, karena tempat yang padat juga kurang hijau.
+
+Pencocokan bukan akhir analisis. Dua plot harus dilihat lebih dulu:
+
+- **Residu terhadap nilai pencocokan**: jika modelnya memadai, residu membentuk pita tanpa pola di sekitar nol. Di sini muncul garis vertikal pada nilai pencocokan tersejuk, tempat kehijauan mendekati maksimum: efek kehijauan mendatar di hutan lebat, sehingga garis lurus terlalu sederhana di ujung itu.
+- **Plot Q–Q** membandingkan residu dengan distribusi normal: titik di atas garis berarti residu normal. Di sini ekor atasnya membengkok menjauh: beberapa piksel jauh lebih panas daripada prediksi model, atap pabrik dan lahan terbuka dari bagian pencilan.
+
+Tidak satu pun masalah itu mengubah kesimpulan utama, bahwa kehijauan dan suhu berkaitan erat di Bandung. Keduanya menunjukkan cara memperbaiki model: suku lengkung atau transformasi log untuk kehijauan, dan memeriksa residu terpanas di peta. Regresi pada data pengamatan juga mengukur keterkaitan, bukan sebab. Tempat yang lebih hijau di cekungan ini mungkin juga lebih tinggi dan lebih jauh dari kota, sehingga sebagian "efek kehijauan" bisa jadi adalah ketinggian; Latihan 4 mengujinya.
+
+## Latihan {.unnumbered}
+
+1. Hitung ulang tabel ringkasan hanya untuk piksel dengan kepadatan di atas 50 orang per hektare. Apakah selisih lahan terbangun dan pohon membesar atau mengecil?
+2. Gambar simulasi limit pusat untuk kehijauan, bukan kepadatan penduduk. Pada *n* berapa rata-ratanya tampak normal, dan mengapa lebih cepat?
+3. Jarangkan sampel sehingga tidak ada dua piksel yang berjarak kurang dari 1 km, lalu ulangi uji t untuk tanaman pertanian dan rumput. Bagaimana nilai p berubah, dan apa artinya bagi asumsi saling bebas spasial?
+4. Tambahkan ketinggian (Copernicus DEM) ke regresi. Seberapa besar efek kehijauan yang tersisa?

@@ -1,0 +1,73 @@
+[
+ {
+  "name": "ch70-summary",
+  "kind": "table",
+  "caption": "Central tendency and spread of dry-season LST (°C) by land cover. MAD is scaled to match the SD for normal data.",
+  "markdown": "| cover   |   n |   mean |   median |   sd |   iqr |   mad |   skew |\n|:--------|----:|-------:|---------:|-----:|------:|------:|-------:|\n| trees   | 600 |     26 |    26.03 | 3.82 |  5.89 |  4.55 |   0.25 |\n| grass   | 600 |     30 |    29.48 | 4.06 |  7.16 |  4.68 |   0.32 |\n| crops   | 600 |     32 |    31.47 | 2.41 |  3.01 |  2.27 |   0.19 |\n| built   | 600 |     34 |    34.33 | 3.47 |  5.40 |  3.98 |  -0.01 |"
+ },
+ {
+  "name": "ch70-distributions",
+  "kind": "chart",
+  "caption": "Density of LST by land cover, with mean (solid) and median (dotted).",
+  "image": "images/real/ch70-distributions.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"cover,n,mean,median,sd,iqr,mad,skew\ntrees,600,26.093,26.034,3.8246,5.8854,4.5545,0.24817\ngrass,600,30.454,29.478,4.0648,7.1556,4.685,0.31709\ncrops,600,31.51,31.467,2.405,3.0066,2.2741,0.19326\nbuilt,600,34.447,34.332,3.4676,5.4047,3.9755,-0.0069292\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_distributions(df):\n    d = sample()\n    fig, ax = plt.subplots(figsize=(9, 4.4))\n    xs = np.linspace(d.lst.quantile(0.002), d.lst.quantile(0.998), 400)\n    for c in ORDER:\n        x = d[d.cover == c].lst; k = stats.gaussian_kde(x)\n        ax.plot(xs, k(xs), color=COLOURS[c], lw=2, label=c)\n        ax.axvline(x.mean(), color=COLOURS[c], lw=1, ls=\"-\"); ax.axvline(x.median(), color=COLOURS[c], lw=1, ls=\":\")\n    ax.set_xlabel(\"dry-season land surface temperature (°C)\"); ax.set_ylabel(\"density\")\n    ax.legend(title=\"land cover (solid line: mean, dotted: median)\", fontsize=8, title_fontsize=8)\n    b, t_ = df.set_index(\"cover\").loc[\"built\"], df.set_index(\"cover\").loc[\"trees\"]\n    ax.set_title(f\"Built-up land is {b['median'] - t_['median']:.1f} °C hotter than trees at the median, and its spread is wider\",\n                 loc=\"left\", fontsize=10)\n    fig.tight_layout()\n    return fig\n\nplot_distributions(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch70-outliers",
+  "kind": "chart",
+  "caption": "Box plots with IQR fences, and the z-score of every sampled pixel.",
+  "image": "images/real/ch70-outliers.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"cover,low fence,high fence,outside fences,|z| > 3,|z| > 2\ntrees,14.031,37.572,0,0,12\ngrass,16.331,44.954,0,0,15\ncrops,25.404,37.431,9,2,26\nbuilt,23.776,45.395,1,1,16\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_outliers(df):\n    d = sample()\n    fig, axs = plt.subplots(1, 2, figsize=(12, 4.6), gridspec_kw=dict(width_ratios=[1, 1.2]))\n    axs[0].boxplot([d[d.cover == c].lst for c in ORDER], whis=1.5, widths=0.55, patch_artist=True,\n                   boxprops=dict(facecolor=\"#f0f0f0\"), flierprops=dict(marker=\"o\", markersize=3, markerfacecolor=\"#d73027\"))\n    axs[0].set_xticks(range(1, 5), ORDER); axs[0].set_ylabel(\"LST (°C)\")\n    axs[0].set_title(\"Box plots: whiskers at 1.5 × IQR, red points beyond them\", loc=\"left\", fontsize=9)\n    d = d.copy(); d[\"z\"] = (d.lst - d.lst.mean()) / d.lst.std()\n    sc = axs[1].scatter(d.lon, d.lat, c=d.z, cmap=\"RdBu_r\", vmin=-3, vmax=3, s=6)\n    fig.colorbar(sc, ax=axs[1], shrink=0.8, label=\"z-score of LST (whole sample)\")\n    xt = np.arange(np.ceil(d.lon.min() * 10) / 10, d.lon.max(), 0.1); yt = np.arange(np.ceil(d.lat.min() * 10) / 10, d.lat.max(), 0.1)\n    axs[1].set_xticks(xt, [f\"{v:.1f}°E\" for v in xt], fontsize=7); axs[1].set_yticks(yt, [f\"{abs(v):.1f}°S\" for v in yt], fontsize=7)\n    axs[1].grid(color=\"#999\", lw=0.4, ls=\"--\"); axs[1].set_aspect(\"equal\")\n    axs[1].set_title(\"Where the sample is hot (z > 0) and cool (z < 0)\", loc=\"left\", fontsize=9)\n    fig.suptitle(\"Two rules for 'unusual': the IQR fences per class, and the z-score against the whole area\",\n                 x=0.01, ha=\"left\", fontsize=10, fontweight=\"bold\")\n    fig.tight_layout()\n    return fig\n\nplot_outliers(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch70-outlier-table",
+  "kind": "table",
+  "caption": "How many pixels each rule calls unusual.",
+  "markdown": "| cover   |   low fence |   high fence |   outside fences |   |z| > 3 |   |z| > 2 |\n|:--------|------------:|-------------:|-----------------:|----------:|----------:|\n| trees   |        14.0 |         37.6 |                0 |         0 |        12 |\n| grass   |        16.3 |         45.0 |                0 |         0 |        15 |\n| crops   |        25.4 |         37.4 |                9 |         2 |        26 |\n| built   |        23.8 |         45.4 |                1 |         1 |        16 |"
+ },
+ {
+  "name": "ch70-clt",
+  "kind": "chart",
+  "caption": "The central limit theorem with real data: means of repeated samples of population density.",
+  "image": "images/real/ch70-clt.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"n,sd of sample means,sigma / sqrt(n),skew of means\n2,34.859,35.357,2.441\n5,22.971,22.362,1.5111\n30,9.1465,9.1291,0.61912\n100,4.9871,5.0002,0.31558\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_clt(df, reps=5000):\n    x = sample().people_ha.values\n    rng = np.random.default_rng(SEED)\n    fig, axs = plt.subplots(1, 5, figsize=(15, 3.4))\n    axs[0].hist(x, bins=40, color=\"#999999\"); axs[0].set_title(f\"population (skew {stats.skew(x):.2f})\", fontsize=9, loc=\"left\")\n    for ax, n in zip(axs[1:], SIZES):\n        m = rng.choice(x, size=(reps, n), replace=True).mean(axis=1)\n        ax.hist(m, bins=40, density=True, color=\"#d73027\", alpha=0.7)\n        se = x.std(ddof=1) / np.sqrt(n); g = np.linspace(max(0, x.mean() - 4 * se), x.mean() + 4 * se, 300)\n        ax.plot(g, stats.norm.pdf(g, x.mean(), se), color=\"#000\", lw=1)\n        ax.set_title(f\"means of n = {n}\", fontsize=9, loc=\"left\"); ax.set_yticks([])\n    axs[0].set_xlabel(\"people per hectare\")\n    fig.suptitle(\"The central limit theorem: population density is far from normal, yet averages of larger samples \"\n                 \"become normal and narrow as σ/√n (black curve)\", x=0.01, ha=\"left\", fontsize=10, fontweight=\"bold\")\n    fig.tight_layout()\n    return fig\n\nplot_clt(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch70-clt-table",
+  "kind": "table",
+  "caption": "The spread of the sample means against the theoretical standard error σ/√n.",
+  "markdown": "|   n |   sd of sample means |   sigma / sqrt(n) |   skew of means |\n|----:|---------------------:|------------------:|----------------:|\n|   2 |               34.859 |            35.357 |            2.44 |\n|   5 |               22.971 |            22.362 |            1.51 |\n|  30 |                9.147 |             9.129 |            0.62 |\n| 100 |                4.987 |             5.000 |            0.32 |"
+ },
+ {
+  "name": "ch70-ci",
+  "kind": "table",
+  "caption": "How much hotter built-up land is, with two 95 % confidence intervals.",
+  "markdown": "| quantity                         |   estimate | 95 % CI (normal)   | 95 % CI (bootstrap)   |\n|:---------------------------------|-----------:|:-------------------|:----------------------|\n| mean LST, built minus trees (°C) |       8.35 | 7.94 to 8.77       | 7.95 to 8.76          |"
+ },
+ {
+  "name": "ch70-tests",
+  "kind": "table",
+  "caption": "Welch's t-test, the Mann-Whitney U test and the two-sample Kolmogorov-Smirnov test.",
+  "markdown": "| comparison     |   mean difference (°C) |   Welch t p |   Mann-Whitney p |   KS D |     KS p |\n|:---------------|-----------------------:|------------:|-----------------:|-------:|---------:|\n| built vs trees |                   8.35 |    1.6e-219 |         1e-155   |   0.73 | 7.5e-157 |\n| crops vs grass |                   1.06 |    5.4e-08  |         7.5e-09  |   0.32 | 3.9e-28  |\n| crops vs trees |                   5.42 |    1.6e-137 |         1.9e-111 |   0.63 | 5.6e-112 |"
+ },
+ {
+  "name": "ch70-ecdf",
+  "kind": "chart",
+  "caption": "Empirical cumulative distributions and the KS statistic D.",
+  "image": "images/real/ch70-ecdf.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"comparison,mean difference (°C),Welch t p,Mann-Whitney p,KS D,KS p\nbuilt vs trees,8.3538,1.5671e-219,1.0163e-155,0.73333,7.5179e-157\ncrops vs grass,1.0568,5.3936e-08,7.5216e-09,0.32333,3.8676e-28\ncrops vs trees,5.4176,1.5591e-137,1.8899e-111,0.63,5.6298e-112\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_ecdf(df):\n    d = sample()\n    fig, axs = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)\n    for ax, (a, b) in zip(axs, [(\"built\", \"trees\"), (\"crops\", \"grass\")]):\n        xa = np.sort(d[d.cover == a].lst); xb = np.sort(d[d.cover == b].lst)\n        for x, c in [(xa, a), (xb, b)]:\n            ax.step(x, np.arange(1, len(x) + 1) / len(x), where=\"post\", color=COLOURS[c], lw=2, label=c)\n        grid = np.sort(np.concatenate([xa, xb]))\n        fa = np.searchsorted(xa, grid, side=\"right\") / len(xa); fb = np.searchsorted(xb, grid, side=\"right\") / len(xb)\n        i = np.argmax(np.abs(fa - fb))\n        ax.vlines(grid[i], min(fa[i], fb[i]), max(fa[i], fb[i]), color=\"#000\", lw=2)\n        ax.text(grid[i], (fa[i] + fb[i]) / 2, f\"  D = {abs(fa[i] - fb[i]):.2f}\", va=\"center\", fontsize=9)\n        ax.set_xlabel(\"LST (°C)\"); ax.legend(fontsize=8, loc=\"lower right\"); ax.grid(alpha=0.3)\n    axs[0].set_ylabel(\"share of pixels at or below\")\n    fig.suptitle(\"Kolmogorov-Smirnov: D is the largest vertical gap between two cumulative distributions\",\n                 x=0.01, ha=\"left\", fontsize=10, fontweight=\"bold\")\n    fig.tight_layout()\n    return fig\n\nplot_ecdf(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch70-regression",
+  "kind": "table",
+  "caption": "Ordinary least squares: LST on greenery, then adding population density.",
+  "markdown": "| model                               | term                |   coefficient | 95 % CI          |       p |   R² |   RMSE (°C) |\n|:------------------------------------|:--------------------|--------------:|:-----------------|--------:|-----:|------------:|\n| LST ~ greenery                      | Intercept           |        37.487 | 37.26 to 37.72   | 0       | 0.65 |        2.73 |\n| LST ~ greenery                      | greenery            |       -17.318 | -17.83 to -16.81 | 0       | 0.65 |        2.73 |\n| LST ~ greenery + log(1 + people/ha) | Intercept           |        35.318 | 34.91 to 35.72   | 0       | 0.67 |        2.64 |\n| LST ~ greenery + log(1 + people/ha) | greenery            |       -15.463 | -16.04 to -14.89 | 0       | 0.67 |        2.64 |\n| LST ~ greenery + log(1 + people/ha) | np.log1p(people_ha) |         0.591 | 0.50 to 0.68     | 9.6e-35 | 0.67 |        2.64 |"
+ },
+ {
+  "name": "ch70-regression-chart",
+  "kind": "chart",
+  "caption": "The fit, the residuals against fitted values, and the Q-Q plot.",
+  "image": "images/real/ch70-regression-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"model,term,coefficient,95 % CI,p,R²,RMSE (°C)\nLST ~ greenery,Intercept,37.487,37.26 to 37.72,0,0.65005,2.7255\nLST ~ greenery,greenery,-17.318,-17.83 to -16.81,0,0.65005,2.7255\nLST ~ greenery + log(1 + people/ha),Intercept,35.318,34.91 to 35.72,0,0.67145,2.6414\nLST ~ greenery + log(1 + people/ha),greenery,-15.463,-16.04 to -14.89,0,0.67145,2.6414\nLST ~ greenery + log(1 + people/ha),np.log1p(people_ha),0.59117,0.50 to 0.68,9.6055e-35,0.67145,2.6414\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_regression(df):\n    import statsmodels.formula.api as smf\n    d = sample(); m = smf.ols(\"lst ~ greenery\", d).fit()\n    fig, axs = plt.subplots(1, 3, figsize=(15, 4.3))\n    for c in ORDER:\n        s = d[d.cover == c]; axs[0].scatter(s.greenery, s.lst, s=5, alpha=0.4, color=COLOURS[c], label=c)\n    g = np.linspace(0, d.greenery.max(), 50)\n    axs[0].plot(g, m.params[\"Intercept\"] + m.params[\"greenery\"] * g, color=\"#000\", lw=2)\n    axs[0].set_xlabel(\"greenery (trees + grass probability, 300 m)\"); axs[0].set_ylabel(\"LST (°C)\"); axs[0].legend(fontsize=7, markerscale=2)\n    axs[0].set_title(f\"Fit: {m.params['greenery'] / 10:.2f} °C per +0.1 greenery, R² = {m.rsquared:.2f}\", loc=\"left\", fontsize=9)\n    axs[1].scatter(m.fittedvalues, m.resid, s=4, alpha=0.4, color=\"#555\"); axs[1].axhline(0, color=\"#d73027\")\n    axs[1].set_xlabel(\"fitted LST (°C)\"); axs[1].set_ylabel(\"residual (°C)\")\n    axs[1].set_title(\"Residuals against fitted: look for funnels and curves\", loc=\"left\", fontsize=9)\n    stats.probplot(m.resid, plot=axs[2]); axs[2].get_lines()[0].set_markersize(2)\n    axs[2].set_title(\"\")                                      # scipy adds its own centred title\n    axs[2].set_title(\"Q-Q plot: residuals against a normal distribution\", loc=\"left\", fontsize=9)\n    axs[2].set_xlabel(\"normal quantiles\"); axs[2].set_ylabel(\"residual quantiles (°C)\")\n    fig.suptitle(\"Regression of LST on greenery, and the two plots to check before believing it\",\n                 x=0.01, ha=\"left\", fontsize=10, fontweight=\"bold\")\n    fig.tight_layout()\n    return fig\n\nplot_regression(df)\nplt.show()\n"
+ }
+]
