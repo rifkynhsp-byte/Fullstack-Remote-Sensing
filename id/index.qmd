@@ -43,13 +43,13 @@ Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode 
 | IV. Rekayasa fitur | 4 | Mengubah reflektansi menjadi prediktor yang bermakna secara ekologis |
 | V. Belajar dari data | 6 | Menjelajah data, menguji klaim secara statistik, lalu melatih, memvalidasi, dan mempertahankan klasifikasi |
 | VI. GeoAI dan waktu | 7 | Memakai embedding model fondasi, regresi, deep learning, dan deret waktu |
-| VII. Bencana | 5 | Memetakan banjir, longsor, badai, dan kebakaran, serta menyatakan seberapa yakin Anda |
+| VII. Bencana | 6 | Memetakan banjir, longsor, badai, kebakaran, dan asap, serta menyatakan seberapa yakin Anda |
 | VIII. Pangan dan perkebunan | 6 | Memantau tanaman, sawah, kesesuaian lahan, dan sawit, dari satelit hingga drone |
 | IX. Hutan, karbon, dan alam | 7 | Melacak deforestasi, karbon, jasa ekosistem, dan habitat, serta mendukung penegakan hukum |
 | X. Pertambangan | 3 | Memetakan tambang, reklamasinya, serta biaya dan manfaatnya |
 | XI. Air dan pesisir | 3 | Mengikuti siklus air, memetakan kedalaman perairan dangkal dan perubahan mangrove |
 | XII. Energi surya | 4 | Mengubah sinar matahari, atap, dan ladang surya menjadi keputusan |
-| XIII. Kota, manusia, dan bisnis | 5 | Memetakan pertumbuhan kota untuk perencana, dan menjawab pertanyaan lokasi, transportasi, dan ekonomi dengan data terbuka |
+| XIII. Kota, manusia, dan bisnis | 6 | Memetakan pertumbuhan kota dan kebutuhan perencanaan (ruang hijau, panas, paparan banjir), dan menjawab pertanyaan lokasi, transportasi, dan ekonomi dengan data terbuka |
 | XIV. Mengomunikasikan hasil | 4 | Merancang grafik dan peta yang menjelaskan, membuat laporan peta, dan merilis aplikasi |
 | XV. LiDAR: kehutanan dan lainnya | 4 | Mengklasifikasi point cloud, menemukan pohon, dan menskalakan biomassa plot dengan GEDI |
 | XVI. Garda depan riset | 1 | Memulai tesis dari baseline yang bisa dijalankan dan jujur |

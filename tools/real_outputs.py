@@ -289,7 +289,7 @@ def render_animation(p: dict, out: Path) -> None:
     labels = p.get("labels", [])
     # Every map gets a graticule, animated ones too: draw each frame on lon/lat axes.
     x0, x1, y0, y1 = _bounds(p["region"])
-    w_in = 6.4
+    w_in = p.get("width", 640) / 100          # the frame's pixel width sets the figure size
     on_axes = []
     for i, frame in enumerate(raw):
         fig, ax = plt.subplots(figsize=(w_in, w_in * (y1 - y0) / (x1 - x0) + 0.5), dpi=100)

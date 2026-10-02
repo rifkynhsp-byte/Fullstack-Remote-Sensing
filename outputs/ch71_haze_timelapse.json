@@ -1,0 +1,57 @@
+[
+ {
+  "name": "ch71_haze_timelapse-webmap",
+  "kind": "html",
+  "html": "images/real/ch71_haze_timelapse-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch71-haze-truecolour",
+  "kind": "animation",
+  "caption": "What the eye sees: MODIS Terra and Aqua true colour every fourth day, August to October 2019. Most of each frame is cloud, and where smoke shows it is a grey veil hard to tell from thin cloud.",
+  "image": "images/real/ch71-haze-truecolour.gif"
+ },
+ {
+  "name": "ch71-haze-co-fires",
+  "kind": "animation",
+  "caption": "What the chemistry sees: Sentinel-5P carbon monoxide (3-day mean, above 40 mmol/m²) over a cloud-free backdrop, with that day's FIRMS fires in red. CO passes through cloud, so the plume is continuous where the true-colour view is not.",
+  "image": "images/real/ch71-haze-co-fires.gif"
+ },
+ {
+  "name": "ch71-season",
+  "kind": "table",
+  "caption": "The 2019 season against 2020: fire pixels in the source provinces, and smoky days at each city.",
+  "markdown": "| place                    | measure                   |   2019 |   2020 | 2019 peak   |\n|:-------------------------|:--------------------------|-------:|-------:|:------------|\n| Kalimantan (fire source) | fire pixels, Jul-Nov      | 150241 |  14965 | 05 Sep      |\n| Kuala Lumpur             | days with CO > 50 mmol/m² |     16 |      0 | 22 Sep      |\n| Kuching                  | days with CO > 50 mmol/m² |     19 |      0 | 18 Sep      |\n| Palangka Raya            | days with CO > 50 mmol/m² |     46 |      0 | 15 Sep      |\n| Pekanbaru                | days with CO > 50 mmol/m² |     35 |      0 | 22 Sep      |\n| Pontianak                | days with CO > 50 mmol/m² |     26 |      0 | 20 Sep      |\n| Singapore                | days with CO > 50 mmol/m² |     18 |      0 | 18 Sep      |\n| Sumatra (fire source)    | fire pixels, Jul-Nov      |  96853 |   3969 | 22 Sep      |"
+ },
+ {
+  "name": "ch71-series",
+  "kind": "chart",
+  "caption": "Three panels, one story: the fires, the smoke over the cities, and the wet-year baseline.",
+  "image": "images/real/ch71-series.png"
+ },
+ {
+  "name": "ch71-hovmoller",
+  "kind": "chart",
+  "caption": "The whole season in one picture.",
+  "image": "images/real/ch71-hovmoller.png"
+ },
+ {
+  "name": "ch71-lags",
+  "kind": "table",
+  "caption": "Correlation of day-to-day anomalies in fire counts with CO at each city, for lags of 0 to 7 days.",
+  "markdown": "| fires in   | CO at         |   lag 0 |   lag 1 |   lag 2 |   lag 3 |   lag 4 |   lag 5 |   lag 6 |   lag 7 |   best lag (days) |   r at best |\n|:-----------|:--------------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------------:|------------:|\n| Sumatra    | Pekanbaru     |    0.26 |    0.50 |    0.37 |    0.18 |    0.12 |    0.14 |   -0.23 |   -0.29 |                 1 |        0.50 |\n| Sumatra    | Singapore     |   -0.05 |    0.11 |    0.08 |    0.08 |    0.15 |    0.43 |    0.16 |    0.06 |                 5 |        0.43 |\n| Sumatra    | Kuala Lumpur  |    0.48 |    0.40 |    0.35 |    0.16 |    0.08 |   -0.02 |   -0.29 |   -0.44 |                 0 |        0.48 |\n| Kalimantan | Palangka Raya |    0.25 |    0.45 |    0.13 |    0.06 |    0.00 |    0.04 |   -0.11 |   -0.31 |                 1 |        0.45 |\n| Kalimantan | Pontianak     |    0.00 |    0.23 |    0.33 |   -0.02 |    0.12 |   -0.21 |    0.23 |    0.03 |                 2 |        0.33 |\n| Kalimantan | Kuching       |    0.20 |   -0.24 |    0.31 |    0.06 |    0.30 |   -0.06 |    0.12 |    0.11 |                 2 |        0.31 |"
+ },
+ {
+  "name": "ch71-lag-chart",
+  "kind": "chart",
+  "caption": "How long the smoke takes to arrive.",
+  "image": "images/real/ch71-lag-chart.png"
+ },
+ {
+  "name": "ch71-co-anomaly",
+  "kind": "map",
+  "caption": "The peak fortnight against the same fortnight a year later. The anomaly is centred on the peat of Central Kalimantan and southern Sumatra and stretches north-west.",
+  "image": "images/real/ch71-co-anomaly.jpg"
+ }
+]

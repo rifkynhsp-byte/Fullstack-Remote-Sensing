@@ -1,0 +1,70 @@
+# Smoke from Space: the 2019 Haze, Frame by Frame {#sec-haze}
+
+::: {.chapter-goal}
+#### In this chapter
+In September 2019 smoke from peat and forest fires in Sumatra and Kalimantan closed schools and grounded flights from Palangka Raya to Kuala Lumpur. You will watch that season twice, as the eye sees it in MODIS true colour and as chemistry sees it in Sentinel-5P carbon monoxide with every FIRMS fire, and then turn the same data into the analysis an animation cannot do on its own: when the smoke peaked and where, how unusual it was against a wet year, and how many days the smoke took to reach each city. JavaScript, Python and R.
+:::
+
+## Why animate, and why not stop there
+
+A time-lapse is the most persuasive picture in remote sensing. It is also the least quantitative: viewers remember the motion, not the numbers, and a smoke plume and a cloud bank look alike in true colour. This chapter uses the animation for what it is good at, showing that something moved and in which direction, and then answers the questions it raises with charts and tables made from the same data. Chapter [-@sec-peat] showed where and why peat burns; this chapter follows the smoke after it leaves the fire.
+
+## The data
+
+| Layer | Source | Resolution | What it shows |
+|---|---|---|---|
+| True colour | MODIS Terra and Aqua surface reflectance (MOD09GA, MYD09GA) | 500 m, daily | What a person would see from orbit |
+| Carbon monoxide | Sentinel-5P TROPOMI, OFFL L3 CO | about 7 km, daily | A combustion gas; passes through cloud |
+| Absorbing aerosol index | Sentinel-5P TROPOMI, OFFL L3 AER_AI | about 7 km, daily | Smoke and dust particles, above about 1 |
+| Active fire | FIRMS (MODIS) | 1 km, daily | Every fire detected in each overpass |
+| Boundaries | FAO GAUL 2025 | | The six fire provinces |
+
+Carbon monoxide (CO) is the backbone of the analysis. It is produced by incomplete combustion, so a smouldering peat fire produces a lot of it, and it lives for weeks in the atmosphere, long enough to travel hundreds of kilometres. TROPOMI measures it in the shortwave infrared, where clouds do not block the signal as completely as they block visible light, so the CO map has far fewer gaps than the true-colour view. The values are total columns in mmol/m²; clean tropical air holds about 30.
+
+{{< include _snippets/ch71_haze_timelapse.qmd >}}
+
+## Two time-lapses of the same season
+
+The first animation is MODIS true colour every fourth day from August to October 2019, Terra and Aqua mosaicked so that one fills most of the other's swath gaps. Most of every frame is cloud. Where smoke shows, over southern Kalimantan in mid-September for example, it is a grey veil, and nothing in an RGB pixel separates it reliably from thin cloud.
+
+The second animation answers that. It shows a three-day mean of CO above 40 mmol/m² over a cloud-free dry-season backdrop, with that day's FIRMS fires in red. The fires flare first in southern Kalimantan, then in Sumatra; the CO builds over both in September, spreads north-west on the south-east monsoon towards the Malacca Strait and Sarawak, and disappears in late October when the rains begin.
+
+::: {.callout-tip}
+## Data visualisation: the backdrop decides what the eye follows
+The chemistry animation uses a static, dimmed, cloud-free backdrop, so the only things that change from frame to frame are the plume and the fires. Change a dynamic background and the eye follows clouds instead. Masking CO below 40 mmol/m² keeps the clean background transparent, so the plume reads as a shape rather than as a colour wash.
+:::
+
+## When and where: the season in three panels
+
+The series chart stacks three panels on one time axis, because the story has three parts: the fires, the smoke over the cities, and the baseline.
+
+- **The fires.** FIRMS counted about 150,000 fire pixel-days in the three Kalimantan provinces and 97,000 in the three Sumatran ones between July and November 2019. The Kalimantan fires peaked on 5 September and the Sumatran ones on 22 September.
+- **The smoke.** CO rose over every city in September. Palangka Raya, in the middle of the Central Kalimantan peat, had the worst air: its CO column peaked on 15 September at 327 mmol/m², ten times the clean-air level, and stayed above 50 mmol/m² on 46 days. Pekanbaru followed with 35 days, and the smoke reached Singapore (18 days), Kuching (19) and Kuala Lumpur (16).
+- **The baseline.** The same months in 2020, a wet year after a La Niña began, had about a tenth of the fires in Kalimantan and a twenty-fourth in Sumatra, and no city had a single day above 50 mmol/m².
+
+The **Hovmöller diagram** puts the whole season into one image. Each row is a day and each column a 0.5° strip of longitude between 3° S and 3° N, coloured by CO; time runs up the page. Averaged over that band, the smoke is faint until early September. It builds into dark bands from about 10 September, peaks over Central Kalimantan (around 114° E) in mid-September and over Sumatra and Singapore (101-104° E) about a week later, matching the two fire peaks, and fades in early October with a weaker pulse in mid-October. A diagram like this is the standard tool in atmospheric science for following anything that moves along one axis (a plume, a monsoon, a Madden-Julian oscillation), and it fits a whole season onto one page.
+
+## How long does the smoke take to arrive?
+
+Smoke cannot reach a city before the fire that makes it, so the fire series should lead the CO series by the travel time. The lag analysis correlates daily fire counts in each source region with CO at a city 0 to 7 days later.
+
+Both series rise and fall with the dry season, so their raw correlation is mostly the season. Each series is first turned into an *anomaly* from its own 15-day running mean, so that only the day-to-day variation is compared. Then:
+
+- **Close to the fires, the lag is about one day.** Sumatran fires correlate most strongly with Pekanbaru CO one day later (r = 0.50), and Kalimantan fires with Palangka Raya CO one day later (r = 0.45).
+- **Further away the signal weakens and becomes harder to read.** Pontianak and Kuching peak at two days (r = 0.33 and 0.31). Kuala Lumpur peaks at day 0 (r = 0.48), plausibly because the Sumatran fires that matter for Kuala Lumpur are on the Riau coast, a few hours' drift across the strait. Singapore's best lag is 5 days but with neighbouring lags near zero, which looks more like noise than a travel time.
+
+::: {.callout-important}
+## Scientific integrity: a lag correlation is a hint, not a transport model
+The correlation of anomalies at each lag is a crude tool. Wind direction changes from day to day, cloud leaves gaps in both series, and with about 150 days and eight lags per pair some correlations will look strong by chance. Read a clear peak at a plausible lag (one day, 100-200 km downwind) as support, and a lone peak at an odd lag as noise. Attributing smoke at a city to a source region properly needs a trajectory model driven by winds, such as HYSPLIT, which is the subject of Exercise 3.
+:::
+
+## The peak as a map
+
+The anomaly map subtracts the mean CO of 8-22 September 2020 from the same fortnight in 2019. It is a better map than either year alone, because the background CO, which varies with latitude and season, cancels out. What is left is the 2019 smoke: centred on the peat of Central Kalimantan and of Jambi and South Sumatra, and stretched north-west over the Malacca Strait and western Borneo.
+
+## Exercises {.unnumbered}
+
+1. Replace CO with the absorbing aerosol index (`absorbing_aerosol_index`, already in the CSV as `ai`). Smoke pushes it above about 1. Which cities cross that line, on how many days, and does the timing match CO?
+2. Repeat the season chart for 2015, the worst fire year of the last two decades, or for 2023. Is the lag at Palangka Raya still about one day?
+3. Add ERA5 daily wind at 850 hPa to the anomaly map as arrows. Does the plume lie downwind of the fires?
+4. Compute the share of 2019 fire pixel-days that fell on peat, using the peat map of Chapter [-@sec-peat], for Sumatra and Kalimantan separately.

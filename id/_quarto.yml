@@ -110,6 +110,7 @@ book:
         - 50-landslide-simple.qmd
         - 46-windstorm.qmd
         - 37-peat.qmd
+        - 71-haze-timelapse.qmd
     - part: "Bagian VIII: Pangan dan Perkebunan"
       chapters:
         - 27-agriculture.qmd
@@ -146,6 +147,7 @@ book:
     - part: "Bagian XIII: Kota, Manusia, dan Bisnis"
       chapters:
         - 72-urban-growth.qmd
+        - 73-urban-planning.qmd
         - 22-vector-geoai.qmd
         - 65-ooh-sydney.qmd
         - 67-transit-access.qmd

@@ -1,0 +1,80 @@
+# An Urban Planning Toolkit: Green Space, Parks, Heat and Flood in Surabaya {#sec-urban-planning}
+
+::: {.chapter-goal}
+#### In this chapter
+A planning office does not need a land cover map. It needs answers per neighbourhood: is there enough green, can people walk to a park, where is it hottest, and is the city building where it floods? You will put Kota Surabaya on a grid of hexagons, fill every hexagon with open data, and answer those four questions. Along the way you will meet a regression trap that catches many published urban heat studies, measure spatial autocorrelation with Moran's I, and build a composite priority index together with the test that shows how much its ranking depends on the weights. Python and R side by side.
+:::
+
+## Why hexagons
+
+Administrative units are the wrong shape for analysis. Kelurahan differ in size by a factor of fifty, so a map of shares by kelurahan is dominated by the big ones, and any statistic depends on where the boundaries happen to be drawn (the *modifiable areal unit problem*). A regular grid fixes both. Hexagons are better than squares for two reasons: every neighbour of a hexagon shares an edge and sits at the same distance, which matters for neighbourhood statistics such as Moran's I, and hexagons tile a city without the visual grain of a chessboard.
+
+The **H3** system, published by Uber, gives every hexagon on Earth a fixed identifier at sixteen resolutions. At resolution 8 a hexagon averages 0.74 km², about the size of an urban neighbourhood; Surabaya is covered by 488 of them. Because the identifiers are global, a hexagon table from this chapter can be joined to any other H3 dataset (mobility, sales, utility connections) without a spatial join.
+
+## The data
+
+| Per hexagon | Source | Cell |
+|---|---|---|
+| Green cover (tree, shrub, grass) and built-up share | ESA WorldCover 2021 | 10 m |
+| Residents | GHSL population 2020 | 100 m |
+| Dry-season land surface temperature | Landsat 8 and 9, June to October 2023-2024, median | 30 m |
+| Land below 3 m above sea level | MERIT Hydro elevation | 90 m |
+| Building cover 2016 and 2023 | Google Open Buildings 2.5D Temporal | 4 m (effective) |
+| Residents within 400 m of a park of at least 0.5 ha | OpenStreetMap parks + GHSL | |
+
+The Python tab fills the hexagons in Earth Engine and fetches the parks from OpenStreetMap once, then saves both to `data/`, so the analysis and the R tab run without either service.
+
+{{< include _snippets/ch73_urban_planning.qmd >}}
+
+## Question 1: is there enough green, and can people reach it?
+
+Indonesia's spatial planning law (Law 26/2007) requires at least **30 % of a city's area as green open space** (*ruang terbuka hijau*, RTH): 20 % public and 10 % private. By WorldCover, Surabaya is **19 % green** (trees, shrubs and grass), and only 10 % has tree cover. The green is unevenly spread. It lies in the west and south-west and in the east-coast belt; 98 of 488 hexagons reach 30 %, and 196 are below 10 %. **Half of all residents (49 %) live in a hexagon with less than 10 % green.**
+
+Access is the sharper problem. Only **12 % of residents live within 400 m (about five minutes' walk) of a park of at least half a hectare**. The map shows why: the parks mapped in OpenStreetMap are few (57 above 0.5 ha) and clustered, and the dense centre-south has almost none.
+
+::: {.callout-warning}
+## Common failure: measuring the law with the wrong ruler
+RTH is a legal category. It includes cemeteries, sports fields and road verges, which WorldCover may call grass or bare ground. It does not include private gardens too small for a 10 m pixel. And OpenStreetMap does not map every park, so a park missing from the map counts as no park at all. The numbers here are a *screening* measure: they show where to look and how big the gap probably is, not a compliance figure. A compliance audit uses the city's own RTH inventory.
+:::
+
+## Question 2: does green cool the city? A regression trap
+
+Heat is the obvious reason to want green. Plot land surface temperature (LST) against green cover per hexagon, fit a line, and you get what you expect: model A, green only, says each +10 % of green goes with **0.24 °C cooler** ground. But green explains only 3 % of the variation (*R*² = 0.03).
+
+Add built-up share and population density (model B), and *R*² jumps to 0.81. Built-up share is the dominant driver: +1.2 °C for each +10 % of built-up land. Then something odd happens: **the coefficient of green turns positive**, +0.63 °C per +10 %.
+
+The model is not wrong; the question changed. Green, built-up, water and the remaining land covers are *shares of the same area*, so they add up to 100 %. In model B, raising green while holding built-up fixed can only lower *something else*, and in Surabaya that something is largely water: the fishponds (*tambak*) of the east coast and the river channels, which are the coolest surfaces in the city (31-34 °C on the map). Model B therefore compares green with water, and water wins. In a regression on compositional data, each share's coefficient means *swapping that cover for the ones left out*. Decide which swap you mean before you interpret the sign. The planning question is usually "what if we replaced roofs and asphalt with trees", which is a swap between built-up and green, so the number to quote is the difference between the two coefficients, not either on its own.
+
+Population density has a negative coefficient once built-up share is fixed: among equally built-up hexagons, the less populated ones are hotter. That is consistent with large warehouse, port and industrial roofs, which are heavily built-up but have few residents. The data here cannot confirm that reading; a map of building types could.
+
+### Moran's I: are the leftovers random in space?
+
+Regression assumes independent residuals. **Moran's I** measures spatial autocorrelation: it is positive when neighbouring values resemble each other, near zero when they are arranged randomly, and negative when they alternate like a chessboard. Here neighbours are the six hexagons around each one, and significance comes from 999 random permutations of the values.
+
+LST itself has Moran's I = 0.71: hot hexagons sit next to hot hexagons, as you would expect. The real test is the residuals of model B, and they still have Moran's I = 0.48 (p = 0.001). The model misses something with a spatial pattern: the residual map shows a warm band in the south-west and cool hexagons along the coasts, which suggests sea breeze and distance to the coast. Two practical consequences: the coefficients' confidence intervals are too narrow, because the 488 hexagons carry less independent information than their number suggests; and the next model should include a spatial term (distance to the coast, or a spatial lag or error model). The R tab gives a slightly different value (0.41) when the h3jsr package is not installed, because it then falls back to "neighbours within 1.1 km", a different neighbour definition. Moran's I always depends on the definition of neighbour, so report it.
+
+## Question 3: where should greening go first?
+
+A **composite index** combines several criteria into one score for ranking. Four criteria describe where a new park or street trees would do the most good: high temperature, many residents, little green and poor park access. Each is converted to a z-score over the hexagons with at least 500 residents, given a direction (+ when more is worse, − when more is better), and averaged with equal weights.
+
+The top ten hexagons form a cluster in central-south Surabaya. They are 43-45 °C in the dry season, hold 150-350 residents per hectare, have less than 7 % green, and almost no resident is within 400 m of a park.
+
+Equal weights are a choice, and a different stakeholder would choose differently. The **weight-sensitivity test** draws 1,000 random sets of weights (from a Dirichlet distribution, so each set is positive and sums to one) and counts how often each hexagon stays in the top ten. The first-ranked hexagon stays in the top ten under 83 % of all weightings; five of the ten stay under at least half; the eighth only under 24 %. Report the ranking *with* that column. A decision-maker can then see which priorities are robust and which depend on a judgement call.
+
+::: {.callout-tip}
+## Data visualisation: show the ranking and its uncertainty side by side
+The priority chart puts the map (where) next to the robustness bars (how sure). A ranked list alone invites false precision: hexagon 8 and hexagon 11 may be indistinguishable. The bars say so without a single equation.
+:::
+
+## Question 4: is the city building on low ground?
+
+Height above the nearest drainage (HAND) is the usual flood screen, but in a delta it fails: in Surabaya HAND is below 5 m for 87 % of the land, so it cannot separate safe places from unsafe ones. (The first version of this chapter used it and got exactly that useless answer.) Height above sea level separates better. **27 % of the city lies below 3 m**, the land most exposed to tidal flooding (*rob*) and river backwater.
+
+Between 2016 and 2023, building cover rose from 28 to 31 % of the city. Only **16 % of the new building cover is on that low ground**, so the **location quotient**, the share of new building divided by the share of land, is 0.60. New building is going to low land at 60 % of the rate it would if it ignored elevation. That reflects the fishpond belt and the protected east coast as much as deliberate planning, but it is the right direction. The same table computed per kecamatan, or for Jakarta's north coast, would read very differently; Exercise 3 asks for that.
+
+## Exercises {.unnumbered}
+
+1. Replace green cover with tree cover alone in model B. Does the sign still flip? What does that say about grass on bare, sunny land?
+2. Add distance to the coast as a predictor. How much does Moran's I of the residuals drop?
+3. Run the low-ground analysis for North Jakarta (Kota Jakarta Utara) and compute the location quotient. How does it compare with Surabaya's 0.60?
+4. Replace straight-line park distance with walking distance on the OpenStreetMap street network (osmnx, as in Chapter [-@sec-transit]). How much does the 12 % change?

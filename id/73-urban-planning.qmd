@@ -1,0 +1,80 @@
+# Perangkat Perencanaan Kota: Ruang Hijau, Taman, Panas, dan Banjir di Surabaya {#sec-urban-planning}
+
+::: {.chapter-goal}
+#### Di bab ini
+Kantor perencanaan tidak membutuhkan peta tutupan lahan. Yang dibutuhkan adalah jawaban per lingkungan: apakah hijaunya cukup, apakah warga bisa berjalan kaki ke taman, di mana paling panas, dan apakah kota membangun di tempat yang tergenang? Anda akan meletakkan Kota Surabaya di atas grid heksagon, mengisi setiap heksagon dengan data terbuka, dan menjawab empat pertanyaan itu. Di sepanjang jalan Anda akan bertemu jebakan regresi yang menjerat banyak studi panas perkotaan yang sudah terbit, mengukur autokorelasi spasial dengan Moran's I, dan membangun indeks prioritas gabungan beserta uji yang menunjukkan seberapa besar peringkatnya bergantung pada bobot. Python dan R berdampingan.
+:::
+
+## Mengapa heksagon
+
+Unit administrasi adalah bentuk yang salah untuk analisis. Luas kelurahan bisa berbeda sampai lima puluh kali, sehingga peta persentase per kelurahan didominasi yang besar, dan statistik apa pun bergantung pada di mana batas kebetulan digambar (*modifiable areal unit problem*). Grid yang teratur mengatasi keduanya. Heksagon lebih baik daripada persegi karena dua alasan: setiap tetangga sebuah heksagon berbagi sisi dan berjarak sama, yang penting untuk statistik ketetanggaan seperti Moran's I, dan heksagon menutup kota tanpa kesan papan catur.
+
+Sistem **H3**, yang diterbitkan Uber, memberi setiap heksagon di Bumi kode tetap pada enam belas resolusi. Pada resolusi 8 sebuah heksagon rata-rata 0,74 km², kira-kira seluas satu lingkungan kota; Surabaya tertutup 488 heksagon. Karena kodenya global, tabel heksagon dari bab ini bisa digabungkan dengan dataset H3 lain (mobilitas, penjualan, sambungan utilitas) tanpa spatial join.
+
+## Datanya
+
+| Per heksagon | Sumber | Sel |
+|---|---|---|
+| Tutupan hijau (pohon, semak, rumput) dan porsi terbangun | ESA WorldCover 2021 | 10 m |
+| Penduduk | GHSL population 2020 | 100 m |
+| Suhu permukaan lahan musim kemarau | Landsat 8 dan 9, Juni hingga Oktober 2023-2024, median | 30 m |
+| Lahan di bawah 3 m di atas permukaan laut | Elevasi MERIT Hydro | 90 m |
+| Tutupan bangunan 2016 dan 2023 | Google Open Buildings 2.5D Temporal | 4 m (efektif) |
+| Penduduk dalam 400 m dari taman minimal 0,5 ha | Taman OpenStreetMap + GHSL | |
+
+Tab Python mengisi heksagon di Earth Engine dan mengambil taman dari OpenStreetMap sekali, lalu menyimpan keduanya ke `data/`, sehingga analisis dan tab R berjalan tanpa kedua layanan itu.
+
+{{< include _snippets/ch73_urban_planning.qmd >}}
+
+## Pertanyaan 1: apakah hijaunya cukup, dan bisakah warga menjangkaunya?
+
+UU Penataan Ruang (UU 26/2007) mewajibkan **ruang terbuka hijau (RTH) minimal 30 % dari luas kota**: 20 % publik dan 10 % privat. Menurut WorldCover, Surabaya **19 % hijau** (pohon, semak, dan rumput), dan hanya 10 % bertutupan pohon. Hijaunya tidak merata. Ia ada di barat dan barat daya serta di sabuk pantai timur; 98 dari 488 heksagon mencapai 30 %, dan 196 di bawah 10 %. **Separuh penduduk (49 %) tinggal di heksagon dengan hijau kurang dari 10 %.**
+
+Akses adalah masalah yang lebih tajam. Hanya **12 % penduduk tinggal dalam 400 m (sekitar lima menit berjalan kaki) dari taman seluas minimal setengah hektare**. Petanya menunjukkan alasannya: taman yang terpetakan di OpenStreetMap sedikit (57 yang di atas 0,5 ha) dan mengelompok, dan bagian tengah-selatan yang padat hampir tidak punya taman.
+
+::: {.callout-warning}
+## Kegagalan umum: mengukur undang-undang dengan penggaris yang salah
+RTH adalah kategori hukum. Ia mencakup makam, lapangan olahraga, dan jalur hijau jalan, yang oleh WorldCover bisa disebut rumput atau lahan terbuka. Ia tidak mencakup pekarangan pribadi yang terlalu kecil untuk piksel 10 m. Dan OpenStreetMap tidak memetakan setiap taman, sehingga taman yang tidak ada di peta dihitung sebagai tidak ada taman. Angka-angka di sini adalah ukuran *penyaringan*: menunjukkan di mana harus melihat dan seberapa besar kemungkinan kesenjangannya, bukan angka kepatuhan. Audit kepatuhan memakai inventaris RTH milik kota sendiri.
+:::
+
+## Pertanyaan 2: apakah hijau mendinginkan kota? Sebuah jebakan regresi
+
+Panas adalah alasan paling jelas untuk menginginkan hijau. Plot suhu permukaan lahan (LST) terhadap tutupan hijau per heksagon, tarik garisnya, dan Anda mendapat apa yang Anda harapkan: model A, hanya hijau, mengatakan setiap +10 % hijau disertai permukaan **0,24 °C lebih dingin**. Tetapi hijau hanya menjelaskan 3 % variasi (*R*² = 0,03).
+
+Tambahkan porsi terbangun dan kepadatan penduduk (model B), dan *R*² melonjak ke 0,81. Porsi terbangun adalah pendorong utama: +1,2 °C untuk setiap +10 % lahan terbangun. Lalu terjadi hal yang aneh: **koefisien hijau berubah positif**, +0,63 °C per +10 %.
+
+Modelnya tidak salah; pertanyaannya yang berubah. Hijau, terbangun, air, dan tutupan lahan lainnya adalah *porsi dari luas yang sama*, sehingga jumlahnya 100 %. Di model B, menaikkan hijau sambil menahan terbangun tetap hanya bisa menurunkan *yang lain*, dan di Surabaya yang lain itu sebagian besar air: tambak di pantai timur dan alur sungai, yang merupakan permukaan paling dingin di kota (31-34 °C di peta). Jadi model B membandingkan hijau dengan air, dan air menang. Dalam regresi pada data komposisi, koefisien setiap porsi berarti *menukar tutupan itu dengan tutupan yang tidak dimasukkan*. Tentukan pertukaran mana yang Anda maksud sebelum menafsirkan tandanya. Pertanyaan perencanaan biasanya "bagaimana jika atap dan aspal diganti pohon", yaitu pertukaran antara terbangun dan hijau, jadi angka yang dikutip adalah selisih kedua koefisien, bukan salah satunya saja.
+
+Kepadatan penduduk berkoefisien negatif setelah porsi terbangun ditahan: di antara heksagon yang sama-sama terbangun, yang lebih sedikit penduduknya justru lebih panas. Ini konsisten dengan atap gudang, pelabuhan, dan industri yang luas, yang sangat terbangun tetapi sedikit penghuninya. Data di sini tidak bisa memastikan tafsiran itu; peta jenis bangunan bisa.
+
+### Moran's I: apakah sisanya acak dalam ruang?
+
+Regresi mengasumsikan residual yang saling bebas. **Moran's I** mengukur autokorelasi spasial: positif bila nilai yang bertetangga mirip, mendekati nol bila tersusun acak, dan negatif bila berselang-seling seperti papan catur. Di sini tetangga adalah enam heksagon di sekeliling setiap heksagon, dan signifikansinya dari 999 permutasi acak nilai-nilainya.
+
+LST sendiri punya Moran's I = 0,71: heksagon panas bersebelahan dengan heksagon panas, sesuai dugaan. Uji sebenarnya adalah residual model B, dan residual itu masih punya Moran's I = 0,48 (p = 0,001). Model melewatkan sesuatu yang berpola spasial: peta residual menunjukkan pita hangat di barat daya dan heksagon dingin di sepanjang pantai, yang mengisyaratkan angin laut dan jarak ke pantai. Dua akibat praktisnya: selang kepercayaan koefisien terlalu sempit, karena 488 heksagon membawa informasi bebas yang lebih sedikit daripada jumlahnya; dan model berikutnya perlu memasukkan suku spasial (jarak ke pantai, atau model spatial lag atau spatial error). Tab R memberi nilai sedikit berbeda (0,41) bila paket h3jsr tidak terpasang, karena ia lalu memakai "tetangga dalam 1,1 km", definisi tetangga yang berbeda. Moran's I selalu bergantung pada definisi tetangga, jadi laporkan.
+
+## Pertanyaan 3: di mana penghijauan didahulukan?
+
+**Indeks gabungan** menyatukan beberapa kriteria menjadi satu skor untuk pemeringkatan. Empat kriteria menggambarkan di mana taman baru atau pohon jalan paling bermanfaat: suhu tinggi, penduduk banyak, hijau sedikit, dan akses taman buruk. Setiap kriteria diubah menjadi z-score atas heksagon yang berpenduduk minimal 500 orang, diberi arah (+ bila makin besar makin buruk, − bila makin besar makin baik), lalu dirata-rata dengan bobot sama.
+
+Sepuluh heksagon teratas membentuk gugus di Surabaya tengah-selatan. Suhunya 43-45 °C di musim kemarau, berpenduduk 150-350 jiwa per hektare, hijaunya kurang dari 7 %, dan hampir tidak ada warga yang tinggal dalam 400 m dari taman.
+
+Bobot yang sama adalah sebuah pilihan, dan pemangku kepentingan lain akan memilih berbeda. **Uji sensitivitas bobot** menarik 1.000 set bobot acak (dari distribusi Dirichlet, sehingga setiap set positif dan berjumlah satu) dan menghitung seberapa sering setiap heksagon tetap di sepuluh besar. Heksagon peringkat pertama tetap di sepuluh besar pada 83 % dari semua pembobotan; lima dari sepuluh tetap bertahan pada minimal separuhnya; peringkat kedelapan hanya 24 %. Laporkan peringkat *bersama* kolom itu. Pengambil keputusan lalu bisa melihat prioritas mana yang kokoh dan mana yang bergantung pada penilaian subjektif.
+
+::: {.callout-tip}
+## Visualisasi data: tampilkan peringkat dan ketidakpastiannya berdampingan
+Grafik prioritas menempatkan peta (di mana) di samping batang kekokohan (seberapa yakin). Daftar peringkat saja mengundang presisi palsu: heksagon ke-8 dan ke-11 mungkin tidak bisa dibedakan. Batang-batang itu mengatakannya tanpa satu persamaan pun.
+:::
+
+## Pertanyaan 4: apakah kota membangun di lahan rendah?
+
+Ketinggian di atas drainase terdekat (HAND) adalah penyaring banjir yang lazim, tetapi di delta ia gagal: di Surabaya HAND di bawah 5 m untuk 87 % lahan, sehingga tidak bisa memisahkan tempat aman dari yang tidak. (Versi pertama bab ini memakainya dan mendapat jawaban yang tidak berguna itu.) Ketinggian di atas permukaan laut memisahkan lebih baik. **27 % kota berada di bawah 3 m**, lahan yang paling terpapar banjir rob dan arus balik sungai.
+
+Antara 2016 dan 2023, tutupan bangunan naik dari 28 menjadi 31 % luas kota. Hanya **16 % tutupan bangunan baru berada di lahan rendah itu**, sehingga **location quotient**, porsi bangunan baru dibagi porsi lahan, adalah 0,60. Bangunan baru masuk ke lahan rendah dengan laju 60 % dari laju bila elevasi diabaikan. Ini mencerminkan sabuk tambak dan kawasan lindung pantai timur sama besarnya dengan perencanaan yang disengaja, tetapi arahnya benar. Tabel yang sama yang dihitung per kecamatan, atau untuk pantai utara Jakarta, akan terbaca sangat berbeda; Latihan 3 memintanya.
+
+## Latihan {.unnumbered}
+
+1. Ganti tutupan hijau dengan tutupan pohon saja di model B. Apakah tandanya masih berbalik? Apa artinya bagi rumput di lahan terbuka yang terik?
+2. Tambahkan jarak ke pantai sebagai prediktor. Berapa penurunan Moran's I residualnya?
+3. Jalankan analisis lahan rendah untuk Jakarta Utara (Kota Jakarta Utara) dan hitung location quotient-nya. Bagaimana dibandingkan dengan 0,60 di Surabaya?
+4. Ganti jarak garis lurus ke taman dengan jarak berjalan kaki di jaringan jalan OpenStreetMap (osmnx, seperti di Bab [-@sec-transit]). Berapa perubahan angka 12 %?

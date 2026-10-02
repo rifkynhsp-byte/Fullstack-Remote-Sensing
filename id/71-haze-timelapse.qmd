@@ -1,0 +1,70 @@
+# Asap dari Angkasa: Kabut Asap 2019, Bingkai demi Bingkai {#sec-haze}
+
+::: {.chapter-goal}
+#### Di bab ini
+Pada September 2019 asap dari kebakaran gambut dan hutan di Sumatra dan Kalimantan meliburkan sekolah dan membatalkan penerbangan dari Palangka Raya hingga Kuala Lumpur. Anda akan menyaksikan musim itu dua kali, seperti yang dilihat mata dalam warna asli MODIS dan seperti yang dilihat kimia dalam karbon monoksida Sentinel-5P beserta setiap titik api FIRMS, lalu mengubah data yang sama menjadi analisis yang tidak bisa dilakukan animasi sendirian: kapan dan di mana asap memuncak, seberapa tidak biasanya dibandingkan tahun basah, dan berapa hari asap butuh untuk mencapai setiap kota. JavaScript, Python, dan R.
+:::
+
+## Mengapa dianimasikan, dan mengapa tidak berhenti di situ
+
+Time-lapse adalah gambar paling meyakinkan dalam penginderaan jauh. Ia juga yang paling tidak kuantitatif: penonton mengingat geraknya, bukan angkanya, dan gumpalan asap tampak mirip awan dalam warna asli. Bab ini memakai animasi untuk apa ia unggul, yaitu menunjukkan bahwa sesuatu bergerak dan ke arah mana, lalu menjawab pertanyaan yang ditimbulkannya dengan grafik dan tabel dari data yang sama. Bab [-@sec-peat] menunjukkan di mana dan mengapa gambut terbakar; bab ini mengikuti asapnya setelah meninggalkan api.
+
+## Datanya
+
+| Layer | Sumber | Resolusi | Yang ditunjukkan |
+|---|---|---|---|
+| Warna asli | Reflektansi permukaan MODIS Terra dan Aqua (MOD09GA, MYD09GA) | 500 m, harian | Apa yang akan dilihat orang dari orbit |
+| Karbon monoksida | Sentinel-5P TROPOMI, OFFL L3 CO | sekitar 7 km, harian | Gas hasil pembakaran; menembus awan |
+| Absorbing aerosol index | Sentinel-5P TROPOMI, OFFL L3 AER_AI | sekitar 7 km, harian | Partikel asap dan debu, di atas sekitar 1 |
+| Titik api aktif | FIRMS (MODIS) | 1 km, harian | Setiap api yang terdeteksi tiap lintasan |
+| Batas wilayah | FAO GAUL 2025 | | Enam provinsi sumber api |
+
+Karbon monoksida (CO) adalah tulang punggung analisis. Gas ini dihasilkan pembakaran tidak sempurna, sehingga api gambut yang membara menghasilkan banyak CO, dan CO bertahan berminggu-minggu di atmosfer, cukup lama untuk menempuh ratusan kilometer. TROPOMI mengukurnya di inframerah gelombang pendek, tempat awan tidak menghalangi sinyal sepenuh ia menghalangi cahaya tampak, sehingga peta CO jauh lebih sedikit bolongnya daripada tampilan warna asli. Nilainya adalah kolom total dalam mmol/m²; udara tropis yang bersih berisi sekitar 30.
+
+{{< include _snippets/ch71_haze_timelapse.qmd >}}
+
+## Dua time-lapse untuk musim yang sama
+
+Animasi pertama adalah warna asli MODIS setiap empat hari dari Agustus hingga Oktober 2019, Terra dan Aqua digabung agar yang satu menutup sebagian besar celah lintasan yang lain. Sebagian besar setiap bingkai tertutup awan. Di tempat asap terlihat, misalnya di Kalimantan bagian selatan pada pertengahan September, ia berupa selubung abu-abu, dan tidak ada apa pun dalam piksel RGB yang bisa memisahkannya dengan andal dari awan tipis.
+
+Animasi kedua menjawabnya. Ia menampilkan rata-rata tiga hari CO di atas 40 mmol/m² di atas latar musim kemarau yang bebas awan, dengan titik api FIRMS hari itu berwarna merah. Api menyala lebih dulu di Kalimantan bagian selatan, lalu di Sumatra; CO menumpuk di atas keduanya pada September, menyebar ke barat laut terbawa monsun tenggara ke arah Selat Malaka dan Sarawak, dan menghilang pada akhir Oktober ketika hujan mulai turun.
+
+::: {.callout-tip}
+## Visualisasi data: latar belakang menentukan apa yang diikuti mata
+Animasi kimia memakai latar yang statis, diredupkan, dan bebas awan, sehingga satu-satunya yang berubah dari bingkai ke bingkai adalah gumpalan asap dan titik api. Gunakan latar yang berubah-ubah, dan mata akan mengikuti awan. Menyembunyikan CO di bawah 40 mmol/m² membuat latar udara bersih transparan, sehingga gumpalan asap terbaca sebagai bentuk, bukan sapuan warna.
+:::
+
+## Kapan dan di mana: satu musim dalam tiga panel
+
+Grafik deret waktu menumpuk tiga panel pada satu sumbu waktu, karena ceritanya terdiri dari tiga bagian: api, asap di atas kota, dan pembanding.
+
+- **Api.** FIRMS mencatat sekitar 150.000 piksel-hari api di tiga provinsi Kalimantan dan 97.000 di tiga provinsi Sumatra antara Juli dan November 2019. Api Kalimantan memuncak pada 5 September dan api Sumatra pada 22 September.
+- **Asap.** CO naik di atas setiap kota pada September. Palangka Raya, di tengah gambut Kalimantan Tengah, mengalami udara terburuk: kolom CO-nya memuncak pada 15 September di 327 mmol/m², sepuluh kali udara bersih, dan di atas 50 mmol/m² selama 46 hari. Pekanbaru menyusul dengan 35 hari, dan asap mencapai Singapura (18 hari), Kuching (19), dan Kuala Lumpur (16).
+- **Pembanding.** Bulan-bulan yang sama pada 2020, tahun basah setelah La Niña mulai, punya sekitar sepersepuluh api di Kalimantan dan seperdua puluh empat di Sumatra, dan tidak ada kota dengan satu hari pun di atas 50 mmol/m².
+
+**Diagram Hovmöller** memasukkan seluruh musim ke satu gambar. Setiap baris adalah satu hari dan setiap kolom satu jalur bujur selebar 0,5° antara 3° LS dan 3° LU, diwarnai menurut CO; waktu berjalan ke atas. Dirata-rata pada jalur itu, asap masih samar sampai awal September. Asap menebal menjadi pita gelap sejak sekitar 10 September, memuncak di atas Kalimantan Tengah (sekitar 114° BT) pada pertengahan September dan di atas Sumatra serta Singapura (101-104° BT) sekitar seminggu kemudian, sesuai dengan dua puncak api, lalu memudar pada awal Oktober dengan denyut yang lebih lemah di pertengahan Oktober. Diagram seperti ini adalah alat baku ilmu atmosfer untuk mengikuti apa pun yang bergerak sepanjang satu sumbu (gumpalan asap, monsun, osilasi Madden-Julian), dan memuat satu musim penuh dalam satu halaman.
+
+## Berapa lama asap tiba?
+
+Asap tidak bisa mencapai kota sebelum api yang menghasilkannya, jadi deret api seharusnya mendahului deret CO sebesar waktu tempuhnya. Analisis jeda (lag) mengorelasikan jumlah api harian di setiap wilayah sumber dengan CO di sebuah kota 0 hingga 7 hari kemudian.
+
+Kedua deret naik turun mengikuti musim kemarau, sehingga korelasi mentahnya sebagian besar adalah musim itu sendiri. Setiap deret lebih dulu diubah menjadi *anomali* dari rata-rata bergerak 15 harinya sendiri, sehingga hanya variasi dari hari ke hari yang dibandingkan. Hasilnya:
+
+- **Dekat sumber api, jedanya sekitar satu hari.** Api Sumatra berkorelasi paling kuat dengan CO Pekanbaru satu hari kemudian (r = 0,50), dan api Kalimantan dengan CO Palangka Raya satu hari kemudian (r = 0,45).
+- **Makin jauh, sinyalnya melemah dan makin sulit dibaca.** Pontianak dan Kuching memuncak di dua hari (r = 0,33 dan 0,31). Kuala Lumpur memuncak di hari ke-0 (r = 0,48), kemungkinan karena api Sumatra yang berpengaruh bagi Kuala Lumpur ada di pesisir Riau, hanya beberapa jam hanyut menyeberangi selat. Jeda terbaik Singapura adalah 5 hari tetapi jeda di sebelahnya mendekati nol, yang lebih mirip derau daripada waktu tempuh.
+
+::: {.callout-important}
+## Integritas ilmiah: korelasi jeda adalah petunjuk, bukan model transportasi
+Korelasi anomali pada setiap jeda adalah alat kasar. Arah angin berubah dari hari ke hari, awan meninggalkan bolong di kedua deret, dan dengan sekitar 150 hari dan delapan jeda per pasangan sebagian korelasi akan tampak kuat karena kebetulan. Baca puncak yang jelas pada jeda yang masuk akal (satu hari, 100-200 km di hilir angin) sebagai dukungan, dan puncak tunggal pada jeda yang janggal sebagai derau. Mengaitkan asap di sebuah kota dengan wilayah sumbernya secara benar butuh model lintasan yang digerakkan angin, seperti HYSPLIT, yang menjadi bahan Latihan 3.
+:::
+
+## Puncaknya sebagai peta
+
+Peta anomali mengurangkan rata-rata CO 8-22 September 2020 dari dua minggu yang sama pada 2019. Peta ini lebih baik daripada salah satu tahun saja, karena CO latar, yang berubah menurut lintang dan musim, saling meniadakan. Yang tersisa adalah asap 2019: berpusat di gambut Kalimantan Tengah serta Jambi dan Sumatra Selatan, dan memanjang ke barat laut di atas Selat Malaka dan Kalimantan bagian barat.
+
+## Latihan {.unnumbered}
+
+1. Ganti CO dengan absorbing aerosol index (`absorbing_aerosol_index`, sudah ada di CSV sebagai `ai`). Asap mendorongnya di atas sekitar 1. Kota mana yang melewati batas itu, berapa hari, dan apakah waktunya cocok dengan CO?
+2. Ulangi grafik musim untuk 2015, tahun kebakaran terburuk dalam dua dekade terakhir, atau untuk 2023. Apakah jeda di Palangka Raya masih sekitar satu hari?
+3. Tambahkan angin harian ERA5 pada 850 hPa ke peta anomali sebagai panah. Apakah gumpalan asap berada di hilir angin dari api?
+4. Hitung porsi piksel-hari api 2019 yang jatuh di gambut, memakai peta gambut Bab [-@sec-peat], untuk Sumatra dan Kalimantan secara terpisah.

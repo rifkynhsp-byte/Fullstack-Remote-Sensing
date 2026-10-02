@@ -1,0 +1,44 @@
+[
+ {
+  "name": "ch73-green",
+  "kind": "table",
+  "caption": "Green cover, tree cover and park access in Kota Surabaya, on H3 resolution-8 hexagons.",
+  "markdown": "| measure                                       |   value |\n|:----------------------------------------------|--------:|\n| green cover, whole city (%)                   |    18.6 |\n| tree cover, whole city (%)                    |    10.0 |\n| hexagons meeting the 30 % target              |    98.0 |\n| hexagons below 10 % green                     |   196.0 |\n| residents in hexagons below 10 % green (%)    |    49.5 |\n| residents within 400 m of a park ≥ 0.5 ha (%) |    12.4 |\n| number of hexagons                            |   488.0 |"
+ },
+ {
+  "name": "ch73-maps",
+  "kind": "chart",
+  "caption": "Four layers a planner reads together. Park outlines from OpenStreetMap on map 2.",
+  "image": "images/real/ch73-maps.png"
+ },
+ {
+  "name": "ch73-regression",
+  "kind": "table",
+  "caption": "Ordinary least squares of land surface temperature per hexagon, and Moran's I before and after.",
+  "markdown": "| model                     | term                   |   coefficient |   95% CI low |   95% CI high |         p |\n|:--------------------------|:-----------------------|--------------:|-------------:|--------------:|----------:|\n| A: green only             | Intercept              |        42.173 |       41.821 |        42.525 |   0       |\n| A: green only             | green_pct              |        -0.024 |       -0.037 |        -0.010 |   0.00055 |\n| A: green only             | R²                     |         0.026 |      nan     |       nan     | nan       |\n| B: green + built + people | Intercept              |        36.011 |       35.653 |        36.370 |   0       |\n| B: green + built + people | green_pct              |         0.063 |        0.055 |         0.072 |   3.9e-39 |\n| B: green + built + people | built_pct              |         0.116 |        0.105 |         0.127 |   1.6e-69 |\n| B: green + built + people | log_people_ha          |        -0.695 |       -0.909 |        -0.482 |   3.7e-10 |\n| B: green + built + people | R²                     |         0.809 |      nan     |       nan     | nan       |\n|                           | Moran's I of LST       |         0.711 |      nan     |       nan     |   0.001   |\n| B                         | Moran's I of residuals |         0.484 |      nan     |       nan     |   0.001   |"
+ },
+ {
+  "name": "ch73-regression-chart",
+  "kind": "chart",
+  "caption": "Left: the partial effect of green cover. Right: where the model is too cool (red) or too warm (blue).",
+  "image": "images/real/ch73-regression-chart.png"
+ },
+ {
+  "name": "ch73-priority",
+  "kind": "table",
+  "caption": "The ten hexagons where greening helps most: hot, crowded, bare and far from a park.",
+  "markdown": "| h3              |     lon |    lat |   lst_c |   people_ha |   green_pct |   park_access_pct |   score |   in top 10 under random weights (%) |\n|:----------------|--------:|-------:|--------:|------------:|------------:|------------------:|--------:|-------------------------------------:|\n| 888d808353fffff | 112.735 | -7.261 |    43.4 |         349 |         1.9 |                 0 |    1.60 |                                   83 |\n| 888d808319fffff | 112.732 | -7.255 |    42.8 |         254 |         2.8 |                 0 |    1.09 |                                   62 |\n| 888d808229fffff | 112.725 | -7.275 |    45.2 |         151 |         0.3 |                 0 |    0.99 |                                   65 |\n| 888d809191fffff | 112.751 | -7.297 |    44.4 |         170 |         0.5 |                 0 |    0.96 |                                   48 |\n| 888d808265fffff | 112.741 | -7.276 |    43.0 |         227 |         5.6 |                 0 |    0.96 |                                   50 |\n| 888d808301fffff | 112.750 | -7.241 |    43.9 |         186 |         1.5 |                 0 |    0.96 |                                   51 |\n| 888d8091dbfffff | 112.760 | -7.318 |    44.0 |         191 |         4.6 |                 1 |    0.93 |                                   36 |\n| 888d8090a9fffff | 112.747 | -7.324 |    44.6 |         166 |         3.2 |                 0 |    0.93 |                                   24 |\n| 888d80822dfffff | 112.730 | -7.268 |    43.8 |         182 |         0.9 |                 0 |    0.93 |                                   36 |\n| 888d8091b7fffff | 112.754 | -7.269 |    43.2 |         220 |         6.7 |                 0 |    0.93 |                                   45 |"
+ },
+ {
+  "name": "ch73-priority-chart",
+  "kind": "chart",
+  "caption": "The composite index, and a weight-sensitivity test.",
+  "image": "images/real/ch73-priority-chart.png"
+ },
+ {
+  "name": "ch73-flood",
+  "kind": "table",
+  "caption": "Building on low ground: new building cover 2016-2023 on land below 3 m above sea level.",
+  "markdown": "| measure                                             |   value |\n|:----------------------------------------------------|--------:|\n| land below 3 m above sea level (%)                  |   26.72 |\n| new building cover 2016-2023 on that land (%)       |   15.94 |\n| location quotient (new building share / land share) |    0.60 |\n| building cover 2016 (%)                             |   28.02 |\n| building cover 2023 (%)                             |   31.13 |"
+ }
+]
