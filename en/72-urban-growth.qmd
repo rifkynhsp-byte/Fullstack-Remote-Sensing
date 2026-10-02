@@ -1,0 +1,93 @@
+# Urban Growth: Where Cities Grow, How Fast, and Where Next {#sec-urban-growth}
+
+::: {.chapter-goal}
+#### In this chapter
+Urban planners, developers, utilities and insurers all ask the same four questions of a satellite archive: how many people live in cities, is land being built on faster than the population grows, in which direction is the city spreading, and where will it go next. You will answer each with open data: Indonesia's urbanisation from 1975 to 2030 with the UN-endorsed Degree of Urbanisation, a time-lapse and a radial profile of Jabodetabek, the SDG 11.3.1 indicator for fourteen cities and regions, an urban growth model trained in Python and applied to every cell in Earth Engine, and seven years of densification from building footprints. Python and R side by side.
+:::
+
+## Who uses this
+
+Urban growth maps are working documents in several industries:
+
+| User | Question | What they take from this chapter |
+|---|---|---|
+| City and provincial planning offices (Bappeda) | Is the spatial plan (RTRW) keeping up with what is actually built? | SDG 11.3.1, the growth-probability map |
+| Property developers and banks | Where will demand be in ten years? | The growth model and its drivers |
+| Utilities (water, power, telecoms) | Where to lay network before the houses arrive | The growth-probability map, densification |
+| Insurers | How much exposure is being added in hazard zones? | New building cover, overlaid on a flood or landslide map (Chapters [-@sec-flood] and [-@sec-landslide-simple]) |
+| National statistics and the SDG secretariat | Reporting SDG 11.3.1 | The indicator, and why the boundary changes the answer |
+
+## The data
+
+| Layer | Source | Cell | Years |
+|---|---|---|---|
+| Built-up surface | GHSL P2023A GHS_BUILT_S | 100 m | 1975-2030, every 5 years |
+| Population | GHSL P2023A GHS_POP | 100 m | 1975-2030 |
+| Settlement model (Degree of Urbanisation) | GHSL P2023A GHS_SMOD | 1 km | 1975-2030 |
+| Building presence | Google Open Buildings 2.5D Temporal v1 | 4 m (effective) | 2016-2023, yearly |
+| Terrain | Copernicus DEM GLO-30 | 30 m | |
+| Boundaries | FAO GAUL 2025 | | |
+
+The Global Human Settlement Layer (GHSL) is built by the European Commission's Joint Research Centre from the Landsat and Sentinel-2 archives and census population. Two warnings come with it. The 1975-2015 layers are reconstructed backwards from later imagery, so early epochs are less certain. And 2025 and 2030 are **projections**, not observations; every chart below marks them.
+
+{{< include _snippets/ch72_urban_growth.qmd >}}
+
+## How urban is Indonesia?
+
+Countries define "urban" differently, which makes their statistics hard to compare. The **Degree of Urbanisation**, endorsed by the UN Statistical Commission in 2020, applies one rule everywhere on a 1 km grid. An **urban centre** (a city) is a contiguous cluster of cells with at least 1,500 people per km² and 50,000 people in total. An **urban cluster** (towns and suburbs) has at least 300 people per km² and 5,000 in total. Everything else is rural. GHSL's settlement model (SMOD) is that rule applied to its own population grid.
+
+By this rule, Indonesia's population grew from 121 to 259 million between 1975 and 2020, and the share living in cities rose from 51 to 55 %. Rural areas held 12 % in 1975 and 11 % in 2020. Two things stand out. First, more than eight in ten Indonesians lived in an urban centre or cluster already in 1975, because Java's rice-growing villages are so dense that they meet the town threshold. Second, the change since then is slow in shares but enormous in people: the cities gained about 81 million residents. National statistics use a village-level definition of "urban" and give different numbers; neither is wrong, they answer different questions, and a report should say which one it uses.
+
+The aggregation step in the script deserves a look. Population is a *count* per 100 m cell, and the settlement classes are on a 1 km grid. Reducing at 1 km without care makes Earth Engine *sample* one 100 m value per 1 km cell, which undercounts by a factor of about a hundred. The first run of this chapter did exactly that and reported 2.6 million Indonesians. The fix is `reduceResolution(ee.Reducer.sum())` before reprojecting, so each 1 km cell holds the sum of its hundred children. Always check a total against a number you know.
+
+## Jabodetabek, 1975 to 2020
+
+The time-lapse shows the built-up share of each 100 m cell every five years. Growth follows the main road corridors: east through Bekasi towards the Cikarang industrial estates, west to Tangerang, and south through Depok to Bogor. A time-lapse shows *where*; it is bad at *how much*. The radial profile answers that: the mean built-up share in 2 km rings around Monas, one line per epoch.
+
+The core has not changed in fifty years: within 5 km of Monas, roughly 40 % of the ground is under buildings in every epoch (the rest is roads, parks and water). All the change is in the ring from 10 to 40 km. If the edge is taken as the distance where the built-up share falls below 10 %, it moved from 21 km from the centre in 1975 to 31 km in 2020, about 2 km per decade.
+
+::: {.callout-tip}
+## Data visualisation: one picture for where, another for how much
+The animation and the radial profile show the same data. The animation is memorable and shows direction; the profile is quantitative and comparable between epochs. A report needs both. Note the colour choice on the profile: a sequential palette (viridis) ordered by time, with the first and last epochs drawn thicker, so the eye reads the bundle as a progression.
+:::
+
+## SDG 11.3.1: land consumption against population growth
+
+SDG indicator 11.3.1 is the ratio of the land consumption rate to the population growth rate (**LCRPGR**). Both rates are logarithmic: LCR = ln(U~2020~/U~2000~)/20 for built-up area U, PGR = ln(P~2020~/P~2000~)/20 for population P. A ratio above 1 means land is being built on faster than people arrive, so each resident occupies more built-up land over time: the city is spreading. Below 1, the city is densifying.
+
+Only Palembang (1.78) and Surabaya (1.32) are above 1. Every other city, and the Jabodetabek metropolitan region as a whole (0.34), added people faster than built-up land; built-up area per resident in Jabodetabek fell from 35 to 26 m². Batam is the extreme: its population grew by 7.9 % a year, and built-up area per person fell from 114 to 31 m² as an industrial town filled in.
+
+Two cautions belong next to these numbers. First, the indicator is computed within *administrative* boundaries. DKI Jakarta's ratio is 0.12, because the city is nearly full and growth has gone to its neighbours; the metropolitan region gives 0.34. The boundary is part of the answer, so report it. Second, GHSL's built-up surface is itself modelled from imagery at 10-30 m, and it is likely to miss some dense, low-rise *kampung* infill that adds people without adding visible roof area. Read "densifying" as a strong signal, not an exact rate.
+
+## Where will the city grow next? A model
+
+The model asks of every 100 m cell that was not urban in 2000 (built-up share below 20 %): did it become urban by 2020? A stratified sample of 2,500 cells that did and 2,500 that did not gives a balanced training set. Six drivers describe each cell as it was in 2000: distance to Monas, distance to the nearest urban cell, built-up share within 1 km, population density (log), slope and elevation.
+
+Two models are compared on **spatially blocked** cross-validation: the cells are grouped into blocks of about 11 km, and each fold holds out whole blocks, so the test cells are never neighbours of training cells (Chapter [-@sec-sampling] explains why that matters). Logistic regression reaches an AUC of 0.88 and a random forest 0.90. The forest is slightly better at ranking cells; the logistic model is the one a planner can read:
+
+- **People already living there** is the strongest driver: each standard deviation of log population density multiplies the odds of urbanising by 2.7. Growth comes where people already are.
+- **Distance to the urban edge** (odds ratio 0.43 per 0.8 km) and **distance to the centre** (0.55 per 15.5 km) both lower the odds. Growth is contiguous: cells next to the city get built.
+- **Slope** lowers the odds (0.47 per 6°): the hills south of Bogor stay green.
+- **Elevation** has no effect once slope is in the model (odds ratio 1.09, 95 % interval 0.90 to 1.33).
+
+The last step is the one planners use. The fitted coefficients are written into an Earth Engine expression and applied to the drivers *as they were in 2020*, giving the probability that each non-urban cell becomes urban in the next twenty years if the same forces keep working. The highest probabilities sit in a ring around the 2020 edge, strongest on the western (Tangerang) flank and to the south-west, towards Parung.
+
+::: {.callout-important}
+## Scientific integrity: a growth model extrapolates the past
+The model learned what happened between 2000 and 2020. A new toll road, a new capital, a flood-zone ban or a recession will change the drivers, and the model cannot know. Present the map as "where growth would go if the last twenty years repeated", compare it with the spatial plan, and update it when GHSL publishes new epochs. And a probability map is not a prediction of a date: a cell at 0.8 is likely to urbanise, not certain to by 2040.
+:::
+
+## Up, not only out: densification from building footprints
+
+GHSL sees built-up surface at 10-30 m. Google's **Open Buildings 2.5D Temporal** dataset estimates, every year from 2016 to 2023, the presence and height of buildings at about 4 m effective resolution, from Sentinel-2 time series. Its change map shows where building cover rose in seven years, and the ring table puts numbers on it.
+
+The gain is largest at the centre and declines outwards: building cover within 5 km of Monas rose from 37 to 47 % (9.4 percentage points), against 6 to 7 points in the 5 to 25 km rings and 2 to 3 points beyond 30 km. Together with the SDG 11.3.1 result, the picture is consistent: Jakarta is mostly filling in, and its spread is happening at the edge of the metropolitan region rather than within its core cities.
+
+One caution: a model that produces yearly maps can drift, and the early years of a temporal product are usually less complete than the later ones. Part of a uniform gain across all rings may be the detector improving, not the city changing. The *difference between rings* is more trustworthy than the absolute gain.
+
+## Exercises {.unnumbered}
+
+1. Compute SDG 11.3.1 for 1990-2000 and 2000-2020 for Jabodetabek. Did the region switch from spreading to densifying?
+2. Replace the Monas distance in the growth model with distance to the nearest toll gate (OpenStreetMap). Does the AUC improve, and does the odds ratio for distance to the centre change?
+3. Overlay the 2020-2040 growth probability on the JRC flood hazard map or the HAND layer of Chapter [-@sec-flood]. How much of the high-probability land is flood-prone?
+4. Repeat the radial profile for Surabaya, one of the two cities with LCRPGR > 1. Where does its edge move?

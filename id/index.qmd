@@ -49,7 +49,7 @@ Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode 
 | X. Pertambangan | 3 | Memetakan tambang, reklamasinya, serta biaya dan manfaatnya |
 | XI. Air dan pesisir | 3 | Mengikuti siklus air, memetakan kedalaman perairan dangkal dan perubahan mangrove |
 | XII. Energi surya | 4 | Mengubah sinar matahari, atap, dan ladang surya menjadi keputusan |
-| XIII. Manusia, tempat, dan bisnis | 4 | Menjawab pertanyaan lokasi, transportasi, dan ekonomi dengan data terbuka |
+| XIII. Kota, manusia, dan bisnis | 5 | Memetakan pertumbuhan kota untuk perencana, dan menjawab pertanyaan lokasi, transportasi, dan ekonomi dengan data terbuka |
 | XIV. Mengomunikasikan hasil | 4 | Merancang grafik dan peta yang menjelaskan, membuat laporan peta, dan merilis aplikasi |
 | XV. LiDAR: kehutanan dan lainnya | 4 | Mengklasifikasi point cloud, menemukan pohon, dan menskalakan biomassa plot dengan GEDI |
 | XVI. Garda depan riset | 1 | Memulai tesis dari baseline yang bisa dijalankan dan jujur |

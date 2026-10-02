@@ -1,0 +1,93 @@
+# Pertumbuhan Kota: Di Mana Kota Tumbuh, Seberapa Cepat, dan ke Mana Berikutnya {#sec-urban-growth}
+
+::: {.chapter-goal}
+#### Di bab ini
+Perencana kota, pengembang properti, perusahaan utilitas, dan asuransi mengajukan empat pertanyaan yang sama kepada arsip satelit: berapa banyak orang tinggal di kota, apakah lahan dibangun lebih cepat daripada pertumbuhan penduduk, ke arah mana kota melebar, dan ke mana kota akan tumbuh berikutnya. Anda akan menjawab semuanya dengan data terbuka: urbanisasi Indonesia 1975 hingga 2030 menurut Degree of Urbanisation yang disahkan PBB, time-lapse dan profil radial Jabodetabek, indikator SDG 11.3.1 untuk empat belas kota dan wilayah, model pertumbuhan kota yang dilatih di Python lalu diterapkan ke setiap sel di Earth Engine, dan tujuh tahun pemadatan dari jejak bangunan. Python dan R berdampingan.
+:::
+
+## Siapa yang memakai ini
+
+Peta pertumbuhan kota adalah dokumen kerja di beberapa industri:
+
+| Pengguna | Pertanyaan | Yang diambil dari bab ini |
+|---|---|---|
+| Bappeda kota dan provinsi | Apakah RTRW mengikuti apa yang benar-benar dibangun? | SDG 11.3.1, peta peluang pertumbuhan |
+| Pengembang properti dan bank | Di mana permintaan sepuluh tahun lagi? | Model pertumbuhan dan pendorongnya |
+| Utilitas (air, listrik, telekomunikasi) | Di mana memasang jaringan sebelum rumah datang | Peta peluang pertumbuhan, pemadatan |
+| Asuransi | Berapa banyak aset baru yang bertambah di zona bahaya? | Tutupan bangunan baru, ditumpangkan pada peta banjir atau longsor (Bab [-@sec-flood] dan [-@sec-landslide-simple]) |
+| BPS dan sekretariat SDGs | Pelaporan SDG 11.3.1 | Indikatornya, dan mengapa batas wilayah mengubah jawabannya |
+
+## Datanya
+
+| Layer | Sumber | Sel | Tahun |
+|---|---|---|---|
+| Permukaan terbangun | GHSL P2023A GHS_BUILT_S | 100 m | 1975-2030, tiap 5 tahun |
+| Penduduk | GHSL P2023A GHS_POP | 100 m | 1975-2030 |
+| Model permukiman (Degree of Urbanisation) | GHSL P2023A GHS_SMOD | 1 km | 1975-2030 |
+| Keberadaan bangunan | Google Open Buildings 2.5D Temporal v1 | 4 m (efektif) | 2016-2023, tahunan |
+| Topografi | Copernicus DEM GLO-30 | 30 m | |
+| Batas wilayah | FAO GAUL 2025 | | |
+
+Global Human Settlement Layer (GHSL) dibuat oleh Joint Research Centre Komisi Eropa dari arsip Landsat dan Sentinel-2 serta data sensus penduduk. Ada dua peringatan. Layer 1975-2015 direkonstruksi mundur dari citra yang lebih baru, jadi epoch awal kurang pasti. Dan 2025 serta 2030 adalah **proyeksi**, bukan pengamatan; setiap grafik di bawah menandainya.
+
+{{< include _snippets/ch72_urban_growth.qmd >}}
+
+## Seberapa urban Indonesia?
+
+Setiap negara mendefinisikan "perkotaan" secara berbeda, sehingga statistiknya sulit dibandingkan. **Degree of Urbanisation**, yang disahkan Komisi Statistik PBB pada 2020, menerapkan satu aturan di mana saja pada grid 1 km. **Pusat perkotaan** (kota) adalah gugus sel yang bersambung dengan kepadatan minimal 1.500 jiwa per km² dan total minimal 50.000 jiwa. **Gugus perkotaan** (kota kecil dan pinggiran) minimal 300 jiwa per km² dan total 5.000 jiwa. Sisanya perdesaan. Model permukiman GHSL (SMOD) adalah aturan itu yang diterapkan pada grid penduduknya sendiri.
+
+Menurut aturan ini, penduduk Indonesia tumbuh dari 121 menjadi 259 juta antara 1975 dan 2020, dan bagian yang tinggal di kota naik dari 51 menjadi 55 %. Perdesaan menampung 12 % pada 1975 dan 11 % pada 2020. Dua hal menonjol. Pertama, lebih dari delapan dari sepuluh orang Indonesia sudah tinggal di pusat atau gugus perkotaan sejak 1975, karena desa-desa padi di Jawa begitu padat sehingga memenuhi ambang kota kecil. Kedua, perubahannya lambat dalam persentase tetapi besar dalam jumlah orang: kota-kota bertambah sekitar 81 juta penduduk. Statistik nasional memakai definisi "perkotaan" tingkat desa dan memberi angka yang berbeda; keduanya tidak salah, keduanya menjawab pertanyaan yang berbeda, dan laporan harus menyebut definisi mana yang dipakai.
+
+Langkah agregasi di skrip layak diperhatikan. Penduduk adalah *jumlah* per sel 100 m, sedangkan kelas permukiman ada di grid 1 km. Mereduksi pada 1 km tanpa hati-hati membuat Earth Engine *mengambil sampel* satu nilai 100 m per sel 1 km, sehingga jumlahnya kurang sekitar seratus kali. Percobaan pertama bab ini melakukan persis itu dan melaporkan 2,6 juta penduduk Indonesia. Perbaikannya adalah `reduceResolution(ee.Reducer.sum())` sebelum reproyeksi, sehingga setiap sel 1 km berisi jumlah dari seratus sel anaknya. Selalu cek total terhadap angka yang Anda tahu.
+
+## Jabodetabek, 1975 hingga 2020
+
+Time-lapse menunjukkan porsi terbangun setiap sel 100 m tiap lima tahun. Pertumbuhan mengikuti koridor jalan utama: ke timur melalui Bekasi menuju kawasan industri Cikarang, ke barat ke Tangerang, dan ke selatan melalui Depok ke Bogor. Time-lapse menunjukkan *di mana*; ia lemah untuk *seberapa banyak*. Profil radial menjawabnya: rata-rata porsi terbangun dalam cincin 2 km di sekitar Monas, satu garis per epoch.
+
+Intinya tidak berubah dalam lima puluh tahun: dalam radius 5 km dari Monas, sekitar 40 % permukaan tanah tertutup bangunan di setiap epoch (sisanya jalan, taman, dan air). Semua perubahan terjadi di cincin 10 hingga 40 km. Bila tepi kota diartikan sebagai jarak tempat porsi terbangun turun di bawah 10 %, tepi itu bergeser dari 21 km dari pusat pada 1975 menjadi 31 km pada 2020, sekitar 2 km per dekade.
+
+::: {.callout-tip}
+## Visualisasi data: satu gambar untuk di mana, satu lagi untuk seberapa banyak
+Animasi dan profil radial menampilkan data yang sama. Animasi mudah diingat dan menunjukkan arah; profil bersifat kuantitatif dan bisa dibandingkan antar-epoch. Laporan butuh keduanya. Perhatikan pilihan warna pada profil: palet berurutan (viridis) menurut waktu, dengan epoch pertama dan terakhir digambar lebih tebal, sehingga mata membaca berkas garis itu sebagai sebuah perkembangan.
+:::
+
+## SDG 11.3.1: konsumsi lahan dibandingkan pertumbuhan penduduk
+
+Indikator SDG 11.3.1 adalah rasio laju konsumsi lahan terhadap laju pertumbuhan penduduk (**LCRPGR**). Kedua laju bersifat logaritmik: LCR = ln(U~2020~/U~2000~)/20 untuk luas terbangun U, PGR = ln(P~2020~/P~2000~)/20 untuk penduduk P. Rasio di atas 1 berarti lahan dibangun lebih cepat daripada kedatangan penduduk, sehingga setiap warga menempati lebih banyak lahan terbangun dari waktu ke waktu: kota melebar. Di bawah 1, kota memadat.
+
+Hanya Palembang (1,78) dan Surabaya (1,32) yang di atas 1. Semua kota lain, dan wilayah metropolitan Jabodetabek secara keseluruhan (0,34), bertambah penduduk lebih cepat daripada lahan terbangun; luas terbangun per penduduk di Jabodetabek turun dari 35 menjadi 26 m². Batam adalah kasus ekstrem: penduduknya tumbuh 7,9 % per tahun, dan luas terbangun per orang turun dari 114 menjadi 31 m² ketika kota industri itu terisi.
+
+Dua catatan harus menyertai angka-angka ini. Pertama, indikator dihitung di dalam batas *administratif*. Rasio DKI Jakarta 0,12, karena kota itu hampir penuh dan pertumbuhan pindah ke tetangganya; wilayah metropolitan memberi 0,34. Batas wilayah adalah bagian dari jawaban, jadi laporkan. Kedua, permukaan terbangun GHSL sendiri dimodelkan dari citra 10-30 m, dan kemungkinan melewatkan sebagian pemadatan kampung bertingkat rendah yang menambah penduduk tanpa menambah atap yang terlihat. Baca "memadat" sebagai sinyal kuat, bukan laju yang persis.
+
+## Ke mana kota tumbuh berikutnya? Sebuah model
+
+Model ini bertanya kepada setiap sel 100 m yang belum urban pada 2000 (porsi terbangun di bawah 20 %): apakah sel itu menjadi urban pada 2020? Sampel bertingkat berisi 2.500 sel yang menjadi urban dan 2.500 yang tidak, memberi data latih yang seimbang. Enam pendorong menggambarkan setiap sel seperti keadaannya pada 2000: jarak ke Monas, jarak ke sel urban terdekat, porsi terbangun dalam radius 1 km, kepadatan penduduk (log), kemiringan lereng, dan elevasi.
+
+Dua model dibandingkan dengan validasi silang **berblok spasial**: sel-sel dikelompokkan ke blok sekitar 11 km, dan setiap fold menyisihkan blok utuh, sehingga sel uji tidak pernah bertetangga dengan sel latih (Bab [-@sec-sampling] menjelaskan mengapa ini penting). Regresi logistik mencapai AUC 0,88 dan random forest 0,90. Random forest sedikit lebih baik dalam mengurutkan sel; model logistik adalah yang bisa dibaca perencana:
+
+- **Penduduk yang sudah tinggal di sana** adalah pendorong terkuat: setiap satu simpangan baku kepadatan penduduk (log) melipatgandakan odds menjadi urban sebesar 2,7. Pertumbuhan datang ke tempat yang sudah berpenghuni.
+- **Jarak ke tepi kota** (odds ratio 0,43 per 0,8 km) dan **jarak ke pusat** (0,55 per 15,5 km) sama-sama menurunkan odds. Pertumbuhan bersifat bersambung: sel di sebelah kota yang akan dibangun.
+- **Kemiringan lereng** menurunkan odds (0,47 per 6°): perbukitan di selatan Bogor tetap hijau.
+- **Elevasi** tidak berpengaruh setelah kemiringan masuk model (odds ratio 1,09, selang 95 % 0,90 hingga 1,33).
+
+Langkah terakhir adalah yang dipakai perencana. Koefisien hasil fit ditulis menjadi ekspresi Earth Engine dan diterapkan pada pendorong *sebagaimana keadaannya pada 2020*, sehingga menghasilkan peluang setiap sel non-urban menjadi urban dalam dua puluh tahun ke depan bila kekuatan yang sama terus bekerja. Peluang tertinggi berada di cincin sekitar tepi kota 2020, paling kuat di sisi barat (Tangerang) dan ke arah barat daya menuju Parung.
+
+::: {.callout-important}
+## Integritas ilmiah: model pertumbuhan mengekstrapolasi masa lalu
+Model ini mempelajari apa yang terjadi antara 2000 dan 2020. Jalan tol baru, ibu kota baru, larangan membangun di zona banjir, atau resesi akan mengubah pendorongnya, dan model tidak bisa mengetahuinya. Sajikan peta sebagai "ke mana pertumbuhan akan pergi bila dua puluh tahun terakhir terulang", bandingkan dengan rencana tata ruang, dan perbarui ketika GHSL menerbitkan epoch baru. Peta peluang juga bukan ramalan tanggal: sel dengan nilai 0,8 kemungkinan besar menjadi urban, bukan pasti pada 2040.
+:::
+
+## Ke atas, bukan hanya ke luar: pemadatan dari jejak bangunan
+
+GHSL melihat permukaan terbangun pada 10-30 m. Dataset **Open Buildings 2.5D Temporal** dari Google memperkirakan, setiap tahun dari 2016 hingga 2023, keberadaan dan tinggi bangunan pada resolusi efektif sekitar 4 m, dari deret waktu Sentinel-2. Peta perubahannya menunjukkan di mana tutupan bangunan naik dalam tujuh tahun, dan tabel cincin memberinya angka.
+
+Kenaikan terbesar ada di pusat dan menurun ke luar: tutupan bangunan dalam radius 5 km dari Monas naik dari 37 menjadi 47 % (9,4 poin persentase), dibandingkan sekitar 6 poin di cincin 5 hingga 25 km dan 2 hingga 3 poin di luar 30 km. Bersama hasil SDG 11.3.1, gambarannya konsisten: Jakarta terutama sedang terisi, dan pelebarannya terjadi di tepi wilayah metropolitan, bukan di kota-kota intinya.
+
+Satu catatan: model yang menghasilkan peta tahunan bisa bergeser, dan tahun-tahun awal produk temporal biasanya kurang lengkap dibanding tahun berikutnya. Sebagian kenaikan yang merata di semua cincin mungkin berasal dari detektor yang membaik, bukan kota yang berubah. *Perbedaan antar-cincin* lebih bisa dipercaya daripada kenaikan absolutnya.
+
+## Latihan {.unnumbered}
+
+1. Hitung SDG 11.3.1 untuk 1990-2000 dan 2000-2020 bagi Jabodetabek. Apakah wilayah itu beralih dari melebar ke memadat?
+2. Ganti jarak ke Monas dalam model pertumbuhan dengan jarak ke gerbang tol terdekat (OpenStreetMap). Apakah AUC membaik, dan apakah odds ratio jarak ke pusat berubah?
+3. Tumpangkan peluang pertumbuhan 2020-2040 pada peta bahaya banjir JRC atau layer HAND di Bab [-@sec-flood]. Berapa bagian lahan berpeluang tinggi yang rawan banjir?
+4. Ulangi profil radial untuk Surabaya, satu dari dua kota dengan LCRPGR > 1. Ke mana tepinya bergeser?

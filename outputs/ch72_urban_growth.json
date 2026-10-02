@@ -1,0 +1,83 @@
+[
+ {
+  "name": "ch72_urban_growth-webmap",
+  "kind": "html",
+  "html": "images/real/ch72_urban_growth-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch72-urbanisation",
+  "kind": "table",
+  "caption": "Population of Indonesia by degree of urbanisation (GHSL SMOD), 1975-2030. 2025 and 2030 are GHSL projections.",
+  "markdown": "|   year |   population (million) |   city (urban centre) |   rural |   town and suburb (urban cluster) |\n|-------:|-----------------------:|----------------------:|--------:|----------------------------------:|\n|   1975 |                  120.5 |                  51.3 |    11.7 |                              36.9 |\n|   1980 |                  137.2 |                  50.9 |    12.6 |                              36.6 |\n|   1985 |                  154.6 |                  50.2 |    12.6 |                              37.1 |\n|   1990 |                  170.8 |                  50.0 |    12.3 |                              37.8 |\n|   1995 |                  186.5 |                  51.7 |    11.9 |                              36.4 |\n|   2000 |                  202.2 |                  52.8 |    11.6 |                              35.6 |\n|   2005 |                  216.7 |                  53.7 |    11.5 |                              34.8 |\n|   2010 |                  231.7 |                  54.6 |    11.2 |                              34.2 |\n|   2015 |                  246.6 |                  55.0 |    11.0 |                              34.0 |\n|   2020 |                  259.0 |                  55.1 |    10.9 |                              34.0 |\n|   2025 |                  268.9 |                  55.0 |    10.6 |                              34.4 |\n|   2030 |                  278.8 |                  55.3 |    10.4 |                              34.3 |"
+ },
+ {
+  "name": "ch72-urbanisation-chart",
+  "kind": "chart",
+  "caption": "Half a century of urbanisation in one stacked chart.",
+  "image": "images/real/ch72-urbanisation-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,population (million),city (urban centre),rural,town and suburb (urban cluster)\n1975,120.5,51.3,11.7,36.9\n1980,137.2,50.9,12.6,36.6\n1985,154.6,50.2,12.6,37.1\n1990,170.8,50,12.3,37.8\n1995,186.5,51.7,11.9,36.4\n2000,202.2,52.8,11.6,35.6\n2005,216.7,53.7,11.5,34.8\n2010,231.7,54.6,11.2,34.2\n2015,246.6,55,11,34\n2020,259,55.1,10.9,34\n2025,268.9,55,10.6,34.4\n2030,278.8,55.3,10.4,34.3\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_urbanisation(t):\n    fig, ax = plt.subplots(figsize=(8, 3.8))\n    cols = [\"city (urban centre)\", \"town and suburb (urban cluster)\", \"rural\"]\n    ax.stackplot(t.year, *[t[c] for c in cols], labels=cols, colors=[\"#b2182b\", \"#f4a582\", \"#a6d96a\"], alpha=0.9)\n    ax.axvspan(2020, 2030, color=\"white\", alpha=0.45); ax.text(2025, 4, \"projection\", ha=\"center\", fontsize=8)\n    ax.set_ylabel(\"share of population (%)\"); ax.set_xlim(1975, 2030); ax.set_ylim(0, 100)\n    ax.legend(frameon=False, fontsize=8, loc=\"upper right\")\n    a, b = t.set_index(\"year\").loc[[1975, 2020], \"city (urban centre)\"]\n    ax.set_title(f\"Indonesians living in cities: {a:.0f} % in 1975, {b:.0f} % in 2020\", loc=\"left\", fontweight=\"bold\", fontsize=10)\n    ax.spines[[\"top\", \"right\"]].set_visible(False)\n    fig.tight_layout()\n    return fig\n\nplot_urbanisation(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch72-jabodetabek-growth",
+  "kind": "animation",
+  "caption": "Built-up share of each 100 m cell, GHSL 1975-2020, every five years. The city grows along the toll roads east to Bekasi and Cikarang, west to Tangerang and south to Bogor.",
+  "image": "images/real/ch72-jabodetabek-growth.gif"
+ },
+ {
+  "name": "ch72-built-2020",
+  "kind": "map",
+  "caption": "The last frame as a map, with coordinates and a scale bar.",
+  "image": "images/real/ch72-built-2020.jpg"
+ },
+ {
+  "name": "ch72-radial",
+  "kind": "chart",
+  "caption": "Built-up share in 2 km rings around Monas, one line per five-year epoch: the city's edge moving outwards.",
+  "image": "images/real/ch72-radial.png"
+ },
+ {
+  "name": "ch72-sdg",
+  "kind": "table",
+  "caption": "SDG 11.3.1, the ratio of land consumption rate to population growth rate, 2000-2020, within each city's administrative boundary.",
+  "markdown": "| city                       |   land consumption rate (%/yr) |   population growth rate (%/yr) |   LCRPGR |   built m² per person 2000 |   built m² per person 2020 |\n|:---------------------------|-------------------------------:|--------------------------------:|---------:|---------------------------:|---------------------------:|\n| Palembang                  |                           0.77 |                            0.43 |     1.78 |                         25 |                         27 |\n| Surabaya                   |                           0.53 |                            0.40 |     1.32 |                         30 |                         31 |\n| Malang                     |                           0.44 |                            0.52 |     0.83 |                         25 |                         25 |\n| Semarang                   |                           0.83 |                            1.39 |     0.60 |                         37 |                         33 |\n| Makassar                   |                           0.72 |                            1.51 |     0.48 |                         32 |                         27 |\n| Pekanbaru                  |                           1.37 |                            3.18 |     0.43 |                         61 |                         42 |\n| Jabodetabek (metro region) |                           0.74 |                            2.19 |     0.34 |                         35 |                         26 |\n| Balikpapan                 |                           0.74 |                            2.31 |     0.32 |                         47 |                         34 |\n| Bandung                    |                           0.24 |                            1.02 |     0.23 |                         18 |                         15 |\n| Medan                      |                           0.14 |                            0.80 |     0.18 |                         33 |                         29 |\n| Batam                      |                           1.34 |                            7.85 |     0.17 |                        114 |                         31 |\n| DKI Jakarta                |                           0.13 |                            1.03 |     0.12 |                         27 |                         22 |\n| Denpasar                   |                           0.28 |                            2.82 |     0.10 |                         61 |                         36 |\n| Yogyakarta                 |                           0.02 |                            0.23 |     0.07 |                         33 |                         32 |"
+ },
+ {
+  "name": "ch72-sdg-chart",
+  "kind": "chart",
+  "caption": "Each city against the 1:1 line.",
+  "image": "images/real/ch72-sdg-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"city,land consumption rate (%/yr),population growth rate (%/yr),LCRPGR,built m² per person 2000,built m² per person 2020\nPalembang,0.76674,0.42955,1.785,25.106,26.858\nSurabaya,0.5314,0.40222,1.3212,30.147,30.937\nMalang,0.43593,0.52365,0.8325,25.094,24.658\nSemarang,0.82968,1.3923,0.5959,36.507,32.621\nMakassar,0.71679,1.5079,0.47537,31.867,27.204\nPekanbaru,1.3732,3.1843,0.43125,60.511,42.124\nJabodetabek (metro region),0.7375,2.195,0.33599,35.287,26.365\nBalikpapan,0.73652,2.3092,0.31895,46.783,34.158\nBandung,0.2376,1.0194,0.23307,17.534,14.996\nMedan,0.14222,0.80104,0.17755,32.726,28.686\nBatam,1.3351,7.8532,0.17001,113.71,30.879\nDKI Jakarta,0.1272,1.0266,0.1239,26.726,22.326\nDenpasar,0.28493,2.8204,0.10103,60.575,36.481\nYogyakarta,0.016044,0.23414,0.068521,33.239,31.82\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_sdg(t):\n    fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 4.8), gridspec_kw={\"width_ratios\": [1.3, 1]})\n    x, y = t[\"population growth rate (%/yr)\"], t[\"land consumption rate (%/yr)\"]\n    lo, hi = 0.01, 10\n    a1.fill_between([lo, hi], [lo, hi], hi, color=\"#fddbc7\", alpha=0.5)\n    a1.plot([lo, hi], [lo, hi], color=\"grey\", lw=0.8)\n    a1.text(0.012, 6, \"land built faster than\\npeople arrive (spreading)\", fontsize=8, va=\"top\")\n    a1.text(8, 0.013, \"people arrive faster than\\nland is built (densifying)\", fontsize=8, ha=\"right\")\n    a1.scatter(x, y, s=40, color=\"#b2182b\", zorder=3)\n    for _, r in t.iterrows():\n        a1.annotate(r.city.replace(\" (metro region)\", \" metro\"), (r[\"population growth rate (%/yr)\"], r[\"land consumption rate (%/yr)\"]),\n                    fontsize=7.5, xytext=(4, 2), textcoords=\"offset points\")\n    a1.set_xscale(\"log\"); a1.set_yscale(\"log\"); a1.set_xlim(0.15, hi); a1.set_ylim(lo, hi)\n    a1.set_xlabel(\"population growth rate, 2000-2020 (%/yr, log)\"); a1.set_ylabel(\"land consumption rate (%/yr, log)\")\n    tt = t.sort_values(\"LCRPGR\")\n    a2.barh(tt.city, tt.LCRPGR, color=[\"#b2182b\" if v > 1 else \"#4393c3\" for v in tt.LCRPGR])\n    a2.axvline(1, color=\"k\", lw=0.8); a2.set_xlabel(\"LCRPGR (1 = land and people grow at the same rate)\")\n    a2.tick_params(axis=\"y\", labelsize=8)\n    for a in (a1, a2):\n        a.spines[[\"top\", \"right\"]].set_visible(False)\n    n = int((t.LCRPGR > 1).sum())\n    fig.suptitle(f\"SDG 11.3.1: only {n} of {len(t)} areas built on land faster than they gained people, 2000-2020\",\n                 x=0.01, ha=\"left\", fontweight=\"bold\")\n    fig.tight_layout()\n    return fig\n\nplot_sdg(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch72-model",
+  "kind": "table",
+  "caption": "Logistic regression of becoming urban between 2000 and 2020, standardised predictors.",
+  "markdown": "| predictor (per 1 SD)            |   1 SD = |   odds ratio |   95% CI low |   95% CI high |        p |\n|:--------------------------------|---------:|-------------:|-------------:|--------------:|---------:|\n| distance to Monas (km)          |   15.5   |         0.55 |         0.48 |          0.63 | 1.2e-18  |\n| distance to the urban edge (km) |    0.791 |         0.43 |         0.33 |          0.55 | 8.3e-11  |\n| built-up share within 1 km      |    0.089 |         1.16 |         1.04 |          1.30 | 0.0094   |\n| people per ha (log)             |    1.62  |         2.74 |         2.50 |          3.00 | 6.5e-104 |\n| slope (degrees)                 |    6.12  |         0.47 |         0.38 |          0.59 | 2.2e-11  |\n| elevation (m)                   |  352.0   |         1.09 |         0.90 |          1.33 | 0.37     |"
+ },
+ {
+  "name": "ch72-model-chart",
+  "kind": "chart",
+  "caption": "Left: how well each model ranks cells, on spatially separate test blocks. Right: the drivers.",
+  "image": "images/real/ch72-model-chart.png"
+ },
+ {
+  "name": "ch72-growth-probability",
+  "kind": "map",
+  "caption": "The logistic model fitted on 2000-2020 and applied to the drivers as they were in 2020. Cells already urban in 2020 are blank.",
+  "image": "images/real/ch72-growth-probability.jpg"
+ },
+ {
+  "name": "ch72-densification",
+  "kind": "map",
+  "caption": "Where building cover rose (red) or fell (blue) in seven years, central Jakarta to the inner suburbs.",
+  "image": "images/real/ch72-densification.jpg"
+ },
+ {
+  "name": "ch72-densification-rings",
+  "kind": "table",
+  "caption": "Building cover in 5 km rings around Monas, 2016 and 2023 (Open Buildings presence > 0.5).",
+  "markdown": "| km from Monas   |   building cover 2016 (%) |   building cover 2023 (%) |   change (points) |\n|:----------------|--------------------------:|--------------------------:|------------------:|\n| 0-5             |                      37.1 |                      46.5 |               9.4 |\n| 5-10            |                      32.0 |                      38.4 |               6.3 |\n| 10-15           |                      23.9 |                      29.9 |               6.0 |\n| 15-20           |                      17.6 |                      24.2 |               6.7 |\n| 20-25           |                      13.3 |                      19.0 |               5.7 |\n| 25-30           |                       8.6 |                      13.0 |               4.4 |\n| 30-35           |                       6.1 |                       9.3 |               3.2 |\n| 35-40           |                       4.5 |                       7.0 |               2.4 |"
+ }
+]

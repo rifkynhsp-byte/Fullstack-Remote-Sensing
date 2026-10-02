@@ -273,7 +273,7 @@ def render_animation(p: dict, out: Path) -> None:
         raw = []
         for frame in p["frames"]:
             url = frame.getThumbURL({"region": p["region"], "dimensions": p.get("width", 520),
-                                     "format": "png", "crs": "EPSG:3857"})
+                                     "format": "png", "crs": "EPSG:4326"})   # plain lon/lat, so a graticule fits
             reply = requests.get(url, timeout=600)
             if not reply.headers.get("content-type", "").startswith("image/"):
                 raise RuntimeError(reply.text[:200])
@@ -281,12 +281,27 @@ def render_animation(p: dict, out: Path) -> None:
     else:
         url = p["collection"].getVideoThumbURL({
             "region": p["region"], "dimensions": p.get("width", 720),
-            "framesPerSecond": p.get("fps", 1), "crs": "EPSG:3857"})
+            "framesPerSecond": p.get("fps", 1), "crs": "EPSG:4326"})
         reply = requests.get(url, timeout=600)
         if not reply.headers.get("content-type", "").startswith("image/"):
             raise RuntimeError(reply.text[:200])
         raw = list(ImageSequence.Iterator(Image.open(io.BytesIO(reply.content))))
     labels = p.get("labels", [])
+    # Every map gets a graticule, animated ones too: draw each frame on lon/lat axes.
+    x0, x1, y0, y1 = _bounds(p["region"])
+    w_in = 6.4
+    on_axes = []
+    for i, frame in enumerate(raw):
+        fig, ax = plt.subplots(figsize=(w_in, w_in * (y1 - y0) / (x1 - x0) + 0.5), dpi=100)
+        ax.imshow(frame.convert("RGB"), extent=[x0, x1, y0, y1], interpolation="nearest")
+        ax.set_xlim(x0, x1); ax.set_ylim(y0, y1)
+        graticule(ax)
+        _scale_bar(ax, x0, x1, y0, y1)
+        fig.tight_layout(pad=0.3)
+        fig.canvas.draw()
+        on_axes.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba()).convert("RGB"))
+        plt.close(fig)
+    raw = on_axes
     frames = []
     for i, frame in enumerate(raw):
         f = frame.convert("RGB")
@@ -297,9 +312,9 @@ def render_animation(p: dict, out: Path) -> None:
                 font = ImageFont.load_default(size=18)
             except TypeError:                      # Pillow < 10.1
                 font = ImageFont.load_default()
-            box = d.textbbox((14, 12), str(labels[i]), font=font)
+            box = d.textbbox((70, 18), str(labels[i]), font=font)        # inside the axes, clear of the labels
             d.rectangle([box[0] - 6, box[1] - 4, box[2] + 6, box[3] + 4], fill=(255, 255, 255))
-            d.text((14, 12), str(labels[i]), fill=(20, 20, 20), font=font)
+            d.text((70, 18), str(labels[i]), fill=(20, 20, 20), font=font)
         frames.append(f)
     # An adaptive 128 colour palette keeps a six frame GIF well under 1 MB.
     frames = [f.quantize(colors=128, method=Image.Quantize.MEDIANCUT) for f in frames]
