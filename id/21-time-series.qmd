@@ -2,28 +2,11 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan memisahkan perubahan ekologis sungguhan dari derau musiman memakai regresi harmonik, dan membangun deteksi perubahan yang tetap bekerja menembus awan dengan radar.
+Anda akan memisahkan perubahan sungguhan dari musim dengan regresi harmonik, mula-mula pada data sintetis lalu pada satu piksel nyata yang dibuka untuk ibu kota baru Indonesia; mengubah residual menjadi peringatan dengan aturan persistensi; memetakan perubahan dari radar, yang menembus awan; menghitung perubahan dengan Dynamic World tanpa menipu diri sendiri; dan mengukur siapa yang berada di tanah yang berubah setelah bencana Palu 2018.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
-:::
-
-## Rencana bagian
-
-1. **Membangun dan memetakan deret waktu pada satu titik dan satu wilayah**
-2. **Regresi harmonik**: memodelkan fenologi dengan suku sinus dan kosinus
-3. **Residual sebagai sinyal**: mendeteksi degradasi setelah musim dihilangkan
-4. **Deteksi perubahan optik**: selisih, rasio dan ambang batas
-5. **Deteksi perubahan rasio logaritmik SAR dan mengapa ia menembus awan**
-6. **Pendekatan titik patah**: logika di balik LandTrendr, CCDC dan BFAST
-7. **Mengubah peta perubahan menjadi peringatan**: unit minimum, aturan persistensi
 
 ## Regresi harmonik, dalam lima belas baris
-
-Prosa bab ini masih ditulis. Mekanisme di pusatnya tidak, dan mekanismenya cukup kecil untuk ditampilkan utuh, jadi inilah ia mendahului narasinya.
 
 Time series optik yang sudah disaring awan di daerah tropis datang sebagai sebaran pengamatan tak beraturan dengan siklus tahunan yang kuat di dalamnya. Persoalan yang timbul: dua tanggal mana pun yang Anda bandingkan berbeda karena dua alasan sekaligus, musimnya bergerak dan mungkin lahannya berubah. Memisahkan keduanya adalah seluruh pekerjaannya.
 
@@ -199,11 +182,41 @@ for m in bulan:
 }
 </script>
 
+## Dari sintetis ke nyata: satu piksel yang dibuka untuk ibu kota baru
+
+Deret sintetis menunjukkan mekanismenya dalam kondisi ideal. Data nyata menambah dua kerumitan: celah di tempat awan menutupi tanah, dan periode latih yang lebih pendek dari yang diinginkan. Listing berikut mengambil satu piksel 10 m di zona inti Nusantara, ibu kota baru Indonesia di Kalimantan Timur, yang bervegetasi pada 2019 dan kini terbuka atau terbangun, lalu menjalankan tiga langkah yang sama pada setiap pengamatan Sentinel-2 bersih dari 2019 hingga 2024.
+
+{{< include _snippets/ch21_harmonic_alerts.qmd >}}
+
+**Pasang musim pada tahun yang bisa dipercaya.** Reflektansi permukaan Sentinel-2 yang tersaring awan baru tersedia di sini sejak 2019, jadi musim dipelajari dari 2019-2020, 58 pengamatan bersih. Versi pertama skrip ini juga memasang tren linear. Dengan periode latih sependek itu, suku tren mengekstrapolasi musim ke atas, memprediksi NDVI 1,2 pada 2024, yang mustahil, dan setiap pengamatan sesudahnya tampak seperti kehilangan: skrip itu memunculkan "peringatan" pada 2021, dua tahun sebelum apa pun terjadi. Tanpa suku tren, model hanyalah musim, dan residual di periode latih tersebar dengan simpangan baku 0,034 NDVI.
+
+**Ubah residual menjadi peringatan dengan aturan persistensi.** Satu pengamatan yang jauh di bawah musim bisa jadi kabut atau bayangan awan yang lolos masker. Aturan di sini menunggu tiga pengamatan berturut-turut di bawah -3 simpangan baku. Di piksel ini pengamatan pertama seperti itu jatuh pada 6 Maret 2023, dan peringatan muncul pada 8 Maret 2023, ketika pembukaan lahan untuk ibu kota mencapainya. Aturan yang sama tidak memunculkan peringatan di periode latih. Persistensi ada harganya: bila pengamatan bersih berjarak berminggu-minggu, menunggu tiga pengamatan bisa menunda peringatan berbulan-bulan, trade-off yang disetel setiap sistem operasional (GLAD, RADD, DIST-ALERT).
+
+## Semua piksel sekaligus, dan pendapat kedua dari radar
+
+Model harmonik yang sama bisa dipasang pada setiap piksel dengan satu reducer Earth Engine (`ee.Reducer.linearRegression`), dan rata-rata residual 2023 setiap piksel, dalam satuan simpangan baku residualnya sendiri, menjadi peta perubahan. Di peta, perubahan optis menelusuri persis apa yang diketahui terjadi: grid jalan baru di barat daya dan blok-blok terbuka zona inti pemerintahan di sekitar 116,70° BT, 0,97° LS, 1.257 ha di kotak 100 km². Unit pemetaan minimum 0,1 ha membuang piksel-piksel tunggal dan hanya sedikit mengubah total (1.220 ha), karena pembangunan membuka wilayah besar yang bersambung.
+
+Radar menjawab pertanyaan yang sama dengan cara lain. **Log rasio** hamburan balik VH Sentinel-1, 2023 terhadap 2019 (selisih dalam desibel), menandai perubahan lebih dari 3 dB pada 563 ha. Radar menembus awan, jadi tidak butuh penyaringan dan model musim, tetapi ia bereaksi terhadap apa pun yang mengubah struktur atau kelembapan permukaan. Sebagian besar perubahannya tidak berada di tempat perubahan optis: keduanya hanya sepakat pada 102 ha, dan banyak perubahan khusus radar terletak di sepanjang sungai dan lahan basah di utara, tempat muka air, bukan pembukaan lahan, yang menggerakkan hamburan balik. Dicek dengan Dynamic World, yang labelnya berubah pada 10 % kotak, perubahan optis lebih diperkaya (27 % bertepatan dengan perubahan label), perubahan radar lebih sedikit (19 %). Di sini peta harmonik optis adalah produk yang lebih baik; di musim yang lebih berawan, radar akan menjadi satu-satunya yang tersedia.
+
+**Uji aturannya pada tahun ketika tidak ada yang seharusnya terjadi.** Pemeriksaan paling adil untuk aturan perubahan adalah menjalankannya pada periode tanpa perubahan. Dipasang hanya pada 2019, aturan yang sama menandai 1.663 ha pada 2023, tetapi juga 1.028 ha pada 2020, sebelum pembukaan lahan mencapai sebagian besar kotak. Dengan satu tahun latihan, lebih dari separuh "perubahan" bisa jadi derau: satu tahun tidak cukup untuk mempelajari musim, dan panen hutan tanaman atau tahun kering tampak seperti gangguan bagi model yang baru melihat satu siklus. Setiap peta perubahan seharusnya membawa uji seperti ini sebelum luasnya dikutip.
+
+## Dari perubahan ke peringatan, dan metode yang melakukannya dalam skala besar
+
+Sistem peringatan operasional membakukan langkah-langkah bab ini:
+
+- **Metode titik patah** memasang musim dan mencari tanggal ketika segmen baru dimulai. **CCDC** (Continuous Change Detection and Classification, `ee.Algorithms.TemporalSegmentation.Ccdc`) memasang segmen harmonik pada setiap piksel dan melaporkan tanggal patahan; **LandTrendr** memasang segmen linear bertahap pada komposit tahunan; **BFAST** menguji patahan pada tren dan musim secara terpisah.
+- **Aturan peringatan** menambahkan unit pemetaan minimum, aturan persistensi atau konfirmasi (dua dari tiga, atau tiga berturut-turut), dan masa kedaluwarsa untuk peringatan yang tidak terkonfirmasi.
+- **Validasi** mengambil sampel peringatan dan bukan-peringatan lalu memeriksanya di citra resolusi sangat tinggi, menghasilkan tingkat galat komisi dan omisi (Bab [-@sec-accuracy]).
+
+Detailnya berbeda; logikanya sama dengan yang dibangun di sini: modelkan apa yang normal, ukur penyimpangan darinya, dan syaratkan penyimpangan itu bertahan.
+
 ## Menghitung perubahan dengan Dynamic World
 
 Dynamic World memberi setiap citra Sentinel-2 sembilan probabilitas kelas, sehingga menjadi cara tercepat untuk menghitung perubahan. Tapi cara ini juga mudah menipu diri sendiri. Skrip ini berasal dari latihan GEE101 di Lampung, dengan satu koreksi: versi aslinya mengambil lahan terbangun dari kelas 2, padahal di Dynamic World kelas 2 adalah rumput. Lihat grafiknya dulu sebelum petanya. Angka tahunan yang turun separuh lalu naik dua kali lipat sedang bercerita tentang datanya, bukan tentang kotanya.
 
 {{< include _snippets/ch21_dynamic_world_change.qmd >}}
+
+Grafiknya adalah pelajarannya. Luas terbangun di kotak Lampung ini berubah dari 5,5 km² pada 2019 menjadi 2,0 km² pada 2020 lalu kembali 5,4 km² pada 2021, sesuatu yang tidak dilakukan kota mana pun. Kolom jumlah citra menjelaskan sebagiannya: label tahunan adalah label yang paling sering muncul di antara berapa pun citra bersih yang kebetulan ada tahun itu, dan tahun dengan sedikit citra atau citra yang mengumpul di satu musim memberi jawaban berbeda untuk tanah yang sama. Aturan probabilitas yang lebih ketat (probabilitas terbangun di atas ambang) lebih rendah setiap tahun tetapi melonjak di tahun yang sama, jadi bukan obatnya. Dua kebiasaan membuat Dynamic World bisa dipakai untuk perubahan: bandingkan musim yang sama di kedua tahun, dan haluskan beberapa tahun sebelum mengurangkan, agar satu tahun yang janggal tidak menciptakan perubahan yang tidak pernah terjadi.
 
 ## Bencana yang terlihat dua kali: Palu, 2018
 
@@ -211,6 +224,11 @@ Deteksi perubahan yang paling langsung hanya butuh dua citra dan satu pertanyaan
 
 {{< include _snippets/ch21_palu_liquefaction.qmd >}}
 
+Dua proses yang sangat berbeda meninggalkan tanda yang sama pada sepasang citra sebelum dan sesudah: vegetasi dan atap hilang, digantikan tanah terbuka yang terang. Jarak dari pantai memisahkan keduanya. Di daratan, aliran likuefaksi, dengan Petobo sebagai yang terbesar di citra ini, mengubah 239 ha menjadi lumpur terbuka, dengan 322 bangunan terpetakan dan sekitar 2.400 jiwa (WorldPop 2018) di dalamnya. Dalam 500 m dari teluk, tsunami meninggalkan 17 ha tanah terbuka baru, dengan 32 bangunan dan sekitar 170 jiwa. Zona tsunami ditaksir terlalu rendah oleh metode ini: kerusakan air yang membiarkan atap tetap berdiri tidak banyak mengubah citra. Peta selisih menghitung apa yang bisa dilihatnya; penilaian kerusakan harus menyebut apa yang tidak bisa dilihatnya.
+
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Ubah aturan persistensi dari tiga pengamatan berturut-turut menjadi dua dari tiga. Seberapa cepat peringatan di piksel ibu kota muncul, dan apakah periode latih kini memunculkan peringatan palsu?
+2. Pasang model regional pada 2019-2021, bukan 2019-2020. Apakah luas perubahan 2023 mengecil, dan mengapa bisa begitu?
+3. Ulangi perubahan radar dengan orbit naik dan turun digabung. Apakah kesepakatan dengan peta optis membaik?
+4. Haluskan deret terbangun Dynamic World selama tiga tahun sebelum mengurangkan. Apakah penurunan 2020 menghilang?

@@ -2,28 +2,11 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will separate genuine ecological change from seasonal noise using harmonic regression, and build change detection that survives cloud by using radar.
+You will separate genuine change from the seasons with harmonic regression, first on synthetic data and then on a real pixel cleared for Indonesia's new capital; turn residuals into alerts with persistence rules; map change from radar, which sees through cloud; count change with Dynamic World without fooling yourself; and measure who was inside the changed ground after the 2018 Palu disaster.
 :::
 
-::: {.callout-note}
-## In progress
-The section plan below is settled. Prose and annotated listings are being
-written part by part; check the roadmap in the preface for the current order.
-:::
-
-## Planned sections
-
-1. **Building and charting a time series at a point and over a region**
-2. **Harmonic regression**: modelling phenology with sine and cosine terms
-3. **Residuals as the signal**: detecting degradation once seasonality is removed
-4. **Optical change detection**: differencing, ratioing and thresholding
-5. **SAR log ratio change detection, and why it works through cloud**
-6. **Breakpoint approaches**: the logic behind LandTrendr, CCDC and BFAST
-7. **Turning a change map into an alert**: minimum mapping unit, persistence rules and false positive control
 
 ## Harmonic regression, in fifteen lines
-
-The chapter's prose is still being written. The mechanism at its centre is not, and it is small enough to show in full, so here it is ahead of the narrative.
 
 A cloud screened optical time series over the tropics arrives as an irregular scatter of observations with a strong annual cycle in it. The problem this creates is that any two dates you happen to compare differ for two reasons at once: the season moved, and possibly the land changed. Separating those is the whole task.
 
@@ -145,11 +128,41 @@ for m in months:
 :::
 
 
+## From synthetic to real: a pixel cleared for the new capital
+
+The synthetic series shows the mechanism under ideal conditions. Real data adds two complications: gaps where clouds hid the ground, and a training period that is shorter than you would like. The next listing takes one 10 m pixel in the core zone of Nusantara, Indonesia's new capital in East Kalimantan, that was vegetated in 2019 and is bare or built today, and runs the same three steps on every clear Sentinel-2 observation from 2019 to 2024.
+
+{{< include _snippets/ch21_harmonic_alerts.qmd >}}
+
+**Fit the season on years you trust.** Cloud-screened Sentinel-2 surface reflectance only begins here in 2019, so the season is learned from 2019-2020, 58 clear observations. The first version of this script also fitted a linear trend. With so short a training period the trend term extrapolated the season upwards, predicting an NDVI of 1.2 by 2024, which is impossible, and every later observation then looked like a loss: it raised an "alert" in 2021, two years before anything happened. Without the trend term the model is a season and nothing else, and the residuals in the fit period scatter with a standard deviation of 0.034 NDVI.
+
+**Turn residuals into an alert with a persistence rule.** One observation far below the season can be haze or a cloud shadow the mask missed. The rule here waits for three consecutive observations below -3 standard deviations. At this pixel the first such observation is on 6 March 2023, and the alert fires on 8 March 2023, when clearing for the capital reached it. The same rule raises no alert inside the fit period. Persistence costs time: where clear observations are weeks apart, waiting for three can delay an alert by months, which is the trade-off every operational system (GLAD, RADD, DIST-ALERT) tunes.
+
+## Every pixel at once, and a second opinion from radar
+
+The same harmonic model can be fitted to every pixel with one Earth Engine reducer (`ee.Reducer.linearRegression`), and the mean 2023 residual of each pixel, in units of its own residual standard deviation, becomes a change map. On the map, the optical change traces exactly what is known to have happened: a grid of new roads in the south-west and the cleared blocks of the government core around 116.70° E, 0.97° S, 1,257 ha in the 100 km² box. A minimum mapping unit of 0.1 ha removes isolated pixels and changes the total little (1,220 ha), because construction clears large connected areas.
+
+Radar answers the same question differently. The **log ratio** of Sentinel-1 VH backscatter, 2023 against 2019 (the difference in decibels), flags a change of more than 3 dB on 563 ha. Radar sees through cloud, so it needs no screening and no season model, but it responds to anything that changes the surface's structure or moisture. Most of its change is not where the optical change is: the two agree on only 102 ha, and much of the radar-only change lies along the river and wetland in the north, where water levels, not clearing, move the backscatter. Checked against Dynamic World, which changed label on 10 % of the box, the optical change is enriched (27 % of it coincides with a label change), the radar change less so (19 %). Here the optical harmonic map is the better product; in a cloudier season the radar would be the only one available.
+
+**Test the rule on a year when nothing should happen.** The fairest check of a change rule is to run it on a period with no change. Fitted on 2019 alone, the same rule flags 1,663 ha in 2023, but also 1,028 ha in 2020, before clearing reached most of the box. With one year of training, more than half of the "change" could be noise: one year is not enough to learn a season, and a plantation harvest or a dry year looks like a disturbance to a model that has seen only one cycle. Every change map should carry a test like this before its area is quoted.
+
+## From change to alert, and the methods that do it at scale
+
+Operational alert systems formalise the steps of this chapter:
+
+- **Breakpoint methods** fit the season and look for the date when a new segment starts. **CCDC** (Continuous Change Detection and Classification, `ee.Algorithms.TemporalSegmentation.Ccdc`) fits harmonic segments to every pixel and reports break dates; **LandTrendr** fits piecewise-linear segments to annual composites; **BFAST** tests for breaks in trend and season separately.
+- **Alert rules** add a minimum mapping unit, a persistence or confirmation rule (two of three, or three in a row) and an expiry for unconfirmed alerts.
+- **Validation** samples alerts and non-alerts and checks them in very high resolution imagery, giving commission and omission rates (Chapter [-@sec-accuracy]).
+
+The details differ; the logic is the one built here: model what is normal, measure departure from it, and require the departure to persist.
+
 ## Counting change with Dynamic World
 
 Dynamic World labels every Sentinel-2 scene with nine class probabilities, which makes it the fastest way to count change. It is also an easy way to fool yourself. This listing comes from the GEE101 Lampung exercise, with one correction: the original extracted built-up land with class 2, which in Dynamic World is grass. Look at the chart before the maps. A yearly number that halves and then doubles is telling you about the data, not the town.
 
 {{< include _snippets/ch21_dynamic_world_change.qmd >}}
+
+The chart is the lesson. Built-up area in this Lampung box goes from 5.5 km² in 2019 to 2.0 km² in 2020 and back to 5.4 km² in 2021, which no town does. The column of scene counts explains part of it: the yearly label is the most frequent label among however many clear scenes that year happened to have, and a year with few or seasonally clustered scenes gives a different answer from the same ground. The stricter probability rule (built-up probability above a threshold) is lower every year but jumps in the same years, so it is not a cure. Two habits make Dynamic World usable for change: compare the same season in both years, and smooth over several years before differencing, so that one odd year does not create change that never happened.
 
 ## A disaster seen twice: Palu, 2018
 
@@ -157,9 +170,7 @@ Change detection at its most direct is two images and a question: what is differ
 
 {{< include _snippets/ch21_palu_liquefaction.qmd >}}
 
-## Source material
-
-The harmonic trend block in your code collection, session 4 of Akselerasi Konservasi, and the land cover change dashboards.
+Two very different processes leave the same signature in a before-and-after pair: vegetation and roofs gone, bright bare ground in their place. Distance from the shore separates them. Inland, the liquefaction flow slides, Petobo the largest in this scene, turned 239 ha into bare mud, with 322 mapped buildings and about 2,400 people (WorldPop 2018) inside. Within 500 m of the bay the tsunami left 17 ha of new bare ground, with 32 buildings and about 170 people. The tsunami zone is underestimated by this method: water damage that leaves a roof standing does not change the image much. A difference map counts what it can see; a damage assessment has to say what it cannot.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -215,4 +226,7 @@ The harmonic trend block in your code collection, session 4 of Akselerasi Konser
 
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Change the persistence rule from three consecutive observations to two of three. How much earlier does the alert at the capital pixel fire, and does the fit period now raise a false alert?
+2. Fit the regional model on 2019-2021 instead of 2019-2020. Does the 2023 change area shrink, and why might it?
+3. Repeat the radar change with ascending and descending orbits combined. Does the agreement with the optical map improve?
+4. Smooth the Dynamic World built-up series over three years before differencing. Does the 2020 dip disappear?
