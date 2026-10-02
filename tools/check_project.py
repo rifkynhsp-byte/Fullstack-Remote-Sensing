@@ -649,6 +649,26 @@ def check_app_layer() -> None:
 
 
 # ---------------------------------------------------------------------------
+def check_webmap_overlays() -> None:
+    """Every image a web map loads must be in the repository.
+
+    The maps load their overlays by relative path, so an overlay PNG that was
+    rendered locally but never committed still looks fine on the author's
+    machine and shows a broken image on the published site.
+    """
+    section("Web map overlays")
+    import re, subprocess
+    tracked = set(subprocess.run(["git", "ls-files", "images/real"], cwd=ROOT, capture_output=True,
+                                 text=True).stdout.split())
+    n = 0
+    for html in sorted((ROOT / "images" / "real").glob("*-webmap.html")):
+        for rel in re.findall(r'"(raw/[^"]+\.png)"', html.read_text(encoding="utf-8")):
+            n += 1
+            if f"images/real/{rel}" not in tracked:
+                fail(f"{html.name} loads images/real/{rel}, which is not committed")
+    print(f"  {n} overlay image(s) checked")
+
+
 def main() -> int:
     print("Pre-flight checks")
     print("=" * 60)
@@ -663,6 +683,7 @@ def main() -> int:
     check_python_chunks()
     check_lms_assets()
     check_app_layer()
+    check_webmap_overlays()
 
     print("\n" + "=" * 60)
     if problems:
