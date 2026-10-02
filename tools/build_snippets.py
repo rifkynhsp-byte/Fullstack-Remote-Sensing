@@ -82,14 +82,17 @@ EE_LINK_BASE = "https://code.earthengine.google.com/?scriptPath="
 # maps, charts and tables it describes are printed under the tabs, with a
 # runnable Python cell holding each chart's real data.
 PY_DIR = SCRIPT_DIR / "py"
+# R twins (scripts/r/<name>.R) add an R tab beside Python, for chapters that
+# exist in both languages (statistics, caret/tidymodels, sf).
+R_DIR = SCRIPT_DIR / "r"
 OUTPUT_DIR = ROOT / "outputs"
 
 LABELS = {
-    "en": {"js": "JavaScript (Code Editor)", "py": "Python (Colab or local)",
+    "en": {"js": "JavaScript (Code Editor)", "py": "Python (Colab or local)", "r": "R (RStudio or Colab R runtime)",
            "out": "What this code produces", "live": "Change the chart yourself. "
            "The data below is the real output of the script above; press **Run**.",
            "failed": "This output could not be regenerated on the last build."},
-    "id": {"js": "JavaScript (Code Editor)", "py": "Python (Colab atau lokal)",
+    "id": {"js": "JavaScript (Code Editor)", "py": "Python (Colab atau lokal)", "r": "R (RStudio atau runtime R Colab)",
            "out": "Hasil kode ini", "live": "Ubah grafiknya sendiri. Data di bawah "
            "adalah hasil nyata dari skrip di atas; tekan **Run**.",
            "failed": "Hasil ini gagal dibuat ulang pada build terakhir."},
@@ -97,7 +100,7 @@ LABELS = {
 
 DIRECTIVE = re.compile(r"^(?://\||#\|)\s*(\w+)\s*:\s*(.+?)\s*$")
 
-HIGHLIGHT = {".js": "javascript", ".py": "python", ".sh": "bash", ".json": "json"}
+HIGHLIGHT = {".js": "javascript", ".py": "python", ".R": "r", ".sh": "bash", ".json": "json"}
 
 
 def parse_directives(lines: list[str]) -> tuple[dict[str, str], list[str]]:
@@ -159,15 +162,29 @@ def build(path: Path, display_path: str, lang_code: str = "en") -> str | None:
     return "\n".join(parts)
 
 
+def tabset(tabs: list[tuple[str, str]]) -> str:
+    """One tab per language; a single listing needs no tabs."""
+    if len(tabs) == 1:
+        return tabs[0][1]
+    out = ["::: {.panel-tabset group=\"code-language\"}", ""]
+    for label, snippet in tabs:
+        out += [f"## {label}", "", snippet, ""]
+    return "\n".join(out + [":::", ""])
+
+
+def r_tab(stem: str, lang_code: str) -> list[tuple[str, str]]:
+    r = R_DIR / f"{stem}.R"
+    if not r.exists():
+        return []
+    snippet = build(r, f"scripts/r/{r.name}", lang_code)
+    return [(LABELS[lang_code]["r"], snippet)] if snippet else []
+
+
 def tabbed(js_snippet: str, py_path: Path, lang_code: str) -> str:
-    """Wrap the JavaScript listing and its Python twin in one tab set."""
+    """Wrap the JavaScript listing, its Python twin and any R twin in one tab set."""
     py_snippet = build(py_path, f"scripts/py/{py_path.name}", lang_code) or ""
     lab = LABELS[lang_code]
-    return "\n".join([
-        "::: {.panel-tabset group=\"code-language\"}", "",
-        f"## {lab['js']}", "", js_snippet, "",
-        f"## {lab['py']}", "", py_snippet, "",
-        ":::", ""])
+    return tabset([(lab["js"], js_snippet), (lab["py"], py_snippet)] + r_tab(py_path.stem, lang_code))
 
 
 def outputs_block(stem: str, lang_code: str) -> str:
@@ -252,6 +269,7 @@ def main() -> int:
             snippet = build(py, f"scripts/py/{py.name}", lang)
             if snippet is None:
                 continue
+            snippet = tabset([(LABELS[lang]["py"], snippet)] + r_tab(py.stem, lang))
             snippet += outputs_block(py.stem, lang)
             (target_dir / f"{py.stem}.qmd").write_text(snippet, encoding="utf-8")
             written += 1

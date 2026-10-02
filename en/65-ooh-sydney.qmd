@@ -1,0 +1,94 @@
+# Out-of-Home Advertising: Footfall, Audience and Inventory in Sydney {#sec-ooh}
+
+::: {.chapter-goal}
+#### In this chapter
+A complete commercial location study, in R and in Python side by side. You will predict how many people walk past every candidate location in central Sydney, turn footfall into an audience score for three kinds of advertiser, and rank the bus shelters, banners and bus routes an advertiser can actually buy. Along the way you will meet the two mistakes that make most published footfall models look better than they are.
+:::
+
+## The question an advertiser asks
+
+Out-of-home (OOH) advertising is everything a person sees outside their own home: billboards, bus shelters, street banners, the sides of buses. Unlike online advertising, it cannot count its own audience. A website knows who loaded a page; a bus shelter does not know who walked past it. The price of a site, and the advertiser's decision to buy it, therefore rest on an estimate of who is there.
+
+That estimate has three parts, and this chapter builds each in turn.
+
+1. **Footfall.** How many people pass the location? This is a prediction problem: a few dozen locations are counted, and every other location has to be inferred from what surrounds it.
+2. **Audience.** Are they the right people? A bank and a fast-food chain want different audiences from the same footfall. This is a weighting problem, and the weights are a judgement.
+3. **Inventory.** Which of the places that can be bought reach that audience? This is a spatial join of the scores onto the bus shelters, banners and routes that are for sale.
+
+The chapter is written in both R and Python. The analysis was first built in R with `caret`, which remains common in consultancy and in applied statistics, and every listing has a Python twin that does the same thing with `scikit-learn` and `geopandas`. Read whichever you work in; the reasoning is the same.
+
+## The data
+
+Every input is open. [DATA TABLE: to be completed from the project folder: layer, source, year, licence, and how each surface was derived.]
+
+The training target is the City of Sydney's walking counts. Twice a year the City counts pedestrians at around 100 locations from 6 am to midnight, on a weekday and on a weekend day in March and October [CITE: City of Sydney walking count sites dataset]. The model predicts the weekday count (`Mon_Count`).
+
+The predictors describe what surrounds each location: density surfaces of points of interest, road length, bus stops, building footprint area and building volume, an economic-potential surface, a night-time activity layer, and the attributes of the floor space and employment survey zone the location falls in [CITE: City of Sydney Floor Space and Employment Survey].
+
+## Building the features at three scales
+
+A pedestrian count depends on what is on the street and on what is in the neighbourhood. A shop on the corner draws people; so does the station 600 metres away that sends them past the corner. Every surface is therefore summarised three times, as the mean within 100, 500 and 1000 metres of the location.
+
+Two details matter. The buffers must be in metres, so the data must be in a projected coordinate system in metres, such as MGA zone 56 for Sydney; both scripts stop if they are not. And the mean is area-weighted (`exactextract`), so a pixel half inside a buffer counts half, which matters at 100 m where a buffer covers only a few dozen pixels.
+
+## The two mistakes, and how the scripts avoid them
+
+### The test set that was used for training
+
+A common pattern, and the one in the first version of this analysis, takes a 20 per cent sample of the data, fits the pre-processing on that sample (centring, scaling, Box–Cox), and then uses the same sample as the test set. The model is never trained on those rows, so it looks like a fair test. It is not quite: the test rows have shaped the transformation every training row went through. A second, larger version of the same leak is to report R² on all the counted sites, training sites included, because that number measures memory as much as prediction.
+
+The scripts hold out 20 per cent of the counted sites first, before anything is learned, and put the pre-processing inside each model so that it is refitted in every fold. The only number reported as performance is on the held-out sites.
+
+### The neighbour in the training fold
+
+Count sites in a city centre are a few hundred metres apart. Two sites on the same street share their 500 m and 1000 m buffers almost entirely. Under ordinary random cross-validation, a validation site usually has a near-twin in the training fold, and the model is rewarded for interpolating between neighbours, which it will not be able to do at a genuinely new location.
+
+The scripts compare random folds with spatial folds, in which the training sites are grouped into five location clusters and each cluster is held out in turn.
+
+[RESULT: Table ch65-cv. Random vs spatial CV MAE per learner; describe the inflation.]
+
+::: {.callout-tip}
+## From the field
+When the sites you validate on sit next to the sites you train on, a random split measures how well the model interpolates, not how well it predicts. Ask where the model will be used. If it will be used between the training sites, random folds are fine. If it will be used on new streets, suburbs or cities, validate on held-out places.
+:::
+
+## Six learners and a stack
+
+Six models with different inductive biases are tuned by random search: an elastic net (`glmnet` / `ElasticNet`), a random forest (`ranger` / `RandomForestRegressor`), Cubist rule-based regression, a linear support vector machine, gradient-boosted trees (`xgboost`) and a small neural network. A stack then learns how to combine their predictions, with Cubist as the meta-learner.
+
+Stacking helps only when the base models make different mistakes, so the R script prints the correlation between their resampled errors before stacking. Highly correlated learners add little.
+
+{{< include _snippets/ch65_ooh_sydney.qmd >}}
+
+[RESULT: Table ch65-test and the scatter. Held-out R², RMSE, MAPE. Compare the stack with the best single learner.]
+
+## From footfall to audience
+
+Footfall is not an audience. A multi-criteria score combines the predicted count with weekly household income, population, the population in an age band, and the density of related businesses within 500 m, each rescaled to 0–1:
+
+| Advertiser | Income + population | Footfall | Related businesses | Age band |
+|---|---|---|---|---|
+| Financial services | 0.50 | 0.20 | 0.20 (financial) | 0.10 (40–64) |
+| Fast food | 0.15 | 0.40 | 0.35 (fast food) | 0.10 (15–44) |
+| Education | 0.05 | 0.20 | 0.35 (education) | 0.40 (20–34) |
+
+These weights are a media planner's judgement, not a measurement. They are written down so that a client can disagree with one and see what changes, which is the same argument made for the SHAP-derived weights in Chapter [-@sec-vector].
+
+## From audience to inventory
+
+An advertiser cannot buy a scored point; it buys a bus shelter, a banner or a route. Each shelter and banner takes the mean score of the scored locations within 50 m. Each bus route takes the mean score of the scored locations it passes.
+
+The mean matters. The first version of this analysis summed the scores along each route, which ranks routes largely by their length: a long route passes more locations and collects more score whether or not its audience is better. The scripts report the mean per location, with route length beside it, so that a planner can trade audience quality against reach explicitly.
+
+[RESULT: Table ch65-routes and the map. Best route per advertiser; comment on whether the sum and mean rankings differ.]
+
+## What the model is not
+
+It predicts weekday counts from 6 am to midnight in fair weather, at the scale of the counted sites. It knows nothing of events, school holidays, construction or which side of the street a shelter faces. The MCDA weights are assumptions. Use the ranking to shortlist sites and routes; then check the shortlist against the operator's own impression data before a contract is signed.
+
+## Exercises {.unnumbered}
+
+1. Change the fast-food weights to 0.6 footfall and 0.2 businesses. How many of the top ten shelters change?
+2. Remove the 1000 m features. Does the spatial-CV error rise or fall, and why?
+3. Replace the sum of route scores with the mean, and the mean with the maximum. Which would a media buyer prefer, and for which advertiser?
+4. Add the weekend count as a second target. Which predictors change importance?
