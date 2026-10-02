@@ -101,8 +101,20 @@ Something that only shows up in operational work, usually the hard way.
 
 The foundational scripts in Part II descend from the EE101 teaching series by Noel Gorelick, David Gibson, Nicholas Clinton and Hadi, adapted here with gratitude. The mangrove and blue carbon material draws on field data and methodological work from the Indonesian conservation research community, including CIFOR plot data from West Papua. Errors that remain are mine.
 
-## Contact
+## About the author
 
-Rifky Nauval Hendrawan &middot; [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com)
+**Rifky Nauval Hendrawan** is a remote sensing specialist who builds geospatial workflows that measure natural capital, from satellite imagery and UAV LiDAR to the machine-learning models and dashboards that turn them into decisions. This book is written from that work.
 
-Corrections, disagreements and questions are all welcome. If you find an error, saying so is a contribution.
+- **Industry.** Senior Remote Sensing Specialist at Asia Pacific Resources International Holdings (APRIL), integrating UAV LiDAR and satellite data across about 200,000 hectares of plantation forest for digital forestry, harvest planning and carbon estimation. Before that, Senior Geospatial Lead at Pleno GmbH, a German climate-technology start-up, where he developed carbon measurement, reporting and verification (MRV) models and led the design of the *Carbon Farming Explorer*, an Earth Engine application that cuts project feasibility assessment from weeks to hours.
+- **Projects.** Machine-learning detection of deforestation and peat-depth calibration with the Centre for Nature-based Climate Solutions at the National University of Singapore; an automated, one-click LiDAR processing pipeline for forest inventory with Bracell in Brazil; and, with the DRPRS laboratory at Universitas Padjadjaran, the IJB Landslide Explorer for disaster-preparedness stakeholders.
+- **Research and teaching.** Master of Engineering Science (Environmental Engineering) at UNSW Sydney, with research on generative individual-tree detection from LiDAR; Bachelor of Geophysics with honours from Universitas Padjadjaran, where he was a remote sensing lecture assistant. Publications on shoreline change in Jakarta Bay (2021) and land suitability from soil electrical properties and remote sensing (2023); two registered intellectual-property web GIS applications (Indraja Buana, MataBDG); former Officer for Big Data and Remote Sensing in the Indonesian geophysics association.
+
+## Work with me
+
+This book is free, and it will stay free. If it has been useful and you need the same methods applied to your own problem, I am open to:
+
+- **Consulting and projects**: satellite and LiDAR analysis, forest inventory and biomass, carbon MRV, land-cover and change mapping, and Earth Engine applications, for companies, NGOs and government.
+- **Training**: workshops and courses for teams, in English or Bahasa Indonesia, built on the chapters of this book.
+- **Research collaboration and PhD opportunities** in remote sensing, LiDAR, GeoAI and environmental monitoring.
+
+Write to [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com) or connect on [LinkedIn](https://www.linkedin.com/in/rifkynauvalhsp). Corrections, disagreements and questions about the book are just as welcome. If you find an error, saying so is a contribution.

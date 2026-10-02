@@ -101,8 +101,20 @@ Hal yang hanya muncul pada pekerjaan operasional, biasanya dengan cara yang meny
 
 Skrip dasar di Bagian II berasal dari seri pengajaran EE101 oleh Noel Gorelick, David Gibson, Nicholas Clinton dan Hadi, diadaptasi di sini dengan penuh terima kasih. Materi mangrove dan blue carbon memanfaatkan data lapangan serta kerja metodologis komunitas riset konservasi Indonesia, termasuk data plot CIFOR dari Papua Barat. Kesalahan yang tersisa adalah milik saya.
 
-## Kontak
+## Tentang penulis
 
-Rifky Nauval Hendrawan &middot; [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com)
+**Rifky Nauval Hendrawan** adalah spesialis penginderaan jauh yang membangun alur kerja geospasial untuk mengukur modal alam, dari citra satelit dan LiDAR UAV sampai model *machine learning* dan *dashboard* yang mengubahnya menjadi keputusan. Buku ini ditulis dari pekerjaan itu.
 
-Koreksi, sanggahan dan pertanyaan sama sama disambut. Bila Anda menemukan kesalahan, menyampaikannya adalah sebuah kontribusi.
+- **Industri.** Senior Remote Sensing Specialist di Asia Pacific Resources International Holdings (APRIL), mengintegrasikan data LiDAR UAV dan satelit di sekitar 200.000 hektare hutan tanaman untuk kehutanan digital, perencanaan panen, dan estimasi karbon. Sebelumnya, Senior Geospatial Lead di Pleno GmbH, perusahaan rintisan teknologi iklim asal Jerman, tempat ia mengembangkan model pengukuran, pelaporan, dan verifikasi (MRV) karbon serta memimpin perancangan *Carbon Farming Explorer*, aplikasi Earth Engine yang memangkas penilaian kelayakan proyek dari hitungan minggu menjadi jam.
+- **Proyek.** Deteksi deforestasi berbasis *machine learning* dan kalibrasi kedalaman gambut bersama Centre for Nature-based Climate Solutions, National University of Singapore; *pipeline* pengolahan LiDAR otomatis satu klik untuk inventarisasi hutan bersama Bracell di Brasil; dan, bersama laboratorium DRPRS Universitas Padjadjaran, IJB Landslide Explorer untuk para pemangku kepentingan kesiapsiagaan bencana.
+- **Riset dan pengajaran.** Master of Engineering Science (Teknik Lingkungan) di UNSW Sydney, dengan riset deteksi pohon individu generatif dari LiDAR; Sarjana Geofisika dengan pujian dari Universitas Padjadjaran, tempat ia menjadi asisten dosen penginderaan jauh. Publikasi tentang perubahan garis pantai Teluk Jakarta (2021) dan kesesuaian lahan dari sifat listrik tanah dan penginderaan jauh (2023); dua aplikasi web GIS berhak kekayaan intelektual terdaftar (Indraja Buana, MataBDG); pernah menjadi pengurus bidang Big Data dan Penginderaan Jauh di asosiasi geofisika Indonesia.
+
+## Bekerja sama
+
+Buku ini gratis, dan akan tetap gratis. Jika buku ini bermanfaat dan Anda membutuhkan metode yang sama untuk persoalan Anda sendiri, saya terbuka untuk:
+
+- **Konsultasi dan proyek**: analisis satelit dan LiDAR, inventarisasi dan biomassa hutan, MRV karbon, pemetaan tutupan lahan dan perubahannya, serta aplikasi Earth Engine, untuk perusahaan, LSM, dan pemerintah.
+- **Pelatihan**: lokakarya dan kursus untuk tim, dalam bahasa Indonesia atau Inggris, berdasarkan bab-bab buku ini.
+- **Kolaborasi riset dan peluang PhD** di bidang penginderaan jauh, LiDAR, GeoAI, dan pemantauan lingkungan.
+
+Hubungi [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com) atau terhubung di [LinkedIn](https://www.linkedin.com/in/rifkynauvalhsp). Koreksi, sanggahan, dan pertanyaan tentang buku ini juga sama-sama disambut. Bila Anda menemukan kesalahan, menyampaikannya adalah sebuah kontribusi.
