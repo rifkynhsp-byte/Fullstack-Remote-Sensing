@@ -1,0 +1,60 @@
+[
+ {
+  "name": "ch65-surfaces",
+  "kind": "figure",
+  "caption": "The seven predictor surfaces built from open data, and the counted sites.",
+  "image": "images/real/ch65-surfaces.png"
+ },
+ {
+  "name": "ch65-correlation",
+  "kind": "chart",
+  "caption": "Spearman correlation of each surface with the weekday count, at three buffer sizes.",
+  "image": "images/real/ch65-correlation.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"surface,100 m,500 m,1000 m\nnighttime,0.74482,0.73677,0.71335\njobs,0.78723,0.72737,0.68775\nbuilding_volume,0.74517,0.72015,0.65778\npoi,0.74319,0.69574,0.68037\nroad_density,0.61032,0.69478,0.59212\nbus_station,0.34355,0.65312,0.60624\nbuilding_surface,0.31862,0.052663,-0.10047\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_correlation(df):\n    fig, ax = plt.subplots(figsize=(6.4, 3.8))\n    y = np.arange(len(df))\n    for off, d, c in [(-0.25, \"100 m\", \"#9ecae1\"), (0, \"500 m\", \"#4292c6\"), (0.25, \"1000 m\", \"#08306b\")]:\n        ax.barh(y + off, df[d], height=0.25, color=c, label=d)\n    ax.set_yticks(y, df.surface.str.replace(\"_\", \" \")); ax.invert_yaxis(); ax.axvline(0, color=\"#555\", lw=0.8)\n    ax.set_xlabel(\"Spearman correlation with weekday count\")\n    ax.legend(title=\"buffer\", fontsize=8, loc=\"upper left\", bbox_to_anchor=(1.01, 1))\n    ax.set_title(\"Which surroundings go with footfall, and at what scale\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_correlation(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch65-cv-chart",
+  "kind": "chart",
+  "caption": "Cross-validated error of each learner under random and spatial folds.",
+  "image": "images/real/ch65-cv-chart.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"model,random,spatial,inflation_%\ncubist,0.49556,0.64718,30.597\nxgbTree,0.5187,0.7227,39.329\nranger,0.55508,0.75786,36.531\nglmnet,0.58021,0.76681,32.162\nsvmL,0.55633,0.78539,41.174\nnnet,0.57225,0.89084,55.674\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_cv(df):\n    fig, ax = plt.subplots(figsize=(6.4, 3.4))\n    y = np.arange(len(df))\n    ax.hlines(y, df.random, df.spatial, color=\"#bbbbbb\", lw=2)\n    ax.scatter(df.random, y, color=\"#4292c6\", label=\"random folds\", zorder=3)\n    ax.scatter(df.spatial, y, color=\"#cb181d\", label=\"spatial folds\", zorder=3)\n    ax.set_yticks(y, df.model); ax.invert_yaxis()\n    ax.set_xlabel(\"Cross-validated MAE of log(1 + count)\"); ax.legend(fontsize=8)\n    ax.set_title(\"The same models, validated on new places instead of neighbours\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_cv(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch65-cv",
+  "kind": "table",
+  "caption": "Cross-validated MAE of log(1 + count) for each learner under random and spatial folds, and how much worse the spatial folds are (per cent).",
+  "markdown": "| model   |   random |   spatial |   inflation_% |\n|:--------|---------:|----------:|--------------:|\n| cubist  |    0.496 |     0.647 |            31 |\n| xgbTree |    0.519 |     0.723 |            39 |\n| ranger  |    0.555 |     0.758 |            37 |\n| glmnet  |    0.580 |     0.767 |            32 |\n| svmL    |    0.556 |     0.785 |            41 |\n| nnet    |    0.572 |     0.891 |            56 |"
+ },
+ {
+  "name": "ch65-test",
+  "kind": "table",
+  "caption": "The held-out count sites, which no model or pre-processing step saw.",
+  "markdown": "| model   |   test_r2 |   test_rmse |   test_mape_% |\n|:--------|----------:|------------:|--------------:|\n| xgbTree |      0.87 |       4,393 |            93 |\n| cubist  |      0.82 |       4,629 |            98 |\n| nnet    |      0.88 |       4,635 |            78 |\n| stack   |      0.82 |       4,907 |            95 |\n| ranger  |      0.88 |       5,236 |            96 |\n| svmL    |      0.79 |       5,620 |           111 |\n| glmnet  |      0.61 |       7,447 |           160 |"
+ },
+ {
+  "name": "ch65-test-scatter",
+  "kind": "chart",
+  "caption": "Stacked model on the held-out count sites.",
+  "image": "images/real/ch65-test-scatter.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"actual,predicted\n4210,4111.3\n292,465.79\n4768,5303.1\n2390,2802.5\n3398,2259.8\n42465,37261\n8874,9747\n17180,6437.6\n1084,9628.4\n7622,5238.1\n4980,6658.4\n3072,2100.5\n7940,10446\n36620,21416\n386,2981.5\n1902,2343.3\n3962,5691.6\n8694,6890.2\n20676,23584\n17900,10850\n5390,2642.9\n7290,7104.2\n2146,5305.6\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_test(df):\n    r2 = np.corrcoef(df.actual, df.predicted)[0, 1] ** 2\n    rmse = np.sqrt(np.mean((df.actual - df.predicted) ** 2))\n    mape = 100 * np.mean(np.abs(df.predicted - df.actual) / df.actual)\n    fig, ax = plt.subplots(figsize=(5.6, 5))\n    lim = [0, max(df.actual.max(), df.predicted.max()) * 1.05]\n    ax.plot(lim, lim, \":\", color=\"#555555\", lw=1)\n    ax.scatter(df.actual, df.predicted, s=36, alpha=0.75, color=\"#1f4e79\")\n    ax.text(0.03, 0.97, f\"R² = {r2:.2f}\\nRMSE = {rmse:,.0f}\\nMAPE = {mape:.0f}%\", transform=ax.transAxes,\n            va=\"top\", fontweight=\"bold\")\n    ax.set_xlim(lim); ax.set_ylim(lim)\n    ax.set_xlabel(\"Counted pedestrians (weekday)\"); ax.set_ylabel(\"Predicted\")\n    ax.set_title(\"Held-out count sites: actual vs predicted\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_test(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch65-importance",
+  "kind": "chart",
+  "caption": "Permutation importance of the twelve most important features for the stacked model.",
+  "image": "images/real/ch65-importance.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"feature,importance,sd\nnighttime_100m,0.33462,0.097494\npoi_100m,0.26534,0.1022\nroad_density_500m,0.10483,0.036729\npoi_500m,0.10114,0.042791\nfloor_ratio,0.087906,0.039675\nBusinesses,0.050818,0.03292\npoi_1000m,0.04923,0.030365\njobs_100m,0.043866,0.030487\njobs_1000m,0.037262,0.050825\nnighttime_500m,0.013006,0.030309\nbus_station_100m,0.0060574,0.0064837\nbuilding_surface_1000m,0.0046735,0.0068637\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_importance(df):\n    fig, ax = plt.subplots(figsize=(6.4, 4))\n    ax.barh(df.feature, df.importance, xerr=df.sd, color=\"#41ab5d\", ecolor=\"#555\")\n    ax.invert_yaxis(); ax.set_xlabel(\"Increase in MAE of log(1 + count) when shuffled\")\n    ax.set_title(\"What the stacked model relies on (held-out sites)\", loc=\"left\", fontsize=10)\n    return fig\n\nplot_importance(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch65-routes",
+  "kind": "table",
+  "caption": "The three best bus routes for each advertiser, by mean score per scored location.",
+  "markdown": "| advertiser   |   rank | route   |   mean_score |   length_km |   scored_locations |\n|:-------------|-------:|:--------|-------------:|------------:|-------------------:|\n| financial    |      1 | 243     |        0.587 |         2.4 |                 18 |\n| financial    |      2 | 290     |        0.578 |         5.0 |                 26 |\n| financial    |      3 | 100     |        0.568 |         5.4 |                 45 |\n| fastfood     |      1 | 100     |        0.499 |         5.4 |                 45 |\n| fastfood     |      2 | 120     |        0.499 |         5.4 |                 45 |\n| fastfood     |      3 | 607X    |        0.496 |         5.3 |                 44 |\n| education    |      1 | 339     |        0.495 |         6.0 |                 42 |\n| education    |      2 | 431     |        0.488 |         7.1 |                 83 |\n| education    |      3 | 469     |        0.481 |         3.5 |                 48 |"
+ },
+ {
+  "name": "ch65-map",
+  "kind": "figure",
+  "caption": "Advertiser scores at every candidate location and the best bus route for each.",
+  "image": "images/real/ch65-map.png"
+ }
+]

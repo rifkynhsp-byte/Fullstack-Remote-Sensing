@@ -1,0 +1,124 @@
+# Iklan Luar Ruang: Arus Pejalan Kaki, Audiens, dan Inventaris di Sydney {#sec-ooh}
+
+::: {.chapter-goal}
+#### Di bab ini
+Sebuah studi lokasi komersial yang utuh, dalam R dan Python berdampingan. Anda akan memprediksi berapa banyak orang yang berjalan melewati setiap calon lokasi di pusat Kota Sydney, mengubah arus pejalan kaki menjadi skor audiens untuk tiga jenis pengiklan, lalu memeringkat halte bus, spanduk kota, dan rute bus yang benar-benar bisa dibeli pengiklan. Di sepanjang jalan Anda akan bertemu dua kesalahan yang membuat sebagian besar model arus pejalan kaki yang dipublikasikan tampak lebih baik daripada kenyataannya.
+:::
+
+## Pertanyaan seorang pengiklan
+
+Iklan luar ruang (*out-of-home*, OOH) adalah semua yang dilihat orang di luar rumahnya: papan reklame, halte bus, spanduk jalan, sisi badan bus. Berbeda dengan iklan daring, iklan luar ruang tidak bisa menghitung audiensnya sendiri. Sebuah situs web tahu siapa yang membuka halamannya; halte bus tidak tahu siapa yang lewat di depannya. Harga sebuah titik iklan, dan keputusan pengiklan untuk membelinya, karena itu bertumpu pada perkiraan tentang siapa yang ada di sana.
+
+Perkiraan itu punya tiga bagian, dan bab ini membangunnya satu per satu.
+
+1. **Arus pejalan kaki.** Berapa banyak orang yang melewati lokasi itu? Ini masalah prediksi: beberapa puluh lokasi dihitung, dan semua lokasi lain harus disimpulkan dari apa yang ada di sekitarnya.
+2. **Audiens.** Apakah mereka orang yang tepat? Bank dan jaringan restoran cepat saji menginginkan audiens yang berbeda dari arus pejalan kaki yang sama. Ini masalah pembobotan, dan bobotnya adalah penilaian.
+3. **Inventaris.** Tempat mana, di antara yang bisa dibeli, yang menjangkau audiens itu? Ini *spatial join* skor ke halte bus, spanduk, dan rute yang dijual.
+
+Bab ini ditulis dalam R dan Python. Analisisnya mula-mula dibangun di R dengan `caret`, yang masih umum dipakai di konsultan dan statistik terapan, dan setiap listing punya kembaran Python yang melakukan hal yang sama dengan `scikit-learn` dan `geopandas`. Bacalah yang biasa Anda pakai; penalarannya sama.
+
+## Data
+
+Semua masukan terbuka, dan satu skrip membangun ulang semuanya, sehingga seluruh studi bisa dijalankan ulang dari nol.
+
+| Masukan | Sumber | Cara dipakai |
+|---|---|---|
+| Hitungan pejalan kaki | Survei *walking count* City of Sydney, 2022–2023 | Target: rata-rata hitungan hari kerja dari tiga survei pasca-COVID di setiap titik |
+| Titik minat, cepat saji, pendidikan, keuangan | OpenStreetMap | Permukaan kepadatan kernel (kuartik, radius 250 m) |
+| Jalan, halte bus, dan stasiun | OpenStreetMap | Permukaan panjang jalan dan kepadatan halte |
+| Luas dan volume bangunan | GHSL P2023A, 2020 (Earth Engine) | Luas dan volume terbangun per sel 100 m |
+| Cahaya malam | Komposit tahunan VIIRS, 2022 (Earth Engine) | Radiansi rata-rata |
+| Lapangan kerja dan luas lantai | *Floor space and employment survey* City of Sydney, 2022 | Pekerjaan per hektare per blok, atribut blok terdekat |
+| Pendapatan rumah tangga | Sensus ABS 2021, G02, per SA2 | Median pendapatan rumah tangga mingguan |
+| Penduduk menurut umur | WorldPop 2020, 100 m, umur dan jenis kelamin (Earth Engine) | Dijumlahkan per SA2 ke kelompok umur sasaran pengiklan |
+| Halte bus, spanduk | Data terbuka City of Sydney | Inventaris yang diberi skor |
+| Rute bus | Relasi rute OpenStreetMap | Inventaris yang diberi skor |
+| Calon lokasi | Satu titik setiap 100 m di sepanjang jaringan jalan | Tempat arus pejalan kaki diprediksi |
+
+{{< include _snippets/ch65_ooh_data.qmd >}}
+
+Target pelatihannya adalah hitungan pejalan kaki City of Sydney. Dua kali setahun, City of Sydney menghitung pejalan kaki di sekitar 100 lokasi dari pukul 6 pagi sampai tengah malam, pada satu hari kerja dan satu hari akhir pekan, di musim gugur dan musim semi. Model memprediksi rata-rata hitungan hari kerja dari tiga survei setelah pembatasan COVID-19 berakhir (musim gugur 2022, musim semi 2022, dan musim gugur 2023), yang tersedia di 115 dari 120 titik. Hitungannya berkisar dari 256 sampai 72.352 orang per hari, dengan median 6.080.
+
+Prediktornya menggambarkan apa yang ada di sekitar setiap lokasi: permukaan kepadatan titik minat, panjang jalan dan halte angkutan umum, luas dan volume terbangun, cahaya malam, kepadatan lapangan kerja, serta jumlah pekerjaan, luas lantai, dan usaha di blok survei lapangan kerja terdekat. Penggabungan terakhir itu punya jebakannya sendiri. Titik hitung berada di jalan, dan jalan terletak di antara blok survei, sehingga *join* "titik di dalam poligon" hampir tidak mencocokkan apa pun; skripnya mengambil blok terdekat.
+
+## Membangun fitur pada tiga skala
+
+Hitungan pejalan kaki bergantung pada apa yang ada di jalan itu dan apa yang ada di lingkungannya. Toko di sudut jalan menarik orang; begitu pula stasiun 600 meter jauhnya yang mengirim orang melewati sudut itu. Karena itu setiap permukaan diringkas tiga kali, sebagai rata-rata dalam radius 100, 500, dan 1000 meter dari lokasi.
+
+Dua detail penting. *Buffer* harus dalam meter, sehingga data harus berada dalam sistem koordinat terproyeksi bersatuan meter, misalnya MGA zona 56 untuk Sydney; kedua skrip berhenti jika tidak. Dan rata-ratanya berbobot luas (`exactextract`), sehingga piksel yang separuh masuk *buffer* dihitung separuh, yang penting pada 100 m ketika sebuah *buffer* hanya mencakup beberapa puluh piksel.
+
+## Lihat dulu sebelum membuat model
+
+Sebelum model apa pun dicocokkan, dua hasil antara layak dibaca (keduanya muncul di bawah kode). Yang pertama adalah peta ketujuh permukaan dengan titik hitung di atasnya, yang langsung memperlihatkan bahwa arus pejalan kaki, cahaya malam, lapangan kerja, dan volume bangunan semuanya memuncak di poros CBD yang sama, dan bahwa titik hitung menyampel poros itu dengan rapat sementara kawasan permukiman di selatan hanya jarang.
+
+Yang kedua adalah korelasi setiap permukaan dengan hitungan pada setiap ukuran *buffer*. Cahaya malam, kepadatan lapangan kerja, volume bangunan, dan titik minat semuanya berkorelasi sekitar 0,7 sampai 0,8 dengan arus pejalan kaki hari kerja. Halte bus berpengaruh pada 500 m tetapi jauh lebih lemah pada 100 m: halte menarik orang di sepanjang jalan menuju ke sana, bukan hanya ke trotoar di sampingnya. Luas terbangun hampir tidak berkorelasi, bahkan sedikit negatif pada 1000 m, karena kawasan pinggiran penuh rumah yang menutupi tanah tetapi hanya mengirim sedikit orang ke jalan. Dua permukaan yang terdengar mirip (luas bangunan dan volume bangunan) membawa informasi yang berlawanan, dan itulah alasan untuk melihat dulu sebelum membuat model.
+
+Satu efek skala mudah terlewat. Piksel cahaya malam VIIRS berukuran sekitar 500 m, sehingga rata-rata "100 m"-nya sebenarnya adalah nilai satu piksel, bukan ukuran jalan itu.
+
+## Dua kesalahan, dan cara skrip menghindarinya
+
+### Data uji yang ikut dipakai untuk pelatihan
+
+Pola yang umum, dan yang ada di versi pertama analisis ini, mengambil sampel 20 persen dari data, mencocokkan pra-pemrosesan pada sampel itu (pemusatan, penskalaan, Box–Cox), lalu memakai sampel yang sama sebagai data uji. Model tidak pernah dilatih pada baris-baris itu, sehingga tampak seperti uji yang adil. Tidak sepenuhnya: baris uji telah membentuk transformasi yang dilalui setiap baris latih. Versi kebocoran yang lebih besar adalah melaporkan R² pada semua titik yang dihitung, termasuk titik latih, karena angka itu mengukur ingatan sama banyaknya dengan prediksi.
+
+Skripnya menyisihkan 20 persen titik hitung terlebih dahulu, sebelum apa pun dipelajari, dan memasukkan pra-pemrosesan ke dalam setiap model sehingga dicocokkan ulang di setiap *fold*. Satu-satunya angka yang dilaporkan sebagai kinerja adalah pada titik yang disisihkan.
+
+### Tetangga di *fold* latih
+
+Titik hitung di pusat kota berjarak beberapa ratus meter satu sama lain. Dua titik di jalan yang sama berbagi *buffer* 500 m dan 1000 m hampir seluruhnya. Pada validasi silang acak biasa, sebuah titik validasi biasanya punya "kembaran" di *fold* latih, dan model diganjar karena menginterpolasi antartetangga, hal yang tidak akan bisa dilakukannya di lokasi yang benar-benar baru.
+
+Skripnya membandingkan *fold* acak dengan *fold* spasial, di mana titik latih dikelompokkan ke dalam lima klaster lokasi dan setiap klaster disisihkan bergantian.
+
+Untuk setiap *learner*, *fold* spasial memberi galat 31 sampai 56 persen lebih besar daripada *fold* acak (tabel di bawah kode). Pemisahan acak akan melaporkan galat sepertiga sampai separuh lebih kecil daripada galat yang akan dibuat model di jalan yang belum pernah dilihatnya. Urutan *learner* berubah lebih sedikit daripada galatnya: Cubist dan *boosted trees* terbaik di kedua skema.
+
+::: {.callout-tip}
+## Dari lapangan
+Ketika titik validasi berdampingan dengan titik latih, pemisahan acak mengukur seberapa baik model menginterpolasi, bukan seberapa baik ia memprediksi. Tanyakan di mana model akan dipakai. Jika dipakai di antara titik-titik latih, *fold* acak sudah cukup. Jika dipakai di jalan, kawasan, atau kota baru, validasilah pada tempat yang disisihkan.
+:::
+
+## Enam *learner* dan sebuah *stack*
+
+Target dimodelkan pada skala logaritma. Hitungan membentang lebih dari dua orde besaran, dan model yang dicocokkan pada hitungan mentah menghabiskan seluruh usahanya pada sepuluh sudut CBD tersibuk: pada percobaan pertama dengan hitungan mentah, MAPE pada data uji melebihi 130 persen karena jalan-jalan sepi diprediksi beberapa kali lipat dari hitungan sebenarnya. Mencocokkan log(1 + hitungan) lalu mengembalikannya menempatkan gang kecil dan sudut CBD pada pijakan yang setara.
+
+Enam model dengan bias induktif berbeda disetel dengan pencarian acak: *elastic net* (`glmnet` / `ElasticNet`), *random forest* (`ranger` / `RandomForestRegressor`), regresi berbasis aturan Cubist, *support vector machine* linear, *gradient-boosted trees* (`xgboost` di Python; `gbm` di R, karena `xgbTree` milik caret tidak lagi berjalan dengan xgboost 3), dan jaringan saraf kecil. Sebuah *stack* kemudian belajar menggabungkan prediksi mereka: Cubist menjadi *meta-learner* di Python, dan *elastic net* di R, karena *meta-learner* Cubist atas keenam model membuat `caretStack` *crash* saat diuji.
+
+*Stacking* hanya membantu bila model-model dasarnya membuat kesalahan yang berbeda, karena itu skrip R mencetak korelasi antargalat hasil *resampling* sebelum *stacking*. *Learner* yang sangat berkorelasi menambah sedikit.
+
+{{< include _snippets/ch65_ooh_sydney.qmd >}}
+
+Pada 23 titik yang disisihkan, *learner* tunggal terbaik menjelaskan 82 sampai 88 persen variasi hitungan hari kerja, dengan RMSE sekitar 4.400 sampai 5.200 orang per hari. *Stack* tidak mengalahkan mereka di sini: RMSE-nya 4.900, di tengah-tengah, karena model dasarnya membuat kesalahan yang sangat mirip dan 92 titik latih hanya menyisakan sedikit untuk dipelajari *meta-learner*. Galat persentasenya tetap tinggi, sekitar 80 sampai 100 persen, dan didorong oleh titik-titik tersepi, di mana memprediksi 900 orang untuk jalan yang dilewati 300 orang adalah meleset besar secara relatif dan kecil secara absolut. Bagi pengiklan asimetri itu dapat diterima, karena titik ramailah yang dibeli, tetapi hal itu perlu dinyatakan. Versi R mengambil 20 persen acaknya sendiri (24 titik) dan memakai `gbm` untuk *boosting*; *stack*-nya mencapai R² 0,70 pada titik-titik itu. Perbedaan ini mengingatkan betapa skor uji dari dua lusin titik bergantung pada dua lusin titik yang mana. Kedua versi memilih rute bus terbaik yang sama untuk setiap pengiklan.
+
+*Permutation importance* pada titik yang disisihkan memperlihatkan apa yang diandalkan *stack*: cahaya malam dan titik minat tepat di sekitar lokasi, lalu kepadatan jalan dan titik minat dalam 500 m, lalu rasio luas lantai blok terdekat. Model membaca arus pejalan kaki pertama-tama dari apa yang ada di jalan itu dan kedua dari lingkungannya, sesuai dugaan seorang perencana yang berjalan menyusuri kota.
+
+## Dari arus pejalan kaki ke audiens
+
+Arus pejalan kaki bukanlah audiens. Skor multikriteria menggabungkan hitungan prediksi dengan pendapatan rumah tangga mingguan, jumlah penduduk, penduduk dalam kelompok umur tertentu, dan kepadatan usaha terkait dalam radius 500 m, masing-masing diskalakan ulang ke 0–1:
+
+| Pengiklan | Pendapatan + penduduk | Arus pejalan kaki | Usaha terkait | Kelompok umur |
+|---|---|---|---|---|
+| Jasa keuangan | 0,50 | 0,20 | 0,20 (keuangan) | 0,10 (40–64) |
+| Cepat saji | 0,15 | 0,40 | 0,35 (cepat saji) | 0,10 (15–44) |
+| Pendidikan | 0,05 | 0,20 | 0,35 (pendidikan) | 0,40 (20–34) |
+
+Bobot ini adalah penilaian perencana media, bukan hasil pengukuran. Bobot ini ditulis agar klien bisa tidak setuju pada salah satunya dan melihat apa yang berubah, argumen yang sama dengan bobot hasil SHAP di Bab [-@sec-vector].
+
+## Dari audiens ke inventaris
+
+Pengiklan tidak bisa membeli titik skor; yang dibeli adalah halte bus, spanduk, atau rute. Setiap halte dan spanduk mengambil rata-rata skor lokasi dalam radius 50 m. Setiap rute bus mengambil rata-rata skor lokasi yang dilaluinya.
+
+Rata-rata itu penting. Versi pertama analisis ini menjumlahkan skor di sepanjang setiap rute, yang memeringkat rute terutama menurut panjangnya: rute panjang melewati lebih banyak lokasi dan mengumpulkan lebih banyak skor, entah audiensnya lebih baik atau tidak. Skripnya melaporkan rata-rata per lokasi, dengan panjang rute di sampingnya, sehingga perencana dapat menimbang mutu audiens terhadap jangkauan secara eksplisit.
+
+Arus pejalan kaki diprediksi di 6.202 calon lokasi jalan, setiap 100 m di sepanjang jaringan. Peta memperlihatkan pola yang dihasilkan setiap pembobotan. Cepat saji terpusat di poros CBD dan Haymarket, tempat arus pejalan kaki memikul 40 persen bobot. Pendidikan memuncak di sekitar Ultimo, Chippendale, dan kampus-kampus, tempat orang dewasa muda tinggal dan titik minat pendidikan mengelompok. Jasa keuangan menyebar ke kawasan permukiman yang lebih makmur, karena pendapatan dan penduduk memikul separuh skornya.
+
+Sebuah rute membutuhkan sedikitnya lima lokasi berskor sebelum rata-ratanya diperingkat, sehingga rute yang hanya menyentuh tepi kota tersingkir.
+
+## Apa yang bukan model ini
+
+Model ini memprediksi hitungan hari kerja dari pukul 6 pagi sampai tengah malam dalam cuaca cerah, pada skala titik-titik yang dihitung. Model ini tidak tahu apa pun tentang acara, libur sekolah, proyek konstruksi, atau ke sisi jalan mana sebuah halte menghadap. Lapisan OpenStreetMap hanya diunduh untuk wilayah City of Sydney, sehingga *buffer* 1000 m dari titik di dekat batas wilayah melihat lebih sedikit toko dan jalan daripada kenyataannya, dan arus pejalan kaki di tepi wilayah cenderung diremehkan. Bobot MCDA adalah asumsi. Pakailah peringkat ini untuk menyaring daftar pendek titik dan rute; lalu periksa daftar pendek itu terhadap data impresi milik operator sebelum kontrak ditandatangani.
+
+## Latihan {.unnumbered}
+
+1. Ubah bobot cepat saji menjadi 0,6 untuk arus pejalan kaki dan 0,2 untuk usaha terkait. Berapa banyak dari sepuluh halte teratas yang berubah?
+2. Hapus fitur 1000 m. Apakah galat validasi silang spasial naik atau turun, dan mengapa?
+3. Ganti jumlah skor rute dengan rata-ratanya, dan rata-rata dengan nilai maksimumnya. Mana yang lebih disukai pembeli media, dan untuk pengiklan yang mana?
+4. Tambahkan hitungan akhir pekan sebagai target kedua. Prediktor mana yang berubah tingkat kepentingannya?

@@ -100,6 +100,7 @@ book:
         - 20-regression-biomass.qmd
         - 21-time-series.qmd
         - 22-vector-geoai.qmd
+        - 65-ooh-sydney.qmd
         - 23-apps-mrv.qmd
     - part: "Bagian VII: Penerapan di Industri"
       chapters:

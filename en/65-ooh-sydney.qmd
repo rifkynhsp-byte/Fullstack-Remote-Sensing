@@ -19,17 +19,41 @@ The chapter is written in both R and Python. The analysis was first built in R w
 
 ## The data
 
-Every input is open. [DATA TABLE: to be completed from the project folder: layer, source, year, licence, and how each surface was derived.]
+Every input is open, and one script rebuilds all of them, so the whole study can be rerun from nothing.
 
-The training target is the City of Sydney's walking counts. Twice a year the City counts pedestrians at around 100 locations from 6 am to midnight, on a weekday and on a weekend day in March and October [CITE: City of Sydney walking count sites dataset]. The model predicts the weekday count (`Mon_Count`).
+| Input | Source | How it is used |
+|---|---|---|
+| Walking counts | City of Sydney walking count surveys, 2022–2023 | Target: mean weekday count of the three post-COVID surveys at each site |
+| Points of interest, fast food, education, finance | OpenStreetMap | Kernel density surfaces (quartic, 250 m radius) |
+| Roads, bus stops and stations | OpenStreetMap | Road length and stop density surfaces |
+| Building surface and volume | GHSL P2023A, 2020 (Earth Engine) | Built-up surface and volume per 100 m cell |
+| Night-time light | VIIRS annual composite, 2022 (Earth Engine) | Average radiance |
+| Jobs and floor space | City of Sydney floor space and employment survey, 2022 | Jobs per hectare by block, nearest block attributes |
+| Household income | ABS Census 2021, G02, by SA2 | Median weekly household income |
+| Population by age | WorldPop 2020, 100 m, age and sex (Earth Engine) | Summed per SA2 into the advertisers' age bands |
+| Bus shelters, banners | City of Sydney open data | The inventory to be scored |
+| Bus routes | OpenStreetMap route relations | The inventory to be scored |
+| Candidate locations | A point every 100 m along the street network | Where footfall is predicted |
 
-The predictors describe what surrounds each location: density surfaces of points of interest, road length, bus stops, building footprint area and building volume, an economic-potential surface, a night-time activity layer, and the attributes of the floor space and employment survey zone the location falls in [CITE: City of Sydney Floor Space and Employment Survey].
+{{< include _snippets/ch65_ooh_data.qmd >}}
+
+The training target is the City of Sydney's walking counts. Twice a year the City counts pedestrians at around 100 locations from 6 am to midnight, on a weekday and a weekend day, in autumn and spring. The model predicts the mean weekday count of the three surveys after the COVID-19 restrictions ended (autumn 2022, spring 2022 and autumn 2023), available at 115 of the 120 sites. Counts run from 256 to 72,352 people a day, with a median of 6,080.
+
+The predictors describe what surrounds each location: density surfaces of points of interest, road length and public-transport stops, built-up surface and volume, night-time light, job density, and the jobs, floor space and businesses of the nearest employment-survey block. That last join has a trap of its own. Count sites stand on streets, and streets lie between survey blocks, so a 'point in polygon' join matches almost nothing; the scripts take the nearest block instead.
 
 ## Building the features at three scales
 
 A pedestrian count depends on what is on the street and on what is in the neighbourhood. A shop on the corner draws people; so does the station 600 metres away that sends them past the corner. Every surface is therefore summarised three times, as the mean within 100, 500 and 1000 metres of the location.
 
 Two details matter. The buffers must be in metres, so the data must be in a projected coordinate system in metres, such as MGA zone 56 for Sydney; both scripts stop if they are not. And the mean is area-weighted (`exactextract`), so a pixel half inside a buffer counts half, which matters at 100 m where a buffer covers only a few dozen pixels.
+
+## Look before you model
+
+Before any model is fitted, two intermediate results are worth reading (both appear under the code below). The first is the maps of the seven surfaces with the counted sites on top, which show at a glance that footfall, night-time light, jobs and building volume all peak on the same CBD spine, and that the count sites sample that spine densely and the residential south thinly.
+
+The second is the correlation of every surface with the count at each buffer size. Night-time light, job density, building volume and points of interest all correlate at about 0.7 to 0.8 with weekday footfall. Bus stops matter at 500 m but much less at 100 m: a stop draws people along the street towards it, not only to the kerb beside it. Built-up surface barely correlates at all, and slightly negatively at 1000 m, because the suburbs are full of houses that cover the ground but send few people onto the street. Two surfaces that sound alike (building surface and building volume) carry opposite information, which is the reason to look before modelling.
+
+One scale effect is easy to miss. The VIIRS night-light pixel is about 500 m across, so its "100 m" mean is really the value of a single pixel, not a measurement of the street.
 
 ## The two mistakes, and how the scripts avoid them
 
@@ -45,7 +69,7 @@ Count sites in a city centre are a few hundred metres apart. Two sites on the sa
 
 The scripts compare random folds with spatial folds, in which the training sites are grouped into five location clusters and each cluster is held out in turn.
 
-[RESULT: Table ch65-cv. Random vs spatial CV MAE per learner; describe the inflation.]
+For every learner, spatial folds give an error 31 to 56 per cent larger than random folds (table below the code). A random split would have reported an error a third to a half smaller than the model will make on a street it has not seen. The ranking of the learners also changes less than their errors do: Cubist and boosted trees are best under both schemes.
 
 ::: {.callout-tip}
 ## From the field
@@ -54,13 +78,17 @@ When the sites you validate on sit next to the sites you train on, a random spli
 
 ## Six learners and a stack
 
-Six models with different inductive biases are tuned by random search: an elastic net (`glmnet` / `ElasticNet`), a random forest (`ranger` / `RandomForestRegressor`), Cubist rule-based regression, a linear support vector machine, gradient-boosted trees (`xgboost`) and a small neural network. A stack then learns how to combine their predictions, with Cubist as the meta-learner.
+The target is modelled on a log scale. Counts span more than two orders of magnitude, and a model fitted on raw counts spends its whole effort on the ten busiest CBD corners: in a first run on raw counts, the held-out MAPE exceeded 130 per cent because quiet streets were predicted at several times their true count. Fitting log(1 + count) and transforming back puts a laneway and a CBD corner on comparable terms.
+
+Six models with different inductive biases are tuned by random search: an elastic net (`glmnet` / `ElasticNet`), a random forest (`ranger` / `RandomForestRegressor`), Cubist rule-based regression, a linear support vector machine, gradient-boosted trees (`xgboost` in Python; `gbm` in R, because caret's `xgbTree` no longer works with xgboost 3) and a small neural network. A stack then learns how to combine their predictions: Cubist is the meta-learner in Python, and an elastic net in R, where a Cubist meta-learner over all six models crashed `caretStack` in testing.
 
 Stacking helps only when the base models make different mistakes, so the R script prints the correlation between their resampled errors before stacking. Highly correlated learners add little.
 
 {{< include _snippets/ch65_ooh_sydney.qmd >}}
 
-[RESULT: Table ch65-test and the scatter. Held-out R², RMSE, MAPE. Compare the stack with the best single learner.]
+On the 23 held-out sites, the best single learners explain 82 to 88 per cent of the variance in weekday counts, with an RMSE of about 4,400 to 5,200 people a day. The stack does not beat them here: its RMSE of 4,900 is in the middle of the pack, because its base learners make very similar mistakes and 92 training sites leave the meta-learner little to learn from. The percentage error remains high, around 80 to 100 per cent, and it is driven by the quietest sites, where predicting 900 people for a street that saw 300 is a large relative miss and a small absolute one. For an advertiser that asymmetry is acceptable, since it is the busy sites that are bought, but it should be stated. The R version draws its own random 20 per cent (24 sites) and uses `gbm` for boosting; its stack reaches R² 0.70 on those sites. The difference is a reminder of how much a held-out score from two dozen sites depends on which two dozen they are. Both versions choose the same best bus route for every advertiser.
+
+Permutation importance on the held-out sites shows what the stack relies on: night-time light and points of interest immediately around the site, then road density and points of interest within 500 m, then the floor-space ratio of the nearest block. The model reads footfall from what is on the street first and from the neighbourhood second, which is what a planner walking the city would expect.
 
 ## From footfall to audience
 
@@ -80,11 +108,13 @@ An advertiser cannot buy a scored point; it buys a bus shelter, a banner or a ro
 
 The mean matters. The first version of this analysis summed the scores along each route, which ranks routes largely by their length: a long route passes more locations and collects more score whether or not its audience is better. The scripts report the mean per location, with route length beside it, so that a planner can trade audience quality against reach explicitly.
 
-[RESULT: Table ch65-routes and the map. Best route per advertiser; comment on whether the sum and mean rankings differ.]
+Footfall is predicted at 6,202 candidate street locations, every 100 m along the network. The map shows the pattern each weighting produces. Fast food concentrates on the CBD spine and Haymarket, where footfall carries 40 per cent of the weight. Education peaks around Ultimo, Chippendale and the universities, where young adults live and education points of interest cluster. Financial services spread into the wealthier residential suburbs, because income and population carry half of that score.
+
+A route needs at least five scored locations before its mean is ranked, which removes routes that merely clip the edge of the city.
 
 ## What the model is not
 
-It predicts weekday counts from 6 am to midnight in fair weather, at the scale of the counted sites. It knows nothing of events, school holidays, construction or which side of the street a shelter faces. The MCDA weights are assumptions. Use the ranking to shortlist sites and routes; then check the shortlist against the operator's own impression data before a contract is signed.
+It predicts weekday counts from 6 am to midnight in fair weather, at the scale of the counted sites. It knows nothing of events, school holidays, construction or which side of the street a shelter faces. The OpenStreetMap layers are downloaded for the City of Sydney only, so the 1000 m buffers of sites near the boundary see fewer shops and roads than are really there, and footfall near the edge is likely to be underestimated. The MCDA weights are assumptions. Use the ranking to shortlist sites and routes; then check the shortlist against the operator's own impression data before a contract is signed.
 
 ## Exercises {.unnumbered}
 
