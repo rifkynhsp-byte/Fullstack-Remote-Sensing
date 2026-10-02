@@ -2,28 +2,64 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will replace hand built feature stacks with Google's 64 band satellite embeddings, and reach comparable accuracy from twenty training points instead of two thousand.
+You will replace a hand-built feature stack with Google's 64-band annual satellite embeddings, and test the claim that comes with them: that a useful map needs only a handful of labels. On the Mahakam Delta, five labelled points per class with embeddings match a hand-built Sentinel-2 stack trained on a hundred. You will also search for places that look like a reference, look inside the 64 dimensions, and detect change without classifying anything, and you will see where the approach stops working.
 :::
 
-::: {.callout-note}
-## In progress
-The working script below is complete and runnable. The narrative prose for
-this chapter is still being written; the section plan shows what is coming.
-:::
+## What changed
 
-## Planned sections
+For most of this book a classifier has been fed features you built: cloud-masked composites, spectral indices, texture, terrain, radar (Chapters [-@sec-indices] to [-@sec-sampling]). Every one of those choices took knowledge and time, and most of the accuracy came from them.
 
-1. **Self supervised learning and geospatial foundation models**: what changed
-2. **AlphaEarth and the annual satellite embedding dataset**: what the 64 dimensions encode
-3. **Why embeddings need no cloud masking, index calculation or texture engineering**
-4. **Low shot classification**: training a usable model from a handful of labels
-5. **Embedding similarity search**: find everywhere that looks like this place
-6. **Dimensionality reduction with PCA, and change detection in embedding space**
-7. **Limits and honest caveats**: annual granularity, opacity, and dependence on Google's release cadence
+A **geospatial foundation model** changes the order of work. It is trained once, on an enormous archive of unlabelled imagery, to compress what it sees into a short vector that keeps what matters about a place and discards noise such as clouds and sensor quirks. It learns this *self-supervised*: no one labels the training images; the model learns by predicting parts of the data from other parts, across sensors and seasons. Your labels then only have to say which region of an already organised space you care about.
 
-## The full workflow
+**AlphaEarth Foundations**, from Google DeepMind, is such a model, and its output is published in Earth Engine as `GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL`: one 64-dimensional vector for every 10 m pixel on land and coastal water, for every year from 2017. The model draws on optical, radar and lidar observations and other sources across the whole year, so each vector summarises a year of observations. The vectors have unit length, which matters later: the similarity of two pixels is simply their dot product.
 
 {{< include _snippets/ch19_satellite_embeddings.qmd >}}
+
+## No masking, no indices, no texture
+
+Look at what the script does *not* do. There is no cloud mask, no compositing, no NDVI, no GLCM texture and no terrain derivative: one line loads the year's embedding and the classifier trains on it. That work has not vanished. It happened upstream, inside the pipeline that produced the embeddings, to Google's design and defaults. You gain time and consistency. You lose the ability to inspect or change those decisions, which is the first of several trade-offs this chapter returns to.
+
+The three-band picture of the embedding (bands A01, A16, A09 as red, green and blue) has no physical meaning. Its value is that similar places get similar colours before any training: the mangrove fringe, the delta's ponds, the river and the upland forest are already distinct.
+
+## Low-shot classification, tested fairly
+
+The claim is that a usable map needs only a few labels. The first learning curve trains a random forest on 5 to 100 WorldCover-labelled points per class and tests it on a fixed set of 300 points. Accuracy is 0.76 at five points per class, 0.83 at twenty, and 0.86 at a hundred: the curve is nearly flat after twenty.
+
+That curve alone proves nothing, because there is nothing to compare it with. The head-to-head test gives it a baseline. It builds the stack this book would otherwise build, a cloud-masked 2023 Sentinel-2 median with ten bands and three water and vegetation indices, and trains both feature sets on *identical* points, three random draws at each size, scored on the same 300 validation points.
+
+At every size the embeddings win, by 6 to 10 percentage points. With five points per class they reach 0.75; the Sentinel-2 stack needs a hundred points per class to reach 0.76. The embeddings are also steadier from draw to draw (a standard deviation of 0.01-0.02 against 0.02-0.04), which is what a project with few labels needs most. "Low-shot" is real, and here it means about twenty times fewer labels for the same accuracy.
+
+::: {.callout-important}
+## Scientific integrity: the labels are a map, not the ground
+Both feature sets were trained and tested on WorldCover labels, and WorldCover is itself made from Sentinel-1 and Sentinel-2. A model can score well by reproducing WorldCover's own patterns, including its errors. The comparison between the two feature sets is fair, because both face the same labels; the absolute accuracies are agreement with WorldCover, not accuracy on the ground. For a map you will report, validate against field or very high resolution reference points (Chapter [-@sec-accuracy]).
+:::
+
+## Similarity search: find everywhere like this
+
+Because similar places have similar vectors, you can search the embedding space directly. Take the vector of a reference pixel, compute the distance to every other pixel, and dark means "like the reference".
+
+From a single pixel that WorldCover and Global Mangrove Watch both call mangrove, the search fails in an instructive way: in the median, water is *closer* to that one pixel (distance 0.91) than other mangrove is (1.00). One pixel carries its own peculiarities: a channel edge, a mixed cell. Averaging the vectors of twenty mangrove training points removes them. From that centroid, mangrove is the nearest class (0.49), other forest next (0.61), and water the farthest (1.00). One pixel is an anecdote; twenty are a description.
+
+## What the 64 dimensions hold
+
+Principal component analysis of 2,000 sampled vectors shows that the dimensions are far from independent: nine components hold 90 % of the variance. Plotted on just the first two, the classes already fall into separate regions, water at one end, urban at another, mangrove and forest together on a third side, before any classifier has seen a label. That is the visual reason a few labels suffice: the labels only have to draw boundaries through a space that is already organised.
+
+PCA is also a practical tool. If a downstream method struggles with 64 correlated inputs (a logistic regression, a distance-based clustering), the first ten components keep almost everything.
+
+## Change without classification
+
+The embeddings exist for every year, and their vectors have unit length, so the dot product of the 2018 and 2023 vectors for the same pixel is the cosine of the angle between them: 1 means the pixel looks the same, lower values mean it has changed. No class labels, thresholds per class or composites are needed.
+
+Over the delta, 3.3 % of the area has a similarity below 0.9 and 0.4 % below 0.6. The changes cluster on the delta islands: new and abandoned ponds, mangrove cut or regrown. A check against Dynamic World, an independent classifier, shows that the signal is real: across the whole area, Dynamic World's annual label changed in 5 % of pixels; among pixels below 0.6 similarity, it changed in 84 %. The lower the similarity, the more often an independent map agrees that the land cover changed.
+
+## Limits
+
+Four limits keep embeddings from replacing the rest of this book:
+
+1. **One vector per year.** A flood, a harvest, a fire or a clearing inside a year is averaged with everything else. Events need time series (Chapter [-@sec-timeseries]) or radar (Chapter [-@sec-flood]).
+2. **Opacity.** No single dimension means "vegetation" or "water". The map cannot explain itself the way an NDVI threshold can, and a reviewer may ask why the model decided what it did.
+3. **Someone else's decisions.** Masking, compositing and the training data of the foundation model were chosen elsewhere. If they fail somewhere (persistent cloud, unusual sensors), you will not see why.
+4. **A release cadence you do not control.** The product depends on Google continuing to publish it, and a new version may not match the old one. Keep the method reproducible with your own features, and record the dataset version with every map.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -66,10 +102,9 @@ this chapter is still being written; the section plan shows what is coming.
 }
 </script>
 
-## Source material
-
-Your Export.classifier.toAsset workflow built on GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL, and session 6 of Akselerasi Konservasi.
-
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Add Sentinel-1 VV and VH to the Sentinel-2 stack in the head-to-head test. How much of the gap to the embeddings does radar close?
+2. Run the learning curve with ten random draws per size instead of three. Below how many points per class does the spread become too wide to trust one draw?
+3. Use the change map to choose ten pixels below 0.6 similarity and inspect them in Sentinel-2 imagery of 2018 and 2023. What kinds of change does the embedding detect, and which does it miss?
+4. Repeat the similarity search for shrimp ponds instead of mangrove. How many reference points do you need before the search stops finding river channels?

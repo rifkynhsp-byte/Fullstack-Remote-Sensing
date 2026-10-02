@@ -1,33 +1,65 @@
 # Paradigma GeoAI {#sec-embeddings}
 
 ::: {.chapter-goal}
-#### Dalam bab ini
-Anda akan mengganti feature stack rakitan tangan dengan satellite embeddings 64 band milik Google, dan mencapai akurasi sebanding dari dua puluh titik latih alih alih dua ribu.
+#### Di bab ini
+Anda akan mengganti tumpukan fitur buatan tangan dengan embedding satelit tahunan 64 band dari Google, dan menguji klaim yang menyertainya: bahwa peta yang berguna hanya butuh segelintir label. Di Delta Mahakam, lima titik berlabel per kelas dengan embedding menyamai tumpukan Sentinel-2 buatan tangan yang dilatih dengan seratus titik. Anda juga akan mencari tempat yang mirip dengan sebuah rujukan, melihat isi 64 dimensi itu, dan mendeteksi perubahan tanpa mengklasifikasi apa pun, serta melihat di mana pendekatan ini berhenti bekerja.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Skrip kerja di bawah ini lengkap dan dapat dijalankan. Narasi bab ini masih
-ditulis; rencana bagian menunjukkan apa yang akan datang.
-:::
+## Apa yang berubah
 
-## Rencana bagian
+Di sebagian besar buku ini, pengklasifikasi diberi fitur yang Anda bangun sendiri: komposit bebas awan, indeks spektral, tekstur, topografi, radar (Bab [-@sec-indices] sampai [-@sec-sampling]). Setiap pilihan itu butuh pengetahuan dan waktu, dan sebagian besar akurasi datang darinya.
 
-1. **Pembelajaran mandiri dan model fondasi geospasial**: apa yang berubah
-2. **AlphaEarth dan dataset embedding tahunan**: apa yang dikodekan 64 dimensinya
-3. **Mengapa embedding tidak memerlukan masking awan, indeks atau tekstur**
-4. **Klasifikasi low shot**: model layak pakai dari segelintir label
-5. **Pencarian kemiripan**: temukan semua tempat yang mirip tempat ini
-6. **Reduksi dimensi dengan PCA dan deteksi perubahan di ruang embedding**
-7. **Batas dan catatan jujur**: granularitas tahunan, keburaman, ketergantungan rilis
+**Model fondasi geospasial** mengubah urutan kerja. Model ini dilatih sekali, pada arsip citra tanpa label yang sangat besar, untuk memadatkan apa yang dilihatnya menjadi vektor pendek yang menyimpan hal penting tentang suatu tempat dan membuang derau seperti awan dan keanehan sensor. Ia belajar secara *self-supervised*: tidak ada yang memberi label pada citra latihnya; model belajar dengan menebak sebagian data dari bagian lainnya, lintas sensor dan musim. Label Anda kemudian hanya perlu menunjukkan wilayah mana dari ruang yang sudah tertata itu yang Anda pedulikan.
 
-## Alur kerja lengkap
+**AlphaEarth Foundations** dari Google DeepMind adalah model seperti itu, dan keluarannya diterbitkan di Earth Engine sebagai `GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL`: satu vektor 64 dimensi untuk setiap piksel 10 m di daratan dan perairan pesisir, untuk setiap tahun sejak 2017. Model ini memakai pengamatan optis, radar, lidar, dan sumber lain sepanjang tahun, sehingga setiap vektor merangkum satu tahun pengamatan. Panjang vektornya satu, yang penting nanti: kemiripan dua piksel cukup dihitung dari hasil kali titiknya.
 
 {{< include _snippets/ch19_satellite_embeddings.qmd >}}
 
-## Latihan {.unnumbered}
+## Tanpa masker, tanpa indeks, tanpa tekstur
 
-Ditulis bersamaan dengan naskah babnya.
+Perhatikan apa yang *tidak* dilakukan skrip. Tidak ada masker awan, tidak ada komposit, tidak ada NDVI, tidak ada tekstur GLCM, dan tidak ada turunan topografi: satu baris memuat embedding tahun itu dan pengklasifikasi langsung dilatih padanya. Pekerjaan itu tidak hilang. Ia terjadi di hulu, di dalam pipeline yang membuat embedding, menurut rancangan dan pengaturan Google. Anda mendapat waktu dan konsistensi. Anda kehilangan kemampuan memeriksa atau mengubah keputusan-keputusan itu, yang menjadi trade-off pertama dari beberapa yang dibahas bab ini.
+
+Gambar tiga band dari embedding (band A01, A16, A09 sebagai merah, hijau, biru) tidak punya makna fisik. Nilainya adalah bahwa tempat yang mirip mendapat warna mirip sebelum pelatihan apa pun: tepian mangrove, tambak delta, sungai, dan hutan dataran tinggi sudah terpisah.
+
+## Klasifikasi low-shot, diuji secara adil
+
+Klaimnya: peta yang bisa dipakai hanya butuh sedikit label. Kurva belajar pertama melatih random forest dengan 5 sampai 100 titik berlabel WorldCover per kelas dan mengujinya pada 300 titik tetap. Akurasinya 0,76 pada lima titik per kelas, 0,83 pada dua puluh, dan 0,86 pada seratus: kurvanya hampir datar setelah dua puluh.
+
+Kurva itu sendirian tidak membuktikan apa pun, karena tidak ada pembandingnya. Uji berdampingan memberinya pembanding. Uji ini membangun tumpukan yang biasanya dibangun di buku ini, median Sentinel-2 2023 bebas awan dengan sepuluh band dan tiga indeks air dan vegetasi, lalu melatih kedua set fitur pada titik yang *sama*, tiga tarikan acak di setiap ukuran, dan menilainya pada 300 titik validasi yang sama.
+
+Di setiap ukuran embedding unggul, dengan selisih 6 sampai 10 poin persentase. Dengan lima titik per kelas, embedding mencapai 0,75; tumpukan Sentinel-2 butuh seratus titik per kelas untuk mencapai 0,76. Embedding juga lebih stabil dari tarikan ke tarikan (simpangan baku 0,01-0,02 dibanding 0,02-0,04), dan itulah yang paling dibutuhkan proyek dengan sedikit label. "Low-shot" itu nyata, dan di sini artinya sekitar dua puluh kali lebih sedikit label untuk akurasi yang sama.
+
+::: {.callout-important}
+## Integritas ilmiah: labelnya peta, bukan lapangan
+Kedua set fitur dilatih dan diuji dengan label WorldCover, dan WorldCover sendiri dibuat dari Sentinel-1 dan Sentinel-2. Sebuah model bisa mendapat skor tinggi dengan meniru pola WorldCover, termasuk kesalahannya. Perbandingan antara kedua set fitur adil, karena keduanya menghadapi label yang sama; akurasi absolutnya adalah kesesuaian dengan WorldCover, bukan akurasi di lapangan. Untuk peta yang akan Anda laporkan, validasi dengan titik rujukan lapangan atau citra resolusi sangat tinggi (Bab [-@sec-accuracy]).
+:::
+
+## Pencarian kemiripan: temukan semua yang seperti ini
+
+Karena tempat yang mirip punya vektor yang mirip, Anda bisa mencari langsung di ruang embedding. Ambil vektor sebuah piksel rujukan, hitung jaraknya ke setiap piksel lain, dan gelap berarti "mirip rujukan".
+
+Dari satu piksel yang disebut mangrove oleh WorldCover dan Global Mangrove Watch, pencarian gagal dengan cara yang mendidik: secara median, air *lebih dekat* ke piksel itu (jarak 0,91) daripada mangrove lain (1,00). Satu piksel membawa keanehannya sendiri: tepi alur, sel campuran. Merata-ratakan vektor dua puluh titik latih mangrove menghilangkannya. Dari centroid itu, mangrove menjadi kelas terdekat (0,49), hutan lain berikutnya (0,61), dan air paling jauh (1,00). Satu piksel adalah anekdot; dua puluh adalah deskripsi.
+
+## Apa isi 64 dimensi itu
+
+Analisis komponen utama (PCA) pada 2.000 vektor sampel menunjukkan bahwa dimensinya jauh dari saling bebas: sembilan komponen memuat 90 % variansi. Bila digambar hanya pada dua komponen pertama, kelas-kelas sudah jatuh di wilayah yang terpisah, air di satu ujung, permukiman di ujung lain, mangrove dan hutan bersama di sisi ketiga, sebelum pengklasifikasi melihat satu label pun. Itulah alasan visual mengapa sedikit label sudah cukup: label hanya perlu menarik batas di ruang yang sudah tertata.
+
+PCA juga alat praktis. Bila metode hilir kesulitan dengan 64 masukan yang saling berkorelasi (regresi logistik, klasterisasi berbasis jarak), sepuluh komponen pertama menyimpan hampir semuanya.
+
+## Perubahan tanpa klasifikasi
+
+Embedding tersedia untuk setiap tahun, dan panjang vektornya satu, sehingga hasil kali titik vektor 2018 dan 2023 untuk piksel yang sama adalah kosinus sudut di antara keduanya: 1 berarti piksel tampak sama, nilai lebih rendah berarti telah berubah. Tidak dibutuhkan label kelas, ambang per kelas, atau komposit.
+
+Di delta ini, 3,3 % wilayah punya kemiripan di bawah 0,9 dan 0,4 % di bawah 0,6. Perubahannya mengumpul di pulau-pulau delta: tambak baru dan terbengkalai, mangrove yang ditebang atau tumbuh kembali. Pemeriksaan dengan Dynamic World, pengklasifikasi independen, menunjukkan sinyalnya nyata: di seluruh wilayah, label tahunan Dynamic World berubah di 5 % piksel; di antara piksel dengan kemiripan di bawah 0,6, label itu berubah di 84 %. Makin rendah kemiripannya, makin sering peta independen sepakat bahwa tutupan lahan berubah.
+
+## Batas
+
+Empat batas membuat embedding tidak menggantikan sisa buku ini:
+
+1. **Satu vektor per tahun.** Banjir, panen, kebakaran, atau pembukaan lahan di dalam setahun dirata-ratakan dengan semua yang lain. Kejadian butuh deret waktu (Bab [-@sec-timeseries]) atau radar (Bab [-@sec-flood]).
+2. **Tidak transparan.** Tidak ada satu dimensi pun yang berarti "vegetasi" atau "air". Petanya tidak bisa menjelaskan dirinya seperti ambang NDVI, dan penelaah bisa bertanya mengapa model memutuskan seperti itu.
+3. **Keputusan orang lain.** Masker, komposit, dan data latih model fondasi dipilih di tempat lain. Bila keputusan itu gagal di suatu tempat (awan menetap, sensor tak biasa), Anda tidak akan melihat sebabnya.
+4. **Jadwal rilis yang tidak Anda kendalikan.** Produk ini bergantung pada Google yang terus menerbitkannya, dan versi baru mungkin tidak cocok dengan yang lama. Jaga agar metodenya tetap bisa diulang dengan fitur Anda sendiri, dan catat versi dataset pada setiap peta.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -69,3 +101,10 @@ Ditulis bersamaan dengan naskah babnya.
   ]
 }
 </script>
+
+## Latihan {.unnumbered}
+
+1. Tambahkan Sentinel-1 VV dan VH ke tumpukan Sentinel-2 dalam uji berdampingan. Seberapa besar selisih dengan embedding yang ditutup oleh radar?
+2. Jalankan kurva belajar dengan sepuluh tarikan acak per ukuran, bukan tiga. Di bawah berapa titik per kelas sebaran hasilnya terlalu lebar untuk memercayai satu tarikan?
+3. Pakai peta perubahan untuk memilih sepuluh piksel dengan kemiripan di bawah 0,6 dan periksa di citra Sentinel-2 2018 dan 2023. Jenis perubahan apa yang terdeteksi embedding, dan mana yang terlewat?
+4. Ulangi pencarian kemiripan untuk tambak udang, bukan mangrove. Berapa titik rujukan yang dibutuhkan sebelum pencarian berhenti menemukan alur sungai?
