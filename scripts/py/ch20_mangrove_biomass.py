@@ -141,6 +141,55 @@ agb_map = (stack.classify(rf(indexed, STACK_BANDS))
 map_window = ee.Geometry.Rectangle([133.35, -4.0, 133.95, -3.45])
 
 
+def range_frame(df):
+    """Random forests average their training targets, so they cannot predict outside the
+    range they saw and pull extremes towards the mean. How much does each model shrink it?"""
+    import pandas as pd
+    rows = [{"series": "field AGB", "min": df["AGB"].min(), "p10": df["AGB"].quantile(0.1),
+             "p90": df["AGB"].quantile(0.9), "max": df["AGB"].max(), "sd": df["AGB"].std()}]
+    for col, name in MODELS.items():
+        v = df[col]
+        rows.append({"series": name, "min": v.min(), "p10": v.quantile(0.1), "p90": v.quantile(0.9),
+                     "max": v.max(), "sd": v.std()})
+    return pd.DataFrame(rows)
+
+
+# Carbon, with its error bar: AGB -> carbon (x 0.47, the IPCC default carbon fraction of dry
+# biomass) -> CO2 (x 44/12). The map uses the best model, the embedding forest.
+CARBON_FRACTION, CO2_PER_C = 0.47, 44 / 12
+agb_emb = (embeddings.classify(rf(indexed, EMB_BANDS)).updateMask(ee.Image(0).paint(gmw, 1)).rename("AGB"))
+
+
+def carbon_frame(df):
+    """Total for the mapped mangrove, and two honest error bars.
+
+    Pixel errors are not independent: a model that is wrong for one plot of a
+    category is wrong for the whole category. So the uncertainty of a total is
+    driven by the systematic error (the bias), not by RMSE divided by the square
+    root of millions of pixels. Bootstrap the leave-one-out residuals of the 45
+    plots to get an interval on the mean error, and apply it to the whole area.
+    """
+    import pandas as pd
+    r = (agb_emb.multiply(ee.Image.pixelArea().divide(1e4)).rename("agb_x_ha")
+         .addBands(ee.Image.pixelArea().divide(1e4).updateMask(agb_emb.mask()).rename("ha"))
+         .reduceRegion(ee.Reducer.sum(), map_window, 30, maxPixels=1e10, tileScale=4).getInfo())
+    area, total = r["ha"], r["agb_x_ha"]
+    mean = total / area
+    e = (df["pred_rf_embed"] - df["AGB"]).to_numpy()
+    rng = np.random.default_rng(2)
+    boot_bias = np.array([rng.choice(e, e.size).mean() for _ in range(5000)])
+    lo, hi = np.percentile(boot_bias, [5, 95])
+    to_co2 = lambda agb_mg_ha: agb_mg_ha * area * CARBON_FRACTION * CO2_PER_C / 1e6     # Mt CO2
+    naive = np.sqrt(np.mean(e ** 2)) / np.sqrt(area)                                   # pretends pixels are independent
+    rows = [
+        ("mapped mangrove area (ha)", area, None, None),
+        ("mean predicted AGB (Mg/ha)", mean, mean - hi, mean - lo),
+        ("above ground carbon stock (Mt CO2e)", to_co2(mean), to_co2(mean - hi), to_co2(mean - lo)),
+        ("same, if pixel errors were independent (wrong)", to_co2(mean), to_co2(mean - 1.645 * naive), to_co2(mean + 1.645 * naive)),
+    ]
+    return pd.DataFrame(rows, columns=["quantity", "estimate", "90% low", "90% high"])
+
+
 def products():
     return [
         {"kind": "chart", "name": "ch20-agb-by-category", "data": loo,
@@ -177,6 +226,12 @@ def products():
                     "Mangrove Watch 2020. Given the scores above, this map shows what the "
                     "model believes, not what is there. It is here so you can see how "
                     "convincing an unvalidated map looks."},
+        {"kind": "table", "name": "ch20-range", "data": loo, "transform": range_frame,
+         "floatfmt": ("", ".0f", ".0f", ".0f", ".0f", ".0f"),
+         "caption": "The spread of field AGB against the spread of each model's leave-one-out predictions (Mg/ha)."},
+        {"kind": "table", "name": "ch20-carbon", "data": loo, "transform": carbon_frame,
+         "floatfmt": ("", ".2f", ".2f", ".2f"),
+         "caption": "Above ground carbon of the mapped mangrove (map window, GMW 2020), from the embedding forest, with a 90 % interval from the bootstrapped bias of the 45 plots, and the falsely narrow interval that assumes independent pixel errors."},
     ]
 
 

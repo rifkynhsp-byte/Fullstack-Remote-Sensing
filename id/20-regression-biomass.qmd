@@ -1,24 +1,48 @@
-# Ansambel dan Prediksi Kontinu {#sec-regression}
+# Ensemble dan Prediksi Kontinu {#sec-regression}
 
 ::: {.chapter-goal}
-#### Dalam bab ini
-Anda akan beralih dari mengklasifikasikan kategori ke memprediksi besaran: tinggi tajuk, biomassa dan stok karbon, dikalibrasi terhadap data rujukan yang jarang.
+#### Di bab ini
+Anda akan beralih dari mengklasifikasi kategori ke memprediksi besaran: biomassa di atas permukaan tanah dan karbon, dikalibrasi dengan plot lapangan. Pada 45 plot mangrove di Papua Barat, tiga model diuji secara jujur, plot demi plot, dan sebagian besar gagal; bab ini menunjukkan mengapa, apa yang dilakukan random forest terhadap nilai ekstrem, dan bagaimana memberi selang galat yang jujur pada total karbon.
 :::
 
-::: {.callout-note}
-## Sedang dikerjakan
-Rencana bagian di bawah ini sudah final. Naskah dan listing beranotasi ditulis
-bagian demi bagian; lihat prakata untuk urutannya.
+## Ketika kategori adalah keluaran yang salah
+
+Pengklasifikasi menjawab "yang mana": hutan atau bukan, mangrove atau tambak. Proyek karbon, inventarisasi kayu, atau laporan restorasi butuh "berapa banyak": ton biomassa per hektare, meter tajuk, ton karbon. Hutan/bukan hutan membuang persis informasi yang dibutuhkan laporan, jadi model harus mengeluarkan angka. Itulah **regresi**, dan tiga hal berubah bersamanya: metriknya (RMSE, bias, dan R², bukan akurasi dan kappa), bahaya memprediksi di luar rentang data latih, dan keharusan membawa ketidakpastian melalui setiap konversi hingga angka akhir.
+
+## Uji nyata pertama: 45 plot lapangan di Papua Barat
+
+Sebelum teori, satu hasil dulu. Tim lapangan CIFOR mengukur biomassa di atas permukaan tanah pada 45 plot mangrove di sekitar Teluk Bintuni, yang dipublikasikan sebagai data terbuka [@murdiyarso2019swampbintuni], mulai dari tambak, hutan yang tumbuh kembali selama 5 sampai 25 tahun, sampai tegakan yang belum terganggu. Skrip ini mencoba tiga cara memprediksi angka tersebut dari citra satelit, lalu menguji masing masing secara jujur dengan mengeluarkan satu plot setiap kali. Hasilnya membuat kita rendah hati, dan alasannya justru lebih berguna daripada skor yang bagus.
+
+{{< include _snippets/ch20_mangrove_biomass.qmd >}}
+
+## Apa yang ditunjukkan uji ini
+
+**Tiga model, sedikit kemampuan.** AGB lapangan di plot-plot ini punya simpangan baku sekitar 48 Mg/ha, jadi model yang selalu menebak rata-rata akan punya RMSE dekat 48. Garis lurus pada tinggi tajuk mendapat 48,1 dan random forest pada tumpukan sensor 50,4: tidak lebih baik dari rata-rata. Hanya random forest pada embedding satelit (Bab [-@sec-embeddings]) yang menjelaskan sesuatu: RMSE 42,8 dan R² 0,18. Selang bootstrap RMSE saling tumpang tindih, jadi keunggulan itu pun belum pasti dengan 45 plot.
+
+**Diagnosisnya ada di data, bukan algoritma.** Tabel kategori menunjukkan sebabnya. Peta tinggi tajuk 2020 menempatkan plot tambak di sekitar 22 m dan tegakan muda 5 tahun di 27 m, lebih tinggi dari mangrove utuh (18 m). Nilai lapangan menggambarkan hutan saat plot diukur; satelit menggambarkan 2020. Bila tambak sudah tumbuh kembali, atau koordinat plot meleset satu-dua piksel, lapangan dan satelit menggambarkan tempat yang berbeda. Tidak ada algoritma yang bisa mempelajari hubungan yang tidak ada di masukannya. Perbaikannya adalah menyamakan tanggal dan posisi, itulah sebabnya Bab [-@sec-height-scaling] menekankan data rujukan yang sejajar lokasi dan tahunnya.
+
+## Apa yang dilakukan random forest terhadap nilai ekstrem
+
+Random forest regresi memprediksi rata-rata nilai latih yang jatuh di daun yang sama. Karena itu ia tidak bisa memprediksi di atas nilai latih tertinggi atau di bawah yang terendah, dan bila prediktornya lemah ia menarik setiap prediksi ke tengah. Tabel rentang menunjukkannya dengan jelas. AGB lapangan berkisar 6 sampai 179 Mg/ha dengan simpangan baku 48. Prediksi leave-one-out model terbaik hanya berkisar 45 sampai 109, dengan simpangan baku 19; garis lurus lebih tertekan lagi, 55 sampai 101.
+
+Akibatnya bagi peta bersifat sistematis: tegakan paling rusak ditaksir terlalu tinggi dan yang paling kaya ditaksir terlalu rendah, dan total satu bentang bisa tetap tampak benar sementara setiap hektarenya salah. Dua obat yang umum. Gradient boosting dan model linear bisa sedikit mengekstrapolasi, dengan harga galat yang lebih liar. Yang lebih berguna dalam praktik adalah memastikan plot latih mencakup seluruh rentang tempat peta akan diterapkan, yang merupakan masalah pengambilan sampel (Bab [-@sec-sampling]), bukan masalah pemodelan.
+
+## Ensemble: mengapa lebih banyak model membantu, dan kapan tidak
+
+Bagging (banyak pohon pada sampel bootstrap, dirata-ratakan, seperti random forest) mengurangi variansi. Boosting (pohon ditambahkan satu per satu, masing-masing menangkap yang terlewat oleh sebelumnya) mengurangi bias. Stacking (model kedua yang belajar menggabungkan beberapa model tingkat pertama) bisa menggabungkan keduanya, dan Bab [-@sec-ooh] memakainya untuk hitungan pejalan kaki. Ketiganya mengandaikan prediktor membawa sinyal. Dengan 45 plot yang tanggal lapangan dan satelitnya mungkin tidak cocok, menggabungkan model lemah menghasilkan rata-rata yang yakin dari model-model lemah: ensemble tidak bisa memulihkan informasi yang tidak ada di masukan.
+
+## Dari biomassa ke karbon, dengan selang galat yang jujur
+
+Angka karbon dibangun dari rantai konversi: biomassa di atas permukaan ke karbon (dikali 0,47, fraksi karbon bawaan IPCC untuk biomassa kering), karbon ke karbon dioksida (dikali 44/12). Setiap langkahnya sederhana. Bagian yang sulit adalah ketidakpastiannya.
+
+Random forest embedding, diterapkan pada 9.605 ha mangrove yang dipetakan Global Mangrove Watch di jendela peta, memprediksi rata-rata 93 Mg/ha, atau 1,54 juta ton CO₂ ekuivalen di atas permukaan. Seberapa yakin angka itu?
+
+Jawaban yang menggoda menganggap galat setiap piksel 30 m saling bebas. Maka galat rata-rata menyusut dengan akar jumlah piksel, dan selangnya 1,53 sampai 1,55 Mt: hampir tanpa ketidakpastian. Jawaban itu salah. Model yang menaksir terlalu tinggi satu plot tegakan muda menaksir terlalu tinggi setiap piksel tegakan muda; galatnya bersama, bukan saling bebas. Ketidakpastian sebuah total ditentukan oleh **galat sistematis**, yaitu bias, yang hanya bisa diperkirakan kasar dari 45 plot. Bootstrap residual leave-one-out mereka memberi selang 90 % untuk bias, dan menerapkannya ke seluruh wilayah memberi 1,35 sampai 1,70 Mt, lebih dari sepuluh kali lebih lebar. Itu pun masih optimistis: mengandaikan 45 plot mewakili mangrove di seluruh jendela, yang sudah dipertanyakan oleh tabel kategori.
+
+::: {.callout-important}
+## Integritas ilmiah: angka karbon tanpa selang bukanlah hasil
+Laporkan setiap total karbon bersama selangnya, sebutkan galat mana yang dicakup selang itu (di sini: galat sistematis model yang diperkirakan dari 45 plot) dan mana yang tidak (galat lokasi plot, fraksi karbon, biomassa di bawah permukaan, ketidakcocokan tanggal). Selang yang berasal dari memperlakukan jutaan piksel sebagai pengukuran yang saling bebas bukanlah kehati-hatian; itu kesalahan hitung yang membuat model lemah tampak presisi.
 :::
-
-## Rencana bagian
-
-1. **Klasifikasi versus regresi**: kapan kategori adalah keluaran yang salah
-2. **Regresi random forest, gradient boosting, dan batas ekstrapolasinya**
-3. **Mengalibrasi LiDAR GEDI yang jarang terhadap citra liputan penuh**
-4. **Ansambel bertumpuk**: bagging, boosting dan komponen jaringan saraf
-5. **Dari tinggi tajuk ke biomassa ke karbon, dan asumsi alometrik di antaranya**
-6. **Perambatan ketidakpastian, dan mengapa angka karbon tanpa galat bukan hasil**
 
 <script type="application/json" class="lms-quiz">
 {
@@ -61,12 +85,9 @@ bagian demi bagian; lihat prakata untuk urutannya.
 }
 </script>
 
-## Uji nyata pertama: 45 plot lapangan di Papua Barat
-
-Sebelum teori, satu hasil dulu. Tim lapangan CIFOR mengukur biomassa di atas permukaan tanah pada 45 plot mangrove di sekitar Teluk Bintuni, yang dipublikasikan sebagai data terbuka [@murdiyarso2019swampbintuni], mulai dari tambak, hutan yang tumbuh kembali selama 5 sampai 25 tahun, sampai tegakan yang belum terganggu. Skrip ini mencoba tiga cara memprediksi angka tersebut dari citra satelit, lalu menguji masing masing secara jujur dengan mengeluarkan satu plot setiap kali. Hasilnya membuat kita rendah hati, dan alasannya justru lebih berguna daripada skor yang bagus.
-
-{{< include _snippets/ch20_mangrove_biomass.qmd >}}
-
 ## Latihan {.unnumbered}
 
-Ditulis bersamaan dengan naskah babnya.
+1. Keluarkan dua plot tambak dan plot tegakan muda 5 tahun, yang tinggi tajuknya bertentangan dengan biomassa lapangannya, lalu ulangi uji leave-one-out. Seberapa besar setiap model membaik, dan apakah perbaikan itu jujur?
+2. Ganti random forest dengan gradient boosting (`ee.Classifier.smileGradientTreeBoost`) pada embedding. Apakah rentang prediksi melebar?
+3. Tambahkan biomassa di bawah permukaan dengan rasio akar-pucuk mangrove dari IPCC 2013 Wetlands Supplement, lalu ulangi tabel karbon. Ketidakpastian mana yang kini dominan?
+4. Hitung selang karbon untuk random forest tumpukan sensor, bukan embedding. Mengapa selang yang lebih lebar untuk model yang lebih buruk adalah hasil yang jujur?

@@ -2,27 +2,47 @@
 
 ::: {.chapter-goal}
 #### In this chapter
-You will move from classifying categories to predicting quantities: canopy height, biomass and carbon stock, calibrated against sparse reference data.
+You will move from classifying categories to predicting quantities: above ground biomass and carbon, calibrated against field plots. On 45 mangrove plots in West Papua, three models are tested honestly, plot by plot, and mostly fail; the chapter shows why, what random forests do to extreme values, and how to put an honest error bar on a carbon total.
 :::
 
-::: {.callout-note}
-## In progress
-The section plan below is settled. Prose and annotated listings are being
-written part by part; check the roadmap in the preface for the current order.
+## When a category is the wrong output
+
+A classifier answers "which": forest or not, mangrove or pond. A carbon project, a timber inventory or a restoration report needs "how much": tonnes of biomass per hectare, metres of canopy, tonnes of carbon. Forest/non-forest discards exactly the information the report needs, so the model has to output a number. That is **regression**, and three things change with it: the metrics (RMSE, bias and R² instead of accuracy and kappa), the danger of predicting outside the range of the training data, and the need to carry uncertainty through every conversion to the final number.
+
+## A first real test: 45 field plots in West Papua
+
+Before the theory, a result. CIFOR field teams measured above ground biomass in 45 mangrove plots around Bintuni Bay, published as open data [@murdiyarso2019swampbintuni], from fish ponds through forest regrowing for 5 to 25 years to undisturbed stands. The script tries three ways to predict those numbers from space and tests each one honestly, by leaving one plot out at a time. The outcome is humbling, and the reason is more useful than a good score would have been.
+
+{{< include _snippets/ch20_mangrove_biomass.qmd >}}
+
+## What the test shows
+
+**Three models, little skill.** Field AGB in these plots has a standard deviation of about 48 Mg/ha, so a model that always predicted the mean would have an RMSE near 48. The straight line on canopy height scores 48.1 and the random forest on the sensor stack 50.4: no better than the mean. Only the random forest on satellite embeddings (Chapter [-@sec-embeddings]) explains anything: RMSE 42.8 and R² 0.18. The bootstrap intervals on RMSE overlap, so even that advantage is uncertain with 45 plots.
+
+**The diagnosis is the data, not the algorithm.** The category table shows why. The 2020 canopy height map puts fish-pond plots at about 22 m and five-year regrowth at 27 m, taller than undisturbed mangrove (18 m). The field values describe the forest when the plots were measured; the satellites describe 2020. If ponds have since regrown, or a plot's coordinates are off by a pixel or two, the field and the satellites are describing different places. No algorithm can learn a relationship that the inputs do not contain. The fix is matching dates and positions, which is why Chapter [-@sec-height-scaling] insists on co-located, same-year reference data.
+
+## What random forests do to extremes
+
+A regression forest predicts the average of the training values that end up in the same leaves. It therefore cannot predict anything above the highest or below the lowest value it was trained on, and when the predictors are weak it pulls every prediction towards the middle. The range table shows this clearly. Field AGB runs from 6 to 179 Mg/ha with a standard deviation of 48. The leave-one-out predictions of the best model run only from 45 to 109, with a standard deviation of 19; the straight line is squeezed even harder, 55 to 101.
+
+The consequence for a map is systematic: the most degraded stands are overestimated and the richest are underestimated, and a total over a landscape can still come out about right while every individual hectare is wrong. Two remedies are common. Gradient boosting and linear models can extrapolate a little, at the price of wilder errors. More useful in practice is to make sure the training plots span the whole range the map will be applied to, which is a sampling problem (Chapter [-@sec-sampling]), not a modelling one.
+
+## Ensembles: why more models help, and when they do not
+
+Bagging (many trees on bootstrap samples, averaged, as in a random forest) reduces variance. Boosting (trees added one at a time, each fitting what the previous ones missed) reduces bias. Stacking (a second model that learns how to combine several first-level models) can combine both, and Chapter [-@sec-ooh] uses it for pedestrian counts. All three assume the predictors carry the signal. With 45 plots whose field and satellite dates may not match, combining weak models gives a confident average of weak models: an ensemble cannot recover information that is not in the inputs.
+
+## From biomass to carbon, with an honest error bar
+
+A carbon figure is built from a chain of conversions: above ground biomass to carbon (multiplied by 0.47, the IPCC default carbon fraction of dry biomass), carbon to carbon dioxide (multiplied by 44/12). Each step is simple. The difficult part is the uncertainty.
+
+The embedding forest, applied to the 9,605 ha of mangrove that Global Mangrove Watch maps in the map window, predicts a mean of 93 Mg/ha, or 1.54 million tonnes of CO₂ equivalent above ground. How sure is that number?
+
+The tempting answer treats each 30 m pixel's error as independent. Then the error of the mean shrinks with the square root of the number of pixels, and the interval is 1.53 to 1.55 Mt: almost no uncertainty at all. That answer is wrong. A model that overestimates one regrowth plot overestimates every regrowth pixel; the errors are shared, not independent. The uncertainty of a total is set by the **systematic error**, the bias, which the 45 plots can only estimate roughly. Bootstrapping their leave-one-out residuals gives a 90 % interval on the bias, and applying it to the whole area gives 1.35 to 1.70 Mt, more than ten times wider. Even that is optimistic: it assumes the 45 plots represent the mangrove of the whole window, which the category table already questions.
+
+::: {.callout-important}
+## Scientific integrity: a carbon number without an interval is not a result
+Report every carbon total with its interval, say which errors the interval includes (here: the model's systematic error estimated from 45 plots) and which it does not (plot location error, the carbon fraction, below ground biomass, the mismatch in dates). An interval that comes from treating millions of pixels as independent measurements is not caution; it is a calculation error that makes a weak model look precise.
 :::
-
-## Planned sections
-
-1. **Classification versus regression**: when a category is the wrong output
-2. **Random forest regression, gradient boosting and their extrapolation limits**
-3. **Calibrating sparse LiDAR against wall to wall imagery**
-4. **Stacked ensembles**: bagging, boosting and neural components combined
-5. **From canopy height to above ground biomass to carbon, and the allometric assumptions in between**
-6. **Uncertainty propagation, and why a carbon figure without an error bar is not a result**
-
-## Source material
-
-Your AI model comparison notes and the carbon farming explorer methodology.
 
 <script type="application/json" class="lms-quiz">
 {
@@ -65,12 +85,9 @@ Your AI model comparison notes and the carbon farming explorer methodology.
 }
 </script>
 
-## A first real test: 45 field plots in West Papua
-
-Before the theory, a result. CIFOR field teams measured above ground biomass in 45 mangrove plots around Bintuni Bay, published as open data [@murdiyarso2019swampbintuni], from fish ponds through forest regrowing for 5 to 25 years to undisturbed stands. The script tries three ways to predict those numbers from space and tests each one honestly, by leaving one plot out at a time. The outcome is humbling, and the reason is more useful than a good score would have been.
-
-{{< include _snippets/ch20_mangrove_biomass.qmd >}}
-
 ## Exercises {.unnumbered}
 
-To be written alongside the chapter.
+1. Drop the two fish-pond plots and the 5-year regrowth plots, whose canopy heights contradict their field biomass, and rerun the leave-one-out test. How much does each model improve, and is that improvement honest?
+2. Replace the random forest with gradient boosting (`ee.Classifier.smileGradientTreeBoost`) on the embeddings. Does the predicted range widen?
+3. Add below ground biomass with the mangrove root-to-shoot ratio of the IPCC 2013 Wetlands Supplement, and redo the carbon table. Which uncertainty now dominates?
+4. Compute the carbon interval for the sensor-stack forest instead of the embedding forest. Why is a wider interval for a worse model the honest outcome?

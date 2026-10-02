@@ -37,5 +37,17 @@
   "kind": "map",
   "caption": "The stack model trained on all plots, applied inside Global Mangrove Watch 2020. Given the scores above, this map shows what the model believes, not what is there. It is here so you can see how convincing an unvalidated map looks.",
   "image": "images/real/ch20-agb-map.jpg"
+ },
+ {
+  "name": "ch20-range",
+  "kind": "table",
+  "caption": "The spread of field AGB against the spread of each model's leave-one-out predictions (Mg/ha).",
+  "markdown": "| series                      |   min |   p10 |   p90 |   max |   sd |\n|:----------------------------|------:|------:|------:|------:|-----:|\n| field AGB                   |     6 |    15 |   134 |   179 |   48 |\n| line on canopy height       |    55 |    66 |    94 |   101 |   10 |\n| random forest, sensor stack |    38 |    55 |    94 |   111 |   16 |\n| random forest, embeddings   |    45 |    51 |   104 |   109 |   19 |"
+ },
+ {
+  "name": "ch20-carbon",
+  "kind": "table",
+  "caption": "Above ground carbon of the mapped mangrove (map window, GMW 2020), from the embedding forest, with a 90 % interval from the bootstrapped bias of the 45 plots, and the falsely narrow interval that assumes independent pixel errors.",
+  "markdown": "| quantity                                       |   estimate |   90% low |   90% high |\n|:-----------------------------------------------|-----------:|----------:|-----------:|\n| mapped mangrove area (ha)                      |    9605.23 |    nan    |     nan    |\n| mean predicted AGB (Mg/ha)                     |      93.21 |     81.66 |     102.68 |\n| above ground carbon stock (Mt CO2e)            |       1.54 |      1.35 |       1.70 |\n| same, if pixel errors were independent (wrong) |       1.54 |      1.53 |       1.55 |"
  }
 ]
