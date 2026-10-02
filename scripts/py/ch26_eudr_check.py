@@ -90,6 +90,86 @@ def plot_loss_by_year(df):
     return fig
 
 
+# PART 4. Second opinions: a second loss map, and what the land was at the cut-off ------------------
+# JRC Tropical Moist Forest (TMF) annual change classes: 1 undisturbed forest, 2 degraded forest,
+# 3 deforested land, 4 forest regrowth, 5 water, 6 other land.
+tmf = ee.ImageCollection("projects/JRC/TMF/v1_2024/AnnualChanges").mosaic()
+tmf_forest2020 = tmf.select("Dec2020").lte(2)
+tmf_loss_after = tmf_forest2020.And(tmf.select("Dec2024").eq(3)).And(forest2020).rename("tmf_loss_after_2020")
+
+# Forest Data Partnership commodity models: probability that a 10 m pixel is a rubber or an oil
+# palm plantation, in 2020 (the cut-off year).
+def fdp(crop, year=2020):
+    return (ee.ImageCollection(f"projects/forestdatapartnership/assets/{crop}/model_2026a")
+            .filterDate(f"{year}-01-01", f"{year + 1}-01-01").mosaic().select("probability"))
+
+rubber2020, palm2020 = fdp("rubber"), fdp("palm")
+# What each flagged pixel was at the cut-off: 1 rubber, 2 oil palm, 3 neither (natural forest or unknown)
+was = (ee.Image(3).where(palm2020.gt(0.5), 2).where(rubber2020.gt(0.5), 1)
+       .updateMask(loss_after).rename("was"))
+WAS = {1: "rubber plantation in 2020", 2: "oil palm plantation in 2020", 3: "neither: natural forest or unknown"}
+
+
+def agreement_table():
+    """Plot by plot: does TMF agree with Hansen on deforestation after the cut-off?"""
+    import pandas as pd
+    fc = (ee.Image.cat([loss_after, tmf_loss_after]).multiply(ee.Image.pixelArea()).divide(1e4)
+          .reduceRegions(collection=plots, reducer=ee.Reducer.sum(), scale=30, tileScale=4))
+    d = pd.DataFrame([f["properties"] for f in fc.getInfo()["features"]])
+    h, t = d.loss_after_2020 > 0.5, d.tmf_loss_after_2020 > 0.5
+    rows = [("fail on both", (h & t).sum()), ("fail on Hansen only", (h & ~t).sum()),
+            ("fail on TMF only", (~h & t).sum()), ("pass on both", (~h & ~t).sum())]
+    out = pd.DataFrame(rows, columns=["outcome", "plots"])
+    out["share (%)"] = 100 * out.plots / len(d)
+    return out
+
+
+def what_was_lost():
+    """Hansen loss after 2020 on JRC 2020 forest, by year and by what FDP saw there in 2020."""
+    import pandas as pd
+    code = was.multiply(100).add(hansen.select("lossyear"))
+    r = (ee.Image.pixelArea().divide(1e4).addBands(code)
+         .reduceRegion(ee.Reducer.sum().group(1, "code"), area, 10, maxPixels=1e10, tileScale=4).getInfo())
+    d = pd.DataFrame([{"was": WAS[int(g["code"]) // 100], "year": 2000 + int(g["code"]) % 100, "ha": g["sum"]}
+                      for g in r["groups"]])
+    return d.pivot_table(index="year", columns="was", values="ha", aggfunc="sum").fillna(0).reset_index()
+
+
+def plot_what_was_lost(d):
+    fig, ax = plt.subplots(figsize=(7.5, 3.4))
+    bottom = 0
+    for col, c in [(WAS[1], "#8c6d31"), (WAS[2], "#e6ab02"), (WAS[3], "#1b7837")]:
+        if col in d:
+            ax.bar(d.year.astype(int), d[col], bottom=bottom, color=c, label=col)
+            bottom = bottom + d[col]
+    tot = d.drop(columns="year").sum()
+    share = 100 * (tot.get(WAS[1], 0) + tot.get(WAS[2], 0)) / tot.sum()
+    ax.set_xticks(d.year.astype(int))
+    ax.set_ylabel("flagged loss (ha)"); ax.legend(frameon=False, fontsize=8)
+    ax.set_title(f"{share:.0f} % of the flagged loss was on land a commodity model already called plantation in 2020",
+                 loc="left", fontsize=9.5, fontweight="bold")
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    return fig
+
+
+def patch_sizes():
+    """Flagged loss by the size of the patch it belongs to: smallholder clearings or company blocks?"""
+    import pandas as pd
+    n = loss_after.selfMask().connectedPixelCount(1024, True)          # 30 m pixels per patch, 8-connected
+    size_ha = n.multiply(0.09)
+    bins = [(0, 0.5), (0.5, 2), (2, 5), (5, 20), (20, 1e9)]
+    cls = ee.Image(0)
+    for i, (lo, hi) in enumerate(bins):
+        cls = cls.where(size_ha.gte(lo).And(size_ha.lt(hi)), i + 1)
+    r = (ee.Image.pixelArea().divide(1e4).addBands(cls.updateMask(loss_after).rename("c"))
+         .reduceRegion(ee.Reducer.sum().group(1, "c"), area, 30, maxPixels=1e10).getInfo())
+    lab = {i + 1: (f"{lo:g}-{hi:g} ha" if hi < 1e9 else f"> {lo:g} ha") for i, (lo, hi) in enumerate(bins)}
+    d = pd.DataFrame([{"patch size": lab[int(g["c"])], "flagged loss (ha)": g["sum"]} for g in r["groups"] if int(g["c"]) > 0])
+    d["share (%)"] = 100 * d["flagged loss (ha)"] / d["flagged loss (ha)"].sum()
+    return d
+
+
 def products():
     src = "JRC GFC2020 v4, Hansen GFC v1.12 (2024). GEE."
     return [
@@ -107,7 +187,15 @@ def products():
         {"kind": "table", "name": "ch26-status", "data": screened.select(
             ["status", "forest2020_ha", "loss_after_2020_ha"], retainGeometry=False),
          "transform": summary, "floatfmt": ("", ".0f", ".0f", ".0f"),
-         "caption": ("Plots per screening status. More than half fail, and that is the real lesson: in Jambi's smallholder rubber landscape the 2020 forest map counts old rubber agroforest as forest, and replanting then reads as deforestation. A failed screen is a reason to look closer (imagery, farmer records, planting dates), not a verdict.")},
+         "caption": ("Plots per screening status. More than half fail. Whether that is forest conversion or replanted rubber agroforest the global maps cannot tell; the sections below test it. A failed screen is a reason to look closer (imagery, farmer records, planting dates), not a verdict.")},
+        {"kind": "table", "name": "ch26-agreement", "data": agreement_table, "floatfmt": ("", ".0f", ".0f"),
+         "caption": "Hansen and JRC TMF on the same 1 km plots: deforestation after 2020 on JRC 2020 forest, more than 0.5 ha."},
+        {"kind": "chart", "name": "ch26-what-was-lost", "data": what_was_lost, "plot": plot_what_was_lost, "live": False,
+         "caption": "Every flagged hectare, by loss year and by what the Forest Data Partnership models saw there in 2020."},
+        {"kind": "table", "name": "ch26-patches", "data": patch_sizes, "floatfmt": ("", ".0f", ".0f"),
+         "caption": "Flagged loss by the size of the clearing it belongs to (connected 30 m pixels)."},
+        {"kind": "table", "name": "ch26-what-was-lost-table", "data": what_was_lost, "floatfmt": ".0f",
+         "caption": "The same numbers as a table (ha)."},
     ]
 
 

@@ -22,7 +22,31 @@
  {
   "name": "ch26-status",
   "kind": "table",
-  "caption": "Plots per screening status. More than half fail, and that is the real lesson: in Jambi's smallholder rubber landscape the 2020 forest map counts old rubber agroforest as forest, and replanting then reads as deforestation. A failed screen is a reason to look closer (imagery, farmer records, planting dates), not a verdict.",
+  "caption": "Plots per screening status. More than half fail. Whether that is forest conversion or replanted rubber agroforest the global maps cannot tell; the sections below test it. A failed screen is a reason to look closer (imagery, farmer records, planting dates), not a verdict.",
   "markdown": "| status                             |   plots |   forest2020_ha |   loss_after_2020_ha |\n|:-----------------------------------|--------:|----------------:|---------------------:|\n| deforestation after cut-off        |     697 |           22109 |                 6761 |\n| forest standing: check degradation |      40 |            1212 |                    5 |\n| no forest at cut-off               |     453 |             438 |                   17 |"
+ },
+ {
+  "name": "ch26-agreement",
+  "kind": "table",
+  "caption": "Hansen and JRC TMF on the same 1 km plots: deforestation after 2020 on JRC 2020 forest, more than 0.5 ha.",
+  "markdown": "| outcome             |   plots |   share (%) |\n|:--------------------|--------:|------------:|\n| fail on both        |     626 |          53 |\n| fail on Hansen only |      71 |           6 |\n| fail on TMF only    |      27 |           2 |\n| pass on both        |     466 |          39 |"
+ },
+ {
+  "name": "ch26-what-was-lost",
+  "kind": "chart",
+  "caption": "Every flagged hectare, by loss year and by what the Forest Data Partnership models saw there in 2020.",
+  "image": "images/real/ch26-what-was-lost.png"
+ },
+ {
+  "name": "ch26-patches",
+  "kind": "table",
+  "caption": "Flagged loss by the size of the clearing it belongs to (connected 30 m pixels).",
+  "markdown": "| patch size   |   flagged loss (ha) |   share (%) |\n|:-------------|--------------------:|------------:|\n| 0-0.5 ha     |                 324 |           5 |\n| 0.5-2 ha     |                 812 |          12 |\n| 2-5 ha       |                 942 |          14 |\n| 5-20 ha      |                1883 |          28 |\n| > 20 ha      |                2722 |          41 |"
+ },
+ {
+  "name": "ch26-what-was-lost-table",
+  "kind": "table",
+  "caption": "The same numbers as a table (ha).",
+  "markdown": "|   year |   neither: natural forest or unknown |   oil palm plantation in 2020 |   rubber plantation in 2020 |\n|-------:|-------------------------------------:|------------------------------:|----------------------------:|\n|   2021 |                                 1365 |                            20 |                           3 |\n|   2022 |                                 1383 |                             8 |                           1 |\n|   2023 |                                 1500 |                            10 |                           2 |\n|   2024 |                                 2005 |                             9 |                           2 |"
  }
 ]

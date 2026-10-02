@@ -22,11 +22,33 @@ This is the screening logic of the author's traceability work for rubber and pal
 
 ::: {.callout-important}
 ## Scientific integrity: a global map is not a verdict on a farm
-More than half of the grid fails the screen. Most of it is not new deforestation. Jambi is a landscape of old rubber gardens that look like forest from orbit. A global map made for the whole world cannot always tell them apart from natural forest. When a farmer replants old rubber, the loss map records it. A buyer who rejects every flagged plot punishes exactly the smallholders the regulation says it wants to protect. Use the screen to decide where to look. Then look: at very high resolution imagery, at planting records, and at the plot on the ground.
+More than half of the grid fails the screen. Some of that may be real forest conversion and some may be old rubber gardens, which look like forest from orbit and read as "loss" when a farmer clears and replants them. The global maps cannot separate the two, and the sections below show that a second loss map and a commodity model do not settle it either. A buyer who rejects every flagged plot risks punishing exactly the smallholders the regulation says it wants to protect; a buyer who waves them all through risks buying deforestation. Use the screen to decide where to look. Then look: at very high resolution imagery, at planting records, and at the plot on the ground.
 :::
+
+## Second opinions
+
+A single global map is one model's opinion. Two more opinions are free in Earth Engine, and asking them is the first thing an auditor will do.
+
+### A second loss map: JRC Tropical Moist Forest
+
+The JRC Tropical Moist Forest (TMF) dataset is built independently of Hansen, from the full Landsat archive, and labels every year of every pixel as undisturbed forest, degraded forest, deforested land, regrowth, water or other land. Applying the same rule with TMF (forest in December 2020, deforested land in December 2024) gives a second verdict for each plot. The two maps agree on 92 % of the plots: 53 % fail on both and 39 % pass on both. 71 plots (6 %) fail only on Hansen, and 27 (2 %) only on TMF. Agreement between two independent maps raises confidence that *something* happened on a plot, but not *what*: both maps see a canopy disappear, neither knows whether it was forest or a tree crop.
+
+### What was the land at the cut-off? Commodity models
+
+The Forest Data Partnership publishes yearly probability maps, at 10 m, of whether a pixel is a rubber or an oil palm plantation, made precisely for EUDR due diligence. If the flagged loss were mostly replanted rubber, the 2020 rubber map should light up under it. It does not: only **1 % of the flagged hectares** had a rubber or oil palm probability above 0.5 in 2020; for the median flagged pixel, the 2020 rubber probability is below 0.001.
+
+That is a genuine result, and it cuts against the comfortable explanation. It does not prove the loss is natural forest, for two reasons. First, the commodity models are trained mostly on monoculture plantations, and old smallholder "jungle rubber", rubber trees growing among secondary forest, is exactly what they find hardest to recognise. Second, the JRC 2020 forest map that defines "forest at the cut-off" faces the same difficulty from the other side. Two models that share a blind spot cannot correct each other.
+
+### How big are the clearings?
+
+The patch-size table groups the flagged loss into connected clearings. 31 % of the flagged hectares are in clearings under 5 ha, the scale of a smallholder's garden, and 41 % in patches over 20 ha. The large patches are a mixture of genuinely large clearings and many adjacent small ones that touch at 30 m resolution; the Sentinel-2 imagery of 2024 shows mostly a speckle of small clearings among the river meanders of the Batang Hari, not the rectangular blocks of an industrial concession.
+
+### What the evidence supports
+
+Put together: a lot of tree cover was cleared in this landscape after 2020 (about 6,800 ha flagged in the box, on two independent maps), mostly at small scale, and the available commodity model does not call it plantation. What it was before clearing (secondary forest, jungle rubber, or forest) cannot be decided from global layers. That is the answer a due-diligence report should give, with the list of plots, and it is why the third step, field and very high resolution verification, is not optional.
 
 ## Exercises {.unnumbered}
 
 1. Set the tolerance from 0.5 ha to 0. How many plots change status? Is the extra loss real, or pixels on the plot edge?
-2. Replace Hansen with the JRC Tropical Moist Forest dataset. Which plots change status, and which dataset would you defend to an auditor?
+2. List the 71 plots that fail on Hansen only. Look at three of them in the Sentinel-2 archive. What does Hansen see that TMF does not?
 3. Pick three failed plots and look at them in the Sentinel-2 archive for 2019 and 2024. Which ones are forest conversion and which are replanting?

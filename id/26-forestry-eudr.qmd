@@ -22,11 +22,33 @@ Ini adalah logika penyaringan dari pekerjaan penulis dalam penelusuran rantai pa
 
 ::: {.callout-important}
 ## Integritas ilmiah: peta global bukan vonis untuk satu kebun
-Lebih dari separuh grid gagal disaring. Sebagian besar bukan deforestasi baru. Jambi adalah bentang kebun karet tua yang dari satelit terlihat seperti hutan. Peta global yang dibuat untuk seluruh dunia tidak selalu bisa membedakannya dari hutan alam. Ketika petani meremajakan karet tuanya, peta kehilangan tutupan akan mencatatnya. Pembeli yang menolak semua plot yang tertandai justru menghukum petani kecil yang katanya ingin dilindungi oleh regulasi ini. Gunakan penyaringan untuk memutuskan di mana harus mengecek. Lalu benar benar cek: lewat citra resolusi sangat tinggi, catatan tanam, dan kondisi plot di lapangan.
+Lebih dari separuh grid gagal disaring. Sebagian mungkin konversi hutan yang nyata dan sebagian mungkin kebun karet tua, yang dari satelit tampak seperti hutan dan terbaca sebagai "kehilangan" ketika petani membuka dan meremajakannya. Peta global tidak bisa memisahkan keduanya, dan bagian di bawah menunjukkan bahwa peta kehilangan kedua dan model komoditas juga tidak menyelesaikannya. Pembeli yang menolak semua plot yang tertandai berisiko menghukum petani kecil yang katanya ingin dilindungi regulasi ini; pembeli yang meloloskan semuanya berisiko membeli deforestasi. Gunakan penyaringan untuk memutuskan di mana harus mengecek. Lalu benar-benar cek: lewat citra resolusi sangat tinggi, catatan tanam, dan kondisi plot di lapangan.
 :::
+
+## Pendapat kedua
+
+Satu peta global adalah pendapat satu model. Dua pendapat lagi tersedia gratis di Earth Engine, dan menanyakannya adalah hal pertama yang akan dilakukan auditor.
+
+### Peta kehilangan kedua: JRC Tropical Moist Forest
+
+Dataset JRC Tropical Moist Forest (TMF) dibangun terpisah dari Hansen, dari seluruh arsip Landsat, dan memberi label setiap tahun setiap piksel sebagai hutan utuh, hutan terdegradasi, lahan terdeforestasi, hutan tumbuh kembali, air, atau lahan lain. Menerapkan aturan yang sama dengan TMF (hutan pada Desember 2020, lahan terdeforestasi pada Desember 2024) memberi vonis kedua untuk setiap plot. Kedua peta sepakat pada 92 % plot: 53 % gagal di keduanya dan 39 % lolos di keduanya. 71 plot (6 %) gagal hanya menurut Hansen, dan 27 (2 %) hanya menurut TMF. Kesepakatan dua peta independen menaikkan keyakinan bahwa *sesuatu* terjadi di sebuah plot, tetapi bukan *apa*: kedua peta melihat tajuk menghilang, tidak satu pun tahu apakah itu hutan atau tanaman pohon.
+
+### Lahan itu apa pada tanggal batas? Model komoditas
+
+Forest Data Partnership menerbitkan peta peluang tahunan beresolusi 10 m tentang apakah sebuah piksel adalah kebun karet atau sawit, dibuat khusus untuk uji tuntas EUDR. Bila kehilangan yang tertandai sebagian besar adalah peremajaan karet, peta karet 2020 seharusnya menyala di bawahnya. Ternyata tidak: hanya **1 % hektare yang tertandai** punya peluang karet atau sawit di atas 0,5 pada 2020; untuk piksel tertandai di nilai tengah, peluang karet 2020 di bawah 0,001.
+
+Itu hasil yang nyata, dan bertentangan dengan penjelasan yang nyaman. Namun hasil itu tidak membuktikan bahwa kehilangannya adalah hutan alam, karena dua alasan. Pertama, model komoditas sebagian besar dilatih pada kebun monokultur, dan "karet hutan" petani kecil yang tua, pohon karet yang tumbuh di antara hutan sekunder, justru yang paling sulit dikenalinya. Kedua, peta hutan JRC 2020 yang mendefinisikan "hutan pada tanggal batas" menghadapi kesulitan yang sama dari arah sebaliknya. Dua model dengan titik buta yang sama tidak bisa saling mengoreksi.
+
+### Seberapa besar bukaannya?
+
+Tabel ukuran petak mengelompokkan kehilangan yang tertandai menjadi bukaan yang bersambung. 31 % hektare tertandai berada di bukaan kurang dari 5 ha, skala kebun petani kecil, dan 41 % di petak lebih dari 20 ha. Petak besar itu campuran bukaan yang benar-benar besar dan banyak bukaan kecil bersebelahan yang tersambung pada resolusi 30 m; citra Sentinel-2 tahun 2024 sebagian besar menampilkan bintik-bintik bukaan kecil di antara kelokan Sungai Batang Hari, bukan blok persegi konsesi industri.
+
+### Apa yang didukung bukti
+
+Bila digabungkan: banyak tutupan pohon dibuka di bentang ini setelah 2020 (sekitar 6.800 ha tertandai di kotak ini, pada dua peta independen), sebagian besar dalam skala kecil, dan model komoditas yang tersedia tidak menyebutnya kebun. Apa lahan itu sebelum dibuka (hutan sekunder, karet hutan, atau hutan) tidak bisa diputuskan dari layer global. Itulah jawaban yang seharusnya diberikan laporan uji tuntas, bersama daftar plotnya, dan itulah mengapa langkah ketiga, verifikasi lapangan dan citra resolusi sangat tinggi, tidak boleh dilewati.
 
 ## Latihan {.unnumbered}
 
 1. Ubah toleransi dari 0,5 ha menjadi 0. Berapa plot yang berubah status? Apakah tambahan kehilangan itu nyata, atau hanya piksel di tepi plot?
-2. Ganti Hansen dengan dataset JRC Tropical Moist Forest. Plot mana yang berubah status, dan dataset mana yang akan Anda pertahankan di depan auditor?
+2. Buat daftar 71 plot yang gagal hanya menurut Hansen. Lihat tiga di antaranya di arsip Sentinel-2. Apa yang dilihat Hansen tetapi tidak dilihat TMF?
 3. Pilih tiga plot yang gagal dan periksa di arsip Sentinel-2 tahun 2019 dan 2024. Mana yang konversi hutan dan mana yang peremajaan kebun?
