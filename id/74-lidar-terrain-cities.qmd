@@ -1,0 +1,73 @@
+# LiDAR di Luar Hutan: Medan Longsor dan Kota dalam 3D {#sec-lidar-terrain-cities}
+
+::: {.chapter-goal}
+#### Di bab ini
+Sebagian besar LiDAR udara di dunia diterbangkan bukan untuk pohon, melainkan untuk medan dan kota: model banjir, inventaris longsor, register bangunan, peta surya. Anda akan memakai dua program LiDAR nasional yang gratis di Earth Engine. Di longsor Oso 2014 di Washington, Anda akan membandingkan model medan LiDAR 1 m dengan DEM global 30 m dan melihat apa yang bisa dan tidak bisa ditunjukkan masing-masing. Di pusat Rotterdam, Anda akan mengurangkan tanah dari permukaan untuk mengukur bangunan, pohon, atap yang cocok untuk panel surya, dan seberapa banyak kota berada di bawah permukaan laut. Python dan R berdampingan.
+:::
+
+## Permukaan, medan, dan selisih keduanya
+
+Pulsa LiDAR memantul dari benda pertama yang dikenainya dan, bila ada celah, dari benda di bawahnya, sampai ke tanah. Dua produk lahir dari situ:
+
+- **Model permukaan digital (DSM)** menyimpan pantulan tertinggi di setiap sel: atap, tajuk pohon, jembatan.
+- **Model medan digital (DTM)** hanya menyimpan pantulan yang diklasifikasikan sebagai tanah, diinterpolasi menjadi permukaan tanah gundul yang menerus.
+
+Selisihnya, **DSM ternormalisasi (nDSM = DSM − DTM)**, adalah tinggi segala sesuatu yang berdiri di atas tanah. Bab [-@sec-lidar-trees] dan [-@sec-height-scaling] memakainya untuk pohon; bab ini memakai DTM untuk bentuk lahan dan nDSM untuk bangunan.
+
+DEM global seperti SRTM (radar pita C, 2000) dan Copernicus GLO-30 (radar pita X, 2011-2015) adalah model permukaan 30 m: di atas hutan nilainya berada di antara tanah dan puncak tajuk, tergantung seberapa jauh radar menembus. Fakta tunggal itu menjelaskan sebagian besar isi bab ini.
+
+| Program | Cakupan | Di Earth Engine | Sel |
+|---|---|---|---|
+| USGS 3D Elevation Program (3DEP) | Amerika Serikat | `USGS/3DEP/1m` (DTM tanah gundul) | 1 m |
+| Actueel Hoogtebestand Nederland (AHN4) | Belanda | `AHN/AHN4` (DSM dan DTM) | 0,5 m |
+
+{{< include _snippets/ch74_lidar_terrain_cities.qmd >}}
+
+## Bagian 1. Oso: apa yang terlihat oleh model medan 1 m di sebuah longsor
+
+Pada 22 Maret 2014 sebuah lereng di atas Sungai North Fork Stillaguamish dekat Oso, Washington, runtuh dan meluncur melintasi lembah, mengubur permukiman Steelhead Haven dan jalan State Route 530. Petak LiDAR di Earth Engine diterbangkan pada 2016, dua tahun kemudian; SRTM berasal dari 2000 dan Copernicus dari sebelum longsor.
+
+### Hillshade
+
+Hillshade LiDAR menampilkan bentuk lahan yang dipetakan ahli geomorfologi: gawir mahkota yang melengkung, endapan bergelombang yang menyebar di dasar lembah, alur baru sungai, dan di sepanjang dinding lembah lainnya, gawir dan lidah longsor lama. Hutan yang menyembunyikannya dari citra optis hilang, karena DTM adalah tanah gundul. Hillshade SRTM pada skala yang sama hanya menampilkan lembah dan dataran tinggi, tidak lebih.
+
+### Profil melintang longsor
+
+Sebuah transek utara-selatan dari dataran tinggi, menuruni longsor, melintasi lembah, dan naik ke sisi seberang menunjukkan perbedaannya dalam angka:
+
+- Di **dataran tinggi berhutan** di utara longsor, SRTM berada sekitar 16 m dan Copernicus sekitar 25 m di atas tanah LiDAR. Selisih itu adalah hutan: DEM radar mengukur sebagian ke dalam tajuk, dan DEM Copernicus pita X, dengan panjang gelombang lebih pendek daripada SRTM pita C, mengukur lebih dekat ke puncaknya.
+- Di **dasar lembah** tempat endapan 2014 kini berada, LiDAR sekitar 5 m *di atas* kedua DEM lama. Itulah endapannya sendiri, menumpuk di atas dasar lembah yang direkam DEM lama sebelum longsor. Karena sel 30 m mengaburkan gundukan, baca 5 m sebagai tebal rata-rata di sepanjang garis ini, bukan pengukuran endapan.
+
+Pelajaran untuk kerja longsor: selisih DEM 30 m mencampur tajuk, waktu, dan medan. DTM LiDAR menghilangkan tajuk dan, bila diterbangkan sebelum dan sesudah kejadian, memberi volume material yang berpindah.
+
+### Kemiringan dan kekasaran
+
+Tabel kemiringan membandingkan kotak yang sama di ketiga DEM. Model LiDAR punya kemiringan rata-rata 13,6° dibanding 10,1° untuk SRTM, dan 6,1 % wilayahnya lebih curam dari 35°, dibanding 0,6 % untuk SRTM dan 1,4 % untuk Copernicus. DEM kasar menghaluskan lahan paling curam, padahal justru di sanalah lereng runtuh. **Kekasaran**, di sini simpangan baku kemiringan dalam 15 m, bernilai 6,3° di model LiDAR dan 2,7° di SRTM; endapan longsor itu kasar, dan peta kekasaran adalah cara baku menemukan endapan lama di bawah hutan.
+
+::: {.callout-important}
+## Integritas ilmiah: kerentanan dari DEM 30 m meremehkan kemiringan
+Model kerentanan longsor yang dibangun dari SRTM atau Copernicus (Bab [-@sec-landslide-simple] memakai Copernicus) melihat lebih sedikit sel curam daripada yang sebenarnya ada. Ambang seperti "kemiringan di atas 35°" berarti hal berbeda pada 1 m dan 30 m, dan ambang yang dikalibrasi pada satu resolusi tidak bisa dipakai pada yang lain. Sebutkan DEM dan ukuran selnya setiap kali melaporkan ambang kemiringan.
+:::
+
+## Bagian 2. Rotterdam: kota dari permukaan dikurangi tanah
+
+AHN4 menyediakan DSM dan DTM 0,5 m untuk seluruh Belanda. Di bawah bangunan, DTM tidak berisi data, karena LiDAR tidak pernah mencapai tanah di sana. Skrip mengisi lubang itu dari tanah di sekitarnya, memperlebar jendela pencarian sampai bangunan besar pun terisi, pada salinan DTM 2 m (tanah itu halus, jadi tidak ada yang hilang dan perhitungannya enam belas kali lebih ringan).
+
+### Bangunan dan pohon
+
+Apa pun yang lebih tinggi dari 2,5 m adalah bangunan atau pohon. NDVI Sentinel-2 musim panas memisahkan keduanya: tidak hijau adalah bangunan (NDVI < 0,3), hijau adalah pohon (NDVI ≥ 0,4). Di kotak seluas 727 ha di sekitar pusat kota, sekitar seperempatnya adalah perairan terbuka (Sungai Maas dan pelabuhan). Dari daratannya, **30 % tertutup bangunan** dengan tinggi rata-rata 19 m, dan **10 % tertutup tajuk pohon**. Volume terbangun sekitar 56.000 m³ per hektare daratan. Histogram tinggi menunjukkan dua populasi: pohon mengumpul di bawah 15 m (median 7 m), bangunan menyebar sampai menara-menara pusat kota dan Kop van Zuid, yang tertinggi di atas 100 m.
+
+### Atap untuk panel surya
+
+Atap cocok untuk panel surya bila datar (panel bisa dimiringkan dengan rangka) atau miring menghadap selatan. Kemiringan dan arah hadap dihitung dari DSM, tetapi hanya di bagian dalam setiap atap: di tepi bangunan, kemiringan mengukur dinding, dan histogram versi pertama bab ini punya lonjakan di 70° persis karena itu. Bergeser 1 m ke dalam dari setiap tepi memangkas lonjakan itu menjadi separuhnya; sisanya adalah undakan di dalam atap (parapet, setback, teras atap). Aturan ini punya titik buta kedua yang terlihat di peta: lantai Jembatan Erasmus tinggi, tidak hijau, dan datar, sehingga digolongkan sebagai atap yang cocok untuk surya. Lapisan tapak bangunan, seperti register BAG Belanda, akan menghilangkan kedua masalah itu. Tabel melaporkan porsi bagian dalam atap yang datar atau menghadap antara tenggara dan barat daya, dan hasil penyaringan dengan dua asumsi yang dinyatakan (iradiasi 1.000 kWh/m² per tahun pada panel dan efisiensi 20 %). Desain butuh analisis bayangan, struktur, dan kapasitas jaringan; ini angka yang memberi tahu kota di mana harus melihat lebih dulu. Bab [-@sec-solar-pv] mengajukan pertanyaan yang sama untuk ladang surya.
+
+### Di bawah permukaan laut
+
+DTM dinyatakan dalam meter terhadap NAP, datum Belanda yang dekat dengan muka laut rata-rata. Di kotak ini, sekitar sepertiga permukaan daratan berada di bawahnya. Petanya menunjukkan pola yang dikenal setiap warga Rotterdam: kota lama di barat laut pusat kota berada di bawah NAP, sedangkan dermaga, tanggul, dan kawasan pelabuhan yang lebih baru di sepanjang Maas ditinggikan di atasnya. LiDAR 0,5 m mampu menampilkan tanggul dan jalan yang ditinggikan satu per satu, itulah sebabnya model banjir nasional Belanda berjalan di atas AHN, bukan DEM global 30 m.
+
+## Latihan {.unnumbered}
+
+1. Geser transek Oso 500 m ke timur dan ulangi profilnya. Apakah endapan masih sekitar 5 m di atas DEM lama?
+2. Hitung peta kekasaran dari DTM LiDAR untuk seluruh lembah dan tandai sel di atas persentil ke-95. Berapa banyak yang cocok dengan lidah longsor lama di hillshade?
+3. Ulangi analisis Rotterdam untuk permukiman tahun 1950-an dengan atap miring (misalnya sekitar 4,43° BT, 51,93° LU). Bagaimana porsi atap yang cocok untuk surya berubah?
+4. Perketat aturan bangunan menjadi NDVI < 0,2 dan longgarkan aturan pohon menjadi NDVI ≥ 0,3. Seberapa peka porsi bangunan dan tajuk terhadap ambang ini?

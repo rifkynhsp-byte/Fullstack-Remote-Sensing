@@ -1,0 +1,4 @@
+DEM,cell (m),mean slope (°),95th pct slope (°),area steeper than 35° (%),"roughness (SD of slope, °)"
+LiDAR 1 m (3DEP 2016),1,13.613,36.248,6.1017,6.286
+SRTM 30 m (2000),30,10.077,24.099,0.64547,2.7466
+Copernicus 30 m,30,12.179,29.381,1.431,4.3308

@@ -1,0 +1,73 @@
+# LiDAR Beyond the Forest: Landslide Terrain and a City in 3D {#sec-lidar-terrain-cities}
+
+::: {.chapter-goal}
+#### In this chapter
+Most airborne LiDAR in the world is flown not for trees but for terrain and cities: flood models, landslide inventories, building registers, solar maps. You will use two free national LiDAR programmes in Earth Engine. At the 2014 Oso landslide in Washington you will compare a 1 m LiDAR terrain model with 30 m global DEMs and see what each can and cannot show. In central Rotterdam you will subtract the ground from the surface to measure buildings, trees, roofs suitable for solar panels, and how much of the city lies below sea level. JavaScript is not needed; Python and R side by side.
+:::
+
+## Surface, terrain, and the difference between them
+
+A LiDAR pulse returns from the first thing it hits and, where there are gaps, from things below it, down to the ground. Two products follow:
+
+- The **digital surface model (DSM)** keeps the highest return in each cell: roofs, tree crowns, bridges.
+- The **digital terrain model (DTM)** keeps only returns classified as ground, interpolated into a continuous bare-earth surface.
+
+Their difference, the **normalised DSM (nDSM = DSM − DTM)**, is the height of everything standing on the ground. Chapters [-@sec-lidar-trees] and [-@sec-height-scaling] used it for trees; this chapter uses the DTM for landforms and the nDSM for buildings.
+
+Global DEMs such as SRTM (C-band radar, 2000) and Copernicus GLO-30 (X-band radar, 2011-2015) are surface models at 30 m: over forest they sit somewhere between the ground and the canopy top, depending on how far the radar penetrates. That single fact explains most of what follows.
+
+| Programme | Coverage | In Earth Engine | Cell |
+|---|---|---|---|
+| USGS 3D Elevation Program (3DEP) | United States | `USGS/3DEP/1m` (bare-earth DTM) | 1 m |
+| Actueel Hoogtebestand Nederland (AHN4) | Netherlands | `AHN/AHN4` (DSM and DTM) | 0.5 m |
+
+{{< include _snippets/ch74_lidar_terrain_cities.qmd >}}
+
+## Part 1. Oso: what a 1 m terrain model sees at a landslide
+
+On 22 March 2014 a hillside above the North Fork Stillaguamish River near Oso, Washington, failed and ran across the valley, burying the Steelhead Haven neighbourhood and State Route 530. The LiDAR tile in Earth Engine was flown in 2016, two years later; SRTM dates from 2000 and Copernicus from before the slide.
+
+### Hillshades
+
+The LiDAR hillshade shows landforms a geomorphologist maps: the arcuate head scarp, the hummocky deposit spread across the valley floor, the river's new channel, and, along the rest of the valley wall, older scarps and lobes of earlier landslides. The forest that hides them from optical imagery is gone, because the DTM is bare earth. The SRTM hillshade at the same scale shows a valley and a plateau, and nothing more.
+
+### A profile across the slide
+
+A north-south transect from the plateau, down the slide, across the valley and up the far side shows the difference in numbers:
+
+- On the **forested plateau** north of the slide, SRTM sits about 16 m and Copernicus about 25 m above the LiDAR ground. That gap is the forest: the radar DEMs measure partway into the canopy, and the X-band Copernicus DEM, at a shorter wavelength than C-band SRTM, measures closer to the top.
+- On the **valley floor** where the 2014 deposit now lies, the LiDAR is about 5 m *above* both older DEMs. That is the deposit itself, laid on a floor the older DEMs recorded before the slide. Because 30 m cells blur the hummocks, read 5 m as an average thickness along this line, not a measurement of the deposit.
+
+The lesson for landslide work is that a 30 m DEM difference mixes canopy, time and terrain. A LiDAR DTM removes the canopy and, flown before and after an event, gives the volume of material moved.
+
+### Slopes and roughness
+
+The slope table compares the same box in all three DEMs. The LiDAR model has a mean slope of 13.6° against 10.1° for SRTM, and 6.1 % of the area is steeper than 35°, against 0.6 % for SRTM and 1.4 % for Copernicus. Coarse DEMs smooth the steepest ground away, which is exactly the ground where slopes fail. **Roughness**, here the standard deviation of slope within 15 m, is 6.3° in the LiDAR model and 2.7° in SRTM; landslide deposits are rough, and roughness maps are a standard way to find old deposits under forest.
+
+::: {.callout-important}
+## Scientific integrity: susceptibility from a 30 m DEM underestimates slope
+Landslide susceptibility models built on SRTM or Copernicus (Chapter [-@sec-landslide-simple] uses Copernicus) see fewer steep cells than exist. Thresholds such as "slope above 35°" therefore mean different things at 1 m and 30 m, and a threshold calibrated on one cannot be applied to the other. State the DEM and its cell size with every slope threshold you report.
+:::
+
+## Part 2. Rotterdam: a city from the surface minus the ground
+
+AHN4 provides both a DSM and a DTM at 0.5 m for the whole Netherlands. Under buildings the DTM has no data, because LiDAR never reached the ground there. The script fills those holes from the surrounding ground, widening the search window until even large buildings are filled, on a 2 m copy of the DTM (the ground is smooth, so nothing is lost and the computation is sixteen times lighter).
+
+### Buildings and trees
+
+Anything taller than 2.5 m is either a building or a tree. Sentinel-2 NDVI from the summer separates them: not green is a building (NDVI < 0.3), green is a tree (NDVI ≥ 0.4). In the 727 ha box around the city centre, about a quarter is open water (the Maas and the harbours). Of the land, **30 % is under buildings** with a mean height of 19 m, and **10 % under tree canopy**. Built volume is about 56,000 m³ per hectare of land. The height histogram shows the two populations: trees cluster below 15 m (median 7 m), buildings spread to the towers of the centre and Kop van Zuid, the tallest above 100 m.
+
+### Roofs for solar panels
+
+A roof suits solar panels if it is flat (panels can be tilted on frames) or pitched towards the south. Slope and aspect come from the DSM, but only on the interior of each roof: at a building's edge the slope measures the wall, and the first version of this chapter's histogram had a spike at 70° from exactly that. Moving 1 m in from every edge halves the spike; what remains are steps inside roofs (parapets, setbacks, roof terraces). The rule has a second blind spot visible on the map: the deck of the Erasmus Bridge is tall, not green and flat, so it is classed as a solar-suitable roof. A building footprint layer, such as the Dutch BAG register, would remove both problems. The table reports the share of roof interiors that are flat or face between south-east and south-west, and a screening yield under two stated assumptions (1,000 kWh/m² per year of irradiation on the panel and 20 % efficiency). A design needs shading, structure and grid capacity; this is the number that tells a city where to look first. Chapter [-@sec-solar-pv] does the same question for solar farms.
+
+### Below sea level
+
+The DTM is in metres relative to NAP, the Dutch datum close to mean sea level. In this box, about a third of the land surface lies below it. The map shows the pattern every Rotterdammer knows: the old city north-west of the centre lies below NAP, while the quays, dikes and newer harbour districts along the Maas were built up above it. LiDAR at 0.5 m resolves individual dikes and raised streets, which is why national flood models in the Netherlands run on AHN, not on a 30 m global DEM.
+
+## Exercises {.unnumbered}
+
+1. Move the Oso transect 500 m east and repeat the profile. Does the deposit still sit about 5 m above the older DEMs?
+2. Compute a roughness map from the LiDAR DTM over the whole valley and outline the cells above the 95th percentile. How many of them match old landslide lobes in the hillshade?
+3. Repeat the Rotterdam analysis for a 1950s neighbourhood with pitched roofs (for example around 4.43° E, 51.93° N). How does the share of solar-suitable roof change?
+4. Tighten the building rule to NDVI < 0.2 and loosen the tree rule to NDVI ≥ 0.3. How sensitive are the building and canopy shares to these thresholds?

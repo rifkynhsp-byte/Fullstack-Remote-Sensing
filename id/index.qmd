@@ -51,7 +51,7 @@ Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode 
 | XII. Energi surya | 4 | Mengubah sinar matahari, atap, dan ladang surya menjadi keputusan |
 | XIII. Kota, manusia, dan bisnis | 6 | Memetakan pertumbuhan kota dan kebutuhan perencanaan (ruang hijau, panas, paparan banjir), dan menjawab pertanyaan lokasi, transportasi, dan ekonomi dengan data terbuka |
 | XIV. Mengomunikasikan hasil | 4 | Merancang grafik dan peta yang menjelaskan, membuat laporan peta, dan merilis aplikasi |
-| XV. LiDAR: kehutanan dan lainnya | 4 | Mengklasifikasi point cloud, menemukan pohon, dan menskalakan biomassa plot dengan GEDI |
+| XV. LiDAR: kehutanan dan lainnya | 5 | Mengklasifikasi point cloud, menemukan pohon, menskalakan biomassa plot dengan GEDI, serta memetakan medan longsor dan kota dalam 3D |
 | XVI. Garda depan riset | 1 | Memulai tesis dari baseline yang bisa dijalankan dan jujur |
 
 : Jalur membaca {.striped}

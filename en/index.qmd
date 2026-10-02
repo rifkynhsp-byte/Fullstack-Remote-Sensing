@@ -51,7 +51,7 @@ The text and discussion of the whole book as one Word document, with a link to t
 | XII. Solar energy | 4 | Turn sunlight, rooftops and solar farms into a decision |
 | XIII. Cities, people and business | 6 | Map urban growth and planning needs (green space, heat, flood exposure), and answer location, transport and economic questions with open data |
 | XIV. Communicating results | 4 | Design charts and maps that explain, produce map reports, and ship an app |
-| XV. LiDAR: forestry and beyond | 4 | Classify point clouds, find trees, and scale plot biomass with GEDI |
+| XV. LiDAR: forestry and beyond | 5 | Classify point clouds, find trees, scale plot biomass with GEDI, and map landslide terrain and cities in 3D |
 | XVI. Research frontiers | 1 | Start a thesis from a runnable, honest baseline |
 
 : Reading pathways {.striped}

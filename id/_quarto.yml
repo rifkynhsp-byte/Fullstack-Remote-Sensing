@@ -164,6 +164,7 @@ book:
         - 54-lidar-classification.qmd
         - 33-height-scaling.qmd
         - 47-gedi-structure.qmd
+        - 74-lidar-terrain-cities.qmd
     - part: "Bagian XVI: Garis Depan Riset"
       chapters:
         - 36-thesis-bank.qmd

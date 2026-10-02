@@ -1,0 +1,63 @@
+[
+ {
+  "name": "ch74_lidar_terrain_cities-webmap",
+  "kind": "html",
+  "html": "images/real/ch74_lidar_terrain_cities-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch74-oso-lidar",
+  "kind": "map",
+  "caption": "Bare-earth LiDAR two years after the slide: the head scarp, the hummocky deposit across the river, and older slide scars along the valley wall that the forest hides from optical imagery.",
+  "image": "images/real/ch74-oso-lidar.jpg"
+ },
+ {
+  "name": "ch74-oso-srtm",
+  "kind": "map",
+  "caption": "The global 30 m DEM, fourteen years before the slide. Valley and plateau are there; the landforms are not.",
+  "image": "images/real/ch74-oso-srtm.jpg"
+ },
+ {
+  "name": "ch74-oso-profile",
+  "kind": "chart",
+  "caption": "Elevation along a north-south transect across the slide, from each terrain model.",
+  "image": "images/real/ch74-oso-profile.png"
+ },
+ {
+  "name": "ch74-oso-slopes",
+  "kind": "table",
+  "caption": "Slope and roughness of the same box in three terrain models.",
+  "markdown": "| DEM                   |   cell (m) |   mean slope (°) |   95th pct slope (°) |   area steeper than 35° (%) |   roughness (SD of slope, °) |\n|:----------------------|-----------:|-----------------:|---------------------:|----------------------------:|-----------------------------:|\n| LiDAR 1 m (3DEP 2016) |          1 |             13.6 |                 36.2 |                         6.1 |                          6.3 |\n| SRTM 30 m (2000)      |         30 |             10.1 |                 24.1 |                         0.6 |                          2.7 |\n| Copernicus 30 m       |         30 |             12.2 |                 29.4 |                         1.4 |                          4.3 |"
+ },
+ {
+  "name": "ch74-rotterdam-ndsm",
+  "kind": "map",
+  "caption": "Heights above 2.5 m over a hillshade of the surface model. Purple marks the towers of the centre and Kop van Zuid; colours are capped at 60 m.",
+  "image": "images/real/ch74-rotterdam-ndsm.jpg"
+ },
+ {
+  "name": "ch74-rotterdam-classes",
+  "kind": "map",
+  "caption": "Tall and not green is a building, tall and green a tree; suitable roofs are flat or face south.",
+  "image": "images/real/ch74-rotterdam-classes.jpg"
+ },
+ {
+  "name": "ch74-rotterdam-below-sea",
+  "kind": "map",
+  "caption": "Blue is below sea level. The quays along the Maas are built up above it; the polders behind lie below.",
+  "image": "images/real/ch74-rotterdam-below-sea.jpg"
+ },
+ {
+  "name": "ch74-rotterdam",
+  "kind": "table",
+  "caption": "Central Rotterdam in numbers. Solar yield assumes 1000 kWh/m² per year and 20% efficiency: a screening figure, not a design.",
+  "markdown": "| measure                                             |   value |\n|:----------------------------------------------------|--------:|\n| area of the box (ha)                                |   727.3 |\n| open water, no LiDAR return (%)                     |    26.5 |\n| ground below sea level (NAP 0 m), share of land (%) |    32.8 |\n| building footprint, share of land (%)               |    29.9 |\n| tree canopy, share of land (%)                      |    10.2 |\n| mean building height (m)                            |    18.9 |\n| built volume per hectare of land (m³)               | 56284.4 |\n| roof area suitable for solar (% of roof interiors)  |    67.0 |\n| screening solar yield (GWh/yr)                      |   189.6 |"
+ },
+ {
+  "name": "ch74-rotterdam-chart",
+  "kind": "chart",
+  "caption": "Height distributions and roof slopes from a random sample of 20,000 cells.",
+  "image": "images/real/ch74-rotterdam-chart.png"
+ }
+]
