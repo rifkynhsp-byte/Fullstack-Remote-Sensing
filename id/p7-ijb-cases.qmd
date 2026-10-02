@@ -1,0 +1,69 @@
+# P7 · IJB Bekerja: Empat Studi Kasus {#sec-p7-ijb-cases .unnumbered}
+
+::: {.chapter-goal}
+#### Di bab ini
+P6 menunjukkan cara memakai IJB, tombol demi tombol. Bab ini memakainya pada empat kejadian nyata (banjir Demak Maret 2024, musim kebakaran 2023 di gambut Ogan Komering Ilir, kerawanan longsor di seluruh Jawa Barat, dan lima tahun perubahan di sekitar ibu kota baru), lalu membaca setiap hasilnya secara kritis. Setiap angka dan peta di sini dihasilkan oleh kode aplikasi itu sendiri. Dalam prosesnya, pengujian dengan cara ini menemukan empat kesalahan di aplikasi, yang kemudian diperbaiki; cara menemukannya adalah pelajaran paling berguna di bab ini.
+:::
+
+## Bagaimana hasil ini dibuat
+
+Layar "sesudah" di P6 adalah gambar yang dibuat di buku ini dengan metode yang sama seperti aplikasi. Untuk bab ini, aplikasinya sendiri yang bekerja. Modul-modulnya dijalankan tanpa antarmuka: antarmuka Code Editor diganti oleh sebuah harness kecil (`tools/ijb_headless/harness.js`) yang mengetikkan masukan seperti pengguna mengetiknya dan menekan tombol modul itu sendiri, lalu menyimpan kartu metrik dan objek Earth Engine di balik setiap layer peta. Peta di bawah adalah objek-objek itu, dihitung ulang oleh Earth Engine dan digambar dengan koordinat dan skala. Untuk mengulang sebuah kasus sendiri, buka IJB, gambar atau pilih wilayah yang sama, masukkan nilai di tabel pertama, dan tekan tombol yang sama.
+
+{{< include _snippets/ch00g_ijb_cases.qmd >}}
+
+## Kasus 1. Banjir: Demak, Maret 2024
+
+Pada pertengahan Maret 2024, tanggul sungai jebol di Demak, Jawa Tengah, dan air menggenangi sawah dan desa selama berminggu-minggu. Modul Banjir membandingkan citra Sentinel-1 sebelum kejadian dengan citra sesudahnya, menemukan penurunan hamburan balik yang menandai air terbuka dengan ambang otomatis (Otsu), lalu membuang lahan curam, air permanen, dan lahan yang jauh di atas jaringan drainase.
+
+Dengan pengaturan bawaan aplikasi dan tanggal kejadian, modul memetakan **2.341 ha** genangan baru, dengan sekitar **29.000 jiwa** tinggal di sel tergenang (WorldPop) dan 49 bangunan terpetakan terdampak. Dua fakta harus menyertai angka itu. Satu-satunya lintasan Sentinel-1 menurun di jendela waktu itu adalah 15 Maret, di awal kejadian, jadi ini potret hari-hari pertama, bukan luas maksimum. Dan sebagian besar kabupaten tampak hitam di kedua citra: tambak dan sawah yang sudah tergenang pada Februari, yang memang tidak bisa dihitung sebagai genangan baru oleh metode berbasis perubahan. Kartu "cocok riwayat" (35 %) membandingkan hasil dengan Global Flood Database kejadian 2000-2018; tumpang tindih yang rendah wajar untuk banjir akibat tanggul jebol, bukan pola hujan biasa.
+
+::: {.callout-warning}
+## Bagaimana kesalahan pertama ditemukan: jawaban nol
+Percobaan pertama kasus ini menghasilkan **0 ha**. Nol banjir di Demak pada Maret 2024 bukan hasil, melainkan gejala. Menelusuri modul langkah demi langkah menunjukkan 17.994 ha lolos ambang perubahan dan 0 ha tersisa setelah masker kemiringan: model medan bawaan (FABDEM) dimuat sebagai *mosaic*, dan mosaic Earth Engine tidak punya proyeksi asli. Grid bawaannya satu derajat, sekitar 111 km, sehingga `ee.Terrain.slope()` dihitung pada sel 111 km dan tidak menghasilkan apa pun. Perbaikannya memberi mosaic itu proyeksi petak pertamanya; aplikasi kini menghasilkan 2.341 ha. Kesalahan yang sama mengenai setiap model medan yang dimuat dengan cara ini (Copernicus GLO-30 dan ALOS AW3D30, selain FABDEM). Pelajaran untuk kode Anda sendiri: **bila hasil tepat nol, periksa pipeline sebelum melaporkannya**, dan jangan pernah menjalankan operator medan pada `mosaic()` mentah.
+:::
+
+## Kasus 2. Api: Ogan Komering Ilir, musim kebakaran 2023
+
+Ogan Komering Ilir di Sumatra Selatan sebagian besar gambut, dan 2023 adalah tahun El Niño. Modul Api memetakan keparahan kebakaran dari perubahan normalised burn ratio antara komposit Sentinel-2 sebelum dan sesudah musim, menghitung titik panas FIRMS, dan menumpangkan sebaran serta ketebalan gambut global.
+
+Aplikasi melaporkan **290.030 ha** dalam kelas-kelas keparahan dan **3.817 titik panas**, dan dari area terbakar itu **238.586 ha berada di atas gambut**, dengan ketebalan gambut rata-rata hasil model **151 cm**. Pasangan angka terakhir itulah inti modul ini: satu hektare gambut setebal 1,5 m yang terbakar adalah kejadian karbon dan kesehatan yang sangat berbeda dari satu hektare rumput yang terbakar.
+
+Baca petanya sebelum angkanya. Komposit Sentinel-2 sesudah kebakaran punya jalur-jalur yang hilang sama sekali antara sekitar 2,8° dan 3,6° LS, tempat awan dan asap tidak menyisakan pengamatan bersih, sehingga luas terbakar hanya mencakup sebagian kabupaten; dalam arti itu angka sebenarnya lebih besar. Ke arah sebaliknya, kelas keparahan terendah juga menangkap perubahan bukan kebakaran seperti panen dan peluruhan musiman. Jadi 290.030 ha adalah angka penyaringan untuk wilayah yang tercakup, yang perlu dicek dengan produk area terbakar seperti MODIS MCD64A1 (Bab [-@sec-peat]) sebelum masuk laporan.
+
+::: {.callout-warning}
+## Kesalahan kedua dan ketiga: galat yang tampak seperti hasil
+Percobaan pertama melaporkan **0 ha** gambut terbakar dan ketebalan gambut "NaN cm", di kabupaten yang sebagian besar gambut. Layer gambut dimuat sebagai koleksi citra, padahal keduanya citra tunggal, sehingga pemuatan gagal. Kegagalan itu seharusnya tampil sebagai galat; sebaliknya, fungsi luas di aplikasi mengubah galat Earth Engine *apa pun* menjadi nol. Fungsi yang sama menghasilkan nol palsu berikutnya: di Kasus 4 sebuah kabupaten besar melampaui batas memori per permintaan Earth Engine, dan aplikasi melaporkan "0 ha berubah". Keduanya sudah diperbaiki: layer gambut dimuat sebagai citra, fungsi luas membagi perhitungan besar menjadi ubin (`tileScale`), dan galat kini tampil sebagai "—", bukan 0. Nilai yang hilang tidak boleh tampak seperti nilai yang terukur.
+:::
+
+## Kasus 3. Rawan: kerawanan longsor, Jawa Barat
+
+Modul Rawan melatih random forest pada embedding satelit, medan, curah hujan, tanah, dan tutupan lahan, memakai titik yang ditempatkan pengguna atau, secara otomatis, kejadian dari NASA Global Landslide Catalog. Untuk Kabupaten Bandung Barat katalog itu hanya berisi **9 kejadian**. Percobaan pertama melatih 9 kejadian itu melawan 200 titik "aman" acak dan melaporkan akurasi 92 %, kappa 0,000, dan tidak ada lahan rawan tinggi: dengan positif sesedikit itu, hutan acak belajar menyebut semuanya aman, dan akurasi 92 % hanyalah porsi titik aman. Modul yang sudah diperbaiki menghitung jumlah longsor lebih dulu dan menolak bila kurang dari 20, lalu meminta pengguna memperluas wilayah atau menempatkan titik secara manual.
+
+Di seluruh provinsi kejadiannya cukup. Aplikasi melaporkan **akurasi validasi 81,3 % dan kappa 0,38**, dengan 12.482 ha rawan tinggi.
+
+Sekarang lihat petanya. Nilai tertinggi ada di cekungan Bandung dan sekitar Bogor, yang padat bangunan dan sebagian besar datar, sedangkan pegunungan selatan yang curam dan basah tampak relatif aman. Ini bukan bug di kode; ini sifat data latihnya. Katalog yang disusun dari berita mencatat longsor di tempat orang tinggal dan jalan melintas, sehingga model yang dilatih darinya belajar "dekat kota dan jalan" sama besarnya dengan "lereng curam, basah, dan lemah". Bias yang sama menggelembungkan kartu "jiwa di zona rawan". Gunakan mode otomatis hanya untuk melihat metodenya bekerja; untuk peta kerawanan yang akan dipakai perencanaan, tempatkan titik dari inventaris lapangan atau inventaris poligon yang dipetakan dari citra (Bab [-@sec-landslide-simple] menunjukkan mengapa katalog berbasis berita gagal sebagai data uji), dan pastikan kemiringan dan curah hujan, bukan tutupan lahan, yang membawa model.
+
+## Kasus 4. Ubah: Penajam Paser Utara, 2019 hingga 2024
+
+Penajam Paser Utara memuat inti Nusantara, ibu kota baru Indonesia. Modul Ubah mengurangkan NDVI komposit bebas awan 2019 dari 2024 dan menyebut perubahan nyata bila di atas ±0,2.
+
+Aplikasi melaporkan **10.923 ha** menjadi kurang hijau dan **18.907 ha** menjadi lebih hijau. Petanya menunjukkan di mana. Pola merah rapat berupa jalan dan lahan terbuka di utara sekitar 116,7° BT, 0,95° LS adalah zona inti ibu kota (bandingkan dengan time-lapse di Bab [-@sec-visualisation]); blok-blok persegi besar hijau dan merah di seluruh kabupaten adalah hutan tanaman, dipanen di satu periode dan ditanam ulang di periode lain. Lebih banyak penghijauan daripada pencoklatan di wilayah yang terkenal karena pembukaan lahan bukanlah kontradiksi: selisih NDVI mencatat tumbuhnya kembali hutan tanaman sebagai kenaikan, itulah sebabnya Bab [-@sec-eudr] memisahkan hutan dari tanaman pohon sebelum menyebut apa pun deforestasi.
+
+## Masalah kelima, masih terbuka
+
+Pelaporan hasil per *kecamatan* menghasilkan tabel kosong untuk setiap kasus. Aplikasi mengambil batas kecamatan dari koleksi global geoBoundaries yang tidak punya fitur Indonesia di tingkat itu, sehingga grafik dan unduhan per kecamatan kosong untuk Indonesia. Pelaporan per kabupaten berjalan. Ini butuh sumber batas yang lain dan masuk daftar untuk versi aplikasi berikutnya.
+
+## Apa yang diajarkan oleh menguji aplikasi
+
+Empat kesalahan di aplikasi yang sudah dipakai publik, ditemukan dalam satu sore, dan tidak satu pun terlihat dari antarmuka: setiap percobaan yang salah menghasilkan kartu rapi dengan angka yang masuk akal. Tiga kebiasaan menemukannya, dan berlaku untuk alat apa pun, termasuk skrip Anda sendiri:
+
+1. **Jalankan pada kasus yang kira-kira sudah Anda tahu jawabannya.** Banjir yang terkenal, kabupaten gambut, lokasi pembangunan.
+2. **Perlakukan tepat nol, tepat 100 %, dan akurasi yang tampak sempurna sebagai pertanyaan, bukan jawaban.**
+3. **Lihat peta sebelum metrik.** Masker banjir, celah di komposit kebakaran, dan titik panas perkotaan di peta kerawanan semuanya terlihat sebelum satu angka pun dibaca.
+
+## Latihan {.unnumbered}
+
+1. Jalankan Banjir untuk Demak dengan jendela sesudah 26 Maret sampai 5 April 2024. Apakah luas genangan bertambah, dan apa artinya bagi pemilihan waktu?
+2. Jalankan Api untuk Ogan Komering Ilir dengan jendela sesudah 1 Oktober sampai 31 Desember 2023. Apakah celah di komposit tertutup?
+3. Jalankan Rawan untuk Jawa Barat dengan titik yang Anda tempatkan sendiri pada longsor terpetakan dari inventaris yang sudah terbit. Apakah titik panas di cekungan Bandung masih ada?
+4. Jalankan Ubah untuk Penajam Paser Utara dengan metode transisi Dynamic World, bukan selisih NDVI. Berapa bagian "penghijauan" yang berupa hutan tanaman?

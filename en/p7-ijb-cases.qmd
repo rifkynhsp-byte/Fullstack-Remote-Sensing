@@ -1,0 +1,69 @@
+# P7 · IJB at Work: Four Case Studies {#sec-p7-ijb-cases .unnumbered}
+
+::: {.chapter-goal}
+#### In this chapter
+P6 showed how to use IJB, button by button. This chapter uses it on four real events (the March 2024 floods in Demak, the 2023 fire season on the peat of Ogan Komering Ilir, landslide susceptibility across West Java, and five years of change around the new capital), and reads every result critically. Each number and map here was produced by the app's own code. Along the way, testing the app this way uncovered four faults in it, which were fixed; how they were found is the most useful lesson in the chapter.
+:::
+
+## How these results were made
+
+P6's "after" screens are drawings made in this book with the same methods as the app. For this chapter the app itself did the work. Its modules were run headless: the Code Editor interface was replaced by a small harness (`tools/ijb_headless/harness.js`) that types the inputs a user would type and presses the module's own button, then saves the metric cards and the Earth Engine object behind every map layer. The maps below are those objects, computed again by Earth Engine and drawn with coordinates and a scale bar. To repeat a case yourself, open IJB, draw or choose the same area, enter the values in the first table and press the same button.
+
+{{< include _snippets/ch00g_ijb_cases.qmd >}}
+
+## Case 1. Banjir: Demak, March 2024
+
+In mid-March 2024, river embankments failed in Demak, Central Java, and floodwater spread across rice fields and villages for weeks. The Banjir module compares a Sentinel-1 image before the event with one after it, finds the backscatter drop that marks open water with an automatic (Otsu) threshold, then removes steep ground, permanent water and land high above the drainage network.
+
+With the app's defaults and the event dates, it maps **2,341 ha** of new flooding, with about **29,000 people** living in the flooded cells (WorldPop) and 49 mapped buildings hit. Two facts belong next to those numbers. The only descending Sentinel-1 pass in the window is 15 March, early in the event, so this is a snapshot of the first days, not the maximum extent. And a large part of the district appears black in both images: fishponds and paddies already under water in February, which a change-based method cannot count as new flooding by design. The "overlap with past floods" card (35 %) compares the result with the Global Flood Database of 2000-2018 events; a low overlap is expected for a flood caused by a levee breach rather than by the usual rainfall pattern.
+
+::: {.callout-warning}
+## How the first fault was found: an answer of zero
+The first run of this case returned **0 ha**. Zero flood in Demak in March 2024 is not a result, it is a symptom. Tracing the module step by step showed 17,994 ha passing the change threshold and 0 ha surviving the slope mask: the default terrain model (FABDEM) was loaded as a *mosaic*, and an Earth Engine mosaic has no native projection. Its default grid is one degree, about 111 km, so `ee.Terrain.slope()` was computed on 111 km cells and returned nothing. The fix gives the mosaic the projection of its first tile; the app now returns 2,341 ha. The same fault affected every terrain model loaded this way (Copernicus GLO-30 and ALOS AW3D30 as well as FABDEM). The lesson for your own code: **when a result is exactly zero, check the pipeline before reporting it**, and never run terrain operators on a bare `mosaic()`.
+:::
+
+## Case 2. Api: Ogan Komering Ilir, the 2023 fire season
+
+Ogan Komering Ilir in South Sumatra is mostly peat, and 2023 was an El Niño year. The Api module maps burn severity from the change in the normalised burn ratio between Sentinel-2 composites before and after the season, counts FIRMS hotspots, and overlays global peat extent and thickness.
+
+The app reports **290,030 ha** in the burn-severity classes and **3,817 hotspots**, and of the burned area, **238,586 ha lies on peat**, with a mean modelled peat depth of **151 cm** under it. That last pair is the point of the module: a hectare of burned peat 1.5 m deep is a very different carbon and health event from a hectare of burned grass.
+
+Read the map before the numbers. The post-fire Sentinel-2 composite has whole swaths missing between about 2.8° and 3.6° S, where cloud and haze left no clear observation, so the burned area covers only part of the district; the true figure is higher in that sense. In the other direction, the lowest severity class also catches non-fire change such as harvest and seasonal browning. The 290,030 ha is therefore a screening number for the covered area, to be checked against a burned-area product such as MODIS MCD64A1 (Chapter [-@sec-peat]) before it goes into a report.
+
+::: {.callout-warning}
+## The second and third faults: errors that look like results
+The first run reported **0 ha** of burned peat and a peat depth of "NaN cm", in a district that is mostly peat. The peat layers were loaded as image collections, but both are single images, so loading failed. That failure should have shown as an error; instead the app's area function turned *any* Earth Engine error into zero. The same function produced the next false zero: in Case 4 a large district exceeded Earth Engine's per-request memory, and the app reported "0 ha changed". Both are fixed: the peat layers load as images, the area function splits large computations into tiles (`tileScale`), and an error now shows as "—", not as 0. A missing value must never look like a measured value.
+:::
+
+## Case 3. Rawan: landslide susceptibility, West Java
+
+The Rawan module trains a random forest on satellite embeddings, terrain, rainfall, soil and land cover, using either points the user places or, automatically, events from the NASA Global Landslide Catalog. For Kabupaten Bandung Barat the catalogue holds only **9 events**. The first run trained on those 9 against 200 random "safe" points and reported 92 % accuracy, a kappa of 0.000 and no high-susceptibility land: with so few positives the forest learned to call everything safe, and 92 % accuracy is simply the share of safe points. The fixed module counts the landslides first and refuses below 20, asking the user to widen the area or place points by hand.
+
+Across the whole province there are enough events. The app reports **81.3 % validation accuracy and a kappa of 0.38**, with 12,482 ha of high susceptibility.
+
+Now look at the map. The highest values are in the Bandung basin and around Bogor, densely built and largely flat, while the steep, wet southern mountains look comparatively safe. This is not a bug in the code; it is a property of the training data. A catalogue compiled from news reports records landslides where people live and roads run, so a model trained on it learns "near towns and roads" as much as "steep, wet, weak slopes". The same bias inflates the "people in susceptible zones" card. Use the automatic mode only to see the method work; for a susceptibility map that will inform planning, place points from a field inventory or a polygon inventory mapped from imagery (Chapter [-@sec-landslide-simple] shows why the news-based catalogue fails as a test set), and check that slope and rainfall, not land cover, carry the model.
+
+## Case 4. Ubah: Penajam Paser Utara, 2019 to 2024
+
+Penajam Paser Utara holds the core of Nusantara, Indonesia's new capital. The Ubah module subtracts the NDVI of a cloud-free 2019 composite from that of 2024 and calls a change real above ±0.2.
+
+The app reports **10,923 ha greener-to-browner** and **18,907 ha browner-to-greener**. The map shows where. The tight red pattern of roads and cleared ground in the north around 116.7° E, 0.95° S is the capital's core zone (compare the time-lapse in Chapter [-@sec-visualisation]); the large rectangular green and red blocks across the regency are plantation forestry, harvested in one period and replanted in the other. More greening than browning in a region famous for clearing is not a contradiction: an NDVI difference records plantation regrowth as gain, which is why Chapter [-@sec-eudr] separates forest from tree crops before calling anything deforestation.
+
+## The fifth problem, still open
+
+Reporting results per *kecamatan* returned empty tables for every case. The app takes kecamatan boundaries from a global geoBoundaries collection that has no Indonesian features at that level, so the per-kecamatan charts and downloads are empty for Indonesia. Reporting per kabupaten works. This needs a different boundary source and is listed for the next version of the app.
+
+## What testing an app teaches
+
+Four faults in an app in public use, found in one afternoon, and none of them visible from the interface: every faulty run produced a tidy card with a plausible number. Three habits found them, and they apply to any tool, your own scripts included:
+
+1. **Run it on cases where you know roughly what the answer should be.** A famous flood, a peat district, a construction site.
+2. **Treat exactly zero, exactly 100 % and a perfect-looking accuracy as questions, not answers.**
+3. **Look at the map before the metric.** The flood mask, the gaps in the fire composite and the urban hotspot in the susceptibility map were all visible before any number was read.
+
+## Exercises {.unnumbered}
+
+1. Run Banjir for Demak with the post-event window 26 March to 5 April 2024. Does the flooded area grow, and what does that say about timing?
+2. Run Api for Ogan Komering Ilir with a post-event window of 1 October to 31 December 2023. Do the gaps in the composite close?
+3. Run Rawan for West Java with points you place by hand on mapped landslides from a published inventory. Does the hotspot in the Bandung basin remain?
+4. Run Ubah for Penajam Paser Utara with the Dynamic World transition method instead of the NDVI difference. How much of the "greening" is plantation?

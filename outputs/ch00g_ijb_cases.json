@@ -1,0 +1,45 @@
+[
+ {
+  "name": "ch00g_ijb_cases-webmap",
+  "kind": "html",
+  "html": "images/real/ch00g_ijb_cases-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "p7-inputs",
+  "kind": "table",
+  "caption": "What was entered in the app for each case.",
+  "markdown": "| module   | area                          | what was entered                                                                                                          |\n|:---------|:------------------------------|:--------------------------------------------------------------------------------------------------------------------------|\n| Banjir   | Kabupaten Demak               | before 1-29 Feb 2024, after 14-24 Mar 2024; descending orbit; DEM FABDEM; HAND limit 15 m (all defaults except the dates) |\n| Api      | Kabupaten Ogan Komering Ilir  | before 1 Jun-31 Jul 2023, after 15 Oct-30 Nov 2023                                                                        |\n| Rawan    | Provinsi Jawa Barat           | hazard Longsor, year 2024, DEM SRTM, 120 trees; trained automatically from the NASA landslide catalogue                   |\n| Ubah     | Kabupaten Penajam Paser Utara | index difference, NDVI, 2019 against 2024, threshold 0.2                                                                  |"
+ },
+ {
+  "name": "p7-metrics",
+  "kind": "table",
+  "caption": "The metric cards exactly as the app displayed them (Indonesian number format: a point separates thousands).",
+  "markdown": "| case                                | card in the app     | in English                     | value shown   |\n|:------------------------------------|:--------------------|:-------------------------------|:--------------|\n| Banjir: Kabupaten Demak             | hektar tergenang    | flooded area (ha)              | 2.341         |\n| Banjir: Kabupaten Demak             | jiwa terpapar       | people exposed                 | 29.055        |\n| Banjir: Kabupaten Demak             | bangunan            | buildings hit                  | 49            |\n| Banjir: Kabupaten Demak             | cocok riwayat       | overlap with past floods       | 35%           |\n| Api: Kabupaten Ogan Komering Ilir   | hektar terbakar     | burned area (ha)               | 290.030       |\n| Api: Kabupaten Ogan Komering Ilir   | titik panas         | FIRMS hotspots                 | 3.817         |\n| Api: Kabupaten Ogan Komering Ilir   | hektar gambut       | burned area on peat (ha)       | 238.586       |\n| Api: Kabupaten Ogan Komering Ilir   | tebal gambut rerata | mean peat depth under the burn | 151 cm        |\n| Rawan: Provinsi Jawa Barat          | akurasi validasi    | validation accuracy            | 81.3%         |\n| Rawan: Provinsi Jawa Barat          | kappa               | kappa                          | 0.383         |\n| Rawan: Provinsi Jawa Barat          | hektar rawan tinggi | high-susceptibility area (ha)  | 12.482        |\n| Rawan: Provinsi Jawa Barat          | jiwa di zona rawan  | people in susceptible zones    | 1.950.341     |\n| Ubah: Kabupaten Penajam Paser Utara | hektar bertambah    | greener (ha)                   | 18.907        |\n| Ubah: Kabupaten Penajam Paser Utara | hektar berkurang    | browner (ha)                   | 10.923        |"
+ },
+ {
+  "name": "p7-banjir-demak",
+  "kind": "map",
+  "caption": "The app's flood layer over the post-event Sentinel-1 image.",
+  "image": "images/real/p7-banjir-demak.jpg"
+ },
+ {
+  "name": "p7-api-oki",
+  "kind": "map",
+  "caption": "Burn severity classes from the app, with the outline of burned peat.",
+  "image": "images/real/p7-api-oki.jpg"
+ },
+ {
+  "name": "p7-ubah-ppu",
+  "kind": "map",
+  "caption": "Red: less green in 2024 than in 2019; green: greener. The new capital's core lies in the north of the regency.",
+  "image": "images/real/p7-ubah-ppu.jpg"
+ },
+ {
+  "name": "p7-rawan-jabar",
+  "kind": "map",
+  "caption": "Modelled probability of landslide-like terrain, from the app's automatic training.",
+  "image": "images/real/p7-rawan-jabar.jpg"
+ }
+]

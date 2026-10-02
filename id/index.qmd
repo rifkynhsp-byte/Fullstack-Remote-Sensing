@@ -36,7 +36,7 @@ Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode 
 
 | Bagian | Bab | Setelah selesai Anda mampu |
 |--------|-----|----------------------------|
-| Prinsip | P1 sampai P6 | Menjelaskan cara sensor optik, termal, dan radar membentuk citra, dan memakai aplikasi IJB tanpa kode |
+| Prinsip | P1 sampai P7 | Menjelaskan cara sensor optik, termal, dan radar membentuk citra, dan memakai aplikasi IJB tanpa kode |
 | I. Fondasi, tujuan dan fisika | 4 bab | Menjelaskan apa yang diukur satu piksel dan memilih sensor yang tepat |
 | II. Platform | 3 | Menulis dan men-debug skrip Earth Engine dengan percaya diri |
 | III. Data siap analisis | 4 | Membangun komposit dari data optik, radar dan topografi |

@@ -36,7 +36,7 @@ The text and discussion of the whole book as one Word document, with a link to t
 
 | Part | Chapters | You finish able to |
 |------|----------|--------------------|
-| Principles | P1 to P6 | Explain how optical, thermal and radar sensors form an image, and use the IJB app without code |
+| Principles | P1 to P7 | Explain how optical, thermal and radar sensors form an image, and use the IJB app without code |
 | I. Foundations, purpose and physics | 4 chapters | Explain what a pixel measures and choose the right sensor for a question |
 | II. The platform | 3 | Write and debug Earth Engine scripts with confidence |
 | III. Analysis ready data | 4 | Build composites from optical, radar and terrain sources |
