@@ -140,6 +140,7 @@ book:
         - 38-eda-graphs.qmd
         - 29-dataviz.qmd
         - 66-solar-insight.qmd
+        - 67-transit-access.qmd
         - 30-statistics.qmd
         - 31-deep-learning.qmd
     - part: "Bagian IX: LiDAR untuk Kehutanan"

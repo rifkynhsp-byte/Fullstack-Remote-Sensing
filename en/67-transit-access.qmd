@@ -1,0 +1,57 @@
+# What a Timetable Says About a City: Transit Service and Access in Jakarta {#sec-transit}
+
+::: {.chapter-goal}
+#### In this chapter
+A public transport timetable, published in the GTFS format, is a dataset about the city. You will read the TransJakarta feed into a network map, measure how unequally service is spread across 7,771 stops, compare waits by service type and between weekday and Sunday, and then combine the timetable with gridded population to model what share of Jakarta's residents live within a short walk of frequent service. Python and R side by side, every chart with a headline that states its finding.
+:::
+
+## GTFS: a timetable written for computers
+
+The General Transit Feed Specification (GTFS) is the format in which most of the world's transit agencies publish their schedules, so that journey planners can read them. A feed is a zip of plain text tables: `routes` (the named services), `trips` (individual journeys or journey patterns), `stop_times` (which stops each trip calls at, and when), `stops` (with coordinates), `shapes` (the path driven) and `calendar` (which days each service runs).
+
+Most analyses use GTFS to plan a trip. This chapter uses it the other way round: as a description of the network, aggregated until it says something about the city.
+
+TransJakarta publishes its feed openly. It is a *frequency-based* feed: rather than listing every departure, each trip in `trips` is a template pattern, and `frequencies` says how often it repeats (`headway_secs`) between a start and an end time. That makes service levels easy to compute: a pattern with a 600-second headway runs six buses an hour. Most patterns in this feed run a single headway from 05:00 to 22:00, so the chapter describes one moment, 08:00 on a weekday, and compares it with 08:00 on a Sunday.
+
+{{< include _snippets/ch67_transit_access.qmd >}}
+
+## Insight 1: the network map
+
+The first chart of any network is a map of it. Each trip pattern is drawn along its shape, coloured by service type, with line width proportional to buses per hour. The BRT corridors form the spine of the system; the blue *Angkutan Umum Integrasi* routes extend it along main roads; and the green Mikrotrans minibus routes reach almost every street between them. Royaltrans (premium commuter coaches) and Transjabodetabek (services to the surrounding cities) run out to the edges.
+
+Line width needs one caution. Where many patterns share a corridor, their lines overlap and the corridor draws thick, which is what a passenger on that corridor experiences, but a single pattern there may be no more frequent than a back-street minibus. Insight 3 separates the two.
+
+## Insight 2: where service concentrates
+
+Summing buses per hour over every pattern that calls at a stop gives the service each stop receives. The busiest stops cluster around Tanah Abang and at the big terminals (Tanjung Priok, Rawamangun, Senen): the busiest, JPO Blok G at Tanah Abang, is called at by 33 patterns, about 247 buses an hour on paper. The median stop gets 20.
+
+A map shows where; a **Lorenz curve** shows how unequal. Rank the stops from least to most served, and plot the cumulative share of stops against the cumulative share of bus calls. If every stop got the same service the curve would follow the diagonal; the further it sags, the more unequal the spread. Here the busiest tenth of stops receives 28 per cent of all bus calls, almost three times its share, and the Gini coefficient is 0.38. That is moderate concentration, and the map suggests why: the Mikrotrans network spreads frequent minibus service across the whole grid, so few stops are left with little.
+
+## Insight 3: the wait by service type
+
+To compare waits across service types, each pattern's scheduled headway is plotted as a dot, with a box for the middle half. Two choices make the chart readable. A **log axis** gives a 3-minute and a 30-minute headway equal visual weight, which matches how a passenger feels them. And the **dots over the boxes** keep every pattern visible, so a type with six patterns is not mistaken for one with two hundred.
+
+The result is a surprise for anyone who rides the BRT. Per pattern, Mikrotrans is scheduled every 6 minutes almost without exception, while the median BRT pattern runs every 20. BRT corridors are frequent not because any one pattern is, but because many patterns share them: the stop-level numbers in Insight 2 are where that shows. This is the general lesson of the chart. A summary at the wrong level of aggregation, here the pattern rather than the stop, can reverse the conclusion.
+
+## Insight 4: weekday and Sunday
+
+A **slope chart** compares two states of the same things: one point per service type on the left for the weekday and on the right for Sunday, joined by a line. Parallel lines mean no change; steep lines catch the eye.
+
+The lines here are almost flat. At 08:00, Sunday service is within a few per cent of weekday service for BRT, the integrated routes and Mikrotrans, and Transjabodetabek even runs 13 per cent more. Only Royaltrans, the premium commuter coaches, does not run at all on Sunday; a log axis cannot draw zero, so it is marked at its weekday value instead. A flat slope chart is still a finding. It says the network is scheduled as a seven-day service, which many networks are not.
+
+## Insight 5: a model of access
+
+The last chart turns description into a model. For every 100 m cell of WorldPop 2020 population in the five mainland cities of DKI Jakarta, the script asks whether there is a stop within 500 m (straight line) whose combined headway, all patterns calling there taken together, is at most *h* minutes. Repeating the question for *h* from 3 to 60 minutes traces an **access curve**: the share of residents who can walk to service at least that frequent.
+
+Across the five cities, 89 per cent of residents live within 500 m of a TransJakarta stop at all, and 88 per cent within 500 m of one with a bus at least every 10 minutes. Raising the standard to every 5 minutes drops the share to 78 per cent, and to every 3 minutes, 73 per cent. The curve is almost flat beyond 10 minutes because nearly every stop is served at least that often on paper. The cities differ most at the strict end. Jakarta Pusat reaches 99 per cent at 10 minutes, while Jakarta Utara reaches 80 per cent and Jakarta Barat 85 per cent; Exercise 2 asks whether a longer walk closes the gap.
+
+## What the model is not
+
+The timetable is a plan. Scheduled headways in Jakarta's traffic are targets, and the Mikrotrans value of 6 minutes on almost every route is a service standard, not an observation. Combined headway assumes any bus will do, which is true for a passenger going to the nearest BRT corridor and false for one going somewhere specific. Walking distance is a straight line, not a path through gated estates and across toll roads. WorldPop distributes census counts with a model, and the GAUL 2015 boundaries are approximate. The access curve is therefore an upper bound on how well served Jakarta's residents are. Its value is the shape and the comparison between cities, not the exact percentage.
+
+## Exercises {.unnumbered}
+
+1. Repeat the analysis at 22:00 instead of 08:00. Which service types disappear, and how does the access curve move?
+2. Replace the straight-line 500 m with 800 m. Which city gains the most, and why?
+3. Recompute Insight 3 at the stop level: for each stop, the combined headway, coloured by the service type that contributes most buses. Does the BRT surprise survive?
+4. Find another city's public GTFS feed in the Mobility Database and draw Insight 2 for it. Is its service more or less concentrated than Jakarta's?

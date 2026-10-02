@@ -1,0 +1,46 @@
+[
+ {
+  "name": "ch67-network",
+  "kind": "figure",
+  "caption": "Insight 1. The TransJakarta network at 08:00 on a weekday.",
+  "image": "images/real/ch67-network.png"
+ },
+ {
+  "name": "ch67-stops",
+  "kind": "figure",
+  "caption": "Insight 2. Buses per hour at every stop, and how unequally they are spread.",
+  "image": "images/real/ch67-stops.png"
+ },
+ {
+  "name": "ch67-top-stops",
+  "kind": "table",
+  "caption": "The ten busiest stops: buses per hour, trip patterns calling, and the combined headway.",
+  "markdown": "| stop_name                 |   bph |   n_patterns |   headway_min |\n|:--------------------------|------:|-------------:|--------------:|\n| JPO Blok G                |   247 |           33 |          0.24 |\n| Jln. Taman Jatibaru Timur |   243 |           34 |          0.25 |\n| Pharmin                   |   206 |           28 |          0.29 |\n| Term. Tj. Priok 1         |   199 |           25 |          0.30 |\n| Pospol Jati Bunder        |   183 |           26 |          0.33 |\n| Museum Textile            |   170 |           17 |          0.35 |\n| Term. Rawamangun          |   155 |           19 |          0.39 |\n| Blok F                    |   144 |           20 |          0.42 |\n| Poins Square              |   141 |           21 |          0.43 |\n| Term. Senen               |   135 |           24 |          0.44 |"
+ },
+ {
+  "name": "ch67-headways",
+  "kind": "figure",
+  "caption": "Insight 3. Scheduled headways by service type.",
+  "image": "images/real/ch67-headways.png"
+ },
+ {
+  "name": "ch67-headway-table",
+  "kind": "table",
+  "caption": "Headway quartiles (minutes) by service type, weekday 08:00.",
+  "markdown": "| route_desc              |   count |   25% |   50% |   75% |\n|:------------------------|--------:|------:|------:|------:|\n| BRT                     |     136 |   8.3 |  20.0 |  20.0 |\n| Angkutan Umum Integrasi |     137 |  12.0 |  18.3 |  23.0 |\n| Mikrotrans              |     242 |   6.0 |   6.0 |   6.0 |\n| Transjabodetabek        |      59 |  15.0 |  20.0 |  20.0 |\n| Royaltrans              |       6 |  26.2 |  35.0 |  58.8 |\n| Rusun                   |      30 |  20.0 |  20.0 |  35.0 |\n| Bus Wisata              |       2 |  20.0 |  20.0 |  20.0 |"
+ },
+ {
+  "name": "ch67-weekend",
+  "kind": "chart",
+  "caption": "Insight 4. Weekday against Sunday service by type.",
+  "image": "images/real/ch67-weekend.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"route_desc,weekday,sunday,change_%\nBRT,725.52,744.73,2.6472\nAngkutan Umum Integrasi,523.52,510.23,-2.5378\nMikrotrans,2175,2178,0.13793\nTransjabodetabek,235.32,265.32,12.748\nRoyaltrans,13.623,0,-100\nRusun,97.702,97.702,0\nBus Wisata,6,6,0\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_slope(df):\n    fig, ax = plt.subplots(figsize=(6.4, 5))\n    for r in df.itertuples():\n        c = COLOURS.get(r.route_desc, \"#555\")\n        if r.sunday == 0:            # a log axis cannot show zero: mark it at the weekday point instead\n            ax.plot(0, r.weekday, \"o\", color=c); ax.text(0.04, r.weekday, f\"{r.route_desc}: no Sunday service\",\n                                                         va=\"center\", fontsize=8, color=c)\n            continue\n        ax.plot([0, 1], [r.weekday, r.sunday], \"-o\", color=c, lw=2)\n        ax.text(1.04, r.sunday, f\"{r.route_desc} ({r._4:+.0f} %)\", va=\"center\", fontsize=8)\n    ax.set_yscale(\"log\"); ax.set_xticks([0, 1], [\"weekday 08:00\", \"Sunday 08:00\"]); ax.set_xlim(-0.1, 1.9)\n    ax.yaxis.set_minor_formatter(plt.NullFormatter())\n    ax.set_ylabel(\"buses per hour, whole network (log scale)\")\n    insight(fig, \"Insight 4: Sunday morning keeps almost the whole weekday service; only Royaltrans stops\",\n            \"Total buses per hour by service type at 08:00, weekday against Sunday.\", top=0.86)\n    return fig\n\nplot_slope(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch67-access",
+  "kind": "chart",
+  "caption": "Insight 5. Share of residents within walking distance of frequent service.",
+  "image": "images/real/ch67-access.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"kota,headway_max_min,share_%\nKota Jakarta Barat,3,65.899\nKota Jakarta Pusat,3,88.421\nKota Jakarta Selatan,3,76.06\nKota Jakarta Timur,3,77.693\nKota Jakarta Utara,3,64.105\nDKI Jakarta (5 cities),3,72.897\nKota Jakarta Barat,5,69.51\nKota Jakarta Pusat,5,96.535\nKota Jakarta Selatan,5,82.391\nKota Jakarta Timur,5,82.853\nKota Jakarta Utara,5,70.467\nDKI Jakarta (5 cities),5,78.35\nKota Jakarta Barat,10,85.02\nKota Jakarta Pusat,10,98.737\nKota Jakarta Selatan,10,92.866\nKota Jakarta Timur,10,88.885\nKota Jakarta Utara,10,80.372\nDKI Jakarta (5 cities),10,88.094\nKota Jakarta Barat,15,85.02\nKota Jakarta Pusat,15,98.831\nKota Jakarta Selatan,15,93.434\nKota Jakarta Timur,15,89.414\nKota Jakarta Utara,15,80.495\nDKI Jakarta (5 cities),15,88.392\nKota Jakarta Barat,20,85.544\nKota Jakarta Pusat,20,98.853\nKota Jakarta Selatan,20,94.063\nKota Jakarta Timur,20,89.622\nKota Jakarta Utara,20,81.148\nDKI Jakarta (5 cities),20,88.831\nKota Jakarta Barat,30,86.128\nKota Jakarta Pusat,30,98.853\nKota Jakarta Selatan,30,94.198\nKota Jakarta Timur,30,89.707\nKota Jakarta Utara,30,81.234\nDKI Jakarta (5 cities),30,89.047\nKota Jakarta Barat,60,86.173\nKota Jakarta Pusat,60,98.853\nKota Jakarta Selatan,60,94.198\nKota Jakarta Timur,60,89.712\nKota Jakarta Utara,60,81.767\nDKI Jakarta (5 cities),60,89.151\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_access(df):\n    fig, ax = plt.subplots(figsize=(8, 4.8))\n    for k, g in df.groupby(\"kota\"):\n        whole = k.startswith(\"DKI\")\n        ax.plot(g.headway_max_min, g[\"share_%\"], \"-o\", lw=3 if whole else 1.3, ms=4,\n                color=\"#000\" if whole else None, label=k, zorder=3 if whole else 2)\n    ax.set_xscale(\"log\"); ax.set_xticks(THRESHOLDS, [str(t) for t in THRESHOLDS])\n    ax.xaxis.set_minor_formatter(plt.NullFormatter())\n    ax.set_xlabel(\"a bus at least every ... minutes (combined headway at the stop)\")\n    ax.set_ylabel(f\"residents within {WALK} m of such a stop (%)\"); ax.set_ylim(0, 100); ax.grid(alpha=0.3)\n    ax.legend(fontsize=7, loc=\"lower right\")\n    insight(fig, \"Insight 5: nine in ten residents live within 500 m of a stop served at least every 10 minutes\",\n            f\"Share of each city's WorldPop 2020 residents within {WALK} m (straight line) of a TransJakarta stop, by the \"\n            \"most frequent combined service required at that stop; weekday 08:00.\")\n    return fig\n\nplot_access(df)\nplt.show()\n"
+ }
+]

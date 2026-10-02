@@ -1,0 +1,57 @@
+# Apa yang Diceritakan Jadwal tentang Sebuah Kota: Layanan dan Akses Transportasi Umum di Jakarta {#sec-transit}
+
+::: {.chapter-goal}
+#### Di bab ini
+Jadwal angkutan umum yang diterbitkan dalam format GTFS adalah dataset tentang kota. Anda akan membaca *feed* TransJakarta menjadi peta jaringan, mengukur seberapa timpang layanan tersebar di 7.771 halte, membandingkan waktu tunggu menurut jenis layanan serta antara hari kerja dan Minggu, lalu menggabungkan jadwal dengan populasi berbasis grid untuk memodelkan berapa bagian warga Jakarta yang tinggal dalam jarak jalan kaki dari layanan yang sering. Python dan R berdampingan, setiap grafik dengan judul utama yang menyatakan temuannya.
+:::
+
+## GTFS: jadwal yang ditulis untuk komputer
+
+General Transit Feed Specification (GTFS) adalah format yang dipakai sebagian besar operator angkutan umum di dunia untuk menerbitkan jadwalnya, agar aplikasi perencana perjalanan bisa membacanya. Sebuah *feed* adalah berkas zip berisi tabel teks: `routes` (layanan bernama), `trips` (perjalanan atau pola perjalanan), `stop_times` (halte mana yang disinggahi setiap perjalanan, dan kapan), `stops` (dengan koordinat), `shapes` (lintasan yang dilalui), dan `calendar` (hari apa saja setiap layanan berjalan).
+
+Sebagian besar analisis memakai GTFS untuk merencanakan perjalanan. Bab ini memakainya ke arah sebaliknya: sebagai gambaran jaringan, yang diagregasi sampai bisa mengatakan sesuatu tentang kota.
+
+TransJakarta menerbitkan *feed*-nya secara terbuka. *Feed* ini berbasis frekuensi: alih-alih mencantumkan setiap keberangkatan, setiap perjalanan di `trips` adalah pola templat, dan `frequencies` menyebut seberapa sering pola itu diulang (`headway_secs`) antara jam mulai dan jam selesai. Itu membuat tingkat layanan mudah dihitung: pola dengan *headway* 600 detik menjalankan enam bus per jam. Sebagian besar pola di *feed* ini memakai satu *headway* dari pukul 05.00 sampai 22.00, sehingga bab ini menggambarkan satu momen, pukul 08.00 pada hari kerja, dan membandingkannya dengan pukul 08.00 hari Minggu.
+
+{{< include _snippets/ch67_transit_access.qmd >}}
+
+## *Insight* 1: peta jaringan
+
+Grafik pertama dari jaringan apa pun adalah petanya. Setiap pola perjalanan digambar mengikuti lintasannya, diwarnai menurut jenis layanan, dengan lebar garis sebanding dengan jumlah bus per jam. Koridor BRT membentuk tulang punggung sistem; rute *Angkutan Umum Integrasi* (biru) memperpanjangnya di sepanjang jalan utama; dan rute minibus Mikrotrans (hijau) menjangkau hampir setiap jalan di antaranya. Royaltrans (bus premium komuter) dan Transjabodetabek (layanan ke kota-kota sekitar) menjulur ke tepi wilayah.
+
+Lebar garis perlu satu catatan. Ketika banyak pola berbagi satu koridor, garisnya bertumpuk dan koridor itu tergambar tebal. Itulah yang dialami penumpang di koridor tersebut, tetapi satu pola di sana mungkin tidak lebih sering daripada minibus di jalan kecil. *Insight* 3 memisahkan keduanya.
+
+## *Insight* 2: di mana layanan terpusat
+
+Menjumlahkan bus per jam dari semua pola yang singgah di sebuah halte memberi layanan yang diterima halte itu. Halte tersibuk berkumpul di sekitar Tanah Abang dan di terminal-terminal besar (Tanjung Priok, Rawamangun, Senen): yang paling sibuk, JPO Blok G di Tanah Abang, disinggahi 33 pola, sekitar 247 bus per jam di atas kertas. Halte median mendapat 20.
+
+Peta menunjukkan di mana; **kurva Lorenz** menunjukkan seberapa timpang. Urutkan halte dari yang paling sedikit sampai paling banyak dilayani, lalu gambar bagian kumulatif halte terhadap bagian kumulatif singgahan bus. Jika setiap halte mendapat layanan yang sama, kurvanya mengikuti diagonal; makin melengkung ke bawah, makin timpang sebarannya. Di sini sepersepuluh halte tersibuk menerima 28 persen dari semua singgahan bus, hampir tiga kali bagiannya, dan koefisien Gini-nya 0,38. Itu pemusatan yang sedang, dan petanya memberi petunjuk mengapa: jaringan Mikrotrans menyebarkan layanan minibus yang sering ke seluruh grid kota, sehingga hanya sedikit halte yang tertinggal.
+
+## *Insight* 3: waktu tunggu menurut jenis layanan
+
+Untuk membandingkan waktu tunggu antarjenis layanan, *headway* terjadwal setiap pola digambar sebagai titik, dengan kotak untuk separuh bagian tengahnya. Dua pilihan membuat grafik ini terbaca. **Sumbu logaritmik** memberi *headway* 3 menit dan 30 menit bobot visual yang setara, sesuai yang dirasakan penumpang. Dan **titik di atas kotak** membuat setiap pola tetap terlihat, sehingga jenis layanan dengan enam pola tidak tertukar dengan yang punya dua ratus.
+
+Hasilnya mengejutkan bagi siapa pun yang biasa naik BRT. Per pola, Mikrotrans dijadwalkan setiap 6 menit hampir tanpa kecuali, sementara pola BRT median berjalan setiap 20 menit. Koridor BRT sering bukan karena satu polanya sering, melainkan karena banyak pola berbagi koridor itu: angka tingkat halte di *Insight* 2 adalah tempat hal itu terlihat. Inilah pelajaran umum grafik ini. Ringkasan pada tingkat agregasi yang salah, di sini pola alih-alih halte, dapat membalik kesimpulan.
+
+## *Insight* 4: hari kerja dan Minggu
+
+**Grafik lereng** (*slope chart*) membandingkan dua keadaan dari hal yang sama: satu titik per jenis layanan di kiri untuk hari kerja dan di kanan untuk hari Minggu, dihubungkan dengan garis. Garis sejajar berarti tidak ada perubahan; garis curam menarik perhatian.
+
+Garis-garis di sini hampir datar. Pada pukul 08.00, layanan hari Minggu hanya berbeda beberapa persen dari hari kerja untuk BRT, rute integrasi, dan Mikrotrans, dan Transjabodetabek justru 13 persen lebih banyak. Hanya Royaltrans, bus komuter premium, yang sama sekali tidak beroperasi pada hari Minggu; sumbu logaritmik tidak bisa menggambar nol, sehingga layanan ini ditandai pada nilai hari kerjanya. Grafik lereng yang datar tetaplah sebuah temuan. Grafik ini mengatakan bahwa jaringan dijadwalkan sebagai layanan tujuh hari, hal yang tidak berlaku di banyak jaringan.
+
+## *Insight* 5: sebuah model akses
+
+Grafik terakhir mengubah deskripsi menjadi model. Untuk setiap sel populasi WorldPop 2020 berukuran 100 m di lima kota daratan DKI Jakarta, skrip menanyakan apakah ada halte dalam jarak 500 m (garis lurus) yang *headway* gabungannya, semua pola yang singgah di sana digabung, paling lama *h* menit. Mengulang pertanyaan itu untuk *h* dari 3 sampai 60 menit menghasilkan **kurva akses**: bagian warga yang bisa berjalan ke layanan setidaknya sesering itu.
+
+Di lima kota itu, 89 persen warga tinggal dalam 500 m dari halte TransJakarta mana pun, dan 88 persen dalam 500 m dari halte dengan bus setidaknya setiap 10 menit. Menaikkan standar menjadi setiap 5 menit menurunkan bagiannya menjadi 78 persen, dan setiap 3 menit, 73 persen. Kurvanya hampir datar di atas 10 menit karena hampir setiap halte dilayani setidaknya sesering itu di atas kertas. Perbedaan antarkota paling besar di ujung yang ketat. Jakarta Pusat mencapai 99 persen pada 10 menit, sementara Jakarta Utara mencapai 80 persen dan Jakarta Barat 85 persen; Latihan 2 menanyakan apakah jarak jalan yang lebih panjang menutup selisih itu.
+
+## Apa yang bukan model ini
+
+Jadwal adalah rencana. *Headway* terjadwal di tengah lalu lintas Jakarta adalah target, dan nilai 6 menit untuk Mikrotrans di hampir semua rute adalah standar layanan, bukan hasil pengamatan. *Headway* gabungan mengasumsikan bus mana pun bisa dipakai, yang benar bagi penumpang yang menuju koridor BRT terdekat dan salah bagi penumpang dengan tujuan tertentu. Jarak jalan kaki diukur garis lurus, bukan jalur melewati kompleks berpagar dan menyeberangi jalan tol. WorldPop membagi hitungan sensus dengan model, dan batas wilayah GAUL 2015 bersifat perkiraan. Karena itu kurva akses adalah batas atas seberapa baik warga Jakarta terlayani. Nilainya ada pada bentuk kurva dan perbandingan antarkota, bukan pada persentase persisnya.
+
+## Latihan {.unnumbered}
+
+1. Ulangi analisis pada pukul 22.00, bukan 08.00. Jenis layanan mana yang hilang, dan bagaimana kurva akses bergeser?
+2. Ganti jarak garis lurus 500 m dengan 800 m. Kota mana yang paling bertambah, dan mengapa?
+3. Hitung ulang *Insight* 3 pada tingkat halte: untuk setiap halte, *headway* gabungannya, diwarnai menurut jenis layanan yang menyumbang bus terbanyak. Apakah kejutan BRT tetap bertahan?
+4. Cari *feed* GTFS publik kota lain di Mobility Database dan gambar *Insight* 2 untuknya. Apakah layanannya lebih atau kurang terpusat daripada Jakarta?
