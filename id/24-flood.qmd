@@ -26,7 +26,7 @@ Arah orbit yang dipakai untuk kondisi dasar dan kejadian harus sama. Mencampur l
 
 ## Contoh nyata: Aceh Tamiang, November 2025
 
-Skrip ini mengulang metode Sumatra Flood Explorer milik penulis untuk satu kabupaten saat banjir akhir November 2025. Lihat grafiknya dulu sebelum petanya: kalau air yang terpetakan tidak berada di bagian rendah topografi, berarti ada yang salah dengan aturan radarnya.
+Skrip ini membangun metodenya dari awal, hanya dengan data publik, untuk satu kabupaten saat banjir akhir November 2025. Pendekatannya sama dengan yang dipakai penulis di flood explorer miliknya (tidak dipublikasikan), jadi Anda bebas memakai dan menyesuaikannya. Lihat grafiknya dulu sebelum petanya: kalau air yang terpetakan tidak berada di bagian rendah topografi, berarti ada yang salah dengan aturan radarnya.
 
 {{< include _snippets/ch24_flood_aceh.qmd >}}
 

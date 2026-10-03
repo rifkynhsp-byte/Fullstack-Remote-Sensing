@@ -4,8 +4,8 @@
 /**
  * CHAPTER 24 | Flood mapping as a service
  * ---------------------------------------------------------------------------
- * The method from the author's Sumatra Flood Explorer, as delivered to
- * disaster-response users in late 2025:
+ * Built from the beginning with public data, following the same approach
+ * as the author's own (unpublished) flood explorer. Free to use and adapt:
  *   1. Terrain says where water CAN go: height above nearest drainage (HAND).
  *   2. Radar says where water IS: Sentinel-1 VV below -13 dB after the event,
  *      and at least 1.25 times darker than the dry-season baseline, on slopes

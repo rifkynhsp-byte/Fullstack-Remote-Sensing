@@ -26,7 +26,7 @@ The same orbit direction is used for the baseline and the event. Mixing ascendin
 
 ## A working example: Aceh Tamiang, November 2025
 
-The listing reproduces the method of the author's Sumatra Flood Explorer for one district during the late November 2025 floods. Look at the chart before the map: if the mapped water did not sit low on the terrain, the radar rule would be doing something wrong.
+The listing builds the method from the beginning, with public data only, for one district during the late November 2025 floods. It is the same approach the author uses in his own (unpublished) flood explorer, so you can take it and adapt it freely. Look at the chart before the map: if the mapped water did not sit low on the terrain, the radar rule would be doing something wrong.
 
 {{< include _snippets/ch24_flood_aceh.qmd >}}
 
