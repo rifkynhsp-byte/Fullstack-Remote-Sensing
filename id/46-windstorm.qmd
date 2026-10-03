@@ -80,3 +80,13 @@ Gunakan untuk memutuskan di mana harus melihat, bukan untuk menyatakan luas hekt
 1. Ganti tahun pembanding tunggal dengan rata-rata perubahan 2018–2020. Laporkan porsi kerusakan Rote beserta nilai minimum dan maksimumnya di antara tahun-tahun itu.
 2. Pilih hutan pembanding yang jauh di luar jalur badai, misalnya di Flores atau Sumba tengah. Apakah kelebihan kerusakan di Rote bertambah setelah daerah pembandingnya benar-benar tidak rusak?
 3. Ambil sampel 50 blok dengan anomali terkuat lalu lihat di peta dasar resolusi tinggi sebelum dan sesudah. Berapa yang menunjukkan kerusakan kasatmata?
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Bab ini sudah memberi bahannya: porsi kerusakan Rote 42 % dengan pembanding 2019 dan 32 % dengan 2020. Tambahkan 2018, rata-ratakan perubahan ketiga tahun pembanding, lalu kurangkan rata-ratanya. Hasil per tahun menjadi nilai minimum dan maksimumnya. Perkirakan porsi dengan pembanding rata-rata berada di tengah (kira-kira sepertiga hutan). Laporkan rentangnya bersama angka itu; pembaca lalu bisa melihat seberapa besar angka itu ditentukan oleh pilihan tahun.
+
+**2.** Tidak dihitung di bab ini. Pilih hutan bertipe serupa yang jauh dari jalur badai, misalnya di Flores, lalu hitung porsinya di bawah setiap ambang. Kalau laju di pembanding turun di bawah Timor Barat (17 % pada −0,1), kelebihan di Rote bertambah. Itu menegaskan bahwa Timor Barat sendiri ikut rusak dan bahwa 13.000 ha di bab ini terlalu kecil.
+
+**3.** Latihan ini tidak punya jawaban hasil hitungan: ini pemeriksaan visual yang harus Anda lakukan. Pakai pasangan citra sebelum–sesudah beresolusi di bawah satu meter, dan nilai setiap blok secara buta (tanpa melihat anomalinya dulu) sebagai jelas rusak, tidak jelas, atau tidak rusak. Porsi "jelas rusak" di blok beranomali terkuat adalah taksiran presisi awal. Lakukan hal yang sama untuk 50 blok hutan acak sebagai pembanding.
+:::

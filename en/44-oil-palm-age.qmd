@@ -97,3 +97,13 @@ Use it to show where old and young palm cluster, not to state the age of a singl
 1. Add a third index, for example NDMI (NIR and SWIR1) or a bare-soil index. Does its Spearman rho with GEDI height beat NBR's 0.39?
 2. Find blocks whose dip falls in 1997, 2015 or 2019. Are they replanting after fire rather than first planting?
 3. Refit the growth curve using only pixels where NBR and NDVI agree within 1 year. Do H~max~ and k change? What does that tell you about how age errors bias the curve?
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** Not computed in the chapter. Add an NDMI series (B5 and B6 on Landsat 8/9, B4 and B5 on Landsat 5/7), find its deepest dip, and compute Spearman rho with GEDI height exactly as for NBR. NDMI also uses shortwave infrared, so expect it to behave much more like NBR (rho well above NDVI's 0.09) than like NDVI. If it beats 0.39, it is a candidate; if it agrees with NBR, the two together give a confidence flag.
+
+**2.** Yes, mostly. 1997, 2015 and 2019 are El Niño fire-and-haze years in Kalimantan. The GEDI chart shows the clue: pixels dated to 1995–1999 are about 9 m tall, shorter than palms ten years younger. Many of these "planting years" are haze or fire dips, not clearing. The palms were planted later. For 2015 and 2019, look for the same pattern: a dip followed by quick recovery to the old NBR (a fire under mature palms) rather than five years of slow regrowth (a real replanting).
+
+**3.** Not computed in the chapter. Keep the pixels where NBR and NDVI agree within 1 year (66 % of the area), then refit. Expect H~max~ and k to rise slightly. Misdated short palms, which drag the old end of the curve down, are removed. The size of the change measures how much age error biased the original curve.
+:::

@@ -83,3 +83,18 @@ Pelajarannya tetap berlaku, dan inilah yang paling berguna di bab ini: **sebelum
 1. Simpan model yang dilatih dengan kanal Sentinel-2, bukan embedding, lewat rute A, lalu jalankan uji bolak-balik. Apakah penurunannya juga terjadi?
 2. Ulangi percobaan sampel lokal dengan kanal median Sentinel-2, bukan embedding. Berapa sampel lokal per kelas yang dibutuhkan untuk mencapai 0,85 di Pontianak?
 3. Terapkan model di tempat yang sama dengan embedding 2023. Apakah model yang dilatih dengan data 2021 masih cocok dengan WorldCover 2021 di sana?
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Tidak dihitung di bab ini. Latih Random Forest yang sama pada kanal median Sentinel-2, ekspor lewat rute A, muat ulang, lalu nilai keduanya pada titik uji yang sama. Kalau model yang dimuat ulang cocok, penurunan rute A khusus terjadi pada model embedding (64 kanal, atau skala nilainya). Kalau ikut turun, masalahnya ada pada rute A itu sendiri. Bagaimanapun, uji bolak-baliklah yang memberi tahu Anda; penyebabnya pertanyaan kedua.
+
+**2.** Tidak dihitung di bab ini. Perkirakan kurvanya mulai lebih rendah dan naik lebih lambat daripada dengan embedding: kanal mentah membawa lebih sedikit konteks hasil belajar, sehingga model butuh lebih banyak contoh per kelas. Hasil yang masuk akal adalah 25–50 sampel lokal per kelas untuk mencapai 0,85, dibanding 5 dengan embedding. Jalankan dan lihat; perbandingan itulah nilai sebenarnya dari latihan ini.
+
+**3.** Tidak dihitung di bab ini. Terapkan model hasil latih 2021 pada embedding 2023 lalu nilai terhadap WorldCover 2021. Kesesuaian akan sedikit turun karena dua alasan yang harus dipisahkan:
+
+- **Perubahan nyata:** bangunan baru dan lahan yang dibuka sejak 2021. Ini ketidaksesuaian yang benar.
+- **Pergeseran:** embedding dari tahun berbeda tidak dijamin identik untuk lahan yang tidak berubah.
+
+Nilai hanya pada titik yang tampak tidak berubah antara citra 2021 dan 2023 untuk memisahkan pergeserannya.
+:::

@@ -86,3 +86,18 @@ Ini langkah umum setiap kali jawaban bergantung pada pilihan yang arbitrer: jala
 1. Ulangi analisis kehijauan untuk musim hujan 2023 (Desember sampai Maret). Apakah pendinginan per +0,1 NDVI lebih besar atau lebih kecil, dan kenapa?
 2. Tambahkan kriteria keempat pada penapisan PLTS: jarak ke pantai, atau bahaya banjir. Berapa banyak dari 107 km² lahan kokoh yang bertahan?
 3. Ganti ERA5-Land dengan data penyinaran yang lebih halus jika ada di katalog, atau uji pengaruhnya dengan menghapus kriteria penyinaran (bobot 0 / 0,5 / 0,5). Lahan mana yang kokoh kalau begitu?
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Tidak dihitung di bab ini. Saring koleksi Landsat dan Sentinel-2 ke Desember–Maret lalu jalankan ulang `green_frame`. Perkirakan kemiringannya *lebih kecil*:
+
+- Tanah dan atap yang basah lebih sedikit memanas, dan penguapan mendinginkan permukaan terbuka maupun hijau, sehingga kontrasnya menyusut.
+- Citra cerah yang lebih sedikit membuat kompositnya lebih bising.
+
+Kalau kemiringannya tetap sekitar −0,9 °C, efek kehijauan itu kokoh lintas musim. Kalau menjadi separuhnya, sebagian besar kontras musim kemarau berkaitan dengan kelembapan, bukan naungan.
+
+**2.** Tambahkan skor (misalnya `dist_coast_km` yang diskalakan 0–1), masukkan ke setiap set bobot, lalu hitung ulang piksel yang masuk 10 % teratas pada kelima set. Setiap kriteria tambahan hanya bisa mempertahankan atau menyusutkan lahan kokoh, tidak pernah memperluasnya. Perhatikan apakah yang hilang tersebar atau terpusat di satu kelompok, karena itu menunjukkan lokasi mana yang rapuh.
+
+**3.** Dengan bobot 0 / 0,5 / 0,5, penapisan menjadi "lahan datar dekat permukiman". Banyak lahan kokoh akan bertahan, karena ERA5-Land hampir tidak bervariasi di Sumbawa: itulah sebabnya ia tampak sebagai blok 9 km. Kalau lahan kokohnya hampir tidak berubah, lapisan penyinaran tadi nyaris tidak berkontribusi. Dibutuhkan lapisan surya yang lebih halus sebelum penyinaran bisa mengurutkan lokasi.
+:::

@@ -97,3 +97,13 @@ Gunakan untuk menunjukkan di mana sawit tua dan muda mengelompok, bukan untuk me
 1. Tambahkan indeks ketiga, misalnya NDMI (NIR dan SWIR1) atau indeks tanah terbuka. Apakah rho Spearman-nya terhadap tinggi GEDI mengalahkan 0,39 milik NBR?
 2. Cari blok yang lembahnya jatuh pada 1997, 2015, atau 2019. Apakah itu penanaman ulang setelah kebakaran, bukan penanaman pertama?
 3. Cocokkan ulang kurva pertumbuhan hanya pada piksel tempat NBR dan NDVI sepakat (selisih ≤1 tahun). Apakah H~max~ dan k berubah? Apa artinya tentang bagaimana galat umur membiaskan kurva?
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Tidak dihitung di bab ini. Tambahkan deret NDMI (B5 dan B6 pada Landsat 8/9, B4 dan B5 pada Landsat 5/7), cari lembah terdalamnya, lalu hitung rho Spearman terhadap tinggi GEDI persis seperti untuk NBR. NDMI juga memakai inframerah gelombang pendek, jadi perkirakan perilakunya jauh lebih mirip NBR (rho jauh di atas 0,09 milik NDVI) daripada NDVI. Kalau mengalahkan 0,39, ia layak dipertimbangkan; kalau sepakat dengan NBR, keduanya bersama-sama memberi penanda keyakinan.
+
+**2.** Ya, sebagian besar. 1997, 2015, dan 2019 adalah tahun El Niño dengan kebakaran dan kabut asap di Kalimantan. Grafik GEDI memberi petunjuknya: piksel bertanggal 1995–1999 tingginya sekitar 9 m, lebih pendek daripada sawit sepuluh tahun lebih muda. Banyak "tahun tanam" di sana sebenarnya lembah kabut asap atau kebakaran, bukan pembukaan lahan. Sawitnya ditanam belakangan. Untuk 2015 dan 2019, cari pola yang sama: lembah yang diikuti pemulihan cepat ke NBR lama (kebakaran di bawah sawit tua), bukan pertumbuhan kembali lambat selama lima tahun (tanam ulang sungguhan).
+
+**3.** Tidak dihitung di bab ini. Simpan piksel tempat NBR dan NDVI sepakat (selisih ≤1 tahun, 66 % luasan), lalu cocokkan ulang. Perkirakan H~max~ dan k sedikit naik. Sawit pendek yang salah tanggal, yang menarik ujung tua kurva ke bawah, terbuang. Besarnya perubahan mengukur seberapa jauh galat umur membiaskan kurva semula.
+:::

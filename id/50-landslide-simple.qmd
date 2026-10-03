@@ -83,3 +83,13 @@ Ada dua kesimpulan jujur. Pertama, "optimum" yang disetel di satu area kehilanga
 1. Ganti bobotnya menjadi 0,7, 0,2, 0,1. Apakah AUC Iburi membaik?
 2. Tambahkan faktor "jarak ke sungai". Apakah membantu?
 3. Petakan sendiri longsor di satu lembah di Jawa Barat dari citra Sentinel-2 setelah kejadian yang diketahui, lalu uji tumpang susunnya pada poligon buatan Anda sendiri.
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Hampir tidak, dan arahnya keliru. Sapuan bobot di bab ini memakai lereng 0,7, hujan 0,18, dan tutupan 0,12, dekat dengan bobot latihan ini, dan memberi AUC sekitar 0,58, dibanding 0,59 untuk bobot dasar. Bobot lereng yang lebih besar tidak membantu di Iburi. Bobot "terbaik" dalam sapuan (lereng 0,2) unggul hanya karena tutupan lahan pascakejadian membocorkan bekas longsor ke dalam prediktor. Bangun ulang skor tutupan dari peta tutupan lahan 2017 sebelum mempercayai perbandingan bobot apa pun.
+
+**2.** Tidak dihitung di bab ini. Hitung jarak ke sungai (misalnya dari jaringan sungai MERIT Hydro atau HydroSHEDS), beri skor dalam lima kelas (makin dekat makin tinggi), lalu uji AUC dengan dan tanpa faktor itu. Di Iburi, banyak longsor bermula di lereng atas lalu meluncur ke lembah, jadi perkirakan kenaikannya kecil atau nihil. Pada katalog Jawa Barat, perkirakan kenaikan semu yang sebenarnya tentang jalan dan desa di sepanjang sungai (bias pelaporan), bukan tentang kegagalan lereng.
+
+**3.** Latihan ini seperti kerja lapangan, dan jawabannya milik Anda. Pilih kejadian dengan tanggal yang diketahui, petakan bekas longsor segar sebagai poligon dari citra Sentinel-2 pascakejadian (terang, memanjang, mengarah ke bawah lereng), lalu pastikan masing-masing pada citra sebelum kejadian. Bahkan 30 poligon di satu lembah memberi uji yang lebih baik daripada seluruh katalog berbasis berita, karena lokasinya tepat.
+:::

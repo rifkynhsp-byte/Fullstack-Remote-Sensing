@@ -66,3 +66,19 @@ Aturan ini punya dua ambang yang wajar bila disetel berbeda oleh pembaca: sebera
 1. Berapa bagian genangan yang berada di bawah HAND 5 m? Periksa sisanya di peta dan putuskan apakah itu banjir sungguhan atau alarm palsu.
 2. Jalankan aturan yang sama pada lintasan naik tanggal 28 November 2025. Di mana dua peta itu berbeda, dan kenapa?
 3. Ubah ambang rasio dari 1,25 menjadi 1,5. Angka keterpaparan mana yang paling berubah?
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Pada hasil bab ini, 112 dari 115 km² (sekitar 97 %) berada di bawah HAND 5 m, dan hampir tidak ada di atas 15 m. Sisanya kebanyakan di tepi teras dan di sepanjang anak sungai kecil yang tidak terwakili jaringan drainase MERIT 90 m. Sebagian besar itu banjir yang masuk akal, bukan galat. Pengamatan yang berguna: HAND tidak bisa mengurutkan pengaturan di sini, karena masker lereng sudah membuang air palsu di tempat tinggi (lihat bagian sensitivitas).
+
+**2.** Tidak dihitung di bab ini; berikut cara menalarnya. Kedua lintasan kemungkinan berbeda:
+
+- **Waktu:** air naik atau surut di antara dua lintasan.
+- **Geometri:** arah pandang yang berbeda mengubah bayangan radar dan layover di lereng dan bangunan.
+- **Angin:** air yang beriak oleh angin menjadi terang dan terlewat.
+
+Letakkan kedua peta berdampingan. Perbedaan di dataran banjir terbuka biasanya karena waktu; perbedaan di sepanjang bukit dan di kota biasanya karena geometri.
+
+**3.** Pada −13 dB, menaikkan rasio dari 1,25 ke 1,5 menyusutkan luas dari 115 menjadi 111 km², sekitar 3 %. Angka keterpaparan tidak dihitung ulang untuk pengaturan ini, jadi jalankan sendiri. Perkirakan bangunan dan penduduk berubah *lebih besar secara proporsional* daripada luasnya. Permukiman berada di tanggul dan tanah yang sedikit lebih tinggi di tepi banjir, tepat di tempat aturan yang lebih ketat membuang piksel lebih dulu.
+:::

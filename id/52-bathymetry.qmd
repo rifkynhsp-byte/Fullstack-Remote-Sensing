@@ -73,3 +73,19 @@ Gunakan untuk menunjukkan di mana perairan dangkal dan alur berada. Jangan dipak
 1. Urutkan sepuluh citra kemarau paling jernih menurut rho Spearman-nya terhadap zona terumbu. Apakah citra terbaik adalah yang awannya paling sedikit? Apa lagi yang membedakannya (angin, pasang surut, musim)?
 2. Petakan di mana masker NIR menghapus piksel. Apakah itu jejak kilau matahari, gumpalan sungai, atau rataan yang sangat dangkal? Rancang masker yang menghapus dua yang pertama dan mempertahankan yang ketiga.
 3. Kalau Anda bisa mengumpulkan 30 saja titik kedalaman berkoordinat GPS dengan echosounder genggam, cocokkan $m_1$ dan $m_0$ lalu buat peta kedalaman dalam meter.
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Tidak dihitung di bab ini. Ulangi untuk sepuluh citra paling jernih, hitung rasio untuk masing-masing, lalu hitung rho Spearman-nya terhadap peringkat zona. Citra paling jernih di bab ini mencapai 0,80, jadi perkirakan rentang di sekitar angka itu. Citra terbaik sering *bukan* yang awannya paling sedikit. Angin tenang (tanpa riak), kilau rendah (sudut matahari), air jernih setelah musim kering, dan pasang surut yang serupa sama pentingnya. Catat kondisi itu untuk citra terbaik dan terburuk.
+
+**2.** Tidak dihitung di bab ini. Petakan `nir >= 0.02` di atas air lalu lihat polanya:
+
+- Jejak lurus dan sejajar adalah kilau matahari.
+- Gumpalan dari muara di sepanjang pantai adalah sedimen.
+- Petak tepat di rataan terumbu adalah dasar yang sangat dangkal yang memantulkan sedikit NIR.
+
+Masker yang lebih baik menggabungkan uji NIR dengan uji bentuk atau lokasi, misalnya NIR tinggi *dan* di luar zona rataan terumbu Allen Coral Atlas.
+
+**3.** Kumpulkan kedalaman beserta waktu dan posisi, koreksi masing-masing ke pasang surut pada jam citra, lalu bagi acak menjadi dua. Cocokkan $m_1$ dan $m_0$ pada separuh data, prediksi separuh lainnya, lalu laporkan RMSE dan galat per rentang kedalaman. Tiga puluh titik cukup untuk kalibrasi awal, tetapi terlalu sedikit untuk dipercaya di bawah sekitar 10 m. Simpan separuh data uji sampai akhir.
+:::

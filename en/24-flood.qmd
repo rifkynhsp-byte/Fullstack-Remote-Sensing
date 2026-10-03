@@ -66,3 +66,19 @@ The rule has two thresholds that a reader could reasonably set differently: how 
 1. What share of the mapped flood lies below 5 m HAND? Look at the rest on the map and decide whether it is real flooding or a false alarm.
 2. Run the rule on the ascending pass of 28 November 2025. Where do the two maps disagree, and why?
 3. Change the ratio threshold from 1.25 to 1.5. Which of the three exposure numbers changes most?
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** In the chapter's run, 112 of the 115 km² (about 97 %) lie below 5 m HAND, and almost nothing lies above 15 m. The remainder sits mostly on the edges of terraces and along small tributaries that MERIT's 90 m drainage network does not resolve. Most of it is plausible flooding, not error. The useful observation is that HAND cannot rank the settings here, because the slope mask already removed the high false water (see the sensitivity section).
+
+**2.** Not computed in the chapter; here is how to reason about it. Expect the two passes to disagree:
+
+- **Timing:** water rises or recedes between passes.
+- **Geometry:** a different look direction changes radar shadow and layover on slopes and buildings.
+- **Wind:** wind-roughened water brightens and is missed.
+
+Put the two maps side by side. Disagreement on open floodplain is usually timing; disagreement along hills and in towns is usually geometry.
+
+**3.** At −13 dB, raising the ratio from 1.25 to 1.5 shrinks the area from 115 to 111 km², about 3 %. The exposure counts were not recomputed for this setting, so run it. Expect buildings and people to change *proportionally more* than area. Settlements sit on levees and slightly higher ground at the flood edges, exactly where a stricter rule removes pixels first.
+:::

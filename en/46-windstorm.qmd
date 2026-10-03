@@ -80,3 +80,13 @@ Use it to decide where to look, not to state hectares in a report to an insurer 
 1. Replace the single baseline year with the mean change of 2018–2020. Report the Rote damage share with the minimum and maximum across those years.
 2. Pick a comparison forest well outside the storm's path, for example in Flores or central Sumba. Does the excess damage on Rote grow once the comparison area is truly undamaged?
 3. Sample 50 blocks with the strongest anomaly and look at them in high-resolution basemaps from before and after. How many show visible damage?
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** The chapter already gives the pieces: the Rote damage share is 42 % with 2019 as the baseline and 32 % with 2020. Add 2018, average the three baseline changes, and subtract the mean. The single-year results span the minimum and maximum. Expect the mean-baseline share to sit in the middle (roughly a third of the forest). Report that spread with it; a reader can then see how much of the number is the choice of year.
+
+**2.** Not computed in the chapter. Choose forest of a similar type far from the track, for example on Flores, and compute its share below each threshold. If the comparison rate drops below West Timor's (17 % at −0.1), the excess on Rote grows. That would confirm that West Timor was itself damaged and that the chapter's 13,000 ha is an underestimate.
+
+**3.** This one has no computed answer: it is a visual check you must do. Use a before/after pair at sub-metre resolution, and score each block blind (without looking at its anomaly first) as visibly damaged, unclear or undamaged. The share of "visibly damaged" in the strongest-anomaly blocks is a first precision estimate. Do the same for 50 random forest blocks as the comparison.
+:::

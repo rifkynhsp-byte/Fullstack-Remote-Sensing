@@ -86,3 +86,18 @@ This is the general move whenever an answer depends on an arbitrary choice: run 
 1. Repeat the greenness analysis for the 2023 wet season (December to March). Is the cooling per +0.1 NDVI larger or smaller, and why?
 2. Add a fourth criterion to the solar screen: distance to the coast, or flood hazard. How much of the 107 km² robust land survives?
 3. Replace ERA5-Land with a finer solar resource layer if you can find one in the catalogue, or test the effect by dropping sunshine entirely (weights 0 / 0.5 / 0.5). Which land is robust then?
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** Not computed in the chapter. Filter the Landsat and Sentinel-2 collections to December–March and rerun `green_frame`. Expect a *smaller* slope:
+
+- Wet soils and wet roofs heat less, and evaporation cools bare and green surfaces alike, so the contrast shrinks.
+- Fewer clear scenes make the composite noisier.
+
+If the slope stays near −0.9 °C, the greenness effect is robust across seasons. If it halves, most of the dry-season contrast is about moisture, not shade.
+
+**2.** Add a score (for example `dist_coast_km` rescaled 0–1), include it in every weight set, and recount the pixels in the top 10 % under all five sets. Every extra criterion can only keep or shrink the robust land, never enlarge it. Watch whether the loss is spread out or concentrated in one cluster, because that tells you which sites are fragile.
+
+**3.** With weights 0 / 0.5 / 0.5, the screen becomes "flat land near settlements". Much of the robust land will remain, because ERA5-Land varies little across Sumbawa: that is why it shows as 9 km blocks. If the robust land barely changes, the sunshine layer was contributing almost nothing. A finer solar layer is needed before sunshine can rank sites.
+:::

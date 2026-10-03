@@ -73,3 +73,19 @@ Use it to show where the shallows and channels are. Do not use it for navigation
 1. Rank the ten clearest dry-season scenes by their Spearman rho against the reef zones. Is the best scene the one with the least cloud? What else distinguishes it (wind, tide, season)?
 2. Map where the NIR mask removes pixels. Are they glint streaks, river plumes, or very shallow flats? Design a mask that removes the first two and keeps the third.
 3. If you can collect even 30 GPS-located depths with a handheld sounder, fit $m_1$ and $m_0$ and produce a depth map in metres.
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** Not computed in the chapter. Loop over the ten clearest scenes, compute the ratio for each, and compute its Spearman rho against the zone ranks. The chapter's single clearest scene reached 0.80, so expect a range around that. The best scene is often *not* the least cloudy one. Calm wind (no ripples), low glint (sun angle), clear water after a dry spell and a similar tide matter as much. Note those conditions for the best and worst scenes.
+
+**2.** Not computed in the chapter. Map `nir >= 0.02` over the water and look at the pattern:
+
+- Straight, parallel streaks are glint.
+- Plumes from river mouths along the coast are sediment.
+- Patches exactly on the reef flats are very shallow bottoms reflecting a little NIR.
+
+A better mask combines a NIR test with a shape or location test, for example NIR high *and* outside the Allen Coral Atlas reef-flat zones.
+
+**3.** Collect depths with time and position, correct each to the tide at the image time, and split them in two at random. Fit $m_1$ and $m_0$ on one half, predict the other, and report the RMSE and the error by depth band. Thirty points are enough for a first calibration, but too few to trust below about 10 m. Keep the test half aside until the end.
+:::

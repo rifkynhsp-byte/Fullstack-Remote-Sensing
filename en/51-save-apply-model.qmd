@@ -83,3 +83,18 @@ The lesson still holds, and it is the most useful one in this chapter: **before 
 1. Save a model trained on Sentinel-2 bands instead of embeddings, by route A, and run the round-trip test. Does the drop happen there too?
 2. Repeat the local-samples experiment with Sentinel-2 median bands instead of embeddings. How many local samples per class does it take to reach 0.85 in Pontianak?
 3. Apply the model to the same place in 2023 embeddings. Does a model trained on 2021 still agree with WorldCover 2021 there?
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** Not computed in the chapter. Train the same Random Forest on Sentinel-2 median bands, export it by route A, reload it, and score both on the same test points. If the reloaded model matches, route A's drop is specific to the embedding model (64 bands, or the values' scale). If it drops too, the problem is in route A itself. Either way, the round-trip test is what tells you; the cause is a secondary question.
+
+**2.** Not computed in the chapter. Expect the curve to start lower and climb more slowly than with embeddings: raw bands carry less learned context, so a model needs more examples of each class. A plausible outcome is 25–50 local samples per class to reach 0.85, against 5 with embeddings. Run it and see; that comparison is the real value of the exercise.
+
+**3.** Not computed in the chapter. Apply the 2021-trained model to the 2023 embeddings and score against WorldCover 2021. Agreement will drop somewhat for two reasons that you must separate:
+
+- **Real change:** new buildings and cleared land since 2021. This is a correct disagreement.
+- **Drift:** the embeddings of different years are not guaranteed to be identical for unchanged land.
+
+Score only on points that are visibly unchanged between the 2021 and 2023 images to isolate the drift.
+:::

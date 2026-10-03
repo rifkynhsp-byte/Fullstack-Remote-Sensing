@@ -83,3 +83,13 @@ Two honest conclusions follow. First, an "optimum" tuned on one area loses half 
 1. Change the weights to 0.7, 0.2, 0.1. Does the Iburi AUC improve?
 2. Add a "distance to river" factor. Does it help?
 3. Map landslides yourself for one valley in West Java from Sentinel-2 images after a known event, and test the overlay on your own polygons.
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** Barely, and in the wrong direction. The weight sweep in the chapter used slope 0.7, rain 0.18 and cover 0.12, close to these weights, and gave an AUC of about 0.58, against 0.59 for the base weights. More slope weight does not help at Iburi. The sweep's "best" weights (slope 0.2) score higher only because the post-event land cover leaks the scars into the predictor. Rebuild the cover score from a 2017 land cover before trusting any weight comparison.
+
+**2.** Not computed in the chapter. Compute distance to rivers (for example from the MERIT Hydro or HydroSHEDS river network), score it in five classes (closer = higher), and test the AUC with and without it. At Iburi, many failures started on upper slopes and ran into valleys, so expect a small or no gain. In West Java's catalogue, expect an apparent gain that is really about roads and villages along rivers (reporting bias), not about slope failure.
+
+**3.** This one is fieldwork-like, and its answer is yours. Pick an event with a known date, map fresh scars as polygons from a post-event Sentinel-2 image (bright, elongated, pointing downslope), and confirm each one in a pre-event image. Even 30 polygons in one valley give a better test than the whole news-based catalogue, because their locations are exact.
+:::
