@@ -60,7 +60,7 @@ The app checks the size first and rejects areas over 25,000 km², because larger
 
 ### Step 2: reporting unit
 
-Choose whether statistics and tables are summarised per **province, regency, subdistrict (kecamatan) or village (desa)**. Subdistricts and villages use the community geoBoundaries dataset. A flood map summarised per village is what an emergency response actually needs.
+Choose whether statistics and tables are summarised per **province, regency, subdistrict (kecamatan) or village (desa)**. Subdistricts and villages use the official BPS boundaries (OCHA COD-AB, about 7,000 kecamatan and 82,000 desa). A flood map summarised per village is what an emergency response actually needs.
 
 ### Step 3: choose a module
 

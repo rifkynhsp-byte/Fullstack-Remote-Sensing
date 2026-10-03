@@ -55,7 +55,7 @@ Aplikasi memeriksa ukurannya lebih dulu dan menolak wilayah di atas 25.000 km²,
 
 ### Langkah 2: satuan pelaporan
 
-Pilih apakah statistik dan tabel diringkas per **provinsi, kabupaten, kecamatan, atau desa**. Kecamatan dan desa memakai data geoBoundaries komunitas. Peta banjir yang diringkas per desa itulah yang benar-benar dibutuhkan tanggap darurat.
+Pilih apakah statistik dan tabel diringkas per **provinsi, kabupaten, kecamatan, atau desa**. Kecamatan dan desa memakai batas resmi BPS (OCHA COD-AB, sekitar 7.000 kecamatan dan 82.000 desa). Peta banjir yang diringkas per desa itulah yang benar-benar dibutuhkan tanggap darurat.
 
 ### Langkah 3: pilih modul
 

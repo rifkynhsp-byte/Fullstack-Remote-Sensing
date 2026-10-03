@@ -25,6 +25,18 @@
   "image": "images/real/p7-banjir-demak.jpg"
  },
  {
+  "name": "p7-banjir-kecamatan",
+  "kind": "map",
+  "caption": "The same flood, summarised the way a BPBD office reports it: per kecamatan.",
+  "image": "images/real/p7-banjir-kecamatan.jpg"
+ },
+ {
+  "name": "p7-banjir-kecamatan-table",
+  "kind": "table",
+  "caption": "The app's exposure table for Demak at the Kecamatan level, as downloaded from the app (top 12 by people exposed).",
+  "markdown": "| kecamatan     |   flooded_ha |   people_exposed |   built_up_m2 |\n|:--------------|-------------:|-----------------:|--------------:|\n| Karang Tengah |         1084 |            10498 |         40784 |\n| Bonang        |          704 |             5613 |         56509 |\n| Sayung        |          259 |             3277 |         47865 |\n| Karanganyar   |          231 |             2020 |         12736 |\n| Demak         |          159 |             1764 |          7128 |\n| Guntur        |          190 |             1559 |          6912 |\n| Dempet        |          160 |             1281 |         10238 |\n| Wonosalam     |           92 |             1059 |          4638 |\n| Wedung        |          235 |              851 |         15392 |\n| Gajah         |           70 |              574 |           249 |\n| Mijen         |           23 |              211 |           422 |\n| Kebonagung    |           27 |              178 |            10 |"
+ },
+ {
   "name": "p7-api-oki",
   "kind": "map",
   "caption": "Burn severity classes from the app, with the outline of burned peat.",

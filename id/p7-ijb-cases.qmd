@@ -2,7 +2,7 @@
 
 ::: {.chapter-goal}
 #### Di bab ini
-P6 menunjukkan cara memakai IJB, tombol demi tombol. Bab ini memakainya pada empat kejadian nyata (banjir Demak Maret 2024, musim kebakaran 2023 di gambut Ogan Komering Ilir, kerawanan longsor di seluruh Jawa Barat, dan lima tahun perubahan di sekitar ibu kota baru), lalu membaca setiap hasilnya secara kritis. Setiap angka dan peta di sini dihasilkan oleh kode aplikasi itu sendiri. Dalam prosesnya, pengujian dengan cara ini menemukan empat kesalahan di aplikasi, yang kemudian diperbaiki; cara menemukannya adalah pelajaran paling berguna di bab ini.
+P6 menunjukkan cara memakai IJB, tombol demi tombol. Bab ini memakainya pada empat kejadian nyata (banjir Demak Maret 2024, musim kebakaran 2023 di gambut Ogan Komering Ilir, kerawanan longsor di seluruh Jawa Barat, dan lima tahun perubahan di sekitar ibu kota baru), lalu membaca setiap hasilnya secara kritis. Setiap angka dan peta di sini dihasilkan oleh kode aplikasi itu sendiri. Pelajaran paling berguna tidak ada pada satu angka mana pun: ia adalah kebiasaan memeriksa setiap hasil terhadap apa yang bisa didukung oleh tempat dan datanya.
 :::
 
 ## Bagaimana hasil ini dibuat
@@ -17,9 +17,11 @@ Pada pertengahan Maret 2024, tanggul sungai jebol di Demak, Jawa Tengah, dan air
 
 Dengan pengaturan bawaan aplikasi dan tanggal kejadian, modul memetakan **2.341 ha** genangan baru, dengan sekitar **29.000 jiwa** tinggal di sel tergenang (WorldPop) dan 49 bangunan terpetakan terdampak. Dua fakta harus menyertai angka itu. Satu-satunya lintasan Sentinel-1 menurun di jendela waktu itu adalah 15 Maret, di awal kejadian, jadi ini potret hari-hari pertama, bukan luas maksimum. Dan sebagian besar kabupaten tampak hitam di kedua citra: tambak dan sawah yang sudah tergenang pada Februari, yang memang tidak bisa dihitung sebagai genangan baru oleh metode berbasis perubahan. Kartu "cocok riwayat" (35 %) membandingkan hasil dengan Global Flood Database kejadian 2000-2018; tumpang tindih yang rendah wajar untuk banjir akibat tanggul jebol, bukan pola hujan biasa.
 
-::: {.callout-warning}
-## Bagaimana kesalahan pertama ditemukan: jawaban nol
-Percobaan pertama kasus ini menghasilkan **0 ha**. Nol banjir di Demak pada Maret 2024 bukan hasil, melainkan gejala. Menelusuri modul langkah demi langkah menunjukkan 17.994 ha lolos ambang perubahan dan 0 ha tersisa setelah masker kemiringan: model medan bawaan (FABDEM) dimuat sebagai *mosaic*, dan mosaic Earth Engine tidak punya proyeksi asli. Grid bawaannya satu derajat, sekitar 111 km, sehingga `ee.Terrain.slope()` dihitung pada sel 111 km dan tidak menghasilkan apa pun. Perbaikannya memberi mosaic itu proyeksi petak pertamanya; aplikasi kini menghasilkan 2.341 ha. Kesalahan yang sama mengenai setiap model medan yang dimuat dengan cara ini (Copernicus GLO-30 dan ALOS AW3D30, selain FABDEM). Pelajaran untuk kode Anda sendiri: **bila hasil tepat nol, periksa pipeline sebelum melaporkannya**, dan jangan pernah menjalankan operator medan pada `mosaic()` mentah.
+Angka total kabupaten bukan yang dipakai kantor penanggulangan bencana. Atur satuan pelaporan ke **Kecamatan** dan jalankan ulang: aplikasi memberi tabel keterpaparan per kecamatan, digambar sebagai grafik dan bisa diunduh sebagai CSV. Di Demak, dua kecamatan menanggung sebagian besar banjir: **Karang Tengah** (sekitar 1.080 ha tergenang, 10.500 jiwa di sel tergenang) dan **Bonang** (700 ha, 5.600 jiwa), disusul Sayung, Karanganyar, dan Wedung. Kecamatan di selatan, seperti Karangawen, tidak menunjukkan genangan baru. Batasnya adalah kecamatan resmi BPS yang didistribusikan OCHA, sehingga namanya cocok dengan laporan situasi BPBD.
+
+::: {.callout-tip}
+## Kebiasaan yang layak ditiru dari aplikasi: beri mosaik sebuah proyeksi
+Aplikasi memuat model medan (FABDEM, Copernicus GLO-30, ALOS AW3D30) sebagai `mosaic()` dari banyak ubin. Mosaik Earth Engine tidak punya proyeksi bawaan: grid bawaannya satu derajat, sekitar 111 km. Kalau `ee.Terrain.slope()` dijalankan langsung padanya, lereng dihitung pada sel 111 km, sehingga masker lereng tidak membuang apa-apa atau membuang semuanya. Karena itu aplikasi memberi setiap mosaik proyeksi dari ubin pertamanya sebelum operasi medan apa pun. Lakukan hal yang sama di skrip Anda: `.setDefaultProjection(c.first().select(0).projection())`. Lebih umum lagi, **kalau hasilnya tepat nol, periksa alurnya sebelum melaporkannya.**
 :::
 
 ## Kasus 2. Api: Ogan Komering Ilir, musim kebakaran 2023
@@ -30,18 +32,18 @@ Aplikasi melaporkan **290.030 ha** dalam kelas-kelas keparahan dan **3.817 titik
 
 Baca petanya sebelum angkanya. Komposit Sentinel-2 sesudah kebakaran punya jalur-jalur yang hilang sama sekali antara sekitar 2,8° dan 3,6° LS, tempat awan dan asap tidak menyisakan pengamatan bersih, sehingga luas terbakar hanya mencakup sebagian kabupaten; dalam arti itu angka sebenarnya lebih besar. Ke arah sebaliknya, kelas keparahan terendah juga menangkap perubahan bukan kebakaran seperti panen dan peluruhan musiman. Jadi 290.030 ha adalah angka penyaringan untuk wilayah yang tercakup, yang perlu dicek dengan produk area terbakar seperti MODIS MCD64A1 (Bab [-@sec-peat]) sebelum masuk laporan.
 
-::: {.callout-warning}
-## Kesalahan kedua dan ketiga: galat yang tampak seperti hasil
-Percobaan pertama melaporkan **0 ha** gambut terbakar dan ketebalan gambut "NaN cm", di kabupaten yang sebagian besar gambut. Layer gambut dimuat sebagai koleksi citra, padahal keduanya citra tunggal, sehingga pemuatan gagal. Kegagalan itu seharusnya tampil sebagai galat; sebaliknya, fungsi luas di aplikasi mengubah galat Earth Engine *apa pun* menjadi nol. Fungsi yang sama menghasilkan nol palsu berikutnya: di Kasus 4 sebuah kabupaten besar melampaui batas memori per permintaan Earth Engine, dan aplikasi melaporkan "0 ha berubah". Keduanya sudah diperbaiki: layer gambut dimuat sebagai citra, fungsi luas membagi perhitungan besar menjadi ubin (`tileScale`), dan galat kini tampil sebagai "—", bukan 0. Nilai yang hilang tidak boleh tampak seperti nilai yang terukur.
+::: {.callout-tip}
+## Kenapa sebuah kartu bisa menampilkan "—"
+Beberapa kabupaten terlalu luas untuk satu permintaan Earth Engine, jadi aplikasi menghitung luas per ubin (`tileScale`). Kalau sebuah nilai tetap tidak bisa dihitung, kartu menampilkan "—", bukan 0. Nilai yang hilang tidak boleh tampak seperti hasil ukur: "0 ha gambut terbakar" adalah temuan, "—" adalah "tidak terhitung" yang jujur. Pasang aturan yang sama di alat Anda sendiri.
 :::
 
 ## Kasus 3. Rawan: kerawanan longsor, Jawa Barat
 
-Modul Rawan melatih random forest pada embedding satelit, medan, curah hujan, tanah, dan tutupan lahan, memakai titik yang ditempatkan pengguna atau, secara otomatis, kejadian dari NASA Global Landslide Catalog. Untuk Kabupaten Bandung Barat katalog itu hanya berisi **9 kejadian**. Percobaan pertama melatih 9 kejadian itu melawan 200 titik "aman" acak dan melaporkan akurasi 92 %, kappa 0,000, dan tidak ada lahan rawan tinggi: dengan positif sesedikit itu, hutan acak belajar menyebut semuanya aman, dan akurasi 92 % hanyalah porsi titik aman. Modul yang sudah diperbaiki menghitung jumlah longsor lebih dulu dan menolak bila kurang dari 20, lalu meminta pengguna memperluas wilayah atau menempatkan titik secara manual.
+Modul Rawan melatih random forest pada embedding satelit, medan, curah hujan, tanah, dan tutupan lahan, memakai titik yang ditempatkan pengguna atau, secara otomatis, kejadian dari NASA Global Landslide Catalog. Dalam mode otomatis, modul lebih dulu menghitung longsor katalog di wilayah itu dan membutuhkan **paling sedikit 20**. Untuk Kabupaten Bandung Barat katalog hanya berisi 9, jadi aplikasi meminta pengguna memperluas wilayah atau menempatkan titik secara manual. Aturan ini punya alasan yang layak dipahami. Sembilan longsor melawan 200 titik "aman" acak membuat random forest bisa menyebut semuanya aman dan tetap meraih akurasi 92 %, karena 92 % hanyalah porsi titik aman. Model seperti itu punya kappa nol dan tidak memetakan bahaya sama sekali. Kalau kelasnya setimpang ini, bacalah kappa, bukan akurasi.
 
 Di seluruh provinsi kejadiannya cukup. Aplikasi melaporkan **akurasi validasi 81,3 % dan kappa 0,38**, dengan 12.482 ha rawan tinggi.
 
-Sekarang lihat petanya. Nilai tertinggi ada di cekungan Bandung dan sekitar Bogor, yang padat bangunan dan sebagian besar datar, sedangkan pegunungan selatan yang curam dan basah tampak relatif aman. Ini bukan bug di kode; ini sifat data latihnya. Katalog yang disusun dari berita mencatat longsor di tempat orang tinggal dan jalan melintas, sehingga model yang dilatih darinya belajar "dekat kota dan jalan" sama besarnya dengan "lereng curam, basah, dan lemah". Bias yang sama menggelembungkan kartu "jiwa di zona rawan". Gunakan mode otomatis hanya untuk melihat metodenya bekerja; untuk peta kerawanan yang akan dipakai perencanaan, tempatkan titik dari inventaris lapangan atau inventaris poligon yang dipetakan dari citra (Bab [-@sec-landslide-simple] menunjukkan mengapa katalog berbasis berita gagal sebagai data uji), dan pastikan kemiringan dan curah hujan, bukan tutupan lahan, yang membawa model.
+Sekarang lihat petanya. Nilai tertinggi ada di cekungan Bandung dan sekitar Bogor, yang padat bangunan dan sebagian besar datar, sedangkan pegunungan selatan yang curam dan basah tampak relatif aman. Ini berasal dari data latih, bukan dari metodenya. Katalog yang disusun dari berita mencatat longsor di tempat orang tinggal dan jalan melintas, sehingga model yang dilatih darinya belajar "dekat kota dan jalan" sama besarnya dengan "lereng curam, basah, dan lemah". Bias yang sama menggelembungkan kartu "jiwa di zona rawan". Gunakan mode otomatis hanya untuk melihat metodenya bekerja; untuk peta kerawanan yang akan dipakai perencanaan, tempatkan titik dari inventaris lapangan atau inventaris poligon yang dipetakan dari citra (Bab [-@sec-landslide-simple] menunjukkan mengapa katalog berbasis berita gagal sebagai data uji), dan pastikan kemiringan dan curah hujan, bukan tutupan lahan, yang membawa model.
 
 ## Kasus 4. Ubah: Penajam Paser Utara, 2019 hingga 2024
 
@@ -49,17 +51,13 @@ Penajam Paser Utara memuat inti Nusantara, ibu kota baru Indonesia. Modul Ubah m
 
 Aplikasi melaporkan **10.923 ha** menjadi kurang hijau dan **18.907 ha** menjadi lebih hijau. Petanya menunjukkan di mana. Pola merah rapat berupa jalan dan lahan terbuka di utara sekitar 116,7° BT, 0,95° LS adalah zona inti ibu kota (bandingkan dengan time-lapse di Bab [-@sec-visualisation]); blok-blok persegi besar hijau dan merah di seluruh kabupaten adalah hutan tanaman, dipanen di satu periode dan ditanam ulang di periode lain. Lebih banyak penghijauan daripada pencoklatan di wilayah yang terkenal karena pembukaan lahan bukanlah kontradiksi: selisih NDVI mencatat tumbuhnya kembali hutan tanaman sebagai kenaikan, itulah sebabnya Bab [-@sec-eudr] memisahkan hutan dari tanaman pohon sebelum menyebut apa pun deforestasi.
 
-## Masalah kelima, masih terbuka
+## Membaca hasil aplikasi secara kritis
 
-Pelaporan hasil per *kecamatan* menghasilkan tabel kosong untuk setiap kasus. Aplikasi mengambil batas kecamatan dari koleksi global geoBoundaries yang tidak punya fitur Indonesia di tingkat itu, sehingga grafik dan unduhan per kecamatan kosong untuk Indonesia. Pelaporan per kabupaten berjalan. Ini butuh sumber batas yang lain dan masuk daftar untuk versi aplikasi berikutnya.
+Setiap kasus di atas menghasilkan kartu yang rapi dengan angka yang masuk akal. Pekerjaannya ada pada menentukan seberapa jauh setiap angka bisa dipercaya. Tiga kebiasaan melakukan pekerjaan itu, dan berlaku untuk alat apa pun, termasuk skrip Anda sendiri:
 
-## Apa yang diajarkan oleh menguji aplikasi
-
-Empat kesalahan di aplikasi yang sudah dipakai publik, ditemukan dalam satu sore, dan tidak satu pun terlihat dari antarmuka: setiap percobaan yang salah menghasilkan kartu rapi dengan angka yang masuk akal. Tiga kebiasaan menemukannya, dan berlaku untuk alat apa pun, termasuk skrip Anda sendiri:
-
-1. **Jalankan pada kasus yang kira-kira sudah Anda tahu jawabannya.** Banjir yang terkenal, kabupaten gambut, lokasi pembangunan.
+1. **Jalankan pada kasus yang kira-kira sudah Anda ketahui jawabannya.** Banjir yang terkenal, kabupaten gambut, lokasi pembangunan.
 2. **Perlakukan tepat nol, tepat 100 %, dan akurasi yang tampak sempurna sebagai pertanyaan, bukan jawaban.**
-3. **Lihat peta sebelum metrik.** Masker banjir, celah di komposit kebakaran, dan titik panas perkotaan di peta kerawanan semuanya terlihat sebelum satu angka pun dibaca.
+3. **Lihat peta sebelum angka.** Tambak yang sudah tergenang di Demak, celah awan di komposit kebakaran, dan titik panas perkotaan di peta kerawanan semuanya terlihat sebelum satu angka pun dibaca.
 
 ## Latihan {.unnumbered}
 

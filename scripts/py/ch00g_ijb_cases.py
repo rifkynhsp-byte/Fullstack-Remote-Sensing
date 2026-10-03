@@ -89,12 +89,40 @@ def fire_map():
     return vis(sw.select(0), {"min": 0, "max": 0.4}).blend(vis(sev, v)).blend(edge.visualize(palette=["000000"])), aoi
 
 
+def demak_units():
+    """The app's own exposure table for Demak, summarised per kecamatan (BPS boundaries)."""
+    c = next(c for c in load("banjir_demak_2024")["charts"] if c["table"])
+    return ee.FeatureCollection(ee.deserializer.fromJSON(c["table"]))
+
+
+def kecamatan_table():
+    rows = [f["properties"] for f in demak_units().getInfo()["features"]]
+    d = pd.DataFrame(rows).rename(columns={"wilayah": "kecamatan", "luas_ha": "flooded_ha",
+                                           "jiwa_terpapar": "people_exposed", "terbangun_m2": "built_up_m2"})
+    d = d[d.flooded_ha > 0].sort_values("people_exposed", ascending=False)
+    return d[["kecamatan", "flooded_ha", "people_exposed", "built_up_m2"]].head(12).reset_index(drop=True)
+
+
+def kecamatan_map():
+    # The app's table keeps names, not shapes; join it back to the same public BPS polygons by name.
+    bps = ee.FeatureCollection("projects/shaped-producer-482312-m0/assets/ijb/idn_kecamatan_bps") \
+        .filter(ee.Filter.eq("kab", "Demak"))
+    joined = ee.Join.saveFirst("t").apply(bps, demak_units(), ee.Filter.equals(leftField="nama", rightField="wilayah"))
+    units = ee.FeatureCollection(joined).map(lambda f: f.set("luas_ha", ee.Feature(f.get("t")).get("luas_ha")))
+    fill = units.filter(ee.Filter.gt("luas_ha", 0)).reduceToImage(["luas_ha"], ee.Reducer.first())
+    edge = ee.Image().byte().paint(bps, 1, 1)
+    cls = fill.gt(0).add(fill.gte(100)).add(fill.gte(300)).add(fill.gte(600))      # 1..4
+    img = cls.visualize(min=1, max=4, palette=["fec44f", "fe9929", "d95f0e", "993404"]) \
+        .blend(edge.visualize(palette=["555555"]))
+    return img, bps.geometry().bounds()
+
 def products():
     fm, fa = flood_map()
     fi, fia = fire_map()
     ch, chv, cha = layer("ubah_ppu_2019_2024", "Selisih NDVI")
     rw, rwv, rwa = layer("rawan_jabar_2024", "Indeks kerawanan Longsor")
     rgb = {"bands": ["vis-red", "vis-green", "vis-blue"], "min": 0, "max": 255}
+    km, kma = kecamatan_map()
     pal = lambda v: [c.lstrip("#") for c in v["palette"]]
     return [
         {"kind": "table", "name": "p7-inputs", "data": inputs_table, "caption": "What was entered in the app for each case."},
@@ -104,6 +132,14 @@ def products():
          "classes": [("flooded, 14-24 March 2024", "#1f78ff")], "title": "Banjir: Demak, March 2024",
          "source": "IJB Banjir module (Sentinel-1, Otsu, FABDEM slope, JRC water, HAND). GEE.",
          "caption": "The app's flood layer over the post-event Sentinel-1 image."},
+        {"kind": "map", "name": "p7-banjir-kecamatan", "image": km, "region": kma, "vis": rgb,
+         "classes": [("under 100 ha", "#fec44f"), ("100-300 ha", "#fe9929"), ("300-600 ha", "#d95f0e"),
+                     ("600 ha or more", "#993404")], "title": "Banjir: Demak, flooded area per kecamatan",
+         "source": "IJB Banjir module, reporting level Kecamatan (BPS boundaries via OCHA COD-AB). GEE.",
+         "caption": "The same flood, summarised the way a BPBD office reports it: per kecamatan."},
+        {"kind": "table", "name": "p7-banjir-kecamatan-table", "data": kecamatan_table,
+         "floatfmt": ("", ",.0f", ",.0f", ",.0f"),
+         "caption": "The app's exposure table for Demak at the Kecamatan level, as downloaded from the app (top 12 by people exposed)."},
         {"kind": "map", "name": "p7-api-oki", "image": fi, "region": fia, "vis": rgb,
          "classes": [("low", "#ffe066"), ("moderate", "#ff9f1c"), ("high", "#e63946"), ("very high", "#7d1128"),
                      ("edge of burned peat", "#000000")],

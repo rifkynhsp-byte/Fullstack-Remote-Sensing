@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_1517f0c8dbb5cb83ca4271120cba66e3 {
+                #map_5404d1cf607025df5957c2f4f8432e08 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -110,6 +110,21 @@
                 </style>
             
         
+    
+            
+                <style>
+                    .leaflet-image-layer {
+                        /* old android/safari*/
+                        image-rendering: -webkit-optimize-contrast;
+                        image-rendering: crisp-edges; /* safari */
+                        image-rendering: pixelated; /* chrome */
+                        image-rendering: -moz-crisp-edges; /* firefox */
+                        image-rendering: -o-crisp-edges; /* opera */
+                        -ms-interpolation-mode: nearest-neighbor; /* ie */
+                    }
+                </style>
+            
+        
     <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
 </head>
@@ -117,14 +132,14 @@
     
     <div style="position:absolute;bottom:18px;left:10px;z-index:9999;background:white;padding:4px 8px;border-radius:4px;font:12px sans-serif">Overlay opacity <input type="range" min="0" max="100" value="85" oninput="document.querySelectorAll('.leaflet-image-layer').forEach(function(e){e.style.opacity=this.value/100}.bind(this))"></div>
     
-            <div class="folium-map" id="map_1517f0c8dbb5cb83ca4271120cba66e3" ></div>
+            <div class="folium-map" id="map_5404d1cf607025df5957c2f4f8432e08" ></div>
         
 </body>
 <script>
     
     
-            var map_1517f0c8dbb5cb83ca4271120cba66e3 = L.map(
-                "map_1517f0c8dbb5cb83ca4271120cba66e3",
+            var map_5404d1cf607025df5957c2f4f8432e08 = L.map(
+                "map_5404d1cf607025df5957c2f4f8432e08",
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -136,13 +151,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_1517f0c8dbb5cb83ca4271120cba66e3);
+            L.control.scale().addTo(map_5404d1cf607025df5957c2f4f8432e08);
 
             
 
         
     
-            var tile_layer_762a000429fef2b84d2f47709139a8b9 = L.tileLayer(
+            var tile_layer_ee7f488321e2b516ea1acb299930208f = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -159,10 +174,10 @@
             );
         
     
-            tile_layer_762a000429fef2b84d2f47709139a8b9.addTo(map_1517f0c8dbb5cb83ca4271120cba66e3);
+            tile_layer_ee7f488321e2b516ea1acb299930208f.addTo(map_5404d1cf607025df5957c2f4f8432e08);
         
     
-            var tile_layer_34a536262459663ffaca4bf8fab3244d = L.tileLayer(
+            var tile_layer_38e593cf27a05a4e688ba946e271a304 = L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
@@ -179,10 +194,10 @@
             );
         
     
-            tile_layer_34a536262459663ffaca4bf8fab3244d.addTo(map_1517f0c8dbb5cb83ca4271120cba66e3);
+            tile_layer_38e593cf27a05a4e688ba946e271a304.addTo(map_5404d1cf607025df5957c2f4f8432e08);
         
     
-            var image_overlay_45c7b0056ffbb427912e070048bb5b93 = L.imageOverlay(
+            var image_overlay_83bcf388c95b6d2ac4a7ec1a06fb4d79 = L.imageOverlay(
                 "raw/p7-banjir-demak.png",
                 [[-7.139653974140401, 110.46321018689282], [-6.707843578996774, 110.83894743727315]],
                 {
@@ -193,12 +208,12 @@
             );
         
     
-            image_overlay_45c7b0056ffbb427912e070048bb5b93.addTo(map_1517f0c8dbb5cb83ca4271120cba66e3);
+            image_overlay_83bcf388c95b6d2ac4a7ec1a06fb4d79.addTo(map_5404d1cf607025df5957c2f4f8432e08);
         
     
-            var image_overlay_bb200f8bf29d30942eb2eceb93f1535d = L.imageOverlay(
-                "raw/p7-api-oki.png",
-                [[-4.261308680654593, 104.6404490951329], [-2.3884149062614246, 106.18944719675095]],
+            var image_overlay_257d14ff812b1c02c827c7428f38144b = L.imageOverlay(
+                "raw/p7-banjir-kecamatan.png",
+                [[-7.139649508934126, 110.46321018689282], [-6.706117898840665, 110.83894743727315]],
                 {
   "opacity": 0.85,
   "interactive": false,
@@ -207,9 +222,9 @@
             );
         
     
-            var image_overlay_688d1e876736baa29922c800426b7884 = L.imageOverlay(
-                "raw/p7-ubah-ppu.png",
-                [[-1.6051024641257219, 116.33548058790134], [-0.7984778670069672, 116.95504597773744]],
+            var image_overlay_f415ac84577921058ac78b469b10c00f = L.imageOverlay(
+                "raw/p7-api-oki.png",
+                [[-4.261308680654593, 104.6404490951329], [-2.3884149062614246, 106.18944719675095]],
                 {
   "opacity": 0.85,
   "interactive": false,
@@ -218,9 +233,9 @@
             );
         
     
-            var image_overlay_d1d344f89fa234de5baf29526d8c43c4 = L.imageOverlay(
-                "raw/p7-rawan-jabar.png",
-                [[-7.8209778482284245, 106.37030386746231], [-5.918145695274167, 108.84687963882291]],
+            var image_overlay_a45c1ff11b087cb1265ce8940137733f = L.imageOverlay(
+                "raw/p7-ubah-ppu.png",
+                [[-1.6051024641257219, 116.33548058790134], [-0.7984778670069672, 116.95504597773744]],
                 {
   "opacity": 0.85,
   "interactive": false,
@@ -229,27 +244,39 @@
             );
         
     
-            var layer_control_e6fe331b6c078528e70843504930305c_layers = {
+            var image_overlay_ed60aa03d87a908f7f918b52e3116910 = L.imageOverlay(
+                "raw/p7-rawan-jabar.png",
+                [[-7.8209778482284245, 106.37030386746231], [-5.918145695274167, 108.84687963882291]],
+                {
+  "opacity": 0.85,
+  "interactive": false,
+  "zindex": 14,
+}
+            );
+        
+    
+            var layer_control_f4229acb11bf0bb72adf5ee795d181bd_layers = {
                 base_layers : {
-                    "Street map" : tile_layer_762a000429fef2b84d2f47709139a8b9,
-                    "Satellite basemap" : tile_layer_34a536262459663ffaca4bf8fab3244d,
+                    "Street map" : tile_layer_ee7f488321e2b516ea1acb299930208f,
+                    "Satellite basemap" : tile_layer_38e593cf27a05a4e688ba946e271a304,
                 },
                 overlays :  {
-                    "Banjir: Demak, March 2024" : image_overlay_45c7b0056ffbb427912e070048bb5b93,
-                    "Api: Ogan Komering Ilir, 2023 fire season" : image_overlay_bb200f8bf29d30942eb2eceb93f1535d,
-                    "Ubah: NDVI 2024 minus 2019, Penajam Paser Utara" : image_overlay_688d1e876736baa29922c800426b7884,
-                    "Rawan: landslide susceptibility, West Java 2024" : image_overlay_d1d344f89fa234de5baf29526d8c43c4,
+                    "Banjir: Demak, March 2024" : image_overlay_83bcf388c95b6d2ac4a7ec1a06fb4d79,
+                    "Banjir: Demak, flooded area per kecamatan" : image_overlay_257d14ff812b1c02c827c7428f38144b,
+                    "Api: Ogan Komering Ilir, 2023 fire season" : image_overlay_f415ac84577921058ac78b469b10c00f,
+                    "Ubah: NDVI 2024 minus 2019, Penajam Paser Utara" : image_overlay_a45c1ff11b087cb1265ce8940137733f,
+                    "Rawan: landslide susceptibility, West Java 2024" : image_overlay_ed60aa03d87a908f7f918b52e3116910,
                 },
             };
-            let layer_control_e6fe331b6c078528e70843504930305c = L.control.layers(
-                layer_control_e6fe331b6c078528e70843504930305c_layers.base_layers,
-                layer_control_e6fe331b6c078528e70843504930305c_layers.overlays,
+            let layer_control_f4229acb11bf0bb72adf5ee795d181bd = L.control.layers(
+                layer_control_f4229acb11bf0bb72adf5ee795d181bd_layers.base_layers,
+                layer_control_f4229acb11bf0bb72adf5ee795d181bd_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_1517f0c8dbb5cb83ca4271120cba66e3);
+            ).addTo(map_5404d1cf607025df5957c2f4f8432e08);
 
         
     
@@ -260,10 +287,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_1517f0c8dbb5cb83ca4271120cba66e3);
+            ).addTo(map_5404d1cf607025df5957c2f4f8432e08);
         
     
-            map_1517f0c8dbb5cb83ca4271120cba66e3.fitBounds(
+            map_5404d1cf607025df5957c2f4f8432e08.fitBounds(
                 [[-7.8209778482284245, 104.6404490951329], [-0.7984778670069672, 116.95504597773744]],
                 {}
             );
