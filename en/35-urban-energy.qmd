@@ -41,3 +41,48 @@ So report an MCDA with its weights, show the result under at least two other set
 - Mark the coarse layers. Here the sunshine layer is 9 km, which shows as blocks on the map.
 - Call the result a screen, and name what a site study still has to check.
 :::
+
+
+## How much cooler is green?
+
+The land-cover table says trees are cooler than roofs, but a planner wants a number: if a district gets greener, how much cooler might it get? The script pairs every Landsat pixel with Sentinel-2 NDVI from the same dry season and bins the pixels by greenness, leaving out water.
+
+The relation is smooth and steady. The median surface temperature falls from 44.4 °C at NDVI 0–0.1 to 37.1 °C at 0.7–0.8, more than 7 °C across the range. A straight line through all 3,300 land pixels gives **−0.9 °C per +0.1 NDVI**. Inside built-up pixels only, the slope is smaller, **−0.6 °C**, but still clear: a street with trees is cooler than a street without them.
+
+Before quoting these numbers, be honest about what they are:
+
+- **This is association, not an experiment.** Green pixels also tend to be near rivers, in lower-density neighbourhoods and away from industrial roofs. Part of the difference comes from those, not from the vegetation.
+- **This is surface temperature at about 10:00 in the morning.** Shade lowers the temperature of a pavement far more than the air temperature a pedestrian feels, often by several times.
+- **A 30 m Landsat thermal pixel** (resampled from 100 m) blends roofs, roads and trees. Individual street trees are below its resolution.
+
+So the right sentence for a planning report is: "Across Surabaya, pixels with 0.1 more NDVI were on average 0.6–0.9 °C cooler at the surface in the 2023 dry season." Do not say "planting trees will cool the air by 0.9 °C".
+
+## The robust answer for solar
+
+The weight test showed that a third of the "best" land depends on the weights. The constructive next step is to keep the land that does not. The robust map counts, for every pixel, how many of the five weight sets put it in their top 10 %.
+
+About **107 km²** are in the top 10 % under all five sets. That land is good for solar whatever a stakeholder believes matters most: sunny, flat and near settlements. A further 57 km² are in four of the five. At the other end, 79 km² are "best" under only one set; they depend on one opinion. A site study should start in the dark red land and treat the pale land as contested.
+
+This is the general move whenever an answer depends on an arbitrary choice: run it under every defensible choice and report what survives.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** Both analyses are fast (minutes) and excellent for learning: one teaches the difference between surface and air temperature, the other how to expose the judgement hidden in a weighted overlay. Neither is accurate enough for a decision:
+
+- **The heat map shows the right pattern,** but it is a morning surface temperature, and the greenness effect is a correlation.
+- **The solar screen depends on a 9 km sunshine layer.** It uses a proxy for grid access and weights that someone chose.
+
+**What a funded study would do to make it accurate:**
+
+1. **Air temperature sensors.** A network of low-cost loggers in shaded shelters across districts with different greenness gives the air temperature people actually feel. Use it to calibrate the satellite surface map. Mobile transects by bicycle or car at night add the hours when the heat island is strongest.
+2. **A before/after design for greening.** Compare streets that were greened with similar streets that were not, before and after (difference in differences). That turns correlation into evidence of an effect.
+3. **ECOSTRESS** (ISS, different times of day) **for the afternoon and night.** The heat island at 14:00 and at 22:00 can rank districts differently than Landsat at 10:00.
+4. **A proper solar resource layer.** The Global Solar Atlas (about 250 m) or satellite irradiance products are far finer than ERA5-Land. They remove the 9 km blocks.
+5. **Real constraints instead of proxies.** Use PLN substation and transmission line locations, land status (HGU, forest estate, customary land), flood hazard and soil. Then run a site visit on the short list.
+6. **Weights from people, documented.** Use a structured method such as AHP with the actual stakeholders: the utility, the regency and the communities. Publish the weights alongside the map.
+
+## Exercises {.unnumbered}
+
+1. Repeat the greenness analysis for the 2023 wet season (December to March). Is the cooling per +0.1 NDVI larger or smaller, and why?
+2. Add a fourth criterion to the solar screen: distance to the coast, or flood hazard. How much of the 107 km² robust land survives?
+3. Replace ERA5-Land with a finer solar resource layer if you can find one in the catalogue, or test the effect by dropping sunshine entirely (weights 0 / 0.5 / 0.5). Which land is robust then?

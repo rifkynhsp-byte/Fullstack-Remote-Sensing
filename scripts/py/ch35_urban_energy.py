@@ -174,6 +174,73 @@ def sensitivity_table():
     return pd.DataFrame(rows)
 
 
+# How many of the five weight sets put each pixel in their top 10 %?
+def robust_count():
+    imgs = []
+    for w in WEIGHTS.values():
+        sc = suitability(w)
+        imgs.append(sc.gte(cutoffs(sc)[2]).unmask(0))
+    return ee.ImageCollection(imgs).sum().updateMask(allowed).rename("n")
+
+
+def robust_table():
+    n = robust_count()
+    g = (ee.Image.pixelArea().divide(1e6).addBands(n)
+         .reduceRegion(ee.Reducer.sum().group(1, "n"), island, 100, maxPixels=1e10, tileScale=8)
+         .get("groups").getInfo())
+    d = pd.DataFrame([{"weight sets agreeing (of 5)": int(r["n"]), "area_km2": r["sum"]} for r in g])
+    d = d[d["weight sets agreeing (of 5)"] > 0].sort_values("weight sets agreeing (of 5)", ascending=False)
+    d["cumulative_km2"] = d.area_km2.cumsum()
+    return d.reset_index(drop=True)
+
+
+# Does tree cover cool the city? Sentinel-2 NDVI of the same dry season, binned against LST.
+ndvi_city = (ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterBounds(city)
+             .filterDate("2023-06-01", "2023-11-01").filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 30))
+             .map(lambda i: i.normalizedDifference(["B8", "B4"]).updateMask(i.select("SCL").remap([4, 5, 6], [1, 1, 1], 0)))
+             .median().rename("ndvi"))
+green_points = (lst.addBands(ndvi_city).addBands(dw.rename("cls"))
+                .sample(region=city, scale=30, numPixels=4500, seed=7, dropNulls=True, tileScale=4))
+
+
+def green_frame(df=None):
+    from scipy import stats
+    if df is None:
+        df = ee_to_df(green_points)
+    df = df[df.cls != 0]  # water is cool for another reason; leave it out
+    bins = np.arange(0, 0.85, 0.1)
+    df = df.assign(bin=pd.cut(df.ndvi, bins))
+    g = df.groupby("bin", observed=True)["lst"].agg(["median", "count"]).reset_index()
+    g["ndvi_mid"] = [b.mid for b in g.bin]
+    all_fit = stats.linregress(df.ndvi, df.lst)
+    built = df[df.cls == 6]
+    b_fit = stats.linregress(built.ndvi, built.lst)
+    green_frame.fits = {"all land": (all_fit.slope / 10, len(df)), "built pixels only": (b_fit.slope / 10, len(built))}
+    return g[g["count"] >= 30][["ndvi_mid", "median", "count"]]
+
+
+def ee_to_df(fc):
+    return pd.DataFrame([f["properties"] for f in fc.getInfo()["features"]])
+
+
+def green_fit_table():
+    if not hasattr(green_frame, "fits"):
+        green_frame()
+    return pd.DataFrame([{"pixels": k, "°C per +0.1 NDVI": v[0], "n": v[1]} for k, v in green_frame.fits.items()])
+
+
+def plot_green(g):
+    fig, ax = plt.subplots(figsize=(7, 3.4))
+    ax.plot(g.ndvi_mid, g["median"], "o-", color="#1a9641")
+    for x, y, n in zip(g.ndvi_mid, g["median"], g["count"]):
+        ax.annotate(f"{n}", (x, y), xytext=(0, 6), textcoords="offset points", fontsize=7, ha="center", color="#6b7680")
+    ax.set_xlabel("NDVI (dry season 2023, Sentinel-2)"); ax.set_ylabel("median LST (°C)")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_title("Greener pixels are cooler, by several degrees", loc="left", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
 SUIT = ["d7191c", "fdae61", "a6d96a", "1a9641"]
 
 
@@ -215,6 +282,20 @@ def products():
          "caption": "The top 10 % of allowed land under five sets of weights, compared "
                     "with the base set. Overlap is intersection over union: 1 means the "
                     "same land, 0 means none in common."},
+        {"kind": "map", "name": "ch35-robust-map", "image": robust_count().selfMask().clip(island), "region": island,
+         "vis": {"min": 1, "max": 5, "palette": ["fee5d9", "fcae91", "fb6a4a", "de2d26", "a50f15"]},
+         "legend": "Weight sets that put the pixel in their top 10 %",
+         "title": "The robust answer: land that is 'best' whatever the weights",
+         "source": "This chapter's five weight sets.",
+         "caption": "Dark red land is in the top 10 % under all five weight sets: the place to start a site study. "
+                    "Pale land is 'best' only under one opinion about what matters."},
+        {"kind": "table", "name": "ch35-robust", "data": robust_table, "floatfmt": ("", ",.0f", ",.0f"),
+         "caption": "Area by the number of weight sets that agree it is in the top 10 %."},
+        {"kind": "chart", "name": "ch35-green", "data": green_frame, "plot": plot_green, "live": False,
+         "caption": "Median surface temperature in bins of NDVI, Surabaya, dry season 2023 (water excluded). "
+                    "Small numbers: pixels per bin."},
+        {"kind": "table", "name": "ch35-green-fit", "data": green_fit_table, "floatfmt": ("", ".2f", ",.0f"),
+         "caption": "Slope of a straight line through the pixels: change in surface temperature per 0.1 more NDVI."},
     ]
 
 

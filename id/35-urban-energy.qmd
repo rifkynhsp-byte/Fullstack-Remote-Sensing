@@ -41,3 +41,48 @@ Jadi, laporkan MCDA bersama bobotnya, tunjukkan hasilnya dengan paling sedikit d
 - Tandai lapisan yang kasar. Di sini data penyinaran beresolusi 9 km, terlihat sebagai blok-blok di peta.
 - Sebut hasilnya sebagai penapisan, dan sebutkan apa saja yang masih harus diperiksa dalam studi lokasi.
 :::
+
+
+## Seberapa sejuk area hijau?
+
+Tabel tutupan lahan menyebut pepohonan lebih sejuk daripada atap. Namun perencana ingin angka: kalau sebuah kawasan menjadi lebih hijau, kira-kira seberapa sejuk jadinya? Skrip memasangkan setiap piksel Landsat dengan NDVI Sentinel-2 dari musim kemarau yang sama, lalu mengelompokkan piksel menurut kehijauannya, dengan air dikeluarkan.
+
+Hubungannya mulus dan teratur. Median suhu permukaan turun dari 44,4 °C pada NDVI 0–0,1 menjadi 37,1 °C pada 0,7–0,8, lebih dari 7 °C di sepanjang rentang. Garis lurus melalui 3.300 piksel daratan memberi **−0,9 °C per +0,1 NDVI**. Di dalam piksel terbangun saja kemiringannya lebih kecil, **−0,6 °C**, tetapi tetap jelas: jalan berpohon lebih sejuk daripada jalan tanpa pohon.
+
+Sebelum mengutip angka ini, jujurlah tentang apa artinya:
+
+- **Ini asosiasi, bukan eksperimen.** Piksel hijau juga cenderung dekat sungai, di permukiman yang lebih jarang, dan jauh dari atap pabrik. Sebagian selisihnya berasal dari hal-hal itu, bukan dari vegetasinya.
+- **Ini suhu permukaan sekitar pukul 10.00 pagi.** Naungan menurunkan suhu trotoar jauh lebih besar daripada suhu udara yang dirasakan pejalan kaki, sering beberapa kali lipat.
+- **Satu piksel termal Landsat 30 m** (hasil resampling dari 100 m) mencampur atap, jalan, dan pohon. Pohon peneduh satu per satu berada di bawah resolusinya.
+
+Jadi kalimat yang tepat untuk laporan perencanaan adalah: "Di Surabaya, piksel dengan NDVI 0,1 lebih tinggi rata-rata 0,6–0,9 °C lebih sejuk di permukaan pada kemarau 2023." Jangan menulis "menanam pohon akan menurunkan suhu udara 0,9 °C".
+
+## Jawaban yang kokoh untuk PLTS
+
+Uji bobot menunjukkan sepertiga lahan "terbaik" bergantung pada bobot. Langkah konstruktif berikutnya adalah menyimpan lahan yang tidak bergantung pada bobot. Peta kekokohan menghitung, untuk setiap piksel, berapa dari lima set bobot yang memasukkannya ke 10 % teratas.
+
+Sekitar **107 km²** masuk 10 % teratas pada kelima set. Lahan itu baik untuk PLTS apa pun yang dianggap paling penting oleh pemangku kepentingan: cerah, datar, dan dekat permukiman. Tambahan 57 km² masuk pada empat dari lima set. Di ujung lain, 79 km² hanya "terbaik" pada satu set; lahan ini bergantung pada satu pendapat. Studi lokasi sebaiknya dimulai di lahan merah tua dan memperlakukan lahan pucat sebagai lahan yang masih diperdebatkan.
+
+Ini langkah umum setiap kali jawaban bergantung pada pilihan yang arbitrer: jalankan dengan setiap pilihan yang masuk akal dan laporkan apa yang bertahan.
+
+## Vonis: seberapa jauh hasil ini bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Kedua analisis cepat (hitungan menit) dan sangat baik untuk belajar: yang satu mengajarkan beda suhu permukaan dan suhu udara, yang lain cara membuka penilaian yang tersembunyi dalam overlay berbobot. Keduanya belum cukup akurat untuk keputusan:
+
+- **Peta panas menunjukkan pola yang benar,** tetapi itu suhu permukaan pagi hari, dan efek kehijauannya hanya korelasi.
+- **Penapisan PLTS bergantung pada data penyinaran 9 km.** Ia memakai proksi untuk akses jaringan listrik dan bobot yang dipilih seseorang.
+
+**Yang akan dilakukan studi berdana agar akurat:**
+
+1. **Sensor suhu udara.** Jaringan pencatat murah di dalam pelindung teduh, tersebar di kawasan dengan kehijauan berbeda, memberi suhu udara yang benar-benar dirasakan orang. Pakai untuk mengkalibrasi peta permukaan dari satelit. Transek bergerak dengan sepeda atau mobil pada malam hari menambah jam-jam ketika pulau panas paling kuat.
+2. **Desain sebelum–sesudah untuk penghijauan.** Bandingkan jalan yang dihijaukan dengan jalan serupa yang tidak, sebelum dan sesudah (difference in differences). Itu mengubah korelasi menjadi bukti adanya efek.
+3. **ECOSTRESS** (dari ISS, berbagai jam) **untuk siang dan malam.** Pulau panas pukul 14.00 dan 22.00 bisa mengurutkan kawasan secara berbeda dari Landsat pukul 10.00.
+4. **Data sumber daya surya yang layak.** Global Solar Atlas (sekitar 250 m) atau produk irradiasi satelit jauh lebih halus daripada ERA5-Land. Keduanya menghilangkan blok 9 km.
+5. **Batasan nyata, bukan proksi.** Pakai lokasi gardu induk dan jaringan transmisi PLN, status lahan (HGU, kawasan hutan, tanah ulayat), bahaya banjir, dan tanah. Lalu lakukan kunjungan lapangan pada daftar pendek.
+6. **Bobot dari para pihak, terdokumentasi.** Pakai metode terstruktur seperti AHP bersama para pemangku kepentingan sesungguhnya: PLN, pemerintah kabupaten, dan masyarakat. Terbitkan bobotnya bersama peta.
+
+## Latihan {.unnumbered}
+
+1. Ulangi analisis kehijauan untuk musim hujan 2023 (Desember sampai Maret). Apakah pendinginan per +0,1 NDVI lebih besar atau lebih kecil, dan kenapa?
+2. Tambahkan kriteria keempat pada penapisan PLTS: jarak ke pantai, atau bahaya banjir. Berapa banyak dari 107 km² lahan kokoh yang bertahan?
+3. Ganti ERA5-Land dengan data penyinaran yang lebih halus jika ada di katalog, atau uji pengaruhnya dengan menghapus kriteria penyinaran (bobot 0 / 0,5 / 0,5). Lahan mana yang kokoh kalau begitu?
