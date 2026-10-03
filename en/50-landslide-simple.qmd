@@ -46,6 +46,17 @@ Is the map useless, or is the test? Two clues point to the test:
 - **The records decide what you can learn.** Point catalogues compiled from news are useful for counting events and their impacts, not for validating a 30 m map. Polygon inventories mapped from imagery, like Iburi or the Lombok 2018 inventory [@ferrario2019lombok], are what models should be tested against.
 - **Check that complexity earns its place.** If slope alone does as well as the weighted overlay, the extra factors are decoration.
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** A weighted overlay takes minutes and teaches how susceptibility maps are built. As a map to guide decisions it is **not accurate**: against the landslide catalogue it does no better than chance, and against a mapped inventory it shows only weak skill (AUC about 0.59). The weights are judgement, not measurement.
+
+**How to make it accurate:**
+
+1. **A polygon inventory** of landslides mapped from imagery or in the field, for the same kind of trigger (rain or earthquake) as the map is meant for. News-based point catalogues are not a test set.
+2. **A better terrain model.** Slope from a 1 m LiDAR model is a different variable from slope at 30 m (Chapter [-@sec-lidar-terrain-cities]); old landslides under forest only appear in LiDAR.
+3. **Learn the weights from data** with a model and spatially blocked validation, and check that slope, soil and rainfall, not proxies for where people live, carry it (Chapter [-@sec-p7-ijb-cases] shows what happens otherwise).
+4. **Validate on an independent event or area** before the map is used.
+
 ## Exercises {.unnumbered}
 
 1. Change the weights to 0.7, 0.2, 0.1. Does the Iburi AUC improve?

@@ -53,6 +53,17 @@ Yang tidak bisa dikatakan peta ini adalah mengapa sebuah petak panas. Batu bara 
 
 Di musim kemarau lahan terbuka memang lebih panas daripada hutan, terbakar atau tidak, sehingga peta suhu mentah sebagian besar hanyalah peta lahan terbuka. Sinyal yang berguna adalah konsistensi: stockpile yang tetap lebih panas dari sekitarnya dari satu lintasan ke lintasan berikutnya. Alat deret waktu di Bab [-@sec-timeseries] bisa mengubah peta di atas menjadi uji tersebut. Konfirmasinya lewat terbang drone termal atau pengukuran langsung di lokasi.
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Data publik memberi gambaran tambang yang cepat dan jujur: di mana tambangnya, kira-kira berapa banyak tanah yang berpindah sejak 2000, dan di mana tanah tetap panas. Hasil ini **bukan survei**: model elevasinya adalah model permukaan 30 m dari tanggal berbeda, deret jejak tambangnya tidak stabil, dan panas tidak menjelaskan mengapa sebuah petak panas.
+
+**Cara membuatnya akurat:**
+
+1. **Pasangan model medan resolusi tinggi pada tanggal yang sama** dari fotogrametri drone atau LiDAR, diterbangkan bulanan atau triwulanan dengan titik kontrol tanah, memberi volume dengan galat beberapa persen.
+2. **Survei dasar lubang dan danau tambang**: batimetri untuk lubang yang tergenang, dan survei lapangan di tempat vegetasi atau air menutupi permukaan.
+3. **Petakan jejak tambang dengan aturan yang stabil** (beberapa tanggal, beberapa kelas) dan cocokkan dengan rencana tambang.
+4. **Pastikan panasnya di lapangan**: penerbangan drone termal malam hari atau probe suhu memisahkan batu bara yang memanas sendiri dari timbunan yang hangat karena matahari.
+
 ## Latihan {.unnumbered}
 
 1. Ubah batas ±30 m menjadi ±15 m. Berapa bertambahnya volume galian, dan berapa bagian dari tambahan itu yang kemungkinan hanya hutan yang ditebang?

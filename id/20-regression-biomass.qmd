@@ -44,6 +44,17 @@ Jawaban yang menggoda menganggap galat setiap piksel 30 m saling bebas. Maka gal
 Laporkan setiap total karbon bersama selangnya, sebutkan galat mana yang dicakup selang itu (di sini: galat sistematis model yang diperkirakan dari 45 plot) dan mana yang tidak (galat lokasi plot, fraksi karbon, biomassa di bawah permukaan, ketidakcocokan tanggal). Selang yang berasal dari memperlakukan jutaan piksel sebagai pengukuran yang saling bebas bukanlah kehati-hatian; itu kesalahan hitung yang membuat model lemah tampak presisi.
 :::
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Alur kerjanya cepat dan memang yang perlu dipelajari: prediktor dari Earth Engine, sebuah model, validasi leave-one-plot-out, dan selang yang jujur. Sebagai peta biomassa, hasil ini **tidak akurat**: model terbaik menjelaskan 18 % variasi, setiap model memampatkan rentang nilai lapangan, dan tanggal lapangan dan satelit mungkin tidak cocok. Ini pelajaran tentang validasi, bukan produk karbon.
+
+**Cara membuatnya akurat:**
+
+1. **Plot lapangan yang sejajar lokasi dan tahunnya.** Ukur plot pada tahun citra, dengan galat GPS beberapa meter, dan buat setiap plot setidaknya seluas piksel pembandingnya (0,1 ha atau lebih untuk data 10-30 m). Tiga puluh sampai lima puluh plot per tipe hutan adalah minimum yang realistis.
+2. **Cek alometrinya.** Biomassa sebuah plot berasal dari persamaan alometrik, yang juga sebuah model. Beberapa pohon sampel destruktif, ditebang, dikeringkan, dan ditimbang, menunjukkan apakah persamaan itu cocok untuk pohon setempat, yang paling penting untuk mangrove dan jenis tanaman perkebunan.
+3. **Pakai LiDAR sebagai jembatan.** LiDAR udara atau drone mengukur tinggi dan struktur tajuk secara langsung. Kalibrasi biomassa plot terhadap metrik LiDAR, lalu pakai peta LiDAR, yang jauh lebih banyak daripada plot, untuk melatih model satelit (Bab [-@sec-lidar-trees] dan [-@sec-height-scaling]). Footprint GEDI (Bab [-@sec-gedi-structure]) bisa memainkan peran yang sama dengan biaya lebih rendah.
+4. **Rambatkan setiap ketidakpastian** sampai angka karbon akhir: pengukuran plot, alometri, model, dan sampling, lalu laporkan selangnya bersama totalnya.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch20-regression",

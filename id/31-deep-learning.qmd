@@ -123,6 +123,17 @@ Prediksi yang hanya ada di dalam notebook tidak bisa dicek terhadap layer lain d
 Kalau transformasi GeoTIFF tidak sama dengan grid asal patch, prediksinya bergeser beberapa piksel, dan semua akurasi yang dihitung di Earth Engine turun tanpa sebab yang kelihatan. Simpan grid-nya (titik asal, ukuran piksel, CRS) bersama data saat Anda menariknya, lalu tulis prediksi dengan grid yang persis sama.
 :::
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Perbandingan ini cukup cepat untuk dijalankan di laptop dan mengajarkan perjalanan lengkap dari Earth Engine ke PyTorch dan kembali. Angkanya adalah **kesesuaian dengan WorldCover, bukan akurasi**, pada satu blok, dengan label dari model lain.
+
+**Cara membuatnya akurat:**
+
+1. **Label rujukan yang independen**: titik atau poligon yang ditafsir dari citra resolusi sangat tinggi atau dikunjungi di lapangan, diambil dengan sampel probabilitas (Bab [-@sec-sampling]).
+2. **Laporkan akurasi yang disesuaikan luas dan luas dengan selangnya** (Bab [-@sec-accuracy]), bukan kesesuaian mentah.
+3. **Beberapa blok uji** di bagian bentang yang berbeda, dan beberapa seed, agar selisih antarmodel lebih besar dari derau.
+4. **Latih dengan label yang dipercaya** sebelum meminta jaringan mempelajari bentuk: tambak atau tajuk yang didigitasi tangan mengajarkan apa yang tidak bisa diajarkan peta global 10 m.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch31-deep-learning",

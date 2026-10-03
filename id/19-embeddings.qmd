@@ -61,6 +61,17 @@ Empat batas membuat embedding tidak menggantikan sisa buku ini:
 3. **Keputusan orang lain.** Masker, komposit, dan data latih model fondasi dipilih di tempat lain. Bila keputusan itu gagal di suatu tempat (awan menetap, sensor tak biasa), Anda tidak akan melihat sebabnya.
 4. **Jadwal rilis yang tidak Anda kendalikan.** Produk ini bergantung pada Google yang terus menerbitkannya, dan versi baru mungkin tidak cocok dengan yang lama. Jaga agar metodenya tetap bisa diulang dengan fitur Anda sendiri, dan catat versi dataset pada setiap peta.
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Embedding adalah jalan tercepat di buku ini menuju peta yang bisa dipakai: tanpa komposit, tanpa rekayasa fitur, cukup beberapa label. Akurasi di sini adalah **kesesuaian dengan WorldCover**, yang juga dibuat dari data Sentinel, jadi angkanya menunjukkan seberapa baik embedding meniru satu peta, bukan seberapa baik ia menggambarkan lapangan.
+
+**Cara membuatnya akurat:**
+
+1. **Label yang dipercaya**, dari kunjungan lapangan atau tafsiran cermat citra resolusi sangat tinggi, diambil di seluruh wilayah kajian.
+2. **Validasi independen** dengan sampel probabilitas dan akurasi yang disesuaikan luas (Bab [-@sec-accuracy]).
+3. **Catat versi dan tahun dataset** pada setiap peta, dan ulangi saat versi baru terbit.
+4. **Pakai deret waktu untuk kejadian** (Bab [-@sec-timeseries]): vektor tahunan tidak bisa menentukan tanggal pembukaan lahan atau banjir.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch19-embeddings",

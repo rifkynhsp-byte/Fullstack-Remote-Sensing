@@ -44,6 +44,17 @@ The tempting answer treats each 30 m pixel's error as independent. Then the erro
 Report every carbon total with its interval, say which errors the interval includes (here: the model's systematic error estimated from 45 plots) and which it does not (plot location error, the carbon fraction, below ground biomass, the mismatch in dates). An interval that comes from treating millions of pixels as independent measurements is not caution; it is a calculation error that makes a weak model look precise.
 :::
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The workflow is fast and is the right one to learn: predictors from Earth Engine, a model, leave-one-plot-out validation, an honest interval. As a biomass map it is **not accurate**: the best model explains 18 % of the variation, every model squeezes the range of the field values, and the field and satellite dates may not match. It is a lesson in validation, not a carbon product.
+
+**How to make it accurate:**
+
+1. **Co-located, same-year field plots.** Measure plots in the year of the imagery, with GPS errors of a few metres, and make each plot at least as large as the pixels it is compared with (0.1 ha or more for 10-30 m data). Thirty to fifty plots per forest type is a realistic minimum.
+2. **Check the allometry.** Biomass in a plot comes from an allometric equation, which is itself a model. A few destructively sampled trees, cut, dried and weighed, show whether the equation fits local trees, which matters most for mangrove and for plantation species.
+3. **Use LiDAR as the bridge.** Airborne or drone LiDAR measures canopy height and structure directly. Calibrate biomass on the plots against LiDAR metrics, then use the LiDAR maps, far more numerous than plots, to train the satellite model (Chapters [-@sec-lidar-trees] and [-@sec-height-scaling]). GEDI footprints (Chapter [-@sec-gedi-structure]) can play the same role at lower cost.
+4. **Propagate every uncertainty** to the final carbon number: plot measurement, allometry, model and sampling, and report the interval with the total.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch20-regression",

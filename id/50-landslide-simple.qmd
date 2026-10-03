@@ -46,6 +46,17 @@ Apakah petanya tidak berguna, atau ujiannya? Dua petunjuk mengarah ke ujiannya:
 - **Catatan kejadian menentukan apa yang bisa dipelajari.** Katalog titik yang disusun dari berita berguna untuk menghitung kejadian dan dampaknya, bukan untuk memvalidasi peta 30 m. Inventaris poligon yang dipetakan dari citra, seperti Iburi atau inventaris Lombok 2018 [@ferrario2019lombok], adalah pembanding yang semestinya dipakai untuk menguji model.
 - **Pastikan kerumitan sebanding manfaatnya.** Kalau lereng saja sama baiknya dengan tumpang susun berbobot, faktor-faktor tambahannya hanya hiasan.
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Weighted overlay selesai dalam hitungan menit dan mengajarkan cara peta kerentanan dibangun. Sebagai peta untuk keputusan, hasilnya **tidak akurat**: terhadap katalog longsor ia tidak lebih baik dari kebetulan, dan terhadap inventaris terpetakan ia hanya menunjukkan kemampuan lemah (AUC sekitar 0,59). Bobotnya adalah penilaian, bukan pengukuran.
+
+**Cara membuatnya akurat:**
+
+1. **Inventaris poligon** longsor yang dipetakan dari citra atau di lapangan, untuk jenis pemicu yang sama (hujan atau gempa) dengan tujuan petanya. Katalog titik berbasis berita bukan data uji.
+2. **Model medan yang lebih baik.** Kemiringan dari model LiDAR 1 m adalah variabel yang berbeda dari kemiringan 30 m (Bab [-@sec-lidar-terrain-cities]); longsor lama di bawah hutan hanya terlihat di LiDAR.
+3. **Pelajari bobotnya dari data** dengan model dan validasi berblok spasial, dan pastikan kemiringan, tanah, dan curah hujan, bukan proksi tempat tinggal orang, yang membawa model (Bab [-@sec-p7-ijb-cases] menunjukkan apa yang terjadi bila tidak).
+4. **Validasi pada kejadian atau wilayah yang independen** sebelum peta dipakai.
+
 ## Latihan {.unnumbered}
 
 1. Ganti bobotnya menjadi 0,7, 0,2, 0,1. Apakah AUC Iburi membaik?

@@ -61,6 +61,17 @@ Four limits keep embeddings from replacing the rest of this book:
 3. **Someone else's decisions.** Masking, compositing and the training data of the foundation model were chosen elsewhere. If they fail somewhere (persistent cloud, unusual sensors), you will not see why.
 4. **A release cadence you do not control.** The product depends on Google continuing to publish it, and a new version may not match the old one. Keep the method reproducible with your own features, and record the dataset version with every map.
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** Embeddings are the fastest route in this book to a usable map: no compositing, no feature engineering, a few labels. The accuracies here are **agreement with WorldCover**, which was itself made from Sentinel data, so they say how well the embeddings imitate one map, not how well they describe the ground.
+
+**How to make it accurate:**
+
+1. **Labels you trust**, from field visits or careful interpretation of very high resolution imagery, sampled across the whole area of interest.
+2. **Independent validation** with a probability sample and area-adjusted accuracy (Chapter [-@sec-accuracy]).
+3. **Record the dataset version and year** with every map, and rerun when a new version appears.
+4. **Use time series for events** (Chapter [-@sec-timeseries]): an annual vector cannot date a clearing or a flood.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch19-embeddings",

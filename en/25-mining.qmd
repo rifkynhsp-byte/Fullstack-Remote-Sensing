@@ -53,6 +53,17 @@ What the map cannot say is why a patch is hot. Dark coal and dry spoil heat up i
 
 Bare ground is hotter than forest in the dry season whether or not anything is burning, so a raw temperature map is mostly a map of bare ground. The useful signal is persistence: a stockpile that stays hotter than its neighbours pass after pass. Chapter [-@sec-timeseries]'s time series tools turn the map above into that test. A drone thermal flight or a probe on site confirms it.
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** Public data gives a fast, honest overview of a mine: where it is, roughly how much earth has moved since 2000, and where the ground stays hot. It is **not a survey**: the elevation models are 30 m surface models of different dates, the footprint series is unstable, and heat says nothing about why a patch is hot.
+
+**How to make it accurate:**
+
+1. **Same-date pairs of high-resolution terrain models** from drone photogrammetry or LiDAR, flown monthly or quarterly with ground control points, give volumes to a few per cent.
+2. **Survey the pit floors and lakes**: bathymetry for flooded pits, and ground survey where vegetation or water hides the surface.
+3. **Map the footprint from a stable rule** (several dates, several classes) and check it against the mine plan.
+4. **Confirm heat on the ground**: a night-time thermal drone flight or temperature probes separate self-heating coal from sun-warmed spoil.
+
 ## Exercises {.unnumbered}
 
 1. Change the ±30 m cut-off to ±15 m. How much does the cut volume grow, and how much of that growth is likely cleared forest?

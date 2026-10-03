@@ -130,6 +130,17 @@ for m in bulan:
 :::
 
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Model harmonik dan log rasio radar cepat dan transparan, dan peringatan satu piksel muncul ketika pembukaan lahan terjadi. Peta regionalnya **belum bisa dipercaya sebagai angka luas**: uji tahun stabil menunjukkan bahwa model musim satu tahun menandai banyak tanah yang tidak berubah.
+
+**Cara membuatnya akurat:**
+
+1. **Pasang musim pada beberapa tahun stabil** (tiga atau lebih), agar model sudah melihat tahun kering dan basah.
+2. **Validasi peringatan** dengan citra resolusi sangat tinggi atau cek lapangan pada sampel peringatan dan bukan-peringatan, lalu laporkan galat komisi dan omisi.
+3. **Gabungkan optis dan radar** dengan aturan konfirmasi, agar awan tidak menunda peringatan dan kelembapan tidak menciptakannya.
+4. **Pakai sistem peringatan yang sudah mapan** (GLAD, RADD, DIST-ALERT) sebagai pembanding dan tunjukkan apa tambahan metode lokal Anda.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch21-harmonic",

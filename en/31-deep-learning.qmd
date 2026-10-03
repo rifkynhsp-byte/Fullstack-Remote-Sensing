@@ -123,6 +123,17 @@ A prediction that lives only in a notebook cannot be checked against the project
 If the GeoTIFF's transform does not match the grid the patches came from, the predictions shift by a few pixels, and every accuracy computed in Earth Engine drops for no visible reason. Save the grid (origin, pixel size, CRS) with the data when you pull it, and write the predictions on exactly that grid.
 :::
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The comparison is fast enough to run on a laptop and teaches the full round trip from Earth Engine to PyTorch and back. Its numbers are **agreement with WorldCover, not accuracy**, on one block, with labels from another model.
+
+**How to make it accurate:**
+
+1. **Independent reference labels**: points or polygons interpreted from very high resolution imagery or visited in the field, drawn with a probability sample (Chapter [-@sec-sampling]).
+2. **Report area-adjusted accuracy and areas with intervals** (Chapter [-@sec-accuracy]), not raw agreement.
+3. **Several test blocks** in different parts of the landscape, and several seeds, so that a difference between models is larger than the noise.
+4. **Train on labels you trust** before asking a network to learn shape: hand-digitised ponds or crowns teach what a 10 m global map cannot.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch31-deep-learning",

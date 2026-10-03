@@ -47,6 +47,18 @@ Tabel ukuran petak mengelompokkan kehilangan yang tertandai menjadi bukaan yang 
 
 Bila digabungkan: banyak tutupan pohon dibuka di bentang ini setelah 2020 (sekitar 6.800 ha tertandai di kotak ini, pada dua peta independen), sebagian besar dalam skala kecil, dan model komoditas yang tersedia tidak menyebutnya kebun. Apa lahan itu sebelum dibuka (hutan sekunder, karet hutan, atau hutan) tidak bisa diputuskan dari layer global. Itulah jawaban yang seharusnya diberikan laporan uji tuntas, bersama daftar plotnya, dan itulah mengapa langkah ketiga, verifikasi lapangan dan citra resolusi sangat tinggi, tidak boleh dilewati.
 
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Penyaringan ini cepat, murah, dan bisa diulang, yang memang dibutuhkan untuk tahap pertama atas ribuan plot pemasok. Hasilnya **bukan keputusan kepatuhan**: grid 1 km menggantikan plot nyata, peta hutan dan komoditas global tidak sepakat justru pada agroforestri petani kecil yang membentuk bentang ini, dan pendapat kedua di atas tidak bisa memastikan lahan yang dibuka itu apa.
+
+**Cara membuatnya akurat:**
+
+1. **Batas plot yang sebenarnya** dari pemasok, sebagai poligon, bukan grid.
+2. **Citra resolusi sangat tinggi** untuk setiap plot yang tertandai, sesaat sebelum dan sesudah 31 Desember 2020, ditafsir oleh orang yang mengenal agroforestri karet dan kopi.
+3. **Peta rujukan lokal** bila ada (peta hutan dan tutupan lahan nasional), yang biasanya lebih baik memisahkan kebun dan agroforestri daripada produk global.
+4. **Verifikasi lapangan dan dokumen** untuk sampel plot yang tertandai dan yang lolos, dengan tanggal tanam dan alas hak, sehingga tingkat galat penyaringan diketahui.
+5. **Keputusan yang tercatat per plot**, beserta buktinya, yang memang diminta auditor.
+
 ## Latihan {.unnumbered}
 
 1. Ubah toleransi dari 0,5 ha menjadi 0. Berapa plot yang berubah status? Apakah tambahan kehilangan itu nyata, atau hanya piksel di tepi plot?

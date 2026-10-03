@@ -172,6 +172,17 @@ Change detection at its most direct is two images and a question: what is differ
 
 Two very different processes leave the same signature in a before-and-after pair: vegetation and roofs gone, bright bare ground in their place. Distance from the shore separates them. Inland, the liquefaction flow slides, Petobo the largest in this scene, turned 239 ha into bare mud, with 322 mapped buildings and about 2,400 people (WorldPop 2018) inside. Within 500 m of the bay the tsunami left 17 ha of new bare ground, with 32 buildings and about 170 people. The tsunami zone is underestimated by this method: water damage that leaves a roof standing does not change the image much. A difference map counts what it can see; a damage assessment has to say what it cannot.
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** Harmonic models and radar log ratios are fast and transparent, and the single-pixel alert fired when the clearing happened. The regional map is **not yet trustworthy as an area**: the stable-year test shows that a one-year season model flags much ground that did not change.
+
+**How to make it accurate:**
+
+1. **Fit the season on several stable years** (three or more), so that the model has seen dry and wet years.
+2. **Validate alerts** against very high resolution imagery or field checks on a sample of alerts and non-alerts, and report commission and omission errors.
+3. **Combine optical and radar** with a confirmation rule, so that cloud does not delay alerts and moisture does not create them.
+4. **Use an established alert system** (GLAD, RADD, DIST-ALERT) as a baseline and show what your local method adds.
+
 <script type="application/json" class="lms-quiz">
 {
   "id": "ch21-harmonic",

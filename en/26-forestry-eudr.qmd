@@ -47,6 +47,18 @@ The patch-size table groups the flagged loss into connected clearings. 31 % of t
 
 Put together: a lot of tree cover was cleared in this landscape after 2020 (about 6,800 ha flagged in the box, on two independent maps), mostly at small scale, and the available commodity model does not call it plantation. What it was before clearing (secondary forest, jungle rubber, or forest) cannot be decided from global layers. That is the answer a due-diligence report should give, with the list of plots, and it is why the third step, field and very high resolution verification, is not optional.
 
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The screen is fast, cheap and repeatable, which is what a first pass over thousands of supplier plots needs. It is **not a compliance decision**: a 1 km grid stands in for real plots, global forest and commodity maps disagree on exactly the smallholder agroforest this landscape is made of, and the second opinions above could not settle what the cleared land was.
+
+**How to make it accurate:**
+
+1. **Real plot boundaries** from suppliers, as polygons, not a grid.
+2. **Very high resolution imagery** of each flagged plot shortly before and after 31 December 2020, interpreted by a person who knows rubber and coffee agroforest.
+3. **Local reference maps** where they exist (national forest and land-cover maps), which usually separate plantations and agroforest better than global products.
+4. **Field verification and documents** for a sample of flagged and of passing plots, with planting dates and land titles, so that the screen's error rates are known.
+5. **A recorded decision per plot**, with the evidence behind it, which is what an auditor asks for.
+
 ## Exercises {.unnumbered}
 
 1. Set the tolerance from 0.5 ha to 0. How many plots change status? Is the extra loss real, or pixels on the plot edge?
