@@ -54,7 +54,7 @@ Di PC ini (16 core, tanpa GPU, 8 thread dipakai) satu kali pelatihan 30 epoch bu
 Tidak, setidaknya tidak dengan selisih yang berarti. Pada blok uji:
 
 - Random Forest per piksel sesuai dengan WorldCover pada 91,4 % piksel (kappa 0,787), dengan waktu latih 3 detik.
-- U-Net sesuai pada 92,3 % piksel (kappa 0,806), dengan waktu latih sekitar 113 detik.
+- U-Net sesuai pada 92,3 % piksel (kappa 0,806), dengan waktu latih sekitar dua menit.
 - Random Forest yang diberi rata rata dan simpangan baku setiap band dalam jendela 5 kali 5 juga mencapai 92,2 % (kappa 0,806), dengan waktu latih 8 detik.
 
 Random Forest bawaan Earth Engine dari tab Code Editor (100 pohon, 9.000 titik terstratifikasi dari tile yang sama) sesuai pada 90,8 % dari 20.000 piksel sampel di blok uji (kappa 0,77) saat langkah yang sama kami jalankan. Posisinya setara dengan Random Forest scikit-learn.
@@ -75,6 +75,14 @@ Kenapa jaringan saraf tidak unggul? Ada tiga alasan, dan masing masing memberi p
 **Datanya sedikit.** 212 tile tergolong kecil untuk jaringan dengan 483.907 bobot. Augmentasi (membalik dan memutar seperempat putaran) membantu, tetapi U-Net biasanya butuh ribuan patch berlabel baik sebelum kapasitas tambahannya terbayar.
 
 Skornya seri, petanya tidak. Peta Random Forest berbintik bintik, dengan piksel "lainnya" tunggal tersebar di tengah mangrove. Peta U-Net terdiri dari petak yang bersih dengan tepi halus, karena setiap piksel keluaran diputuskan berdasarkan lingkungannya. Untuk peta yang akan dibaca orang, hal ini bisa lebih penting daripada satu poin kesesuaian. Namun ini perbaikan tampilan yang juga bisa didapat dengan majority filter pada keluaran Random Forest (Bab [-@sec-supervised]), dan Anda perlu mengecek bahwa penghalusan itu tidak menghapus alur sungai kecil yang justru penting.
+
+## Lebih sedikit label: model mana yang lebih terpukul?
+
+Argumen yang biasa untuk deep learning adalah ia belajar lebih banyak dari data yang lebih banyak; kekhawatiran yang biasa tentang label adalah jumlahnya tidak pernah cukup. Eksperimen terakhir melatih kedua model pada sebagian tile latih utuh yang dipilih acak (10 %, 25 %, 50 %, dan semuanya), dengan tile validasi dan blok uji yang sama.
+
+Random Forest dengan statistik 5 kali 5 setidaknya sama baiknya dengan U-Net di setiap ukuran. Dengan 21 tile ia mencapai kappa 0,77 dibanding 0,75 untuk U-Net; dengan 106 tile, 0,80 dibanding 0,75. Baru dengan seluruh 212 tile keduanya bertemu (masing-masing 0,806). Kurva U-Net juga tidak monoton: hasilnya lebih buruk dengan separuh tile daripada dengan seperempat. Itulah derau antar-seed yang diukur di atas muncul lagi, dan itulah masalah praktis jaringan yang dilatih dengan sedikit data: bukan hanya lebih lemah, tetapi juga lebih sulit ditebak. Kelas tersulit, "lainnya", bercerita sama: F1-nya berkisar 0,48 sampai 0,65 untuk U-Net di berbagai ukuran, dan 0,52 sampai 0,66 untuk random forest.
+
+Jadi untuk proyek dengan sedikit label, urutan kerjanya jelas: random forest dengan statistik tetangga dulu, jaringan saraf hanya bila labelnya ribuan dan jawabannya bergantung pada bentuk.
 
 ## Kapan deep learning sepadan
 
@@ -173,3 +181,4 @@ Kalau transformasi GeoTIFF tidak sama dengan grid asal patch, prediksinya berges
 2. Pindahkan `TEST_CENTRE` ke delta bagian luar, di tengah kawasan tambak (misalnya 117,55°BT, 0,78°LS). Model mana yang lebih terpukul, dan apakah WorldCover sendiri tampak benar di sana?
 3. Beri Random Forest jendela 9 kali 9, bukan 5 kali 5. Pada ukuran jendela berapa hasilnya berhenti membaik?
 4. Tulis prediksi U-Net untuk blok uji ke GeoTIFF dengan `rasterio`, memakai transformasi yang sama dengan permintaan `computePixels`. Unggah ke asset Earth Engine Anda dan ulangi confusion matrix di sana. Apakah angkanya sama dengan hasil di Python?
+5. Ulangi eksperimen label yang lebih sedikit dengan tiga seed per ukuran. Apakah penurunan U-Net pada separuh tile bertahan, atau hanya satu run yang sial?

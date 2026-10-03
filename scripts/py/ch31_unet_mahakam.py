@@ -142,12 +142,20 @@ def load_data():
     return data
 
 
-def split_tiles(n):
-    """Whole tiles go to training or validation, never pixels from one tile to both."""
+def split_tiles(n, frac=1.0):
+    """Whole tiles go to training or validation, never pixels from one tile to both.
+
+    frac < 1 keeps only that share of the training tiles (whole tiles, chosen at
+    random); validation tiles and the held-out block stay the same, so results
+    at different fractions are comparable.
+    """
     rng = np.random.default_rng(SEED)
     idx = rng.permutation(n)
     n_val = int(0.2 * n)
-    return idx[n_val:], idx[:n_val]
+    tr = idx[n_val:]
+    if frac < 1:
+        tr = np.random.default_rng(SEED + 1).choice(tr, size=max(4, int(round(frac * len(tr)))), replace=False)
+    return tr, idx[:n_val]
 
 
 # ---------------------------------------------------------------------------
@@ -208,10 +216,10 @@ def to_patches(tiles, size=64):
     return np.stack(out)
 
 
-def train_unet(seed=SEED):
+def train_unet(seed=SEED, frac=1.0):
     """Train on CPU with fixed seeds; keep the epoch with the lowest validation loss."""
-    if ("unet", seed) in _cache:
-        return _cache[("unet", seed)]
+    if ("unet", seed, frac) in _cache:
+        return _cache[("unet", seed, frac)]
     import torch
     from torch import nn
     torch.manual_seed(seed)
@@ -219,7 +227,7 @@ def train_unet(seed=SEED):
     torch.set_num_threads(min(8, os.cpu_count() or 1))
 
     data = load_data()
-    tr, va = split_tiles(len(data["tiles"]))
+    tr, va = split_tiles(len(data["tiles"]), frac)
     x_tr = data["tiles"][tr, :6] / 10000
     stats = (x_tr.mean(axis=(0, 2, 3)), x_tr.std(axis=(0, 2, 3)))
     p_tr = to_patches(data["tiles"][tr])
@@ -273,11 +281,11 @@ def train_unet(seed=SEED):
     model.load_state_dict(best_state)
     model.eval()
     n_params = sum(p.numel() for p in model.parameters())
-    _cache[("unet", seed)] = {"model": model, "stats": stats, "history": pd.DataFrame(history),
+    _cache[("unet", seed, frac)] = {"model": model, "stats": stats, "history": pd.DataFrame(history),
                       "seconds": seconds, "params": n_params,
                       "train_pixels": int(p_tr[:, 6].size), "tiles_train": len(tr),
                       "tiles_val": len(va)}
-    return _cache[("unet", seed)]
+    return _cache[("unet", seed, frac)]
 
 
 # ---------------------------------------------------------------------------
@@ -301,13 +309,13 @@ def pixel_features(block, context=False):
     return f.reshape(len(f), -1).T
 
 
-def train_rf(context=False):
+def train_rf(context=False, frac=1.0):
     """Same tiles, same six bands, one pixel at a time."""
-    if ("rf", context) in _cache:
-        return _cache[("rf", context)]
+    if ("rf", context, frac) in _cache:
+        return _cache[("rf", context, frac)]
     from sklearn.ensemble import RandomForestClassifier
     data = load_data()
-    tr, _ = split_tiles(len(data["tiles"]))
+    tr, _ = split_tiles(len(data["tiles"]), frac)
     t = data["tiles"][tr]
     x = np.concatenate([pixel_features(b, context) for b in t])
     y = t[:, 6].ravel().astype(int)
@@ -317,9 +325,9 @@ def train_rf(context=False):
                                 class_weight="balanced")
     t0 = time.perf_counter()
     rf.fit(x[pick], y[pick])
-    _cache[("rf", context)] = {"model": rf, "seconds": time.perf_counter() - t0,
-                               "pixels": len(pick)}
-    return _cache[("rf", context)]
+    _cache[("rf", context, frac)] = {"model": rf, "seconds": time.perf_counter() - t0,
+                                     "pixels": len(pick)}
+    return _cache[("rf", context, frac)]
 
 
 # ---------------------------------------------------------------------------
@@ -350,9 +358,9 @@ def scores(m):
     return oa, (oa - pe) / (1 - pe), f1
 
 
-def unet_predict(seed, test):
+def unet_predict(seed, test, frac=1.0):
     import torch
-    u = train_unet(seed)
+    u = train_unet(seed, frac)
     x = torch.tensor(normalise(test[None, :6] / 10000, u["stats"]), dtype=torch.float32)
     with torch.no_grad():
         return u["model"](x).argmax(1)[0].numpy()
@@ -499,6 +507,48 @@ def overview_image():
             .blend(ee.Image().byte().paint(block, 1, 3).visualize(palette=["ff2d55"])))
 
 
+# ---------------------------------------------------------------------------
+# STEP 6. Fewer labels: which model loses more?
+# ---------------------------------------------------------------------------
+FRACTIONS = (0.1, 0.25, 0.5, 1.0)
+
+
+def scarcity_frame():
+    """Both models trained on 10 %, 25 %, 50 % and all of the training tiles, scored on the same block."""
+    if "scarcity" in _cache:
+        return _cache["scarcity"]
+    data = load_data()
+    test = data["test"]
+    truth = test[6].astype(int)
+    rows = []
+    for f in FRACTIONS:
+        tr, _ = split_tiles(len(data["tiles"]), f)
+        for name, pred in (("U-Net", lambda: unet_predict(SEED, test, f)),
+                           ("Random Forest + 5 x 5", lambda: train_rf(True, f)["model"].predict(pixel_features(test, True)).reshape(TEST, TEST))):
+            oa, kappa, f1 = scores(confusion(truth, pred()))
+            rows.append({"training tiles": len(tr), "share": f, "model": name, "overall_agreement": oa,
+                         "kappa": kappa, "F1_other": f1[2]})
+    _cache["scarcity"] = pd.DataFrame(rows)
+    return _cache["scarcity"]
+
+
+def plot_scarcity(df):
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 3.6))
+    for name, c in (("U-Net", "#6a51a3"), ("Random Forest + 5 x 5", "#1b7837")):
+        g = df[df.model == name].sort_values("training tiles")
+        a1.plot(g["training tiles"], g.kappa, marker="o", color=c, label=name)
+        a2.plot(g["training tiles"], g.F1_other, marker="o", color=c, label=name)
+    for a, lab in ((a1, "kappa"), (a2, "F1, class 'other'")):
+        a.set_xscale("log"); a.set_xlabel("training tiles (128 x 128 px, log scale)"); a.set_ylabel(lab)
+        a.spines[["top", "right"]].set_visible(False)
+    a1.legend(frameon=False, fontsize=8)
+    small = df[df.share == FRACTIONS[0]].set_index("model").kappa
+    fig.suptitle(f"With {int(df[df.share == FRACTIONS[0]]['training tiles'].iloc[0])} tiles: kappa {small['U-Net']:.2f} for the U-Net, "
+                 f"{small['Random Forest + 5 x 5']:.2f} for the forest", x=0.01, ha="left", fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "map", "name": "ch31-tiles", "image": overview_image(),
@@ -527,6 +577,10 @@ def products():
                     "floor: a gap between models smaller than this is not a result."},
         {"kind": "table", "name": "ch31-setup", "data": setup_frame,
          "caption": "What went into the comparison."},
+        {"kind": "table", "name": "ch31-scarcity", "data": scarcity_frame, "floatfmt": (".0f", ".2f", "", ".3f", ".3f", ".3f"),
+         "caption": "Both models trained on a random share of whole training tiles (same seed, same validation tiles), scored on the same held-out block."},
+        {"kind": "chart", "name": "ch31-scarcity-chart", "data": scarcity_frame, "plot": plot_scarcity, "live": False,
+         "caption": "Fewer labels, measured: kappa and the F1 of the hardest class as the training set shrinks."},
     ]
 
 

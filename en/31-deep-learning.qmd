@@ -1,37 +1,184 @@
-# Deep Learning for Earth Observation {#sec-deeplearning}
+# Deep Learning for Earth Observation: What Earth Engine Cannot Train {#sec-deeplearning}
 
 ::: {.chapter-goal}
 #### In this chapter
-You will train a small convolutional network on real Sentinel-2 patches. You will compare it fairly with a Random Forest, and learn when deep learning is worth its cost and when it is not.
+You will pull image patches and labels out of Earth Engine as NumPy arrays, train a small U-Net on an ordinary CPU, and test it against a Random Forest on the same held-out block. Then you will decide, from numbers, whether the neural network was worth its cost, including what happens when labels are scarce.
 :::
 
-## What Earth Engine cannot train
+## What Earth Engine can train, and what it cannot
 
-Earth Engine's classifiers (Random Forest, gradient boosting, SVM) look at one pixel at a time. A convolutional network looks at a patch: the pixel and its neighbours, so it can learn shape, edges and context. Earth Engine cannot train such a network. It is still the best place to do everything around the training: build the composite, build the labels, cut patches, and later hold the predictions next to every other layer.
+Every classifier in this book so far has looked at one pixel at a time. Earth Engine's Random Forest receives the list of band values for one pixel and returns its class. It never sees the pixel next door, unless you put neighbourhood information into the stack yourself, as texture (Chapter [-@sec-texture]) or segments (Chapter [-@sec-obia]).
 
-The round trip used here is the one in the author's Colab notebooks, made small enough to run on an ordinary laptop:
+A convolutional network works the other way round. It takes a whole patch, say 64 by 64 pixels, and learns its own filters: edges, shapes, the straight walls of a fish pond, the curve of a tidal creek. The U-Net [@ronneberger2015unet] is the standard design for mapping. It shrinks the patch step by step to recognise what is in it, then enlarges it back to full size to decide where things are. "Skip connections" carry fine detail from the early steps to the late ones, so object edges stay sharp. The U-Net was designed for medical images; remote sensing took up deep learning quickly after 2015 [@zhu2017deeprs], and the U-Net became one of the most used designs for segmenting satellite images.
 
-1. Earth Engine builds a 2021 Sentinel-2 composite of the Mahakam Delta and a label image from ESA WorldCover 2021.
-2. `ee.data.computePixels` hands back small tiles as NumPy arrays. There is no export task and no Cloud Storage.
-3. PyTorch trains a small U-Net on 64 × 64 patches.
-4. A Random Forest is trained on the same pixels, as the baseline.
-5. Both predict one block that no training tile touches.
+Earth Engine cannot train such a model. There is no `ee.Classifier` for convolutions, and the servers do not run the many repeated weight updates that training needs. So the work is split:
 
-## A working example: mangrove, water and everything else
+| Step | Runs in | Why |
+|---|---|---|
+| Composite, cloud masking, label image | Earth Engine | the archive is there, and Chapters [-@sec-optical] to [-@sec-sar] already built these |
+| Cutting patches and taking them out | Earth Engine to Python | `computePixels` for small jobs, TFRecord export for large ones |
+| Training the network | your PC, or Colab with a GPU | needs PyTorch or TensorFlow and many passes over the data |
+| Checking, mapping and summarising predictions | back in Earth Engine | as an uploaded asset, next to every other layer |
+
+This is the same pattern as the author's own Colab notebooks: authenticate Earth Engine, build features on the server, pull the stack, train in PyTorch, make a confusion matrix, and put the result back on the map. The example below is the small version, light enough to run on a CPU in a few minutes.
+
+## The task: mangrove, water and everything else in the Mahakam Delta
+
+The Mahakam Delta in East Kalimantan is the study area of Chapters [-@sec-sar] and [-@sec-supervised]. Its outer lobes are mangrove and nipa palm, cut by tidal creeks and thousands of rectangular shrimp ponds. Three classes are enough to see how the two kinds of model behave: mangrove, water and other.
+
+The labels come from ESA WorldCover 2021 [@zanaga2022worldcover]: class 95 is mangrove, class 80 is water, everything else is "other". This is a shortcut, and it has to be called one. WorldCover is itself the output of a model. Training a network on it teaches the network to imitate WorldCover, mistakes included. Every score below is **agreement with WorldCover**, not accuracy on the ground.
+
+The test is designed to be fair:
+
+- **Training tiles** of 128 by 128 pixels (1.28 km) at 10 m, on a grid 0.03 degrees apart so that no two tiles touch. Tiles that are almost all sea are dropped. 264 tiles remain: 212 for training and 52 for validation, split by whole tiles.
+- **One held-out block** of 768 by 768 pixels (7.7 km) where the delta meets the mainland. No training tile comes within about 2 km of it. Both models see this block only at the end.
+- **Both models use the same training tiles and the same six Sentinel-2 bands** (blue, green, red, NIR, SWIR1, SWIR2) from a 2021 composite masked with Cloud Score+.
+
+::: {.callout-note}
+## Concept: getting pixels out without an export
+`ee.data.computePixels` takes any Earth Engine image and a pixel grid (size, origin, pixel size, projection) and returns the pixels straight to Python as a NumPy array. No task, no bucket, no export queue. One request is limited to about 48 MB. A 768 by 768 block with seven float bands (16.5 MB) is safe; the whole delta at 10 m is not. `getDownloadURL` with `format: 'NPY'` does much the same. `sampleRectangle` also returns an array but is limited to 262,144 pixels and is slower. For thousands of patches, use a TFRecord export (see the JavaScript tab).
+:::
+
+The Code Editor tab builds the image and labels, trains Earth Engine's own Random Forest as a baseline, and exports the area as TFRecord patches. The Python tab pulls the tiles with `computePixels`, trains a U-Net and a scikit-learn Random Forest on the same pixels, and scores both on the held-out block.
 
 {{< include _snippets/ch31_unet_mahakam.qmd >}}
 
+## Reading the training curves
+
+Look at the training chart first, not the maps. Both losses fall quickly over five epochs and then flatten. The validation loss stays close to the training loss throughout, so the network is not memorising the training tiles. Validation agreement moves up and down between about 0.915 and 0.943 from one epoch to the next. With 52 validation tiles that is normal: a few pond-filled tiles are enough to shift the score. That is also why the script keeps the epoch with the lowest validation loss, not the last one.
+
+On this PC (16 cores, no GPU, 8 threads used) one 30-epoch training run takes about two minutes. Pulling the tiles from Earth Engine the first time takes longer, about seven minutes, because every tile asks Earth Engine to build a full year of cloud-masked Sentinel-2. The script caches the arrays on disk, so later runs start at once.
+
+## Does the U-Net win?
+
+No, not by a margin that means anything. On the held-out block:
+
+- The per-pixel Random Forest agrees with WorldCover on 91.4 % of pixels (kappa 0.787), trained in a few seconds.
+- The U-Net agrees on 92.3 % (kappa 0.806), trained in about two minutes.
+- A Random Forest given the mean and standard deviation of each band in a 5 by 5 window also reaches 92.2 % (kappa 0.806), trained in about 8 seconds.
+
+Earth Engine's own Random Forest from the Code Editor tab (100 trees, 9,000 stratified points from the same tiles) agreed on 90.8 % of 20,000 sample pixels in the block (kappa 0.77) when we ran the same steps, level with the scikit-learn forest.
+
+Now look at the seed table. The same U-Net trained three times with different random seeds gives 92.3 %, 92.0 % and 91.7 %. The gap between the U-Net and the plain Random Forest (0.9 points) is about as large as the U-Net's own wobble (0.6 points). The Random Forest with a little neighbourhood information matches the U-Net's best run.
+
 ::: {.callout-important}
-## Scientific integrity: a fair baseline, and more than one seed
-The U-Net and a Random Forest given a little neighbourhood information (the 5 × 5 mean and spread) end up level: about 0.92 agreement each. The forest trains in seconds, the network in about two minutes on a CPU. Three training runs with different seeds spread from 0.917 to 0.923, so a difference smaller than that is noise. Two more cautions. The labels are another model's map, so "agreement" is not accuracy. And the test is one block, not a province. A deep learning paper that reports one seed against a pixel-only baseline has not shown very much.
+## Scientific integrity: report a draw as a draw
+It is tempting to write "the U-Net outperformed the Random Forest (92.3 % against 91.4 %)". Both numbers are real, and the sentence is still misleading. One seed, one test block and labels from another model cannot carry a claim of a 0.9-point difference. Report the spread across seeds, include a fair baseline that also gets spatial context, and say plainly when the extra cost bought no measurable improvement.
 :::
+
+Why does the network not win? There are three reasons, and each says something about when deep learning helps.
+
+**The labels come from another classifier.** WorldCover was made by a machine-learning model from Sentinel-1 and Sentinel-2 at 10 m, not from shapes that people drew. A U-Net trained on it learns to copy another model's map. It cannot learn shapes its labels never drew. Look at the dark rectangular ponds in the top right of the Sentinel-2 panel: WorldCover calls many of them mangrove, and both models agree.
+
+**The classes are spectrally easy.** Water and dense mangrove are far apart in NIR and SWIR. When one pixel already gives the answer, context adds little. The hard class is "other": both models put 43 to 46 % of WorldCover's "other" pixels into mangrove. In this block "other" is mostly small patches scattered inside the vegetated delta. At 10 m they look like the mangrove around them, and they are only about 9 % of the block.
+
+**There is little data.** 212 tiles is small for a network with 483,907 weights. Augmentation (flips and quarter turns) helps, but a U-Net usually needs thousands of well-labelled patches before its extra capacity pays off.
+
+The scores are a draw; the maps are not. The Random Forest map is speckled, with single "other" pixels scattered through the mangrove. The U-Net map is made of clean patches with smooth edges, because every output pixel is decided from its surroundings. For a map people will read, that can matter more than a point of agreement. It is, however, a cosmetic gain that a majority filter on the Random Forest output (Chapter [-@sec-supervised]) also gives, and you have to check that the smoothing has not erased the small creeks that matter.
+
+## Fewer labels: which model loses more?
+
+The usual argument for deep learning is that it learns more from more data; the usual worry about labels is that there are never enough. The last experiment trains both models on a random share of the whole training tiles (10 %, 25 %, 50 % and all of them), with the same validation tiles and the same held-out block.
+
+The Random Forest with 5 by 5 statistics is at least as good as the U-Net at every size. With 21 tiles it reaches kappa 0.77 against the U-Net's 0.75; with 106 tiles, 0.80 against 0.75. Only with all 212 tiles do the two meet (0.806 each). The U-Net's curve is also not monotonic: it does worse with half the tiles than with a quarter. That is the seed-to-seed noise measured above showing up again, and it is the practical problem with a network trained on little data: not only is it weaker, it is less predictable. The hardest class, "other", tells the same story: its F1 ranges from 0.48 to 0.65 for the U-Net across the sizes, and from 0.52 to 0.66 for the forest.
+
+For a project with few labels, then, the order of work is clear: a forest with neighbourhood statistics first, a network only when the labels number in the thousands and the answer depends on shape.
 
 ## When deep learning earns its place
 
-It earns its place when shape and context carry the answer: roads and buildings, fish ponds with straight walls, individual tree crowns, landslide scars, ship detection. It also helps when you have many labelled patches, and when the model will run on large areas many times. It does not help much when the classes differ mainly in spectrum, as mangrove and water do here. For bigger jobs, move training to a GPU (the author uses Colab Pro). Then bring the predictions back to Earth Engine as an asset, where they can be mapped, summarised and checked like any other layer.
+A neural network is worth its cost when the answer lies in **shape or texture**, not in the spectrum of a single pixel:
+
+- very high resolution imagery (drone, aerial photography, 0.3 to 1 m), where objects span many pixels: buildings, individual crowns in mixed stands, boats, pond walls;
+- patterns in time and space together, such as the sequence of flooding, planting and harvest in one rice season;
+- tasks with many good labels: hand-digitised polygons, field plots, a national dataset you trust more than a global map.
+
+If the labels come from a 10 m global map and the classes are spectrally separable, start with a Random Forest, add neighbourhood statistics, and stop there unless there is a reason to go further. Chapter [-@sec-agriculture] makes the same point for palm counting.
+
+## When to move to a GPU
+
+The U-Net here is deliberately small: 64 by 64 patches, a three-level network, 3.5 million training pixels. Training time grows roughly with pixels times epochs times model size. Double the patch size, use a deeper network, add a few months as extra bands, and a two-minute job becomes hours on a CPU.
+
+The author's rule of thumb: when one epoch takes more than a few minutes on a CPU, or the PC runs out of memory, move training to Colab with a GPU. Keep everything else at home. A pattern that works:
+
+1. Do the Earth Engine side and the data preparation on the PC. Save the patches as `.npz` or TFRecord and upload them to Google Drive as one bundle.
+2. Keep one runner notebook in Drive with a settings cell at the top: which script, run name, number of epochs, patch size. Nothing else in the notebook needs editing.
+3. Switch the runtime to GPU and run all cells. The script writes its outputs to `runs/<date>_<name>/` in Drive: a log, `run_summary.json`, metric tables and the saved model weights.
+4. Read the results from Drive on the PC, and make the maps and the report there.
+
+::: {.callout-tip}
+## From the field: Colab is not a faster computer for everything
+A Colab session gives a GPU, but few CPU cores, often fewer than a desktop. A Random Forest, pulling data from Earth Engine, or any step that does not run on the GPU will be slower there than at home. Send only the training loop. Write down the run settings and the expected duration before starting, so a failed run can be repeated exactly.
+:::
+
+## Bringing predictions back to Earth Engine
+
+A prediction that lives only in a notebook cannot be checked against the project's other layers. There are two ways back, and the JavaScript tab outlines both.
+
+**Upload it as an asset.** Write the predicted classes to a GeoTIFF on the same grid the pixels were pulled on (the origin, pixel size and projection used in `computePixels`), and upload it through Assets > New > GeoTIFF, or with `earthengine upload image` from a Cloud Storage bucket. It then becomes an ordinary `ee.Image`: put it on the map, sum area by class, run the same `errorMatrix` as in Chapter [-@sec-accuracy]. This is the right choice for a map made once a year.
+
+**Host the model and let Earth Engine call it.** `ee.Model.fromVertexAi` connects Earth Engine to a model deployed on a Vertex AI endpoint. Earth Engine sends image tiles to the endpoint and receives predictions back, so the map can be drawn for any area or date without manual exports. Every computed tile costs money, the model must be served in a format the endpoint understands, and the effort pays only when the map is redrawn often. It is not run in this book.
+
+::: {.callout-warning}
+## Common failure: the uploaded result is shifted
+If the GeoTIFF's transform does not match the grid the patches came from, the predictions shift by a few pixels, and every accuracy computed in Earth Engine drops for no visible reason. Save the grid (origin, pixel size, CRS) with the data when you pull it, and write the predictions on exactly that grid.
+:::
+
+<script type="application/json" class="lms-quiz">
+{
+  "id": "ch31-deep-learning",
+  "questions": [
+    {
+      "q": "Why can a U-Net not be trained inside Earth Engine the way a Random Forest can?",
+      "options": [
+        "Earth Engine has no 10 m Sentinel-2 data",
+        "Earth Engine classifiers work pixel by pixel, and the servers do not run the long repeated training a convolutional network needs",
+        "U-Nets only work on medical images",
+        "Earth Engine forbids exporting labels"
+      ],
+      "answer": 1,
+      "why": "ee.Classifier takes a list of band values per pixel. A convolutional network learns filters over whole patches through many rounds of weight updates, and that is done in PyTorch or TensorFlow outside Earth Engine."
+    },
+    {
+      "q": "The U-Net agrees with WorldCover on 92.3 % of the test block, the per-pixel Random Forest on 91.4 %. What is the honest reading?",
+      "options": [
+        "The U-Net is clearly better",
+        "The Random Forest is clearly better because it trains faster",
+        "The gap is about the size of the U-Net's spread across seeds, and a forest with 5 by 5 statistics matches it, so there is no meaningful win",
+        "Both models are 92 % accurate on the ground"
+      ],
+      "answer": 2,
+      "why": "Three seeds give 91.7 to 92.3 %. A 0.9-point gap on one block, with labels from another model, is not a result. Agreement with WorldCover is not accuracy on the ground either."
+    },
+    {
+      "q": "Which task is most likely to let a U-Net beat a per-pixel Random Forest?",
+      "options": [
+        "Separating open water from dense mangrove in 10 m Sentinel-2",
+        "Mapping building footprints from 0.5 m aerial photos with hand-digitised labels",
+        "Mapping NDVI above 0.6",
+        "Imitating ESA WorldCover at 10 m"
+      ],
+      "answer": 1,
+      "why": "At 0.5 m a building spans many pixels and is recognised by its shape and edges, which is what convolutions learn. Hand-drawn labels let the network learn shapes a 10 m global map never drew."
+    },
+    {
+      "q": "What is the main reason to send work to Colab rather than run it on your own PC?",
+      "options": [
+        "Colab has more CPU cores than a desktop",
+        "The training loop needs a GPU or more memory than the PC has",
+        "Earth Engine only works inside Colab",
+        "Random Forests train faster on Colab"
+      ],
+      "answer": 1,
+      "why": "Colab's value is the GPU. Its CPU allowance is small, so data preparation, Earth Engine requests and Random Forests are usually faster at home."
+    }
+  ]
+}
+</script>
 
 ## Exercises {.unnumbered}
 
-1. Remove the 5 × 5 texture from the second Random Forest. How big is the gap to the U-Net now?
-2. Train the U-Net with a quarter of the tiles. Which model loses more?
-3. Look at the maps where the two models disagree. Is the U-Net smoother because it is right, or because it is a U-Net?
+1. Replace `SEED` and the two other seeds in `seeds_frame` with five new values. How wide is the U-Net's spread now? Does it still overlap the Random Forest with 5 by 5 statistics?
+2. Move `TEST_CENTRE` to the outer delta, in the middle of the pond area (for example 117.55° E, 0.78° S). Which model suffers more, and does WorldCover itself look right there?
+3. Give the Random Forest a 9 by 9 window instead of 5 by 5. At what window size does it stop improving?
+4. Write the U-Net prediction for the test block to a GeoTIFF with `rasterio`, using the same transform as the `computePixels` request. Upload it to your Earth Engine assets and repeat the confusion matrix there. Are the numbers the same as in Python?
+5. Repeat the fewer-labels experiment with three seeds per size. Does the U-Net's dip at half the tiles survive, or was it one unlucky run?
