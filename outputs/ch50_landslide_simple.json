@@ -30,5 +30,23 @@
   "kind": "table",
   "caption": "The same scores tested where landslides were mapped as polygons.",
   "markdown": "| inventory                   |   landslide_pixels |   AUC_weighted_overlay |   AUC_slope_alone |\n|:----------------------------|-------------------:|-----------------------:|------------------:|\n| Iburi 2018, mapped polygons |                800 |                   0.59 |              0.55 |"
+ },
+ {
+  "name": "ch50-weights",
+  "kind": "table",
+  "caption": "Iburi: AUC of the overlay as the slope weight changes (rain and cover share the rest 60:40), and of slope alone without classes.",
+  "markdown": "| slope_weight                |   rain_weight |   cover_weight |   AUC |\n|:----------------------------|--------------:|---------------:|------:|\n| 0.0                         |          0.6  |           0.4  | 0.644 |\n| 0.1                         |          0.54 |           0.36 | 0.662 |\n| 0.2                         |          0.48 |           0.32 | 0.668 |\n| 0.3                         |          0.42 |           0.28 | 0.644 |\n| 0.4                         |          0.36 |           0.24 | 0.640 |\n| 0.5                         |          0.3  |           0.2  | 0.593 |\n| 0.6                         |          0.24 |           0.16 | 0.584 |\n| 0.7                         |          0.18 |           0.12 | 0.584 |\n| 0.8                         |          0.12 |           0.08 | 0.584 |\n| 0.9                         |          0.06 |           0.04 | 0.584 |\n| 1.0                         |          0.0  |           0.0  | 0.543 |\n| slope in degrees, unclassed |          0.0  |           0.0  | 0.550 |"
+ },
+ {
+  "name": "ch50-threshold",
+  "kind": "table",
+  "caption": "Iburi: the slope threshold that best separates landslide from stable pixels, chosen on one half of the area and tested on the other.",
+  "markdown": "| step                                           |   threshold_deg |   hit_rate |   false_alarm |    J |\n|:-----------------------------------------------|----------------:|-----------:|--------------:|-----:|\n| tuned on the west half                         |            17.5 |        64% |           51% | 0.13 |\n| same threshold, tested on the east half        |            17.5 |        66% |           60% | 0.06 |\n| best possible on the east half (for reference) |            20.0 |        58% |           50% | 0.08 |"
+ },
+ {
+  "name": "ch50-threshold-chart",
+  "kind": "chart",
+  "caption": "Youden J for every slope threshold, on the half used for tuning and on the held-out half.",
+  "image": "images/real/ch50-threshold-chart.png"
  }
 ]

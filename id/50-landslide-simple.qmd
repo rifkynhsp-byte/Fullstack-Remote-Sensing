@@ -46,6 +46,26 @@ Apakah petanya tidak berguna, atau ujiannya? Dua petunjuk mengarah ke ujiannya:
 - **Catatan kejadian menentukan apa yang bisa dipelajari.** Katalog titik yang disusun dari berita berguna untuk menghitung kejadian dan dampaknya, bukan untuk memvalidasi peta 30 m. Inventaris poligon yang dipetakan dari citra, seperti Iburi atau inventaris Lombok 2018 [@ferrario2019lombok], adalah pembanding yang semestinya dipakai untuk menguji model.
 - **Pastikan kerumitan sebanding manfaatnya.** Kalau lereng saja sama baiknya dengan tumpang susun berbobot, faktor-faktor tambahannya hanya hiasan.
 
+## Menyetel bobot dan ambang, dan jebakan di dalamnya
+
+Iburi adalah satu-satunya uji yang menunjukkan kemampuan, jadi di sanalah tempat bertanya: bobot mana yang terbaik, dan ambang lereng berapa yang memisahkan longsor dari lahan stabil? Skrip mengambil sampel 1.500 piksel longsor dan 1.500 piksel stabil lalu menjawab keduanya.
+
+**Bobot.** Tabel mengubah bobot lereng dari 0 sampai 1, dengan hujan dan tutupan berbagi sisanya. AUC terbaik (0,67) muncul saat bobot lereng hanya 0,2. Dengan lereng saja nilainya 0,54. Kalau ditelan mentah-mentah, ini berarti tutupan lahan lebih penting daripada lereng. Namun lihat apa yang sebenarnya terjadi:
+
+- **Hujan seragam di area sekecil ini,** jadi tidak menambah apa-apa.
+- **Tutupan lahannya WorldCover 2021, dipetakan tiga tahun *setelah* gempa 2018.** Bekas longsor yang masih segar tampil sebagai tanah terbuka dan rumput, kelas dengan skor tertinggi.
+
+Lapisan tutupan "memprediksi" longsor karena sudah melihatnya. Inilah **kebocoran** (leakage): informasi dari hasil merembes ke dalam prediktor. Bobot apa pun yang disetel di atasnya tidak berguna untuk gempa berikutnya.
+
+Perbaikannya sederhana begitu disadari: selalu pakai prediktor dari **sebelum** kejadian (di sini, tutupan lahan 2017). Kebiasaan inilah pelajaran sebenarnya: kalau hasil tampak lebih baik daripada yang diizinkan fisika, tanyakan bagaimana jawabannya bisa bocor masuk.
+
+**Ambang lereng.** Perencana sering ingin satu angka: "lereng lebih curam dari X° rawan". Ambang terbaik adalah yang memaksimalkan **J Youden**, yaitu laju tangkapan dikurangi laju alarm palsu. Memilihnya pada data yang sama dengan yang dilaporkan akan membuatnya tampak terlalu bagus, jadi skrip menyetelnya di separuh barat area lalu mengujinya di separuh timur:
+
+- **Separuh barat (penyetelan):** optimumnya 17,5°. Ambang ini menangkap 64 % piksel longsor dan menandai 51 % piksel stabil, J = 0,13.
+- **Separuh timur (pengujian), ambang yang sama:** J turun menjadi 0,06. Bahkan ambang terbaik untuk timur (20°) hanya mencapai 0,08.
+
+Ada dua kesimpulan jujur. Pertama, "optimum" yang disetel di satu area kehilangan separuh kemampuannya di area sebelah, jadi selalu laporkan nilai hasil uji, bukan hasil setelan. Kedua, lereng dari model 30 m nyaris tidak memisahkan longsor-longsor ini. Longsor Iburi adalah kegagalan dangkal tanah batu apung, di lereng yang dihaluskan oleh DEM 30 m. Jawabannya adalah model medan yang lebih baik dan lapisan material yang tepat, bukan ambang yang lebih pintar.
+
 ## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
 
 **Vonis.** Weighted overlay selesai dalam hitungan menit dan mengajarkan cara peta kerentanan dibangun. Sebagai peta untuk keputusan, hasilnya **tidak akurat**: terhadap katalog longsor ia tidak lebih baik dari kebetulan, dan terhadap inventaris terpetakan ia hanya menunjukkan kemampuan lemah (AUC sekitar 0,59). Bobotnya adalah penilaian, bukan pengukuran.
@@ -55,7 +75,8 @@ Apakah petanya tidak berguna, atau ujiannya? Dua petunjuk mengarah ke ujiannya:
 1. **Inventaris poligon** longsor yang dipetakan dari citra atau di lapangan, untuk jenis pemicu yang sama (hujan atau gempa) dengan tujuan petanya. Katalog titik berbasis berita bukan data uji.
 2. **Model medan yang lebih baik.** Kemiringan dari model LiDAR 1 m adalah variabel yang berbeda dari kemiringan 30 m (Bab [-@sec-lidar-terrain-cities]); longsor lama di bawah hutan hanya terlihat di LiDAR.
 3. **Pelajari bobotnya dari data** dengan model dan validasi berblok spasial, dan pastikan kemiringan, tanah, dan curah hujan, bukan proksi tempat tinggal orang, yang membawa model (Bab [-@sec-p7-ijb-cases] menunjukkan apa yang terjadi bila tidak).
-4. **Validasi pada kejadian atau wilayah yang independen** sebelum peta dipakai.
+4. **Validasi pada kejadian atau wilayah yang independen** sebelum peta dipakai, dan setel ambang apa pun di satu area lalu laporkan hasilnya di area lain.
+5. **Hanya prediktor dari sebelum kejadian.** Tutupan lahan, NDVI, atau lapisan apa pun dari citra harus lebih tua daripada longsornya, atau bekas longsor bocor ke dalam model.
 
 ## Latihan {.unnumbered}
 

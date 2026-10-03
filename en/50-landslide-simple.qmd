@@ -46,6 +46,26 @@ Is the map useless, or is the test? Two clues point to the test:
 - **The records decide what you can learn.** Point catalogues compiled from news are useful for counting events and their impacts, not for validating a 30 m map. Polygon inventories mapped from imagery, like Iburi or the Lombok 2018 inventory [@ferrario2019lombok], are what models should be tested against.
 - **Check that complexity earns its place.** If slope alone does as well as the weighted overlay, the extra factors are decoration.
 
+## Tuning the weights and the threshold, and the trap inside
+
+Iburi is the one test with skill, so it is where to ask: which weights are best, and what slope threshold separates landslides from stable ground? The script samples 1,500 landslide and 1,500 stable pixels and answers both.
+
+**The weights.** The table changes the slope weight from 0 to 1, with rain and cover sharing the rest. The best AUC (0.67) comes with slope at only 0.2. With slope alone it is 0.54. Taken at face value, that says land cover matters more than slope. But look at what is really happening:
+
+- **Rain is constant across this small area,** so it adds nothing.
+- **The land cover is WorldCover 2021, mapped three years *after* the 2018 earthquake.** The fresh scars appear as bare ground and grass, the classes scored highest.
+
+The cover layer "predicts" landslides because it has already seen them. This is **leakage**: information from the outcome slipping into a predictor. Any weight tuned on it is worthless for the next earthquake.
+
+The fix is simple once you notice it: always use predictors from **before** the event (here, a 2017 land cover). The habit is the real lesson: when a result looks better than the physics suggests, ask how the answer could have leaked in.
+
+**The slope threshold.** A planner often wants one number: "slopes steeper than X° are susceptible". The best threshold is the one that maximises **Youden's J**, the hit rate minus the false-alarm rate. Choosing it on the same data you report would flatter it, so the script tunes it on the west half of the area and tests it on the east half:
+
+- **West half (tuning):** the optimum is 17.5°. It catches 64 % of landslide pixels and flags 51 % of stable ones, J = 0.13.
+- **East half (testing), same threshold:** J falls to 0.06. Even the best possible threshold for the east (20°) reaches only 0.08.
+
+Two honest conclusions follow. First, an "optimum" tuned on one area loses half its skill next door, so always report the tested value, not the tuned one. Second, slope from a 30 m model barely separates these landslides. The Iburi slides were shallow failures of pumice soil, on slopes the 30 m DEM smooths out. The answer is a better terrain model and the right material layer, not a cleverer threshold.
+
 ## Verdict: how far to trust this, and how to make it accurate
 
 **Verdict.** A weighted overlay takes minutes and teaches how susceptibility maps are built. As a map to guide decisions it is **not accurate**: against the landslide catalogue it does no better than chance, and against a mapped inventory it shows only weak skill (AUC about 0.59). The weights are judgement, not measurement.
@@ -55,7 +75,8 @@ Is the map useless, or is the test? Two clues point to the test:
 1. **A polygon inventory** of landslides mapped from imagery or in the field, for the same kind of trigger (rain or earthquake) as the map is meant for. News-based point catalogues are not a test set.
 2. **A better terrain model.** Slope from a 1 m LiDAR model is a different variable from slope at 30 m (Chapter [-@sec-lidar-terrain-cities]); old landslides under forest only appear in LiDAR.
 3. **Learn the weights from data** with a model and spatially blocked validation, and check that slope, soil and rainfall, not proxies for where people live, carry it (Chapter [-@sec-p7-ijb-cases] shows what happens otherwise).
-4. **Validate on an independent event or area** before the map is used.
+4. **Validate on an independent event or area** before the map is used, and tune any threshold on one area and report it on another.
+5. **Predictors from before the event only.** Land cover, NDVI or any image-derived layer must predate the landslides, or the scars leak into the model.
 
 ## Exercises {.unnumbered}
 

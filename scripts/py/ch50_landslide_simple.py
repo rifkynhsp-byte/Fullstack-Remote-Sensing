@@ -147,6 +147,75 @@ def iburi_table():
                           "AUC_slope_alone": auc(y, d.slope.to_numpy())}])
 
 
+# Sensitivity on the good inventory: the weights, and the optimum slope threshold.
+_iburi = {}
+SPLIT_LON = 141.99                                 # west half tunes, east half tests
+
+
+def iburi_sample():
+    if "d" not in _iburi:
+        dem_i = (ee.ImageCollection("COPERNICUS/DEM/GLO30").filterBounds(iburi).select("DEM")
+                 .mosaic().setDefaultProjection("EPSG:4326", None, 30))
+        sl = ee.Terrain.slope(dem_i)
+        img = ee.Image.cat([sl.rename("slope"), classes(sl, [8, 15, 25, 35]).rename("c_slope"),
+                            classes(rain, [2000, 2500, 3000, 3500]).rename("c_rain"),
+                            wc.remap([10, 50, 40, 20, 30, 60], [2, 2, 3, 4, 4, 5], 2).rename("c_lc"),
+                            ee.Image(0).paint(inventory, 1).rename("truth"), ee.Image.pixelLonLat().select("longitude")])
+        pts = img.stratifiedSample(numPoints=1500, classBand="truth", region=iburi, scale=30, seed=11, tileScale=4)
+        _iburi["d"] = pd.DataFrame([f["properties"] for f in pts.getInfo()["features"]]).dropna()
+    return _iburi["d"]
+
+
+def weight_frame():
+    d = iburi_sample(); y = d.truth.to_numpy()
+    rows = []
+    for w in np.round(np.arange(0, 1.01, 0.1), 1):
+        s = w * d.c_slope + (1 - w) * 0.6 * d.c_rain + (1 - w) * 0.4 * d.c_lc
+        rows.append({"slope_weight": w, "rain_weight": round((1 - w) * 0.6, 2), "cover_weight": round((1 - w) * 0.4, 2),
+                     "AUC": auc(y, s.to_numpy())})
+    rows.append({"slope_weight": "slope in degrees, unclassed", "rain_weight": 0, "cover_weight": 0,
+                 "AUC": auc(y, d.slope.to_numpy())})
+    return pd.DataFrame(rows)
+
+
+def threshold_frame():
+    d = iburi_sample()
+    rows = []
+    for th in np.arange(5, 45.1, 2.5):
+        r = {"slope_threshold": th}
+        for half, dd in (("west", d[d.longitude < SPLIT_LON]), ("east", d[d.longitude >= SPLIT_LON])):
+            pos, neg = dd[dd.truth == 1], dd[dd.truth == 0]
+            tpr, fpr = (pos.slope >= th).mean(), (neg.slope >= th).mean()
+            r.update({f"hit_rate_{half}": tpr, f"false_alarm_{half}": fpr, f"J_{half}": tpr - fpr})
+        rows.append(r)
+    return pd.DataFrame(rows)
+
+
+def threshold_table(d):
+    b = d.loc[d.J_west.idxmax()]
+    e = d.loc[d.J_east.idxmax()]
+    return pd.DataFrame([
+        {"step": "tuned on the west half", "threshold_deg": b.slope_threshold, "hit_rate": b.hit_rate_west,
+         "false_alarm": b.false_alarm_west, "J": b.J_west},
+        {"step": "same threshold, tested on the east half", "threshold_deg": b.slope_threshold,
+         "hit_rate": b.hit_rate_east, "false_alarm": b.false_alarm_east, "J": b.J_east},
+        {"step": "best possible on the east half (for reference)", "threshold_deg": e.slope_threshold,
+         "hit_rate": e.hit_rate_east, "false_alarm": e.false_alarm_east, "J": e.J_east}])
+
+
+def plot_threshold(d):
+    fig, ax = plt.subplots(figsize=(7, 3.4))
+    ax.plot(d.slope_threshold, d.J_west, "o-", color="#2a78d6", ms=4, label="west half (tuning)")
+    ax.plot(d.slope_threshold, d.J_east, "s--", color="#c0392b", ms=4, label="east half (testing)")
+    b = d.loc[d.J_west.idxmax()]
+    ax.axvline(b.slope_threshold, color="#6b7680", lw=0.8)
+    ax.set_xlabel("slope threshold for 'susceptible' (°)"); ax.set_ylabel("Youden J = hit rate - false alarm rate")
+    ax.spines[["top", "right"]].set_visible(False); ax.legend(frameon=False, fontsize=8)
+    ax.set_title("The optimum slope threshold, and how well it travels", loc="left", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "map", "name": "ch50-score", "image": score, "region": aoi,
@@ -165,6 +234,15 @@ def products():
         {"kind": "table", "name": "ch50-iburi", "data": iburi_table,
          "floatfmt": ("", ",.0f", ".2f", ".2f"),
          "caption": "The same scores tested where landslides were mapped as polygons."},
+        {"kind": "table", "name": "ch50-weights", "data": weight_frame, "floatfmt": ("", "", "", ".3f"),
+         "caption": "Iburi: AUC of the overlay as the slope weight changes (rain and cover share the rest 60:40), "
+                    "and of slope alone without classes."},
+        {"kind": "table", "name": "ch50-threshold", "data": threshold_frame, "transform": threshold_table,
+         "floatfmt": ("", ".1f", ".0%", ".0%", ".2f"),
+         "caption": "Iburi: the slope threshold that best separates landslide from stable pixels, chosen on one "
+                    "half of the area and tested on the other."},
+        {"kind": "chart", "name": "ch50-threshold-chart", "data": threshold_frame, "plot": plot_threshold, "live": False,
+         "caption": "Youden J for every slope threshold, on the half used for tuning and on the held-out half."},
     ]
 
 
