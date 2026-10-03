@@ -23,5 +23,23 @@
   "kind": "figure",
   "caption": "Six random crowns from each group. If the groups are right, the rows should look different to your eye.",
   "image": "images/real/ch61-gallery.png"
+ },
+ {
+  "name": "ch61-ffb-map",
+  "kind": "figure",
+  "caption": "Modelled fresh fruit bunches from the drone: per palm (left) and per 30 m cell (right). Only crowns that pass the planting-grid test are counted.",
+  "image": "images/real/ch61-ffb-map.png"
+ },
+ {
+  "name": "ch61-ffb-cells",
+  "kind": "chart",
+  "caption": "Distribution of modelled FFB across the 30 m cells of the block.",
+  "image": "images/real/ch61-ffb-cells.png"
+ },
+ {
+  "name": "ch61-ffb",
+  "kind": "table",
+  "caption": "Block totals and the spread between cells under three assumptions about how much crown health costs in fruit, plus the upper bound if every detection were a healthy palm.",
+  "markdown": "| scenario (health multipliers)                      |   palms |   total_t_yr |   planted_ha |   t_ha_yr_planted |   cells_p10 |   cells_p90 |   cells_below_8_t_ha |\n|:---------------------------------------------------|--------:|-------------:|-------------:|------------------:|------------:|------------:|---------------------:|\n| no health effect                                   |    1306 |          124 |         14.8 |               7.9 |         1.5 |        13.7 |                  49% |\n| mild (base)                                        |    1306 |          115 |         14.8 |               7.3 |         1.3 |        12.2 |                  53% |\n| strong                                             |    1306 |          103 |         14.8 |               6.5 |         1.1 |        11.0 |                  66% |\n| upper bound: all 2,585 detections as healthy palms |    2585 |          246 |        nan   |             nan   |       nan   |       nan   |                 nan% |"
  }
 ]

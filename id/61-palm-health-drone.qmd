@@ -31,6 +31,38 @@ Citranya adalah ortofoto OpenAerialMap yang sama, kebun sawit rakyat di dekat Ba
 
 **Warna adalah gejala, bukan diagnosis.** Tajuk yang kuning atau tipis bisa berarti kekurangan hara (sering kalium atau magnesium), kekeringan, tergenang, hama, pelepah tua yang belum dipangkas, atau busuk pangkal batang *Ganoderma*, penyakit sawit paling serius di Asia Tenggara. RGB tidak bisa membedakan semua itu, dan infeksi *Ganoderma* tahap awal sering tidak menunjukkan gejala di tajuk sama sekali. Yang bisa dilakukan peta ini adalah mengirim tim lapangan ke 40 pohon di kelompok buruk lebih dulu.
 
+## Dari tajuk ke buah: peta, bukan hanya total
+
+Manajer kebun jarang hanya bertanya "berapa ton yang akan dihasilkan blok ini?". Pertanyaan berikutnya selalu "di mana kita kehilangan buah?". Taksiran satelit (Bab [-@sec-oil-palm-yield]) memberi satu angka per piksel 10 m, yang berisi satu pohon dan tanah di sekitarnya. Ia tidak bisa melihat bahwa satu pohon hilang, atau satu tajuk dalam barisan tipis. Drone bisa. Jadi skrip mengubah setiap tajuk yang terhitung menjadi taksiran tandan buah segar (TBS) lalu memetakannya dengan dua cara.
+
+**Modelnya, dengan semua asumsi terbuka:**
+
+1. **Buah per pohon saat sehat penuh.** Patokan Bab [-@sec-oil-palm-yield] memberi potensi 34,5 t/ha/th × capaian 0,42 = 14,5 t/ha/th untuk sawit umur prima. Pada jarak tanam segitiga 8,7 m yang terukur di blok ini, itu berarti 153 pohon per hektare, atau **95 kg per pohon per tahun**. Tajuknya saling bersentuhan, jadi blok ini dianggap berumur prima; blok yang lebih muda atau lebih tua butuh angkanya sendiri.
+2. **Potongan untuk tajuk buruk.** Tajuk sehat tetap 100 %, sedang 90 %, buruk 60 %. Pengali ini adalah **asumsi**, bukan hasil ukur, jadi tabel menjalankan dua skenario lain berdampingan: "tanpa efek kesehatan" dan "kuat" (100 / 75 / 30 %).
+3. **Hanya tajuk yang lolos uji grid tanam yang dihitung** sebagai sawit (1.306). Semak dan pohon hutan tidak berbuah TBS.
+4. **Dua peta.**
+   - **Per pohon:** setiap tajuk diwarnai menurut taksiran kilogramnya.
+   - **Per sel 30 m:** jumlah buah dari pohon-pohon di dalam sel, dalam ton per hektare. Sel dengan pohon yang kosong atau lemah tampak rendah.
+
+   Peta sel dibatasi pada area tertanam: sel yang lingkungan 3 × 3-nya berisi paling sedikit 20 pohon. Dengan begitu titik kosong di dalam kebun tetap masuk, sedangkan hutan di sekelilingnya terbuang.
+
+**Apa kata petanya:**
+
+- **Total blok sekitar 115 t TBS per tahun** pada asumsi dasar, 103–124 t di antara ketiga skenario. Pengali kesehatan hanya menggeser total ±10 %. Pengaruhnya lebih kecil dari dugaan, karena hanya 40 pohon yang masuk kelompok buruk.
+- **Sebaran antarsel adalah hasil yang sebenarnya.** Di 14,9 ha area tertanam, rata-ratanya 7,3 t/ha/th, sekitar separuh dari blok yang terisi penuh dan sehat (14,5). Selnya berkisar dari sekitar 1 t/ha (persentil ke-10) sampai 12 t/ha (persentil ke-90), dan separuhnya di bawah 8 t/ha. Sel-sel rendah itulah tempat buah hilang, dan peta menunjukkan persis ke mana harus berjalan. (Beberapa sel melampaui 14,5 t/ha. Satu sel 30 m rata-rata memuat sekitar 14 titik tanam, tetapi tergantung bagaimana barisan tanam melintasinya, ia bisa menangkap 17 atau 18 tajuk. Itu sifat grid, bukan buah tambahan.)
+- **Sel rendah punya dua kemungkinan sebab, dan drone saja tidak bisa membedakannya.** Area tertanam berisi 1.306 pohon terhitung, sekitar 88 per hektare dibanding 153 untuk populasi penuh.
+  - **Pohonnya mungkin memang tidak ada:** mati, tidak pernah ditanam, atau tergantikan semak.
+  - **Detektornya mungkin melewatkannya:** pohon yang terhimpit semak atau berada di tepi blok sehingga gagal uji grid (batas atas 2.585 deteksi menunjukkan seberapa besar kemungkinannya).
+
+  Sebab mana yang benar menentukan tindakannya: tanam sisip pada kasus pertama, perbaiki deteksi pada kasus kedua. Memeriksa sepuluh sel rendah di lapangan menjawabnya dalam satu pagi.
+
+**Cara membaca angkanya dengan jujur.** Setiap ton di sini adalah hasil *model*: tiga angka terbitan atau asumsi dikalikan dengan hitungan pohon. Peta ini baik untuk mengurutkan di mana hasil hilang, dan lemah untuk menyatakan ton secara mutlak. Agar tonnya nyata:
+
+- **Catatan panen per blok** (tiket timbangan kebun) mengkalibrasi kilogram per pohon.
+- **Hitungan tandan pada sampel pohon** di tiap kelompok kesehatan mengukur potongan akibat tajuk buruk, bukan mengasumsikannya.
+- **Register tanam** memastikan umur, dan dengan itu potensinya.
+- **Penerbangan ulang** setiap tahun mengubah peta ini menjadi peta perubahan: sel yang turun dari tahun ke tahun adalah tempat pertama untuk diperiksa.
+
 ## Supaya lebih baik
 
 - **Drone multispektral** membawa kanal red-edge dan inframerah dekat. NDVI dan indeks red-edge peka terhadap klorofil dan struktur daun, bukan hanya warna, dan tidak mudah tertipu tanah yang terlihat di antara pelepah.

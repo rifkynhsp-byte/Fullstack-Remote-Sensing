@@ -31,6 +31,38 @@ The image is the same OpenAerialMap orthophoto of smallholder oil palm near Banj
 
 **Colour is a symptom, not a diagnosis.** A yellow or thin crown can mean nutrient deficiency (often potassium or magnesium), drought, waterlogging, pests, old fronds not yet pruned, or *Ganoderma* basal stem rot, the most serious disease of oil palm in Southeast Asia. RGB cannot tell these apart, and early *Ganoderma* infection often shows no crown symptom at all. What this map can do is send a field crew to the 40 palms in the poor group first.
 
+## From crowns to fruit: a map, not only a total
+
+A plantation manager rarely asks "how many tonnes will this block give?" alone. The next question is always "where are we losing fruit?" A satellite estimate (Chapter [-@sec-oil-palm-yield]) gives a number per 10 m pixel, which holds one palm and the ground around it. It cannot see that a palm is missing, or that one crown in a row is thin. A drone can. So the script turns every counted crown into an expected yield of fresh fruit bunches (FFB) and maps it two ways.
+
+**The model, with every assumption in the open:**
+
+1. **Fruit per palm at full health.** Chapter [-@sec-oil-palm-yield]'s anchors give 34.5 t/ha/yr potential × 0.42 achievement = 14.5 t/ha/yr for prime-age palms. At this block's measured 8.7 m triangular spacing that is 153 palms per hectare, or **95 kg per palm per year**. The crowns touch, so the block is treated as prime age; a younger or older block would need its own figure.
+2. **A cost for poor crowns.** Healthy crowns keep 100 %, moderate 90 %, poor 60 %. These multipliers are **assumptions**, not measurements, so the table runs two others alongside: "no health effect" and "strong" (100 / 75 / 30 %).
+3. **Only crowns that pass the planting-grid test count** as palms (1,306). Bushes and forest trees do not bear fruit.
+4. **Two maps.**
+   - **Per palm:** each crown coloured by its expected kilograms.
+   - **Per 30 m cell:** the sum of the palms in each cell, as tonnes per hectare. A cell with gaps or weak palms shows as low.
+
+   The cell map is limited to the planted area: cells whose 3 × 3 neighbourhood holds at least 20 palms. That keeps gaps inside the plantation and drops the forest around it.
+
+**What the maps say:**
+
+- **The block total is about 115 t of FFB per year** under the base assumption, 103–124 t across the three scenarios. The health multipliers move the total by only ±10 %. They matter less than you might expect, because only 40 palms are in the poor group.
+- **The spread between cells is the real result.** Over the 14.9 planted hectares the mean is 7.3 t/ha/yr, about half of what a fully stocked, healthy block would give (14.5). The cells range from about 1 t/ha (10th percentile) to 12 t/ha (90th), and half of them fall below 8 t/ha. The low cells are where the fruit is lost, and the map shows exactly where to walk. (A few cells exceed 14.5 t/ha. A 30 m cell holds about 14 palm positions on average, but depending on how the planting rows fall across it, it can catch 17 or 18 crowns. That is a property of the grid, not extra fruit.)
+- **The low cells have two possible causes, and the drone alone cannot tell them apart.** The planted area holds 1,306 counted palms, about 88 per hectare against 153 for full stocking.
+  - **The palms may really be missing:** dead, never planted, or replaced by bush.
+  - **The detector may have missed them:** palms crowded by undergrowth or at block edges that fail the grid test (the upper bound of 2,585 detections shows how large that could be).
+
+  Which it is decides the action: replant in the first case, improve the detection in the second. Checking ten low cells on the ground answers it in a morning.
+
+**How to read the numbers honestly.** Every tonne here is *modelled*: three published or assumed numbers multiplied by a count. The map is good at ranking where yield is lost, and weak at stating absolute tonnes. To make the tonnes real:
+
+- **Harvest records per block** (the plantation's own weighbridge tickets) calibrate the kilograms per palm.
+- **Bunch counts on a sample of palms** in each health group measure the cost of a poor crown instead of assuming it.
+- **A planting register** fixes the age, and with it the potential.
+- **A repeat flight** each year turns the map into a change map: cells that fall from one year to the next are where to look first.
+
 ## Doing better
 
 - **Multispectral drones** carry red-edge and near-infrared bands. NDVI and red-edge indices respond to chlorophyll and leaf structure, not only to colour, and are less fooled by soil showing between the fronds.

@@ -112,12 +112,16 @@ def figure_map():
     d = crowns()
     rgb, res = base.load()
     img = np.clip(np.transpose(rgb, (1, 2, 0)) / np.percentile(rgb[rgb > 0], 99), 0, 1)
+    H, W = rgb.shape[1:]
+    w, e, s_, n_ = base.lonlat_extent()
     fig, ax = plt.subplots(figsize=(9, 8))
-    ax.imshow(img)
+    ax.imshow(img, extent=[w, e, s_, n_])
     for n, c in zip(CLASS_NAMES + [NOT_PALM], CLASS_COLS + [NOT_PALM_COL]):
         s = d[d["class"] == n]
-        ax.scatter(s.col, s.row, s=7, color=c, edgecolor="black", linewidth=0.2, label=n)
-    ax.set_axis_off()
+        ax.scatter(w + (s.col + 0.5) / W * (e - w), n_ - (s.row + 0.5) / H * (n_ - s_), s=7, color=c,
+                   edgecolor="black", linewidth=0.2, label=n)
+    base.graticule(ax)
+    ax.set_aspect(1 / np.cos(np.radians((s_ + n_) / 2)))
     ax.legend(frameon=True, fontsize=8, loc="lower right", markerscale=2)
     ax.set_title("Crown health from RGB greenness and fullness", loc="left", fontsize=10)
     return fig
@@ -149,6 +153,123 @@ def figure_gallery():
     return fig
 
 
+# ---------------------------------------------------------------------------
+# Fresh fruit bunches (FFB): a map, not only a total
+# ---------------------------------------------------------------------------
+# Every number below is an assumption you can change, and the chapter tests them:
+PEAK_T_HA = 34.5           # potential FFB at prime age, t/ha/yr (PPKS standard; Chapter 60)
+ACHIEVE = 0.42             # actual / attainable, Indonesian smallholders (Chapter 60)
+SPACING_M = 8.7            # measured planting distance in this block (Chapter 27)
+PALMS_HA = 10000 / (SPACING_M ** 2 * np.sqrt(3) / 2)       # triangular planting: about 153 palms/ha
+KG_PALM = PEAK_T_HA * ACHIEVE * 1000 / PALMS_HA           # about 95 kg per palm per year
+SCENARIOS = {"no health effect": {"healthy": 1.0, "moderate": 1.0, "poor": 1.0},
+             "mild (base)": {"healthy": 1.0, "moderate": 0.9, "poor": 0.6},
+             "strong": {"healthy": 1.0, "moderate": 0.75, "poor": 0.3}}
+BASE_SCEN = "mild (base)"
+CELL_M = 30.0              # the map unit: 30 m cells, 0.09 ha, about 14 palm positions
+
+
+def ffb_palms(scenario=BASE_SCEN):
+    d = crowns()
+    d = d[d["class"].isin(CLASS_NAMES)].copy()
+    d["ffb_kg"] = KG_PALM * d["class"].map(SCENARIOS[scenario])
+    return d
+
+
+def ffb_grid(scenario=BASE_SCEN):
+    """FFB per hectare in 30 m cells: the sum of the palms in each cell over its area.
+    Gaps (dead, missing or unplanted positions) lower a cell, which a satellite pixel cannot show."""
+    rgb, res = base.load()
+    H, W = rgb.shape[1:]
+    n = int(round(CELL_M / res))
+    d = ffb_palms(scenario)
+    valid = rgb.sum(0) > 0
+    rows, cols = H // n, W // n
+    grid = np.full((rows, cols), np.nan)
+    sums = np.zeros((rows, cols)); counts = np.zeros((rows, cols))
+    idx = (np.minimum(d.row.values // n, rows - 1), np.minimum(d.col.values // n, cols - 1))
+    np.add.at(sums, idx, d.ffb_kg.values); np.add.at(counts, idx, 1)
+    # Planted area: a cell whose 3 x 3 neighbourhood (about 124 palm positions) holds at least
+    # 20 palms. Gaps inside the plantation stay in (as low values); forest and bush around it,
+    # with a stray detection here and there, drop out.
+    from scipy.ndimage import uniform_filter
+    planted = uniform_filter(counts, size=3, mode="constant") * 9 >= 20
+    for i in range(rows):
+        for j in range(cols):
+            if planted[i, j] and valid[i * n:(i + 1) * n, j * n:(j + 1) * n].mean() > 0.95:
+                grid[i, j] = sums[i, j] / 1000 / (CELL_M ** 2 / 1e4)       # t/ha/yr
+    return grid
+
+
+def figure_ffb_map():
+    d = ffb_palms()
+    rgb, res = base.load()
+    H, W = rgb.shape[1:]
+    w, e, s, n = base.lonlat_extent()
+    lon = w + (d.col.values + 0.5) / W * (e - w)
+    lat = n - (d.row.values + 0.5) / H * (n - s)
+    img = np.clip(np.transpose(rgb, (1, 2, 0)) / np.percentile(rgb[rgb > 0], 99), 0, 1)
+    grid = ffb_grid()
+    fig, axes = plt.subplots(1, 2, figsize=(11, 5.4))
+    axes[0].imshow(img, extent=[w, e, s, n])
+    mult = SCENARIOS[BASE_SCEN]
+    for n_, c in zip(CLASS_NAMES, CLASS_COLS):
+        k = (d["class"] == n_).values
+        axes[0].scatter(lon[k], lat[k], s=9, color=c, edgecolor="black", linewidth=0.25,
+                        label=f"{n_}: {KG_PALM * mult[n_]:.0f} kg/yr ({k.sum()} palms)")
+    axes[0].legend(fontsize=7, loc="upper right", framealpha=0.9, title="FFB per palm", title_fontsize=7)
+    axes[0].set_title("Per palm: expected fruit, by crown health", loc="left", fontsize=10)
+    axes[1].imshow(img, extent=[w, e, s, n], alpha=0.35)
+    im = axes[1].imshow(np.ma.masked_invalid(grid), extent=[w, e, s, n], cmap="YlGn", vmin=0, vmax=18,
+                        interpolation="nearest", alpha=0.9)
+    fig.colorbar(im, ax=axes[1], shrink=0.7, label="FFB (t/ha/yr), 30 m cells")
+    axes[1].set_title("Per 30 m cell: gaps and weak palms show as low yield", loc="left", fontsize=10)
+    for ax in axes:
+        base.graticule(ax)
+        ax.set_aspect(1 / np.cos(np.radians((s + n) / 2)))
+    fig.text(0.01, 0.01, "Modelled, not measured: 34.5 t/ha potential x 0.42 achievement, "
+             f"{PALMS_HA:.0f} palms/ha, health multipliers {SCENARIOS[BASE_SCEN]}. Drone: OpenAerialMap, CC BY 4.0.",
+             fontsize=7, color="#555555")
+    fig.tight_layout(rect=(0, 0.03, 1, 1))
+    return fig
+
+
+def ffb_table():
+    rows = []
+    area_ha = (~np.isnan(ffb_grid())).sum() * CELL_M ** 2 / 1e4          # planted cells only
+    for name in SCENARIOS:
+        d = ffb_palms(name); g = ffb_grid(name)
+        v = g[~np.isnan(g)]
+        rows.append({"scenario (health multipliers)": name, "palms": len(d), "total_t_yr": d.ffb_kg.sum() / 1000,
+                     "planted_ha": area_ha, "t_ha_yr_planted": v.mean(),
+                     "cells_p10": np.percentile(v, 10), "cells_p90": np.percentile(v, 90),
+                     "cells_below_8_t_ha": (v < 8).mean()})
+    d = crowns()
+    rows.append({"scenario (health multipliers)": "upper bound: all 2,585 detections as healthy palms",
+                 "palms": len(d), "total_t_yr": len(d) * KG_PALM / 1000,
+                 "planted_ha": np.nan, "t_ha_yr_planted": np.nan,
+                 "cells_p10": np.nan, "cells_p90": np.nan, "cells_below_8_t_ha": np.nan})
+    return pd.DataFrame(rows)
+
+
+def ffb_cells_frame():
+    v = ffb_grid()
+    return pd.DataFrame({"t_ha_yr": v[~np.isnan(v)]})
+
+
+def plot_ffb_cells(d):
+    fig, ax = plt.subplots(figsize=(6.6, 3.2))
+    ax.hist(d.t_ha_yr, bins=np.arange(0, 26, 1), color="#78a65a", edgecolor="white")
+    ax.axvline(PEAK_T_HA * ACHIEVE, color="#c0392b", lw=1.2)
+    ax.text(PEAK_T_HA * ACHIEVE, ax.get_ylim()[1] * 0.92, f" a full, healthy cell: {PEAK_T_HA * ACHIEVE:.1f} t/ha",
+            fontsize=8, color="#c0392b")
+    ax.set_xlabel("modelled FFB per 30 m cell (t/ha/yr)"); ax.set_ylabel("cells")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_title("One block, a wide spread: the total hides where the fruit is lost", loc="left", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "figure", "name": "ch61-map", "figure": figure_map,
@@ -164,6 +285,15 @@ def products():
         {"kind": "figure", "name": "ch61-gallery", "figure": figure_gallery,
          "caption": "Six random crowns from each group. If the groups are right, the rows "
                     "should look different to your eye."},
+        {"kind": "figure", "name": "ch61-ffb-map", "figure": figure_ffb_map,
+         "caption": "Modelled fresh fruit bunches from the drone: per palm (left) and per 30 m cell (right). "
+                    "Only crowns that pass the planting-grid test are counted."},
+        {"kind": "chart", "name": "ch61-ffb-cells", "data": ffb_cells_frame, "plot": plot_ffb_cells, "live": False,
+         "caption": "Distribution of modelled FFB across the 30 m cells of the block."},
+        {"kind": "table", "name": "ch61-ffb", "data": ffb_table,
+         "floatfmt": ("", ",.0f", ",.0f", ".1f", ".1f", ".1f", ".1f", ".0%"),
+         "caption": "Block totals and the spread between cells under three assumptions about how much crown "
+                    "health costs in fruit, plus the upper bound if every detection were a healthy palm."},
     ]
 
 
