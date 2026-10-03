@@ -105,6 +105,62 @@ blocks = (anomaly(rote).select("ndmi")
           .reproject(ee.Projection("EPSG:32751").atScale(1000)).rename("block"))
 
 
+# Sensitivity: does the answer depend on the baseline year, the index or the threshold?
+BASELINES = [None, 2019, 2020, 2022, 2023]
+THRESHOLDS = [-0.03, -0.05, -0.075, -0.1, -0.15, -0.2]
+timor = ee.Geometry.Rectangle(ISLANDS["West Timor (Kupang)"], None, False)
+
+
+def _anom(box, base, band):
+    c = change(2021, box).select(band)
+    if base is not None:
+        c = c.subtract(change(base, box).select(band))
+    return c.updateMask(trees).setDefaultProjection("EPSG:4326", None, 20)
+
+
+def baseline_frame():
+    rows = []
+    for band in ("ndmi", "ndvi"):
+        for base in BASELINES:
+            a = _anom(rote, base, band)
+            stack = a.rename("med").addBands(a.lt(-0.1).rename("hit"))
+            r = stack.reduceRegion(ee.Reducer.median().combine(ee.Reducer.mean(), "", True), rote, 30,
+                                   maxPixels=1e10, tileScale=8).getInfo()
+            rows.append({"index": band.upper(), "baseline": "none (raw 2021 change)" if base is None else str(base),
+                         "median_anomaly": r["med_median"], "share_below_-0.1": r["hit_mean"]})
+    return pd.DataFrame(rows)
+
+
+def threshold_frame():
+    rows = []
+    for name, box in (("Rote", rote), ("West Timor", timor)):
+        a = _anom(box, 2020, "ndmi")
+        stack = ee.Image.cat([a.lt(th).rename(f"t{i}") for i, th in enumerate(THRESHOLDS)])
+        r = stack.reduceRegion(ee.Reducer.mean(), box, 30, maxPixels=1e10, tileScale=8).getInfo()
+        rows.append([r[f"t{i}"] for i in range(len(THRESHOLDS))])
+    d = pd.DataFrame({"threshold": THRESHOLDS, "Rote": rows[0], "West_Timor": rows[1]})
+    d["difference"] = d.Rote - d.West_Timor
+    d["ratio"] = d.Rote / d.West_Timor
+    return d
+
+
+def plot_threshold(d):
+    fig, ax = plt.subplots(figsize=(7.4, 3.4))
+    ax.plot(d.threshold, d.Rote, "o-", color="#c0392b", label="Rote (cyclone track)")
+    ax.plot(d.threshold, d.West_Timor, "o-", color="#9aa5b1", label="West Timor (comparison)")
+    ax.set_xlabel("NDMI anomaly threshold for 'damaged'"); ax.set_ylabel("share of forest flagged")
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    ax2 = ax.twinx()
+    ax2.plot(d.threshold, d.ratio, "s--", color="#1f2933", ms=4, label="ratio Rote / West Timor")
+    ax2.set_ylabel("ratio (higher = cleaner)"); ax2.set_ylim(1, 2.3)
+    for a_ in (ax, ax2):
+        a_.spines[["top"]].set_visible(False)
+    h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
+    ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=8, loc="upper center")
+    ax.set_title("Loose thresholds find more, strict ones find it more cleanly", loc="left", fontsize=10)
+    fig.tight_layout()
+    return fig
+
 def products():
     return [
         {"kind": "map", "name": "ch46-anomaly", "image": anomaly(rote).select("ndmi").clip(rote),
@@ -130,6 +186,16 @@ def products():
                     "where the cyclone passed closest. The radar column does not confirm "
                     "it: C-band VH hardly changed anywhere, so radar was no second witness "
                     "here."},
+        {"kind": "table", "name": "ch46-baseline", "data": baseline_frame,
+         "floatfmt": ("", "", ".3f", ".0%"),
+         "caption": "Rote, the same test with each baseline year and with NDVI instead of NDMI. "
+                    "Without a baseline the season is blamed on the wind."},
+        {"kind": "table", "name": "ch46-threshold", "data": threshold_frame,
+         "floatfmt": (".3f", ".0%", ".0%", ".0%", ".1f"),
+         "caption": "Share of forest flagged as damaged at each threshold, on Rote and on West Timor."},
+        {"kind": "chart", "name": "ch46-threshold-chart", "data": threshold_frame, "plot": plot_threshold, "live": False,
+         "caption": "Choosing the damage threshold: the useful one separates the cyclone track from a "
+                    "less-hit island, not the one that gives the biggest number."},
     ]
 
 

@@ -30,5 +30,23 @@
   "kind": "table",
   "caption": "Three islands, the same test. The NDMI anomaly is strongest on Rote, where the cyclone passed closest. The radar column does not confirm it: C-band VH hardly changed anywhere, so radar was no second witness here.",
   "markdown": "| island              |   median_NDMI_anomaly |   share_forest_below_-0.1 |   forest_ha_below_-0.1 |   median_VH_anomaly_dB |\n|:--------------------|----------------------:|--------------------------:|-----------------------:|-----------------------:|\n| Rote                |                -0.066 |                       32% |                 15,831 |                   0.06 |\n| Sumba (east)        |                -0.012 |                       16% |                 22,007 |                  -0.06 |\n| West Timor (Kupang) |                -0.004 |                       17% |                 20,785 |                  -0.19 |"
+ },
+ {
+  "name": "ch46-baseline",
+  "kind": "table",
+  "caption": "Rote, the same test with each baseline year and with NDVI instead of NDMI. Without a baseline the season is blamed on the wind.",
+  "markdown": "| index   | baseline               |   median_anomaly |   share_below_-0.1 |\n|:--------|:-----------------------|-----------------:|-------------------:|\n| NDMI    | none (raw 2021 change) |           -0.090 |                46% |\n| NDMI    | 2019                   |           -0.082 |                42% |\n| NDMI    | 2020                   |           -0.066 |                32% |\n| NDMI    | 2022                   |           -0.043 |                24% |\n| NDMI    | 2023                   |           -0.074 |                37% |\n| NDVI    | none (raw 2021 change) |           -0.004 |                 8% |\n| NDVI    | 2019                   |           -0.039 |                24% |\n| NDVI    | 2020                   |            0.023 |                 7% |\n| NDVI    | 2022                   |            0.008 |                11% |\n| NDVI    | 2023                   |            0.008 |                 7% |"
+ },
+ {
+  "name": "ch46-threshold",
+  "kind": "table",
+  "caption": "Share of forest flagged as damaged at each threshold, on Rote and on West Timor.",
+  "markdown": "|   threshold |   Rote |   West_Timor |   difference |   ratio |\n|------------:|-------:|-------------:|-------------:|--------:|\n|      -0.030 |    68% |          39% |          29% |     1.7 |\n|      -0.050 |    58% |          31% |          26% |     1.8 |\n|      -0.075 |    44% |          23% |          20% |     1.9 |\n|      -0.100 |    32% |          17% |          15% |     1.9 |\n|      -0.150 |    16% |           8% |           7% |     1.9 |\n|      -0.200 |     7% |           4% |           4% |     2.1 |"
+ },
+ {
+  "name": "ch46-threshold-chart",
+  "kind": "chart",
+  "caption": "Choosing the damage threshold: the useful one separates the cyclone track from a less-hit island, not the one that gives the biggest number.",
+  "image": "images/real/ch46-threshold-chart.png"
  }
 ]

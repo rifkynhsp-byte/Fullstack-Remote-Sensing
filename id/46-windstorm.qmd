@@ -31,8 +31,52 @@ Cara ini mengikuti analisis kerusakan angin milik penulis (indeks sebelum dan se
 
 **Radar tidak mengonfirmasi.** Hamburan balik VH Sentinel-1 hampir tidak berubah di ketiga pulau. Salah satu kemungkinan sebabnya, radar kanal C lebih merespons volume dan struktur cabang serta batang daripada kadar air daun, sehingga daun yang tercabik saja hampir tidak menggesernya. Apa pun sebabnya, laporan yang jujur berbunyi: satu sensor menunjukkan kerusakan jelas di Rote, sensor kedua tidak. Foto lapangan atau citra resolusi sangat tinggi dari sampel blok akan menuntaskannya.
 
+## Seberapa besar jawaban bergantung pada pilihan saya?
+
+Tiga pilihan membentuk hasil ini: tahun pembanding, indeks, dan ambang −0,1. Analis yang cermat mengubah tiap pilihan dan melihat apa yang bergeser.
+
+**Tahun pembanding.** Tanpa pembanding, 46 % hutan Rote tampak rusak. Dengan 2020 sebagai pembanding hasilnya 32 %, dengan 2019 42 %, dengan 2023 37 %, dan dengan 2022 hanya 24 %. Setiap pembanding tetap memberi median anomali negatif (−0,04 sampai −0,08), jadi keberadaan kerusakan itu kokoh. Besarnya tidak: berubah hampir dua kali lipat tergantung tahun "normal" mana yang dipilih. Tidak ada satu tahun yang benar-benar normal. Perbaikan yang jujur adalah memakai rata-rata beberapa tahun pembanding dan melaporkan rentangnya.
+
+**Indeks.** Dengan NDVI, sinyalnya hampir hilang. Median anomalinya mendekati nol untuk sebagian besar pembanding, dan porsi di bawah −0,1 hanya 7 % sampai 24 %. Ini sesuai fisika: tajuk yang terkelupas dan patah kehilangan air lebih dulu daripada kehilangan kehijauan, dan semak serta rumput yang menghijau di bawahnya bisa menutupi kehilangan itu. NDMI melihat air tajuk lewat inframerah gelombang pendek, dan di sini ia saksi yang lebih baik. Seperti di @sec-oil-palm-age, indeks adalah pilihan yang diuji, bukan kebiasaan.
+
+**Ambang.** Apa yang disebut "rusak"? Turunkan batasnya ke −0,03 dan 68 % hutan Rote ditandai, tetapi 39 % hutan Timor Barat juga. Naikkan ke −0,2 dan hanya 7 % Rote yang ditandai. Ambang yang berguna bukan yang memberi angka terbesar. Ambang yang berguna adalah yang paling baik memisahkan jalur siklon dari daerah pembanding.
+
+Tabel dan grafik menunjukkan dua cara membaca pemisahan itu:
+
+- **Selisih** (Rote dikurangi Timor Barat) menaksir *seberapa banyak* kerusakan berlebih. Nilainya terbesar pada ambang longgar: 29 poin persen pada −0,03, turun menjadi 4 pada −0,2.
+- **Rasio** (Rote dibagi Timor Barat) menaksir *seberapa bersih* penandaannya. Nilainya naik dari 1,7 pada −0,03 menjadi 2,1 pada −0,2.
+
+Tidak ada satu ambang optimum; yang ada adalah tawar-menawar:
+
+- **Untuk menaksir total luas yang rusak,** pakai ambang longgar (−0,05) lalu kurangi dengan laju di daerah pembanding.
+- **Untuk mengirim tim lapangan ke blok yang hampir pasti rusak,** pakai ambang ketat (−0,15 atau −0,2).
+
+Dengan −0,05, kelebihan dibanding Timor Barat sekitar 26 % dari kira-kira 50.000 ha hutan Rote, atau 13.000 ha.
+
+Satu peringatan lagi. Timor Barat bukan daerah yang utuh: Kupang sendiri terkena Seroja dengan parah. Daerah pembanding yang ikut rusak membuat taksiran kelebihan ini terlalu kecil. Rancangan yang lebih bersih memakai hutan sejenis yang jauh di luar jalur badai sebagai pembanding.
+
+## Vonis: seberapa jauh hasil ini bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Metodenya cepat: dua komposit musiman, satu pengurangan, beberapa menit di Earth Engine. Sangat baik untuk belajar, karena mengajarkan gagasan terpenting dalam deteksi perubahan: pisahkan peristiwa dari musim. Sebagai penilaian kerusakan, hasilnya **indikatif, belum akurat**:
+
+- Kerusakan jelas ada di Rote pada setiap pembanding dan ambang.
+- Luasnya berkisar sekitar 24 % sampai 46 % hutan tergantung pilihan yang sama-sama masuk akal.
+- Radar tidak mengonfirmasinya.
+- Tidak ada data lapangan yang dipakai.
+
+Gunakan untuk memutuskan di mana harus melihat, bukan untuk menyatakan luas hektare dalam laporan ke perusahaan asuransi atau kementerian.
+
+**Yang akan dilakukan penilaian berdana agar akurat:**
+
+1. **Plot lapangan dan kelas kerusakan.** Kunjungi sampel blok yang terstratifikasi (anomali kuat, sedang, dan tanpa anomali) dan catat porsi pohon yang gundul, patah, atau tumbang. Ini mengubah anomali menjadi kelas kerusakan yang terkalibrasi dan memberi angka akurasi sungguhan.
+2. **Citra resolusi sangat tinggi atau survei drone.** Bandingkan sebelum dan sesudah, pada resolusi di bawah satu meter, di sampel yang sama. Tajuk yang patah dan tumbang terlihat langsung. Ini pengganti plot lapangan yang paling cepat.
+3. **Tinggi tajuk dari LiDAR atau stereo, sebelum dan sesudah.** Hilangnya tinggi mengukur kerusakan struktur yang luput dari indeks kelembapan begitu daun tumbuh lagi. Jika ada LiDAR sebelum badai, terbang ulang adalah standar emasnya.
+4. **Pembanding multi-tahun.** Rata-ratakan 2018–2020 (dan 2022–2023 jika hutan sudah pulih) dan laporkan rentangnya, jangan percaya pada satu tahun.
+5. **Kontrol yang layak.** Pilih hutan pembanding bertipe sama di luar jalur badai, atau modelkan perubahan yang diharapkan dari curah hujan dan fenologi.
+6. **Radar L-band.** ALOS-2 PALSAR-2 menembus tajuk lebih dalam daripada C-band. Ia menanggapi batang dan cabang yang patah, kerusakan yang tidak terlihat oleh Sentinel-1 di sini.
+
 ## Latihan {.unnumbered}
 
-1. Ganti NDMI dengan NDVI. Apakah anomali Rote lebih besar atau lebih kecil? Kenapa kadar air daun mungkin lebih responsif daripada kehijauan?
-2. Pakai 2019 sebagai tahun pembanding, bukan 2020. Seberapa besar hasilnya bergantung pada tahun pembanding?
+1. Ganti tahun pembanding tunggal dengan rata-rata perubahan 2018–2020. Laporkan porsi kerusakan Rote beserta nilai minimum dan maksimumnya di antara tahun-tahun itu.
+2. Pilih hutan pembanding yang jauh di luar jalur badai, misalnya di Flores atau Sumba tengah. Apakah kelebihan kerusakan di Rote bertambah setelah daerah pembandingnya benar-benar tidak rusak?
 3. Ambil sampel 50 blok dengan anomali terkuat lalu lihat di peta dasar resolusi tinggi sebelum dan sesudah. Berapa yang menunjukkan kerusakan kasatmata?

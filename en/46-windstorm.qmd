@@ -31,8 +31,52 @@ This follows the author's wind-damage analysis (indices before and after, summar
 
 **Radar did not confirm it.** Sentinel-1 VH backscatter changed by almost nothing on any of the three islands. One likely reason is that C-band radar responds to the volume and structure of branches and stems more than to leaf moisture, so stripped leaves alone barely move it. Whatever the reason, the honest report says: one sensor shows clear damage on Rote, a second sensor does not. Field photographs or very-high-resolution images of a sample of blocks would settle it.
 
+## How much does the answer depend on my choices?
+
+Three choices shaped the result: the baseline year, the index and the −0.1 threshold. A careful analyst changes each one and watches what moves.
+
+**The baseline year.** Without a baseline, 46 % of Rote's forest looks damaged. With 2020 as the baseline it is 32 %, with 2019 42 %, with 2023 37 % and with 2022 only 24 %. Every baseline still gives a negative median anomaly (−0.04 to −0.08), so the existence of damage is robust. Its size is not: it changes by a factor of almost two depending on which "normal" year you pick. No single year is normal. The honest fix is to use the average of several baseline years and report the spread.
+
+**The index.** With NDVI, the signal almost disappears. The median anomaly sits near zero for most baselines, and the share below −0.1 is between 7 % and 24 %. That fits the physics: a stripped and broken canopy loses water before it loses greenness, and the undergrowth and grass greening beneath it can mask the loss. NDMI sees canopy water through the shortwave infrared, and here that is the better witness. As in @sec-oil-palm-age, the index is a choice you test, not a habit.
+
+**The threshold.** What counts as "damaged"? Lower the bar to −0.03 and 68 % of Rote's forest is flagged, but so is 39 % of West Timor's. Raise it to −0.2 and only 7 % of Rote is flagged. The useful threshold is not the one that gives the biggest number. It is the one that best separates the cyclone track from a comparison area.
+
+The table and chart show two ways to read that separation:
+
+- **The difference** (Rote minus West Timor) estimates *how much* excess damage there is. It is largest at loose thresholds: 29 percentage points at −0.03, falling to 4 at −0.2.
+- **The ratio** (Rote divided by West Timor) estimates *how clean* the flag is. It rises from 1.7 at −0.03 to 2.1 at −0.2.
+
+There is no single optimum; it is a trade-off:
+
+- **To estimate total damaged area,** use a loose threshold (−0.05) and subtract the comparison rate.
+- **To send field teams to blocks that are almost certainly damaged,** use a strict one (−0.15 or −0.2).
+
+With −0.05, the excess over West Timor is about 26 % of Rote's roughly 50,000 ha of forest, or 13,000 ha.
+
+One more caution. West Timor is not undamaged: Kupang itself was hit hard by Seroja. A comparison area that also suffered makes the excess an underestimate. A cleaner design would take a comparison area of similar forest well outside the storm's path.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The method is fast: two seasonal composites, one subtraction, minutes in Earth Engine. It is excellent for learning, because it teaches the single most important idea in change detection: separate the event from the season. As a damage assessment it is **indicative, not accurate**:
+
+- Damage is clearly present on Rote under every baseline and threshold.
+- Its extent ranges from about 24 % to 46 % of the forest depending on defensible choices.
+- Radar did not confirm it.
+- No field data was used.
+
+Use it to decide where to look, not to state hectares in a report to an insurer or a ministry.
+
+**What a funded assessment would do to make it accurate:**
+
+1. **Field plots and damage classes.** Visit a stratified sample of blocks (strong, moderate and no anomaly) and record the share of trees defoliated, broken or uprooted. This turns the anomaly into a calibrated damage class and gives a real accuracy figure.
+2. **Very-high-resolution imagery or drone surveys.** Look before and after, at sub-metre resolution, on the same sample. Snapped and uprooted crowns are visible directly. This is the fastest substitute for field plots.
+3. **LiDAR or stereo canopy height before and after.** Height loss measures structural damage that moisture indices miss once leaves regrow. Where pre-storm LiDAR exists, a repeat flight is the gold standard.
+4. **A multi-year baseline.** Average 2018–2020 (and 2022–2023 if the forest recovered) and report the spread, instead of trusting one year.
+5. **A proper control.** Choose comparison forest of the same type outside the storm track, or model the expected change from rainfall and phenology.
+6. **L-band radar.** ALOS-2 PALSAR-2 penetrates deeper into the canopy than C-band. It responds to broken stems and branches, the damage Sentinel-1 could not see here.
+
 ## Exercises {.unnumbered}
 
-1. Replace NDMI with NDVI. Is the Rote anomaly larger or smaller? Why might leaf water respond more than greenness?
-2. Use 2019 as the baseline instead of 2020. How much does the result depend on the baseline year?
+1. Replace the single baseline year with the mean change of 2018–2020. Report the Rote damage share with the minimum and maximum across those years.
+2. Pick a comparison forest well outside the storm's path, for example in Flores or central Sumba. Does the excess damage on Rote grow once the comparison area is truly undamaged?
 3. Sample 50 blocks with the strongest anomaly and look at them in high-resolution basemaps from before and after. How many show visible damage?
