@@ -28,6 +28,27 @@ The study area is a rectangle near Sangatta that contains large open pits. The m
 NASADEM (2000) and Copernicus GLO-30 (2011 to 2015) both record the top of whatever was there, including forest canopy. Clearing 25 m tall forest reads as a 25 m "cut". That is why the listing counts only change beyond ±30 m, and only inside today's bare footprint. State the cut-off next to any volume you report, and give the dates of both elevation models, not today's date.
 :::
 
+## How far can the footprint be trusted?
+
+Look at the footprint chart before the maps. The bare area in the rectangle reads 16.7 km² in 2020, 6.1 km² in 2021, 4.7 km² in 2023 and 25.8 km² in 2024. An open-pit coal mine does not shrink by two thirds in a year and grow fivefold two years later. The yearly number depends on how many clear Sentinel-2 scenes each year had, on haze in the dry season, and on a hard threshold (mean "bare" probability above 0.5) applied to a landscape that is never purely bare: haul roads, wet pit floors, coal and regrowing dumps all sit between Dynamic World's classes. Chapter [-@sec-timeseries] found the same instability for built-up land. Use the footprint as a map of where, not as a time series of how much, unless the years are smoothed and checked against imagery.
+
+## Where did the spoil go?
+
+The first volume table counts 275 million m³ of cut but only 11 million m³ of fill. A mine moves overburden from the pit to a dump, so a ratio of 25 to 1 is a sign that something is missing. The balance table repeats the calculation without the 2024 footprint mask:
+
+- Inside the 2024 bare footprint: 275 million m³ cut, 11 million m³ fill, as before.
+- Outside it: **1,571 million m³ cut** over 17.6 km² and **1,233 million m³ fill** over 21.7 km².
+
+Most of the earthworks lie where Dynamic World saw vegetation or water in 2024, which makes sense for a mine that has worked for decades: old pits become lakes, and old dumps are reshaped and revegetated. Counted over the whole rectangle, cut and fill are now of the same order (about 1,850 against 1,240 million m³). The remaining gap is expected: overburden swells when it is dug, but much of it is backfilled into earlier pits, where it reduces the measured cut rather than adding fill, and pit lakes are measured at their water surface. The lesson is about masks. A footprint chosen for one question (where is the ground bare today?) silently removed most of the answer to another (how much material has moved since 2000?).
+
+## Heat that persists
+
+A single dry-season temperature map shows that bare ground is hotter than forest, which is true of every mine. The persistence map asks a sharper question. For every clear dry-season Landsat 8 and 9 scene from 2019 to 2024, it marks pixels more than 5 °C hotter than the median of that scene's bare ground, and then counts how often each pixel was marked.
+
+About 4,490 ha were that hot in at least a quarter of the clear scenes, 734 ha in at least half, and 45 ha in at least three quarters. The persistent patches trace the benches and floors of the pits and the dump faces, and a few compact patches stand out at the pit rims, which is where a stockpile or a coal seam exposed to air would sit. Almost none of them falls inside the 2024 bare footprint (2-6 %): Dynamic World labels most of the persistently hot ground "built" or "shrub and scrub". That is the third sign, after the unstable footprint and the missing spoil, that the footprint rule misses most of the working mine.
+
+What the map cannot say is why a patch is hot. Dark coal and dry spoil heat up in the sun without burning; self-heating coal stays hot at night too. A Landsat 8 or 9 night-time scene, where one exists, or a drone thermal flight at dawn separates the two, and a temperature probe confirms it.
+
 ## Heat is a symptom, not a diagnosis
 
 Bare ground is hotter than forest in the dry season whether or not anything is burning, so a raw temperature map is mostly a map of bare ground. The useful signal is persistence: a stockpile that stays hotter than its neighbours pass after pass. Chapter [-@sec-timeseries]'s time series tools turn the map above into that test. A drone thermal flight or a probe on site confirms it.
@@ -37,3 +58,5 @@ Bare ground is hotter than forest in the dry season whether or not anything is b
 1. Change the ±30 m cut-off to ±15 m. How much does the cut volume grow, and how much of that growth is likely cleared forest?
 2. Find the hottest 1 % of pixels in the anomaly map. Are they on pits, dumps or stockpile yards?
 3. Split the footprint chart into new bare ground and bare ground that has regrown. Which matters more to a regulator?
+4. Replace the footprint rule with "bare or built probability above 0.5, in at least two of three consecutive years". Does the yearly series become plausible?
+5. Find a night-time Landsat scene over the rectangle and repeat the persistence test. Which hot patches survive the night?

@@ -28,6 +28,27 @@ Area studinya adalah sebuah persegi di dekat Sangatta yang mencakup lubang tamba
 NASADEM (2000) dan Copernicus GLO-30 (2011 sampai 2015) sama sama merekam bagian paling atas dari apa pun yang ada di sana, termasuk tajuk hutan. Hutan setinggi 25 m yang ditebang akan terbaca sebagai "galian" 25 m. Karena itu skrip ini hanya menghitung perubahan di atas ±30 m, dan hanya di dalam area terbuka tahun ini. Cantumkan batas itu di samping setiap angka volume, dan sebutkan tanggal kedua model elevasi, bukan tanggal hari ini.
 :::
 
+## Seberapa jauh jejak tambang bisa dipercaya?
+
+Lihat grafik jejak sebelum petanya. Luas lahan terbuka di kotak ini tercatat 16,7 km² pada 2020, 6,1 km² pada 2021, 4,7 km² pada 2023, dan 25,8 km² pada 2024. Tambang batu bara terbuka tidak menyusut dua pertiga dalam setahun lalu tumbuh lima kali lipat dua tahun kemudian. Angka tahunan itu bergantung pada berapa citra Sentinel-2 bersih yang tersedia tiap tahun, pada kabut di musim kemarau, dan pada ambang keras (rata-rata peluang "bare" di atas 0,5) yang diterapkan pada bentang yang tidak pernah benar-benar terbuka: jalan angkut, dasar lubang yang basah, batu bara, dan timbunan yang mulai tumbuh vegetasi semuanya berada di antara kelas-kelas Dynamic World. Bab [-@sec-timeseries] menemukan ketidakstabilan yang sama untuk lahan terbangun. Pakai jejak tambang sebagai peta di mana, bukan deret waktu seberapa banyak, kecuali tahun-tahunnya dihaluskan dan dicek dengan citra.
+
+## Ke mana material galian pergi?
+
+Tabel volume pertama menghitung 275 juta m³ galian tetapi hanya 11 juta m³ timbunan. Tambang memindahkan tanah penutup dari lubang ke timbunan, jadi rasio 25 banding 1 adalah tanda ada yang hilang. Tabel neraca mengulang perhitungannya tanpa masker jejak 2024:
+
+- Di dalam jejak lahan terbuka 2024: 275 juta m³ galian, 11 juta m³ timbunan, seperti sebelumnya.
+- Di luarnya: **1.571 juta m³ galian** pada 17,6 km² dan **1.233 juta m³ timbunan** pada 21,7 km².
+
+Sebagian besar pekerjaan tanah berada di tempat yang menurut Dynamic World bervegetasi atau berair pada 2024, dan itu masuk akal untuk tambang yang sudah bekerja puluhan tahun: lubang lama menjadi danau, dan timbunan lama dibentuk ulang dan ditanami. Dihitung di seluruh kotak, galian dan timbunan kini berorde sama (sekitar 1.850 berbanding 1.240 juta m³). Selisih yang tersisa memang wajar: tanah penutup mengembang saat digali, tetapi banyak yang ditimbun kembali ke lubang lama, sehingga mengurangi galian terukur alih-alih menambah timbunan, dan danau bekas tambang terukur pada permukaan airnya. Pelajarannya tentang masker. Jejak yang dipilih untuk satu pertanyaan (di mana tanah terbuka hari ini?) diam-diam membuang sebagian besar jawaban untuk pertanyaan lain (berapa banyak material yang berpindah sejak 2000?).
+
+## Panas yang bertahan
+
+Satu peta suhu musim kemarau menunjukkan lahan terbuka lebih panas daripada hutan, yang berlaku untuk setiap tambang. Peta persistensi mengajukan pertanyaan yang lebih tajam. Untuk setiap citra Landsat 8 dan 9 musim kemarau yang bersih dari 2019 hingga 2024, peta ini menandai piksel yang lebih dari 5 °C di atas median lahan terbuka di citra itu, lalu menghitung seberapa sering setiap piksel ditandai.
+
+Sekitar 4.490 ha sepanas itu pada minimal seperempat citra bersih, 734 ha pada minimal separuh, dan 45 ha pada minimal tiga perempat. Petak-petak yang persisten menelusuri jenjang dan dasar lubang serta muka timbunan, dan beberapa petak padat menonjol di bibir lubang, tempat stockpile atau lapisan batu bara yang terpapar udara berada. Hampir tidak ada yang jatuh di dalam jejak lahan terbuka 2024 (2-6 %): Dynamic World melabeli sebagian besar tanah yang terus panas sebagai "built" atau "shrub and scrub". Itulah tanda ketiga, setelah jejak yang tidak stabil dan material galian yang hilang, bahwa aturan jejak melewatkan sebagian besar tambang yang aktif.
+
+Yang tidak bisa dikatakan peta ini adalah mengapa sebuah petak panas. Batu bara gelap dan timbunan kering memanas di bawah matahari tanpa terbakar; batu bara yang memanas sendiri tetap panas di malam hari. Citra malam Landsat 8 atau 9, bila ada, atau penerbangan drone termal saat fajar memisahkan keduanya, dan probe suhu memastikannya.
+
 ## Panas adalah gejala, bukan diagnosis
 
 Di musim kemarau lahan terbuka memang lebih panas daripada hutan, terbakar atau tidak, sehingga peta suhu mentah sebagian besar hanyalah peta lahan terbuka. Sinyal yang berguna adalah konsistensi: stockpile yang tetap lebih panas dari sekitarnya dari satu lintasan ke lintasan berikutnya. Alat deret waktu di Bab [-@sec-timeseries] bisa mengubah peta di atas menjadi uji tersebut. Konfirmasinya lewat terbang drone termal atau pengukuran langsung di lokasi.
@@ -37,3 +58,5 @@ Di musim kemarau lahan terbuka memang lebih panas daripada hutan, terbakar atau 
 1. Ubah batas ±30 m menjadi ±15 m. Berapa bertambahnya volume galian, dan berapa bagian dari tambahan itu yang kemungkinan hanya hutan yang ditebang?
 2. Cari 1 % piksel terpanas di peta anomali. Apakah letaknya di lubang tambang, timbunan, atau lapangan stockpile?
 3. Pisahkan grafik luas menjadi lahan terbuka baru dan lahan terbuka yang sudah tumbuh kembali. Mana yang lebih penting bagi regulator?
+4. Ganti aturan jejak dengan "peluang bare atau built di atas 0,5, pada minimal dua dari tiga tahun berturut-turut". Apakah deret tahunannya menjadi masuk akal?
+5. Cari citra Landsat malam hari di atas kotak ini dan ulangi uji persistensi. Petak panas mana yang bertahan di malam hari?

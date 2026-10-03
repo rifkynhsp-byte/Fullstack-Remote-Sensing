@@ -81,6 +81,59 @@ heat_samples = (anomaly.addBands(bare_in(2024).rename("bare"))
                                   seed=5, tileScale=4))
 
 
+# 4. Where did the spoil go? The same elevation change without the 2024 footprint mask
+dz_all = after.subtract(before).rename("dz")
+
+
+def balance_table():
+    """Cut and fill inside and outside the 2024 bare footprint (beyond +-30 m)."""
+    import pandas as pd
+    bare = bare_in(2024)
+    rows = []
+    for where, m in (("inside the 2024 bare footprint", bare), ("outside it (vegetated or water in 2024)", bare.Not())):
+        for kind, sel in (("cut", dz_all.lt(-30)), ("fill", dz_all.gt(30))):
+            mm = sel.And(m)
+            r = (dz_all.updateMask(mm).multiply(ee.Image.pixelArea()).rename("v")
+                 .addBands(ee.Image.pixelArea().updateMask(mm).rename("a"))
+                 .reduceRegion(ee.Reducer.sum(), mine, 30, maxPixels=1e10).getInfo())
+            rows.append({"where": where, "change": kind, "area_km2": r["a"] / 1e6, "volume_million_m3": r["v"] / 1e6})
+    return pd.DataFrame(rows)
+
+
+# 5. Heat that persists: how often is a pixel much hotter than the bare ground around it?
+HOT = 5.0                                           # °C above the median of bare ground in the same scene
+heat_scenes = (ee.ImageCollection("LANDSAT/LC09/C02/T1_L2").merge(ee.ImageCollection("LANDSAT/LC08/C02/T1_L2"))
+               .filterBounds(mine).filterDate("2019-01-01", "2025-01-01").filter(ee.Filter.calendarRange(6, 10, "month"))
+               .map(to_lst))
+
+
+def scene_hot(img):
+    """1 where this scene's LST is HOT degrees above the median of that scene's bare ground, 0 elsewhere (masked if cloudy)."""
+    bare = bare_in(2024)
+    med = ee.Number(img.updateMask(bare).reduceRegion(ee.Reducer.median(), mine, 90, maxPixels=1e9).get("lst"))
+    return ee.Algorithms.If(med, img.subtract(med).gt(HOT).rename("hot"), ee.Image().rename("hot"))
+
+
+hot_stack = ee.ImageCollection(heat_scenes.map(lambda i: ee.Image(scene_hot(i))))
+n_clear = hot_stack.count().rename("n")
+persistence = hot_stack.sum().divide(n_clear).updateMask(n_clear.gte(5)).rename("share").clip(mine)
+
+
+def persistence_table():
+    import pandas as pd
+    bare = bare_in(2024)
+    rows = []
+    for lab, thr in (("hot in at least 25 % of clear scenes", 0.25), ("at least 50 %", 0.5), ("at least 75 %", 0.75)):
+        m = persistence.gte(thr)
+        r = (ee.Image.pixelArea().updateMask(m).rename("a").addBands(ee.Image.pixelArea().updateMask(m.And(bare)).rename("b"))
+             .reduceRegion(ee.Reducer.sum(), mine, 30, maxPixels=1e10).getInfo())
+        rows.append({"persistence": lab, "area_ha": r["a"] / 1e4, "on the bare footprint (%)": 100 * r["b"] / max(r["a"], 1)})
+    n = heat_scenes.size().getInfo()
+    out = pd.DataFrame(rows)
+    out.attrs["scenes"] = n
+    return out
+
+
 def plot_footprint(df):
     """Bare ground per year: the disturbed footprint."""
     df = df.sort_values("year")
@@ -146,6 +199,15 @@ def products():
                     "a drone or ground survey is still needed to confirm one."},
         {"kind": "chart", "name": "ch25-heat", "data": heat_samples, "plot": plot_heat,
          "caption": "Temperature anomaly at 600 points on and off the bare footprint."},
+        {"kind": "table", "name": "ch25-balance", "data": balance_table, "floatfmt": ("", "", ".2f", ".0f"),
+         "caption": "Cut and fill beyond ±30 m, inside and outside the 2024 bare footprint (NASADEM 2000 to Copernicus GLO-30)."},
+        {"kind": "map", "name": "ch25-persistence", "image": persistence, "region": mine,
+         "vis": {"min": 0, "max": 1, "palette": ["ffffff", "fee391", "fe9929", "cc4c02", "662506"]},
+         "legend": "Share of clear dry-season scenes, 2019-2024, at least 5 °C above the scene's bare-ground median",
+         "title": "Where the ground is hot again and again", "source": "Landsat 8 and 9 ST_B10. GEE.",
+         "caption": "Persistence, not a single hot map, is the stockpile signal. Pixels with fewer than 5 clear scenes are blank."},
+        {"kind": "table", "name": "ch25-persistence-table", "data": persistence_table, "floatfmt": ("", ".0f", ".0f"),
+         "caption": "Area that was persistently hot, and how much of it lies on the bare footprint."},
     ]
 
 
