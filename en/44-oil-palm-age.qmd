@@ -24,7 +24,9 @@ The method follows the author's TimeseriesAPPsawit app, which charted the same L
 
 ## Checking the age with a laser
 
-An age map cannot be checked against the companies' records here, but physics offers a test. If the age is right, palms detected as older must be taller. GEDI measured canopy height at about 400 footprints on these palms between 2019 and 2023, independent of Landsat. The median height rises steadily with estimated age: about 6 m for palms aged 5–8 years, 7 m at 8–12, 11 m at 12–18, 12 m at 18–25 and older. Had the ages been wrong, the cloud of points would be flat. The method is not perfect (a block replanted after a fire or cleared twice will be dated by the deepest dip, not the latest), but it passes the test.
+An age map cannot be checked against the companies' records here, but physics offers a test. If the age is right, palms detected as older must be taller. GEDI measured canopy height at about 3,000 footprints on these palms between 2019 and 2023, independent of Landsat. The median height rises steadily with estimated age, from about 6 m at 7–10 years to 10–15 m at 14–23 years. Had the ages been wrong, the cloud of points would be flat.
+
+Look closely at ages 24–28, though. These are pixels whose deepest dip falls in 1995–1999, and their median height drops back to about 9 m, shorter than palms a decade younger. Real 25-year-old palms are tall, so many of these dates are probably wrong. The likely culprit is the 1997–98 El Niño, when fires and haze across Kalimantan darkened Landsat composites. For a palm planted later, that haze year can look deeper than its real clearing. The test passes overall, and it also shows where the method fails: one deepest dip is not always the planting.
 
 ## Life stages and productivity
 
@@ -32,8 +34,66 @@ The stage table converts age to the categories planters use. In this landscape 7
 
 Turning stages into tonnes of fresh fruit bunches needs yield data by age from the field, which is not public. The stage map is still useful on its own: it says where production will fall in the next decade and where replanting should be planned.
 
+## Does the index matter? A sensitivity test
+
+Step 2 chose NBR. A reader who learned NDVI first will ask: why not NDVI? The honest way to answer is to run both and compare, so the script repeats the whole method with a yearly NDVI series.
+
+The two indices disagree more than you might expect. Over the 84,021 ha of dated palm, NBR and NDVI give the same planting year (within 1 year) on only **66 %** of the area, and within 3 years on 69 %. Once they disagree, they disagree badly, often by a decade, because each index finds its deepest dip in a different event.
+
+Which one is right? Here GEDI acts as the referee. A correct age should rank the palms by height, so the script computes the Spearman rank correlation between estimated age and GEDI height for each index:
+
+- **NBR:** rho = 0.39
+- **NDVI:** rho = 0.09, close to no relation at all
+
+The physical reason is clear. NDVI saturates over a closed canopy and responds weakly to bare, wet or burnt soil, so a dry year or a haze-affected composite can produce a dip as deep as a real clearing. NBR uses the shortwave infrared band, which reacts strongly to bare soil and to the loss of canopy water, so clearing stands out.
+
+The lesson goes beyond oil palm: **choose an index by testing it against something independent, not by habit.**
+
+## The double-dip problem
+
+The method takes the single deepest dip. Some blocks have two: a first planting in the 1990s and a replanting, or a fire, twenty years later. The script flags a pixel as **ambiguous** when another dip, more than 4 years away from the deepest, comes within 0.05 NBR of it. That is true of **9 %** of the palm.
+
+For those pixels, the age could be either one, and the map cannot tell which. Report them as a separate class instead of hiding them inside an age category. A buyer checking for recent clearing cares precisely about the later dip.
+
+## How fast do palms grow?
+
+GEDI gives 2,999 footprints on dated palm. Thirteen of them read 25–72 m. No oil palm is that tall, so these are neighbouring forest trees or noise, and they are dropped. Always look at the scatter before fitting. Fitting the classic saturating growth curve
+
+$$H = H_{max}\,(1 - e^{-k \cdot \text{age}})$$
+
+gives H~max~ = 12.7 ± 0.2 m and k = 0.112 ± 0.005 per year to the remaining 2,986. The palms reach 90 % of their maximum height at about 21 years.
+
+Treat these numbers carefully, because they are not trunk height:
+
+- GEDI measures the height of the top of the crown.
+- The 1998 haze dates (above) put short palms at age 25 and pull the curve down.
+- The fit mixes varieties, soils and managers.
+- Errors in the age estimate flatten the curve: a misdated young palm drags the old end down.
+
+The shape still teaches the agronomy. Height growth is fast through the immature and prime years and levels off after about 20 years. That is when harvesting gets harder and replanting is planned.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The method is fast: one script, minutes in Earth Engine, no training data. It is excellent for learning, because every step is visible and testable. As an operational age map it is **only indicative**:
+
+- NBR and NDVI agree on only two thirds of the area.
+- 9 % of pixels have two candidate planting dates.
+- Even the better index explains only part of the height pattern (rho 0.39), and dips in the 1997–98 haze years give false dates.
+- The palm mask comes from 2019, so recent planting is missing.
+
+Use it to show where old and young palm cluster, not to state the age of a single block.
+
+**What a funded project would do to make it accurate:**
+
+1. **Company and cooperative planting records.** The planting year of even a few hundred blocks provides a real validation set. With it you can report error in years, not just a correlation. This matters more than anything else on this list.
+2. **Field measurements.** Measure trunk height (ground to the base of the lowest living frond) and count frond scars on a sample of palms in each age class. Trunk height tracks age much better than canopy-top height.
+3. **Airborne or drone LiDAR.** LiDAR gives a wall-to-wall height model instead of sparse GEDI footprints. The growth curve can then be fitted per block and per estate, and inverted to estimate age where the archive is ambiguous.
+4. **Handle multiple dips explicitly.** Use a change-detection algorithm such as LandTrendr or CCDC. It returns every disturbance segment, not just the deepest, so the analyst can choose the last clearing followed by recovery.
+5. **A current palm mask.** Rebuild the mask for the target year, including young, open-canopy palm, so that immature blocks are not lost.
+6. **Combine indices instead of choosing one.** Require NBR and a SWIR-based bare-soil index to agree, and report disagreement as low confidence.
+
 ## Exercises {.unnumbered}
 
-1. Replace NBR with NDVI. Do the planting years change? Which index separates bare soil from young palm better?
+1. Add a third index, for example NDMI (NIR and SWIR1) or a bare-soil index. Does its Spearman rho with GEDI height beat NBR's 0.39?
 2. Find blocks whose dip falls in 1997, 2015 or 2019. Are they replanting after fire rather than first planting?
-3. Use GEDI to estimate the height growth rate per year of age. When does it level off?
+3. Refit the growth curve using only pixels where NBR and NDVI agree within 1 year. Do H~max~ and k change? What does that tell you about how age errors bias the curve?

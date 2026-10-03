@@ -24,7 +24,9 @@ Metodenya mengikuti aplikasi TimeseriesAPPsawit milik penulis, yang menampilkan 
 
 ## Mengecek umur dengan laser
 
-Peta umur ini tidak bisa dicocokkan dengan catatan perusahaan, tetapi fisika memberi cara menguji. Kalau umurnya benar, sawit yang terdeteksi lebih tua pasti lebih tinggi. GEDI mengukur tinggi tajuk di sekitar 400 jejak di kebun-kebun ini antara 2019 dan 2023, sepenuhnya terpisah dari Landsat. Median tingginya naik teratur seiring umur taksiran: sekitar 6 m untuk umur 5–8 tahun, 7 m pada 8–12, 11 m pada 12–18, dan 12 m pada 18–25 tahun ke atas. Kalau umurnya keliru, sebaran titiknya akan datar. Metode ini tidak sempurna (blok yang ditanam ulang setelah kebakaran atau dibuka dua kali akan diberi tanggal oleh lembah terdalam, bukan yang terakhir), tetapi lolos ujian ini.
+Peta umur ini tidak bisa dicocokkan dengan catatan perusahaan, tetapi fisika memberi cara menguji. Kalau umurnya benar, sawit yang terdeteksi lebih tua pasti lebih tinggi. GEDI mengukur tinggi tajuk di sekitar 3.000 jejak di kebun-kebun ini antara 2019 dan 2023, sepenuhnya terpisah dari Landsat. Median tingginya naik teratur seiring umur taksiran, dari sekitar 6 m pada umur 7–10 tahun menjadi 10–15 m pada umur 14–23 tahun. Kalau umurnya keliru, sebaran titiknya akan datar.
+
+Namun perhatikan umur 24–28. Ini piksel yang lembah terdalamnya jatuh pada 1995–1999, dan median tingginya turun lagi ke sekitar 9 m, lebih pendek daripada sawit yang sepuluh tahun lebih muda. Sawit yang benar-benar berumur 25 tahun itu tinggi, jadi banyak tanggal di sini kemungkinan besar keliru. Penyebab yang paling mungkin adalah El Niño 1997–98, ketika kebakaran dan kabut asap di seluruh Kalimantan menggelapkan komposit Landsat. Bagi sawit yang ditanam belakangan, tahun berasap itu bisa tampak lebih dalam daripada pembukaan lahannya yang sebenarnya. Secara keseluruhan uji ini lolos, sekaligus menunjukkan di mana metodenya gagal: satu lembah terdalam tidak selalu berarti tahun tanam.
 
 ## Fase hidup dan produktivitas
 
@@ -32,8 +34,66 @@ Tabel fase mengubah umur menjadi kategori yang dipakai pekebun. Di bentang lahan
 
 Mengubah fase menjadi ton tandan buah segar butuh data hasil per umur dari lapangan, yang tidak terbuka untuk publik. Peta fase tetap berguna dengan sendirinya: peta ini menunjukkan di mana produksi akan turun dalam sepuluh tahun ke depan dan di mana peremajaan perlu direncanakan.
 
+## Apakah indeks berpengaruh? Uji sensitivitas
+
+Langkah 2 memilih NBR. Pembaca yang lebih dulu belajar NDVI akan bertanya: kenapa bukan NDVI? Cara jujur menjawabnya adalah menjalankan keduanya lalu membandingkan, jadi skrip ini mengulang seluruh metode dengan deret NDVI tahunan.
+
+Kedua indeks berbeda lebih jauh dari dugaan. Dari 84.021 ha sawit yang diberi tanggal, NBR dan NDVI memberi tahun tanam yang sama (selisih ≤1 tahun) hanya pada **66 %** luasan, dan selisih ≤3 tahun pada 69 %. Begitu keduanya berbeda, bedanya jauh, sering sampai satu dekade, karena tiap indeks menemukan lembah terdalamnya pada peristiwa yang berbeda.
+
+Mana yang benar? Di sini GEDI menjadi wasit. Umur yang benar mestinya mengurutkan sawit menurut tingginya, jadi skrip menghitung korelasi peringkat Spearman antara umur taksiran dan tinggi GEDI untuk tiap indeks:
+
+- **NBR:** rho = 0,39
+- **NDVI:** rho = 0,09, hampir tidak ada hubungan
+
+Alasan fisisnya jelas. NDVI jenuh di atas tajuk yang rapat dan hanya lemah menanggapi tanah terbuka, basah, atau terbakar, sehingga tahun kering atau komposit berkabut asap bisa menghasilkan lembah sedalam pembukaan lahan sungguhan. NBR memakai kanal inframerah gelombang pendek (SWIR), yang bereaksi kuat terhadap tanah terbuka dan hilangnya air tajuk, sehingga pembukaan lahan menonjol.
+
+Pelajarannya berlaku lebih luas dari sawit: **pilih indeks dengan mengujinya terhadap sesuatu yang independen, bukan karena kebiasaan.**
+
+## Masalah lembah ganda
+
+Metode ini mengambil satu lembah terdalam saja. Sebagian blok punya dua: tanam pertama tahun 1990-an lalu tanam ulang, atau kebakaran, dua puluh tahun kemudian. Skrip menandai piksel sebagai **ambigu** bila ada lembah lain, berjarak lebih dari 4 tahun dari yang terdalam, yang nilainya hanya selisih ≤0,05 NBR darinya. Ini berlaku pada **9 %** luasan sawit.
+
+Untuk piksel itu, umurnya bisa yang mana saja, dan peta tidak bisa memastikan. Laporkan sebagai kelas tersendiri, jangan disembunyikan di dalam kelas umur. Pembeli yang memeriksa pembukaan lahan baru justru peduli pada lembah yang lebih akhir.
+
+## Seberapa cepat sawit tumbuh?
+
+GEDI memberi 2.999 jejak di atas sawit yang sudah diberi tanggal. Tiga belas di antaranya bernilai 25–72 m. Tidak ada sawit setinggi itu, jadi ini pohon hutan di sebelahnya atau derau, dan dibuang. Selalu lihat sebaran titik sebelum mencocokkan kurva. Mencocokkan kurva pertumbuhan jenuh klasik
+
+$$H = H_{max}\,(1 - e^{-k \cdot \text{umur}})$$
+
+memberi H~max~ = 12,7 ± 0,2 m dan k = 0,112 ± 0,005 per tahun pada 2.986 jejak sisanya. Sawit mencapai 90 % tinggi maksimumnya pada umur sekitar 21 tahun.
+
+Perlakukan angka ini dengan hati-hati, karena ini bukan tinggi batang:
+
+- GEDI mengukur tinggi puncak tajuk.
+- Tanggal keliru akibat kabut asap 1998 (lihat di atas) menaruh sawit pendek di umur 25 dan menarik kurva ke bawah.
+- Pencocokan ini mencampur varietas, tanah, dan pengelola.
+- Kesalahan taksiran umur membuat kurva lebih datar: sawit muda yang salah diberi umur tua menarik ujung kurva ke bawah.
+
+Bentuknya tetap mengajarkan agronomi. Pertumbuhan tinggi cepat pada masa TBM dan masa prima, lalu melandai setelah sekitar 20 tahun. Saat itulah panen makin sulit dan tanam ulang mulai direncanakan.
+
+## Vonis: seberapa jauh peta ini bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Metodenya cepat: satu skrip, beberapa menit di Earth Engine, tanpa data latih. Sangat baik untuk belajar, karena setiap langkah terlihat dan bisa diuji. Sebagai peta umur operasional, hasilnya **hanya indikatif**:
+
+- NBR dan NDVI hanya sepakat pada dua pertiga luasan.
+- 9 % piksel punya dua kandidat tahun tanam.
+- Indeks yang lebih baik pun hanya menjelaskan sebagian pola tinggi (rho 0,39), dan lembah pada tahun kabut asap 1997–98 memberi tanggal palsu.
+- Masker sawitnya dari 2019, sehingga tanaman baru tidak tercakup.
+
+Gunakan untuk menunjukkan di mana sawit tua dan muda mengelompok, bukan untuk menyatakan umur satu blok tertentu.
+
+**Yang akan dilakukan proyek berdana agar akurat:**
+
+1. **Catatan tahun tanam dari perusahaan dan koperasi.** Tahun tanam dari beberapa ratus blok saja sudah menjadi data validasi sungguhan. Dengan itu galat bisa dilaporkan dalam tahun, bukan sekadar korelasi. Ini paling penting di antara semua langkah di daftar ini.
+2. **Pengukuran lapangan.** Ukur tinggi batang (dari tanah sampai pangkal pelepah hidup terbawah) dan hitung bekas pelepah pada sampel pohon di tiap kelas umur. Tinggi batang mengikuti umur jauh lebih baik daripada tinggi puncak tajuk.
+3. **LiDAR pesawat atau drone.** LiDAR memberi model tinggi menyeluruh, bukan jejak GEDI yang jarang. Kurva pertumbuhan lalu bisa dicocokkan per blok dan per kebun, dan dibalik untuk menaksir umur di tempat arsip Landsat ambigu.
+4. **Tangani lembah ganda secara eksplisit.** Pakai algoritma deteksi perubahan seperti LandTrendr atau CCDC. Algoritma ini mengembalikan setiap segmen gangguan, bukan hanya yang terdalam, sehingga analis bisa memilih pembukaan terakhir yang diikuti pemulihan.
+5. **Masker sawit terkini.** Bangun ulang masker untuk tahun sasaran, termasuk sawit muda bertajuk terbuka, agar blok TBM tidak hilang.
+6. **Gabungkan indeks, jangan memilih satu.** Syaratkan NBR dan indeks tanah terbuka berbasis SWIR saling sepakat, dan laporkan ketidaksepakatan sebagai keyakinan rendah.
+
 ## Latihan {.unnumbered}
 
-1. Ganti NBR dengan NDVI. Apakah tahun tanamnya berubah? Indeks mana yang lebih baik membedakan tanah terbuka dari sawit muda?
+1. Tambahkan indeks ketiga, misalnya NDMI (NIR dan SWIR1) atau indeks tanah terbuka. Apakah rho Spearman-nya terhadap tinggi GEDI mengalahkan 0,39 milik NBR?
 2. Cari blok yang lembahnya jatuh pada 1997, 2015, atau 2019. Apakah itu penanaman ulang setelah kebakaran, bukan penanaman pertama?
-3. Pakai GEDI untuk menaksir laju pertambahan tinggi per tahun umur. Kapan pertambahannya melambat?
+3. Cocokkan ulang kurva pertumbuhan hanya pada piksel tempat NBR dan NDVI sepakat (selisih ≤1 tahun). Apakah H~max~ dan k berubah? Apa artinya tentang bagaimana galat umur membiaskan kurva?
