@@ -25,9 +25,19 @@ This chapter measures all three. Core forest here means forest more than 300 m f
 
 **Quality.** The forest that remains inside the park is structurally more complex: its median foliage height diversity from GEDI is about 3.1, against about 2.7 for forest outside. Outside forest is younger, more disturbed, or mixed with plantations.
 
+## How much of the "forest" is forest?
+
+Hansen's forest is any land with at least 30 % tree cover in 2000, and the land around this park is famous for something that has tree cover and is not forest: robusta coffee, much of it planted inside or at the edge of the park since the 1990s. The Forest Data Partnership publishes 10 m probability maps of coffee, rubber and oil palm for EUDR due diligence (Chapter [-@sec-eudr]), and the plantation table applies them to the 2023 forest.
+
+Outside the park, **21 % of the 2023 "forest" is coffee, rubber or oil palm** by these maps; inside the park, 2 %. That changes the headline in one direction only. Forest outside the park was not 289,000 ha of habitat in 2023 but closer to 228,000 ha, so the true loss of habitat since 2000 is larger than the 12 % in the first table. Core forest outside the park shrinks from 18,900 to 15,800 ha once tree crops are removed, an 81 % loss against the 2000 core rather than 78 % (the 2000 core cannot be corrected the same way, because the commodity maps start in 2018). Inside the park the correction is small (122,100 to 116,800 ha), because the park's core is mostly natural forest; the coffee sits at its edges, which is where the core-forest analysis already looks for damage. The commodity maps have their own errors, especially for shade-grown coffee under remnant trees, so read the 21 % as an order of magnitude, not a measurement.
+
+## Configuration: one forest or many pieces?
+
+Core-forest area does not say whether the core is one block or many. The patch table counts separate patches of core forest (8-connected at 90 m). In 2000 there were 117 patches; the largest covered 136,300 ha, and 89 were under 100 ha. By 2023 there were 41 patches, the largest 84,500 ha, and 31 were under 100 ha. Fewer patches is not an improvement: most small patches did not merge, they disappeared, and the largest block lost about 38 % of its area. For a tiger, whose home range in Sumatra can span thousands to tens of thousands of hectares, the size of the largest block matters more than the total, and that is the number that fell.
+
 ## Limits
 
-- **Hansen's "forest" includes plantations** with 30 % tree cover. Some of the "forest" outside the park is rubber or oil palm, which is habitat for very few forest species.
+- **Hansen's "forest" includes plantations** with 30 % tree cover. The section above estimates the share with commodity maps; those maps miss some shade-grown coffee and agroforest.
 - **300 m is a choice.** Edge effects differ by species and by what lies beyond the edge.
 - **Habitat is not occupancy.** A forest can be empty of large mammals because of hunting. Camera traps and field surveys remain the measure of animals.
 

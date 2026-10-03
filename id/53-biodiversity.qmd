@@ -25,9 +25,19 @@ Bab ini mengukur ketiganya. Hutan inti di sini berarti hutan yang berjarak lebih
 
 **Mutu.** Hutan yang tersisa di dalam taman nasional lebih kompleks strukturnya: median keragaman tinggi dedaunan dari GEDI sekitar 3,1, dibandingkan sekitar 2,7 untuk hutan di luar. Hutan di luar lebih muda, lebih terganggu, atau bercampur dengan kebun.
 
+## Seberapa banyak "hutan" yang memang hutan?
+
+"Hutan" versi Hansen adalah lahan dengan tutupan pohon minimal 30 % pada 2000, dan wilayah di sekitar taman nasional ini terkenal dengan sesuatu yang bertutupan pohon tetapi bukan hutan: kopi robusta, banyak yang ditanam di dalam atau di tepi taman sejak 1990-an. Forest Data Partnership menerbitkan peta peluang 10 m untuk kopi, karet, dan sawit demi uji tuntas EUDR (Bab [-@sec-eudr]), dan tabel kebun menerapkannya pada hutan 2023.
+
+Di luar taman, **21 % "hutan" 2023 adalah kopi, karet, atau sawit** menurut peta-peta itu; di dalam taman, 2 %. Itu mengubah judul hanya ke satu arah. Hutan di luar taman pada 2023 bukan 289.000 ha habitat melainkan mendekati 228.000 ha, sehingga kehilangan habitat sebenarnya sejak 2000 lebih besar dari 12 % di tabel pertama. Hutan inti di luar taman menyusut dari 18.900 menjadi 15.800 ha setelah tanaman pohon dikeluarkan, kehilangan 81 % terhadap inti tahun 2000, bukan 78 % (inti 2000 tidak bisa dikoreksi dengan cara yang sama, karena peta komoditas baru mulai 2018). Di dalam taman koreksinya kecil (122.100 menjadi 116.800 ha), karena inti taman sebagian besar hutan alam; kopinya berada di tepi, tempat analisis hutan inti memang sudah mencari kerusakan. Peta komoditas punya galatnya sendiri, terutama untuk kopi naungan di bawah pohon sisa, jadi baca 21 % sebagai besaran orde, bukan pengukuran.
+
+## Konfigurasi: satu hutan atau banyak potongan?
+
+Luas hutan inti tidak menunjukkan apakah inti itu satu blok atau banyak. Tabel petak menghitung petak hutan inti yang terpisah (8-terhubung pada 90 m). Pada 2000 ada 117 petak; yang terbesar mencakup 136.300 ha, dan 89 di bawah 100 ha. Pada 2023 ada 41 petak, yang terbesar 84.500 ha, dan 31 di bawah 100 ha. Petak yang lebih sedikit bukanlah perbaikan: sebagian besar petak kecil tidak menyatu, melainkan hilang, dan blok terbesar kehilangan sekitar 38 % luasnya. Bagi harimau, yang daerah jelajahnya di Sumatra bisa mencapai ribuan hingga puluhan ribu hektare, ukuran blok terbesar lebih penting daripada totalnya, dan angka itulah yang turun.
+
 ## Batasan
 
-- **"Hutan" versi Hansen mencakup kebun** dengan tutupan pohon 30 %. Sebagian "hutan" di luar taman nasional adalah karet atau sawit, yang hanya menjadi habitat bagi sedikit sekali spesies hutan.
+- **"Hutan" versi Hansen mencakup kebun** dengan tutupan pohon 30 %. Bagian di atas memperkirakan porsinya dengan peta komoditas; peta itu melewatkan sebagian kopi naungan dan agroforestri.
 - **300 m adalah pilihan.** Efek tepi berbeda menurut spesies dan menurut apa yang ada di balik tepi itu.
 - **Habitat bukan keberadaan satwa.** Hutan bisa kosong dari mamalia besar karena perburuan. Kamera jebak dan survei lapangan tetap menjadi ukuran untuk satwanya.
 

@@ -93,6 +93,45 @@ def plot_fhd(df):
     return fig
 
 
+# Is all of Hansen's "forest" forest? Tree crops from the Forest Data Partnership models (2020)
+def fdp(crop, year=2020):
+    return (ee.ImageCollection(f"projects/forestdatapartnership/assets/{crop}/model_2026a")
+            .filterDate(f"{year}-01-01", f"{year + 1}-01-01").mosaic().select("probability"))
+
+
+# Coffee matters most here: robusta gardens are the main crop pushing into this park's buffer zone.
+tree_crop = fdp("rubber").gt(0.5).Or(fdp("palm").gt(0.5)).Or(fdp("coffee").gt(0.5)).unmask(0)
+natural2023 = forest2023.And(tree_crop.Not())
+core_natural2023 = core(natural2023)
+
+
+def plantation_table():
+    """How much 2023 'forest' is rubber or oil palm, and what core forest looks like without it."""
+    area = ee.Image.pixelArea().divide(1e4)
+    stack = ee.Image.cat([area.updateMask(i).rename(n) for i, n in
+                          [(forest2023, "f"), (forest2023.And(tree_crop), "crop"), (core2023, "c"), (core_natural2023, "cn")]]).addBands(inside)
+    g = (stack.reduceRegion(ee.Reducer.sum().repeat(4).group(4, "inside"), aoi, 30, maxPixels=1e11, tileScale=16)
+         .get("groups").getInfo())
+    rows = []
+    for d in g:
+        f, crop, c, cn = d["sum"]
+        rows.append({"where": "inside the park" if d["inside"] == 1 else "outside the park", "forest_2023_ha": f,
+                     "of which coffee, rubber or oil palm": crop / f, "core_2023_ha": c, "core without tree crops (ha)": cn})
+    return pd.DataFrame(rows)
+
+
+def patches_table():
+    """Configuration: how many separate core patches, and how big is the largest? Vectorised at 90 m to stay within limits."""
+    rows = []
+    for year, cimg in (("2000", core2000), ("2023", core2023)):
+        v = cimg.selfMask().reduceToVectors(geometry=aoi, scale=90, geometryType="polygon", eightConnected=True,
+                                            maxPixels=1e10, tileScale=8)
+        a = v.map(lambda f: f.set("ha", f.geometry().area(100).divide(1e4)))
+        rows.append({"year": year, "core patches": a.size().getInfo(), "largest patch (ha)": a.aggregate_max("ha").getInfo(),
+                     "patches under 100 ha": a.filter(ee.Filter.lt("ha", 100)).size().getInfo()})
+    return pd.DataFrame(rows)
+
+
 status = (ee.Image(0).where(forest2000, 1).where(forest2023, 2).where(core2023, 3)
           .selfMask().rename("s").clip(aoi))
 park_line = ee.Image().byte().paint(ee.FeatureCollection([ee.Feature(park)]), 1, 2)
@@ -117,6 +156,11 @@ def products():
          "caption": "Percent change in all forest and in core forest."},
         {"kind": "chart", "name": "ch53-fhd", "data": fhd_pts, "plot": plot_fhd,
          "caption": "GEDI foliage height diversity of remaining forest, 2019-2023."},
+        {"kind": "table", "name": "ch53-plantation", "data": plantation_table,
+         "floatfmt": ("", ",.0f", ".0%", ",.0f", ",.0f"),
+         "caption": "2023 Hansen forest that the Forest Data Partnership models call coffee, rubber or oil palm (probability > 0.5, 2020), and core forest recomputed without it."},
+        {"kind": "table", "name": "ch53-patches", "data": patches_table, "floatfmt": ("", ",.0f", ",.0f", ",.0f"),
+         "caption": "Separate core-forest patches (8-connected, 90 m) and the largest one, 2000 and 2023."},
     ]
 
 
