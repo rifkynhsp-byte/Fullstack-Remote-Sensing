@@ -109,6 +109,62 @@ flood_map = (relief.visualize(min=120, max=255)
              .blend(ee.Image().byte().paint(district, 1, 1).visualize(palette=["000000"])))
 
 
+# STEP 4. How sensitive is the flood area to the rule's settings?
+WATER_DB = (-11, -12, -13, -14, -15, -16, -17)
+RATIOS = (1.0, 1.25, 1.5, 2.0)
+
+
+def rule(water_db, ratio):
+    return (flooded.lt(water_db).And(baseline.subtract(flooded).gt(10 * math.log10(ratio)))
+            .And(slope.lt(CONFIG["slope_max"])).And(permanent.unmask(0).Not()).selfMask().clip(aoi))
+
+
+def sensitivity_frame():
+    """Flood area for every setting, and where it sits on the terrain.
+
+    No field map exists, so terrain is the referee: water within 5 m of the
+    nearest drainage (HAND) is plausible flooding; water more than 15 m above it
+    is very unlikely to be a river flood and counts as a probable false alarm.
+    """
+    import pandas as pd
+    area = ee.Image.pixelArea().divide(1e6)
+    bands, keys = [], []
+    for w in WATER_DB:
+        for r in RATIOS:
+            f = rule(w, r)
+            k = f"w{abs(w)}_r{int(r * 100)}"
+            keys.append((k, w, r))
+            bands += [area.updateMask(f).rename(k + "_all"), area.updateMask(f).updateMask(hand.lt(5)).rename(k + "_low"),
+                      area.updateMask(f).updateMask(hand.gt(15)).rename(k + "_high")]
+    # One stacked image and one reduction: 28 separate requests would exceed Earth Engine's concurrency limit.
+    v = ee.Image.cat(bands).reduceRegion(ee.Reducer.sum(), aoi, 30, maxPixels=1e10, tileScale=8).getInfo()
+    d = pd.DataFrame([{"water_db": w, "ratio": r, "flood_km2": v[k + "_all"], "HAND_below_5m_km2": v[k + "_low"],
+                       "HAND_above_15m_km2": v[k + "_high"]} for k, w, r in keys])
+    d["implausible (%)"] = 100 * d["HAND_above_15m_km2"] / d["flood_km2"].clip(lower=1e-9)
+    return d[["water_db", "ratio", "flood_km2", "HAND_below_5m_km2", "HAND_above_15m_km2", "implausible (%)"]]
+
+
+def plot_sensitivity(d):
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 4))
+    cols = {1.0: "#bdbdbd", 1.25: "#1b7837", 1.5: "#2166ac", 2.0: "#762a83"}
+    for r, g in d.groupby("ratio"):
+        g = g.sort_values("water_db")
+        a1.plot(g.water_db, g.flood_km2, marker="o", color=cols[r], label=f"at least {r:g}x darker than baseline")
+        a2.plot(g.water_db, 100 * g["HAND_below_5m_km2"] / g.flood_km2, marker="o", color=cols[r])
+    for a in (a1, a2):
+        a.axvline(CONFIG["water_threshold"], color="k", ls=":", lw=0.8)
+        a.set_xlabel("water threshold, VV after the event (dB)"); a.spines[["top", "right"]].set_visible(False)
+    a1.set_ylabel("mapped flood (km²)"); a1.legend(frameon=False, fontsize=8)
+    a2.set_ylabel("share of the flood < 5 m above drainage (%)"); a2.set_ylim(90, 100)
+    a1.set_title("Area depends on the settings", loc="left", fontsize=9)
+    a2.set_title("Terrain cannot choose: every setting puts the water low", loc="left", fontsize=9)
+    lo, hi = d.flood_km2.min(), d.flood_km2.max()
+    fig.suptitle(f"The same pass gives {lo:.0f} to {hi:.0f} km² of flood across reasonable settings; the dotted line is the setting used",
+                 x=0.01, ha="left", fontweight="bold", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
 def plot_hand(df):
     """HAND of flooded pixels against the district as a whole."""
     fig, ax = plt.subplots(figsize=(6.5, 3.2))
@@ -148,6 +204,10 @@ def products():
                     "building footprints and WorldPop 2020. The last column is why: Google "
                     "Open Buildings v3 barely covers this district. A first estimate for "
                     "response planning, not a damage assessment."},
+        {"kind": "table", "name": "ch24-sensitivity", "data": sensitivity_frame, "floatfmt": (".0f", ".2f", ".0f", ".0f", ".1f", ".1f"),
+         "caption": "Flood area for 28 settings of the radar rule, and how much of it sits low (HAND < 5 m) or implausibly high (HAND > 15 m) on the terrain."},
+        {"kind": "chart", "name": "ch24-sensitivity-chart", "data": sensitivity_frame, "plot": plot_sensitivity, "live": False,
+         "caption": "Sensitivity of the flood map to its two thresholds."},
     ]
 
 

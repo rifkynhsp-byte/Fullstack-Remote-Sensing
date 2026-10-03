@@ -39,6 +39,28 @@ The first version of this chapter counted buildings with Google Open Buildings v
 
 It is a first estimate of extent and exposure from one satellite pass, available within a day. It is not a damage assessment: flooded is not destroyed, and a building next to the water is not necessarily wet. Say this on the map itself. Response teams will act on what you give them.
 
+## How much does the answer depend on the thresholds?
+
+The rule has two thresholds that a reader could reasonably set differently: how dark the post-event image must be (−13 dB here) and how much darker than the dry-season baseline (1.25 times). The sensitivity listing runs the rule for seven water thresholds from −11 to −17 dB and four ratios from 1.0 to 2.0, 28 settings in all, and measures the flood area each time.
+
+**The area doubles across reasonable settings.** The loosest setting (−11 dB, no change required) maps 151 km² of flood; the strictest (−17 dB, twice as dark) maps 75 km². The setting used in the chapter (−13 dB, 1.25) gives about 114 km², near the middle. Each step of 1 dB in the water threshold moves the area by 8 to 17 km²; the ratio matters less, about 7 to 32 km² across its whole range, more at loose water thresholds.
+
+**Terrain cannot choose between them.** A natural referee is HAND: water far above the nearest drainage is unlikely to be a river flood. Here it fails to discriminate. Every setting puts 96 to 98 % of the mapped water below 5 m HAND and essentially none above 15 m, because the slope mask has already removed the hillside shadows that usually produce high, false water. A test that every candidate passes cannot rank them.
+
+**Choosing needs an independent reference.** What can rank the settings is evidence from outside the radar: a cloud-free optical image within a day or two of the pass, an emergency mapping product from the same date, aerial photographs, or reports from the ground of which villages were and were not flooded. Without one, the honest product is a range (here, 75 to 151 km²) with the chosen setting marked, not a single number.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The radar rule is fast (a map within hours of a pass), transparent and physically sensible, and the terrain check confirms the water sits where floods go. It is **not an accurate area**: the result depends on thresholds by a factor of two, one pass catches one moment of a flood that changes daily, and the exposure numbers inherit every weakness of the population and building layers.
+
+**How to make it accurate:**
+
+1. **Calibrate the thresholds against a reference**: optical imagery on a clear day, a few hundred interpreted points of water and dry ground, or field reports, and choose the setting that best matches them (an automatic threshold such as Otsu, used in the IJB app, is a reasonable start).
+2. **Use every pass**, ascending and descending, to follow the flood through time instead of one snapshot.
+3. **Use a better terrain model**: a LiDAR ground model and HAND computed from it (Chapters [-@sec-terrain] and [-@sec-lidar-terrain-cities]) separate low and high ground far more finely than 90 m MERIT.
+4. **Check the exposure layers** against local data (village population, building registers) before counting people and houses.
+5. **Report a range and the setting used**, and state the date and time of the pass on the map.
+
 ## Exercises {.unnumbered}
 
 1. What share of the mapped flood lies below 5 m HAND? Look at the rest on the map and decide whether it is real flooding or a false alarm.

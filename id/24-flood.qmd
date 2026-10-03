@@ -39,6 +39,28 @@ Versi pertama bab ini menghitung bangunan dengan Google Open Buildings v3. Hasil
 
 Ini adalah perkiraan awal luas genangan dan keterpaparan dari satu lintasan satelit, yang bisa tersedia dalam sehari. Ini bukan penilaian kerusakan: tergenang tidak sama dengan rusak, dan bangunan di dekat air belum tentu basah. Tulis hal ini langsung di petanya. Tim tanggap darurat akan bertindak berdasarkan apa yang Anda berikan.
 
+## Seberapa besar jawabannya bergantung pada ambang?
+
+Aturan ini punya dua ambang yang wajar bila disetel berbeda oleh pembaca: seberapa gelap citra sesudah kejadian (di sini −13 dB) dan seberapa jauh lebih gelap dari rujukan musim kemarau (1,25 kali). Listing sensitivitas menjalankan aturan untuk tujuh ambang air dari −11 sampai −17 dB dan empat rasio dari 1,0 sampai 2,0, total 28 pengaturan, lalu mengukur luas banjir setiap kalinya.
+
+**Luasnya berlipat dua di antara pengaturan yang wajar.** Pengaturan paling longgar (−11 dB, tanpa syarat perubahan) memetakan 151 km² banjir; yang paling ketat (−17 dB, dua kali lebih gelap) memetakan 75 km². Pengaturan yang dipakai bab ini (−13 dB, 1,25) memberi sekitar 114 km², di sekitar tengah. Setiap langkah 1 dB pada ambang air menggeser luas 8 sampai 17 km²; rasio kurang berpengaruh, sekitar 7 sampai 32 km² di seluruh rentangnya, lebih besar pada ambang air yang longgar.
+
+**Topografi tidak bisa memilih di antara keduanya.** Wasit yang wajar adalah HAND: air yang jauh di atas drainase terdekat kecil kemungkinannya banjir sungai. Di sini wasit itu tidak bisa membedakan. Setiap pengaturan menempatkan 96 sampai 98 % air terpetakan di bawah HAND 5 m dan nyaris tidak ada di atas 15 m, karena masker kemiringan sudah membuang bayangan lereng yang biasanya menghasilkan air palsu di tempat tinggi. Uji yang diloloskan semua kandidat tidak bisa memeringkat mereka.
+
+**Memilih butuh rujukan independen.** Yang bisa memeringkat pengaturan adalah bukti dari luar radar: citra optis bebas awan dalam satu-dua hari dari lintasan, produk pemetaan darurat pada tanggal yang sama, foto udara, atau laporan lapangan tentang desa mana yang tergenang dan mana yang tidak. Tanpa itu, produk yang jujur adalah rentang (di sini 75 sampai 151 km²) dengan pengaturan terpilih ditandai, bukan satu angka.
+
+## Vonis: seberapa jauh bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Aturan radar ini cepat (peta dalam hitungan jam setelah lintasan), transparan, dan masuk akal secara fisik, dan cek topografi memastikan air berada di tempat banjir biasa terjadi. Hasilnya **bukan luas yang akurat**: hasilnya bergantung pada ambang hingga dua kali lipat, satu lintasan hanya menangkap satu momen dari banjir yang berubah setiap hari, dan angka keterpaparan mewarisi setiap kelemahan layer penduduk dan bangunan.
+
+**Cara membuatnya akurat:**
+
+1. **Kalibrasi ambang dengan rujukan**: citra optis di hari cerah, beberapa ratus titik air dan tanah kering hasil tafsiran, atau laporan lapangan, lalu pilih pengaturan yang paling cocok (ambang otomatis seperti Otsu, yang dipakai aplikasi IJB, adalah awal yang wajar).
+2. **Pakai setiap lintasan**, naik dan turun, untuk mengikuti banjir sepanjang waktu, bukan satu potret.
+3. **Pakai model medan yang lebih baik**: model tanah LiDAR dan HAND yang dihitung darinya (Bab [-@sec-terrain] dan [-@sec-lidar-terrain-cities]) memisahkan tanah rendah dan tinggi jauh lebih halus daripada MERIT 90 m.
+4. **Cek layer keterpaparan** dengan data lokal (penduduk desa, register bangunan) sebelum menghitung orang dan rumah.
+5. **Laporkan rentang dan pengaturan yang dipakai**, dan cantumkan tanggal dan jam lintasan di peta.
+
 ## Latihan {.unnumbered}
 
 1. Berapa bagian genangan yang berada di bawah HAND 5 m? Periksa sisanya di peta dan putuskan apakah itu banjir sungguhan atau alarm palsu.
