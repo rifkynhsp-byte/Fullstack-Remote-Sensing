@@ -1,4 +1,4 @@
-# Statistics and Modelling You Actually Need {#sec-statistics}
+# Statistics for Time Series and Maps {#sec-statistics}
 
 ::: {.chapter-goal}
 #### In this chapter

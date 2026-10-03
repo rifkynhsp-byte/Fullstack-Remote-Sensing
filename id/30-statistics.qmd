@@ -1,4 +1,4 @@
-# Statistika dan Pemodelan yang Benar Benar Dibutuhkan {#sec-statistics}
+# Statistika untuk Deret Waktu dan Peta {#sec-statistics}
 
 ::: {.chapter-goal}
 #### Di bab ini
