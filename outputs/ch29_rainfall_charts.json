@@ -25,5 +25,29 @@
   "caption": "Interactive: pick a city, hover a cell for that month's total. Each row is a year, so a dry year shows as a pale row.",
   "html": "images/real/ch29-rain-heatmap.html",
   "height": 600
+ },
+ {
+  "name": "ch29-trends",
+  "kind": "table",
+  "caption": "Theil-Sen trend in annual rainfall, 1991-2024, with a 90 % interval, and Kendall's rank test.",
+  "markdown": "| city      |   mean (mm/yr) |   slope (mm/decade) |   90% low |   90% high |   Kendall tau |    p |\n|:----------|---------------:|--------------------:|----------:|-----------:|--------------:|-----:|\n| Padang    |           3745 |                 167 |       -37 |        340 |          0.15 | 0.22 |\n| Pontianak |           3110 |                  29 |       -55 |        114 |          0.06 | 0.60 |\n| Jakarta   |           1907 |                  35 |       -91 |        108 |          0.05 | 0.67 |\n| Makassar  |           3006 |                  73 |       -75 |        216 |          0.12 | 0.34 |\n| Kupang    |           1229 |                  44 |       -27 |        136 |          0.14 | 0.23 |\n| Ambon     |           3387 |                 695 |       316 |       1036 |          0.38 | 0.00 |"
+ },
+ {
+  "name": "ch29-trends-chart",
+  "kind": "chart",
+  "caption": "One dot per city with its interval: the chart says how sure, not only how much.",
+  "image": "images/real/ch29-trends-chart.png"
+ },
+ {
+  "name": "ch29-risk",
+  "kind": "table",
+  "caption": "How often July-October rainfall fell below half of normal, 1991-2024, in El Niño years and in the others.",
+  "markdown": "| city      |   El Niño years |   below half of normal in El Niño years (%) |   other years |   below half of normal in other years (%) |\n|:----------|----------------:|--------------------------------------------:|--------------:|------------------------------------------:|\n| Padang    |              10 |                                          20 |            24 |                                         0 |\n| Pontianak |              10 |                                          20 |            24 |                                         0 |\n| Jakarta   |              10 |                                          70 |            24 |                                         4 |\n| Makassar  |              10 |                                          80 |            24 |                                        12 |\n| Kupang    |              10 |                                           0 |            24 |                                         4 |\n| Ambon     |              10 |                                          50 |            24 |                                        12 |"
+ },
+ {
+  "name": "ch29-risk-chart",
+  "kind": "chart",
+  "caption": "The same numbers drawn for a decision: what to expect when an El Niño is forecast.",
+  "image": "images/real/ch29-risk-chart.png"
  }
 ]

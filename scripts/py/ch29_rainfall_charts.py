@@ -179,6 +179,74 @@ def monthly_frame():
     return _CACHE["df"].copy()
 
 
+# ---------------------------------------------------------------------------
+# A chart with its uncertainty: is annual rainfall trending?
+# ---------------------------------------------------------------------------
+def trend_table():
+    """Theil-Sen slope of annual totals (robust to wet outliers) with a 90 % interval, and Kendall's tau."""
+    import pandas as pd
+    from scipy import stats
+    df = monthly_frame()
+    ann = df.groupby(["place", "year"]).rain_mm.sum().reset_index()
+    ann = ann[ann.year <= LAST]
+    rows = []
+    for p in ORDER:
+        g = ann[ann.place == p]
+        slope, inter, lo, hi = stats.theilslopes(g.rain_mm, g.year, alpha=0.90)
+        tau, pv = stats.kendalltau(g.year, g.rain_mm)
+        rows.append({"city": p, "mean (mm/yr)": g.rain_mm.mean(), "slope (mm/decade)": 10 * slope,
+                     "90% low": 10 * lo, "90% high": 10 * hi, "Kendall tau": tau, "p": pv})
+    return pd.DataFrame(rows)
+
+
+def plot_trends(t):
+    fig, ax = plt.subplots(figsize=(7, 3.4))
+    y = np.arange(len(t))[::-1]
+    sig = (t["90% low"] > 0) | (t["90% high"] < 0)
+    ax.hlines(y, t["90% low"], t["90% high"], color=np.where(sig, "#c0392b", "#9aa5b1"), lw=3)
+    ax.scatter(t["slope (mm/decade)"], y, color=np.where(sig, "#c0392b", "#555555"), zorder=3)
+    ax.axvline(0, color="k", lw=0.8)
+    ax.set_yticks(y, t.city); ax.set_xlabel("change in annual rainfall, 1991-2024 (mm per decade, 90 % interval)")
+    ax.spines[["top", "right"]].set_visible(False)
+    n = int(sig.sum())
+    ax.set_title(f"{n} of {len(t)} cities show a trend whose 90 % interval excludes zero", loc="left", fontsize=10, fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# A chart that decides: if El Nino is forecast, how likely is a failed dry season?
+# ---------------------------------------------------------------------------
+def risk_table():
+    """Share of years in which July-October rain fell below half of normal, El Nino years against the rest."""
+    import pandas as pd
+    from ch38_eda_graphs import enso_frame
+    d = enso_frame()
+    rows = []
+    for p in ORDER:
+        g = d[d.place == p]
+        el, other = g[g.nino34 >= 0.5], g[g.nino34 < 0.5]
+        rows.append({"city": p, "El Niño years": len(el), "below half of normal in El Niño years (%)": 100 * (el.anomaly_pct < -50).mean(),
+                     "other years": len(other), "below half of normal in other years (%)": 100 * (other.anomaly_pct < -50).mean()})
+    return pd.DataFrame(rows)
+
+
+def plot_risk(t):
+    fig, ax = plt.subplots(figsize=(7.5, 3.6))
+    x = np.arange(len(t))
+    ax.bar(x - 0.2, t["below half of normal in other years (%)"], 0.4, color="#9aa5b1", label="other years")
+    ax.bar(x + 0.2, t["below half of normal in El Niño years (%)"], 0.4, color="#c0392b", label="El Niño years (Niño 3.4 ≥ +0.5 °C)")
+    for i, r in t.iterrows():
+        ax.text(i + 0.2, r["below half of normal in El Niño years (%)"] + 2, f'{r["below half of normal in El Niño years (%)"]:.0f}%', ha="center", fontsize=8)
+    ax.set_xticks(x, t.city); ax.set_ylabel("years with Jul-Oct rain\nbelow half of normal (%)"); ax.set_ylim(0, 100)
+    ax.legend(frameon=False, fontsize=8, loc="upper left"); ax.spines[["top", "right"]].set_visible(False)
+    top = t.loc[t["below half of normal in El Niño years (%)"].idxmax()]
+    ax.set_title(f"If El Niño is declared: in {top.city}, {top['below half of normal in El Niño years (%)']:.0f} % of such years had a failed dry season",
+                 loc="left", fontsize=10, fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "chart", "name": "ch29-spaghetti", "data": monthly_frame,
@@ -201,6 +269,14 @@ def products():
         {"kind": "html", "name": "ch29-rain-heatmap", "build": heatmap_html, "height": 600,
          "caption": "Interactive: pick a city, hover a cell for that month's total. "
                     "Each row is a year, so a dry year shows as a pale row."},
+        {"kind": "table", "name": "ch29-trends", "data": trend_table, "floatfmt": ("", ".0f", ".0f", ".0f", ".0f", ".2f", ".2f"),
+         "caption": "Theil-Sen trend in annual rainfall, 1991-2024, with a 90 % interval, and Kendall's rank test."},
+        {"kind": "chart", "name": "ch29-trends-chart", "data": trend_table, "plot": plot_trends, "live": False,
+         "caption": "One dot per city with its interval: the chart says how sure, not only how much."},
+        {"kind": "table", "name": "ch29-risk", "data": risk_table, "floatfmt": ("", ".0f", ".0f", ".0f", ".0f"),
+         "caption": "How often July-October rainfall fell below half of normal, 1991-2024, in El Niño years and in the others."},
+        {"kind": "chart", "name": "ch29-risk-chart", "data": risk_table, "plot": plot_risk, "live": False,
+         "caption": "The same numbers drawn for a decision: what to expect when an El Niño is forecast."},
     ]
 
 

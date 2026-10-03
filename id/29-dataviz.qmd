@@ -39,8 +39,28 @@ Palet pelangi merusak ketiganya. Palet itu memunculkan batas palsu di tempat war
 Grafik tahun kering awalnya berjudul "tahun El Niño". Salah satu dari empat tahun itu, 2019, lebih dipicu oleh Indian Ocean Dipole, bukan El Niño. Klaim itu juga dicek dulu sebelum masuk ke judul: 22 dari 24 pasangan kota dan tahun berada di bawah median, dan dua tidak. Tulis jumlahnya di judul dan pengecualiannya di keterangan. Judul yang hanya berkata "tahun itu kering" menyembunyikan dua kasus yang ternyata tidak kering.
 :::
 
+## Tunjukkan seberapa yakin, bukan hanya seberapa banyak
+
+Garis tren yang ditarik melalui 34 tahun curah hujan selalu miring ke satu arah. Apakah kemiringan itu bermakna adalah pertanyaan lain, dan grafik harus menjawabnya. Grafik tren memberi setiap kota satu titik, kemiringan Theil-Sen-nya (median dari semua kemiringan berpasangan, yang tidak bisa diseret oleh satu tahun yang sangat basah), dan satu batang untuk selang 90 %. Batang abu-abu melewati nol: tidak ada tren yang bisa dibedakan dari kebetulan. Batang merah tidak melewati nol.
+
+Lima dari enam kota tidak menunjukkan tren curah hujan tahunan yang terdeteksi sejak 1991. Ambon menunjukkannya: sekitar +700 mm per dekade, tau Kendall 0,38, p < 0,01. Rata-ratanya 2.700 mm per tahun pada 1991-2007 dan 4.070 mm pada 2008-2024. Lonjakan sebesar itu perlu dicek sebelum dijadikan judul, karena CHIRPS di Indonesia timur memadukan sedikit penakar hujan, dan perubahan jaringan penakar bisa menciptakan undakan yang tampak seperti tren. Produk independen, GPM IMERG, menunjukkan kenaikan yang sama di Ambon (2.210 menjadi 3.360 mm per tahun antara periode yang sama, +52 %) dan tahun-tahun basah yang sama, 2008, 2017, 2021, dan 2022. Jadi pembasahan itu sangat mungkin nyata. Apakah itu tren iklim adalah soal lain: tahun-tahun basah itu sebagian besar tahun La Niña, dan 34 tahun dengan urutan La Niña dan El Niño yang tidak merata bisa menghasilkan kemiringan dengan sendirinya. Keterangan yang jujur menyebut ketiganya: ada kenaikan, dua produk sepakat, dan penyebabnya tidak ditetapkan oleh grafik ini.
+
+## Grafik yang memutuskan
+
+Judul bab ini menjanjikan grafik yang memutuskan sesuatu. Keputusan di sini adalah yang dihadapi dinas pertanian kabupaten setiap tahun: El Niño sudah diramalkan; seberapa khawatir kita tentang musim kemarau?
+
+Grafik risiko menjawabnya langsung. Untuk setiap kota, grafik ini menunjukkan porsi tahun, 1991-2024, ketika curah hujan Juli-Oktober kurang dari separuh normal, terpisah untuk tahun El Niño dan tahun lainnya. Di Jakarta itu terjadi pada 70 % tahun El Niño dan 4 % tahun lain; di Makassar 80 % berbanding 12 %; di Ambon 50 % berbanding 12 %. Padang dan Pontianak jauh lebih tidak terpapar (20 % berbanding 0 %). Kupang menunjukkan 0 %, yang tampak menenangkan padahal tidak: curah hujan Juli-Oktobernya hampir nol setiap tahun, sehingga "separuh normal" adalah ambang tanpa makna di sana, dan ukuran lain (tanggal mulainya hujan) yang penting. Grafik untuk keputusan harus menyebut di mana ukurannya berhenti berlaku.
+
+Dua pilihan rancangan membuat grafik ini bisa dipakai orang yang tidak akan membaca metodenya. Pertanyaannya ada di judul, bersama angka yang menjawabnya. Dan perbandingan yang dibutuhkan pembaca, El Niño berbanding tahun lain, adalah dua batang bersebelahan, bukan dua tabel di halaman berbeda. Dengan sepuluh tahun El Niño per kota, persentasenya bergerak dalam langkah 10 %, itulah sebabnya keterangan grafik menyebut jumlahnya: pengambil keputusan perlu tahu bahwa "80 %" berarti delapan dari sepuluh tahun.
+
+## Alur bagian ini
+
+Bab-bab di bagian ini mengikuti jalan sebuah hasil dari analisis ke pembacanya. Bab ini tentang grafik: memilih grafik dari pertanyaan, menunjukkan variasi dan ketidakpastian, dan membangun grafik untuk keputusan. Bab [-@sec-beyond-choropleth] melakukan hal yang sama untuk peta, dengan kepadatan titik, kartogram, legenda bivariat, dan aliran. Bab [-@sec-mapproduction] mengubah peta menjadi laporan yang bisa dicetak dan diulang, dan Bab [-@sec-apps] menjadi aplikasi yang bisa dijalankan orang lain. Eksplorasi datang sebelum semuanya, di Bab [-@sec-eda].
+
 ## Latihan {.unnumbered}
 
 1. Gambar ulang small multiples dengan sumbu y yang berbeda untuk setiap kota. Perbandingan mana yang jadi menyesatkan?
 2. Tambahkan kota ketujuh dari pola hujan yang berbeda. Di urutan mana kota itu sebaiknya diletakkan, dan kenapa?
 3. Di heatmap interaktif, cari baris paling kering untuk Kupang. Cari tahu apa yang terjadi pada tahun itu.
+4. Hitung ulang grafik risiko dengan "di bawah persentil ke-20 curah hujan Juli-Oktober kota itu sendiri", bukan "di bawah separuh normal". Apakah Kupang masih tampak aman?
+5. Tambahkan presipitasi ERA5-Land sebagai produk ketiga untuk Ambon. Apakah ia sepakat dengan CHIRPS dan IMERG tentang kenaikan setelah 2008?

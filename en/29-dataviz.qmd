@@ -39,8 +39,28 @@ Rainbow palettes break all three. They add false boundaries where the hue jumps,
 The dry-years chart first said "El Niño years". One of the four years, 2019, was driven mainly by the Indian Ocean Dipole, not El Niño. The claim was also checked before it went into the title: 22 of 24 city-years fall below the median, and two do not. Write the count in the title and the exceptions in the caption. A title that only says "they were dry" hides the two cases where they were not.
 :::
 
+## Show how sure, not only how much
+
+A trend line drawn through 34 years of rainfall will always slope one way or the other. Whether the slope means anything is a separate question, and the chart should answer it. The trend chart gives each city one dot, its Theil-Sen slope (the median of all pairwise slopes, which a single very wet year cannot drag), and a bar for the 90 % interval. Grey bars cross zero: no trend that the data can distinguish from chance. Red bars do not.
+
+Five of the six cities have no detectable trend in annual rainfall since 1991. Ambon does: about +700 mm per decade, Kendall's tau 0.38, p < 0.01. Its mean was 2,700 mm a year in 1991-2007 and 4,070 mm in 2008-2024. A jump that large calls for a check before a headline, because CHIRPS in eastern Indonesia blends few gauges, and a change in the gauge network can create a step that looks like a trend. An independent product, GPM IMERG, shows the same rise at Ambon (2,210 to 3,360 mm a year between the same periods, +52 %) and the same wet years, 2008, 2017, 2021 and 2022. So the wetting is very probably real. Whether it is a climate trend is another matter: those wet years are mostly La Niña years, and 34 years with an uneven sequence of La Niña and El Niño can produce a slope by themselves. The honest caption says all three things: there is a rise, two products agree, and its cause is not established by this chart.
+
+## A chart that decides
+
+The title of this chapter promises charts that decide things. The decision here is one a district agriculture office faces every year: an El Niño has been forecast; how worried should we be about the dry season?
+
+The risk chart answers that directly. For each city it shows the share of years, 1991-2024, in which July-October rainfall came in below half of normal, separately for El Niño years and for the rest. In Jakarta that happened in 70 % of El Niño years and 4 % of other years; in Makassar 80 % against 12 %; in Ambon 50 % against 12 %. Padang and Pontianak are much less exposed (20 % against 0 %). Kupang shows 0 %, which looks reassuring and is not: its July-October rain is close to zero in every year, so "half of normal" is a meaningless threshold there, and a different measure (the date the rains start) is the one that matters. A chart built for a decision has to say where its measure stops working.
+
+Two design choices make this chart usable by someone who will not read the methods. The question is in the title, with the number that answers it. And the comparison the reader needs, El Niño against other years, is two bars side by side, not two tables on separate pages. With ten El Niño years per city the percentages move in steps of 10 %, which is why the chart shows counts in the caption: a decision-maker should know that "80 %" means eight of ten years.
+
+## The flow of this part
+
+The chapters of this part follow the path a result takes from analysis to its audience. This chapter is about charts: choosing the chart from the question, showing variation and uncertainty, and building a chart for a decision. Chapter [-@sec-beyond-choropleth] does the same for maps, with dot densities, cartograms, bivariate legends and flows. Chapter [-@sec-mapproduction] turns a map into a printable, repeatable report, and Chapter [-@sec-apps] into an app that others can run. Exploration comes before all of them, in Chapter [-@sec-eda].
+
 ## Exercises {.unnumbered}
 
 1. Redraw the small multiples with a free y-axis for each city. Which comparison becomes misleading?
 2. Add a seventh city from a different rainfall regime. Where does it belong in the panel order, and why?
 3. In the interactive heatmap, find the driest row for Kupang. Look up what happened that year.
+4. Recompute the risk chart with "below the 20th percentile of the city's own Jul-Oct rainfall" instead of "below half of normal". Does Kupang still look safe?
+5. Add ERA5-Land precipitation as a third product for Ambon. Does it agree with CHIRPS and IMERG on the rise after 2008?
