@@ -44,9 +44,39 @@ The script lays the same 50 m grid used for the density map over the satellite m
 The satellite map finds the block, every year, for free; it cannot count palms or see gaps smaller than a few 10 m pixels. The drone counts palms and gaps, but covers a few tens of hectares per flight. Use the satellite to choose where to fly, and the drone to measure what the satellite can only flag.
 :::
 
+## Tuning the detector: which settings count palms, and which count other trees?
+
+Every detector has knobs, and every published count rests on one setting of them. This method has two that matter: the **greenness threshold**, below which a peak is not counted, and the **minimum spacing**, inside which two peaks are merged into one crown. The sensitivity study runs all 35 combinations of seven thresholds and five spacings. Without a field count it cannot score them against truth, so it scores them against what two independent sources agree on:
+
+- detections in 50 m cells that the satellite palm model scores below 0.2 are **not palms**: they are other trees and bushes in cells that both the drone density and the satellite say are unplanted;
+- detections in cells the satellite scores above 0.5 that also sit on a planting grid (at least three neighbours 7 to 11 m away) are **palm-like**.
+
+The results tell a story in three parts, and the first one surprises most people.
+
+**Greenness does not separate palms from other trees.** It seems obvious that raising the threshold should drop the weak, doubtful peaks and keep the palms. The opposite happens. Every crown peak in this image has an excess-green value above 0.29, and the median is 0.43, so the default threshold of 0.04 never removes anything. Raising it to 0.35, 0.40 or 0.45 removes palms much faster than other trees: at a spacing of 5.5 m, the palm-like share of detections falls from 43 % to 35 %, 21 % and 9 %. The greenest peaks in this landscape are bushes and broadleaf trees, not oil palm, whose fronds are a duller, yellower green. A threshold on colour cannot fix this.
+
+**Spacing has a narrow sweet spot.** At 4 m, crowns are counted more than once: 13 % of detections have a neighbour closer than 6 m, which on a 9 m planting grid can only be a double count. At 7 m the detector suppresses real neighbours, because on a triangular grid with 9 m between palms the rows are only 7.8 m apart, and the palm-like count collapses from about 1,100 to 155. Between 5 and 5.5 m the double counts almost disappear (2 % and 0.4 %) and the grid survives.
+
+**What does separate palms is geometry.** Measured as palm-like detections minus detections in non-palm cells, the best setting is a spacing of 5.5 m with a threshold of 0.30, almost exactly the default. It still counts about 970 peaks in non-palm cells. What removes them is not a better threshold but a structural rule: keep only detections that sit on a planting grid inside the planted block. That leaves about 1,100 palm-like crowns, close to the 1,302 found inside the satellite palm cells and to the lower bound of Chapter [-@sec-palm-health].
+
+The general lesson: before you tune a threshold, check that the variable can separate the classes at all. Here the answer was no, and a tidier threshold would only have produced a tidier wrong count.
+
+## Verdict: how far to trust this count, and how to make it accurate
+
+**Verdict.** The method is fast (seconds), needs no training data and is excellent for learning: it shows every step of a detector you can reason about. As a production count it is **not accurate enough**: the same image gives 1,100 to 3,250 palms depending on the setting, the implementation and the filter, and without a reference no one can say which number is right.
+
+**How to make it accurate:**
+
+1. **Make a reference.** Digitise every palm by hand in two or three 1 ha plots, or count them on the ground. With that, the sweep above becomes a real precision and recall curve, and the threshold is chosen by measurement rather than by proxy.
+2. **Use structure, not only colour.** A canopy height model from photogrammetry or LiDAR separates palms (single crown, 8-12 m high, regular spacing) from shrubs and from taller broadleaf trees far better than greenness does.
+3. **Constrain to the planted block.** A plantation boundary, from the estate's own records or from a satellite palm map, removes most of the false detections before counting.
+4. **Then, and only then, consider a trained model.** A small detection network trained on a few hundred hand-labelled crowns handles touching crowns and young palms that local maxima miss. It needs the reference from step 1 anyway.
+5. **Report the count with its uncertainty**, for example the range across reasonable settings, and say which setting was used.
+
 ## Exercises {.unnumbered}
 
 1. Change `MIN_SPACING_M` from 5.5 to 4 and to 7. Watch the spacing histogram. Which setting starts double counting?
 2. Draw a polygon around the planted block only and count inside it. Compare the palms per hectare with a standard 9 m triangular planting.
 3. Run the method on the town scene "kebun_sawit_SPP" from the same survey. What does it count that is not a palm?
 4. Repeat the cross-check with the 2020 satellite map (`p2020` is already in the cell table). Which cells changed, and does the drone show young palms there?
+5. Digitise every palm by hand in one 1 ha square of the planted block (about 140 points). Rerun the sensitivity sweep and compute true precision and recall for each setting. Is 5.5 m and 0.30 still the best?

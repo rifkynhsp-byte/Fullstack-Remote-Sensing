@@ -84,25 +84,48 @@ def density_frame():
     return grid * 4          # 50 m cell = 0.25 ha
 
 
+def lonlat_extent():
+    """The orthophoto's extent in degrees, for a graticule on the image maps."""
+    if "ext" not in _cache:
+        from rasterio.warp import transform_bounds
+        with rasterio.open("/vsicurl/" + URL) as src:
+            w, s_, e, n = transform_bounds(src.crs, "EPSG:4326", *src.bounds)
+        _cache["ext"] = [w, e, s_, n]
+    return _cache["ext"]
+
+
+def graticule(ax):
+    from matplotlib.ticker import FuncFormatter, MaxNLocator
+    ax.xaxis.set_major_locator(MaxNLocator(3)); ax.yaxis.set_major_locator(MaxNLocator(3))
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{abs(v):.3f}°E"))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{abs(v):.3f}°S"))
+    ax.grid(True, color="#ffffff", lw=0.4, ls="--", alpha=0.7); ax.tick_params(labelsize=7)
+
+
 def figure_crowns():
     """The orthophoto with every counted crown, and a zoom on one corner."""
     rgb, res = load()
     peaks = count_palms()
     img = np.clip(np.moveaxis(rgb, 0, -1) / 255, 0, 1)
     fig, axes = plt.subplots(1, 2, figsize=(11, 5.6), gridspec_kw={"width_ratios": [1.2, 1]})
-    axes[0].imshow(img)
-    axes[0].plot(peaks[:, 1], peaks[:, 0], ".", color="#ff2d55", ms=1.6)
+    w, e, s_, n = lonlat_extent()
+    h, wd = img.shape[:2]
+    lon = w + (peaks[:, 1] + 0.5) / wd * (e - w)
+    lat = n - (peaks[:, 0] + 0.5) / h * (n - s_)
+    axes[0].imshow(img, extent=[w, e, s_, n])
+    axes[0].plot(lon, lat, ".", color="#ff2d55", ms=1.6)
     axes[0].set_title(f"{len(peaks):,} crowns counted", loc="left", fontsize=10)
     zy, zx, zs = int(0.55 * img.shape[0]), int(0.05 * img.shape[1]), int(120 / res)
-    axes[0].add_patch(plt.Rectangle((zx, zy), zs, zs, fill=False, ec="yellow", lw=1.5))
+    dx, dy = (e - w) / wd, (n - s_) / h
+    axes[0].add_patch(plt.Rectangle((w + zx * dx, n - (zy + zs) * dy), zs * dx, zs * dy, fill=False, ec="yellow", lw=1.5))
+    graticule(axes[0])
     axes[1].imshow(img[zy:zy + zs, zx:zx + zs])
     sel = ((peaks[:, 0] >= zy) & (peaks[:, 0] < zy + zs) &
            (peaks[:, 1] >= zx) & (peaks[:, 1] < zx + zs))
     axes[1].plot(peaks[sel, 1] - zx, peaks[sel, 0] - zy, "o", mfc="none", mec="#ff2d55",
                  ms=9, mew=1.2)
     axes[1].set_title("Zoom, 120 m across", loc="left", fontsize=10)
-    for ax in axes:
-        ax.set_axis_off()
+    axes[1].set_axis_off()            # a 120 m zoom; its position is the yellow box on the left map
     fig.text(0.01, 0.01, "Imagery: OpenAerialMap contributors, CC BY 4.0", fontsize=7,
              color="#616e7c")
     fig.tight_layout()
@@ -113,10 +136,14 @@ def figure_density():
     """Palms per hectare, 50 m cells."""
     grid = density_frame()
     fig, ax = plt.subplots(figsize=(6, 5.2))
-    im = ax.imshow(np.ma.masked_equal(grid, 0), cmap="YlGn", vmin=0, vmax=180)
+    w, e, s_, n = lonlat_extent()
+    rgb, res = load()
+    cell = int(50 / res)
+    ext = [w, w + grid.shape[1] * cell / rgb.shape[2] * (e - w), n - grid.shape[0] * cell / rgb.shape[1] * (n - s_), n]
+    im = ax.imshow(np.ma.masked_equal(grid, 0), cmap="YlGn", vmin=0, vmax=180, extent=ext)
     fig.colorbar(im, ax=ax, label="Palms per hectare (50 m cells)", shrink=0.8)
     ax.set_title("Planting density", loc="left", fontsize=10)
-    ax.set_axis_off()
+    graticule(ax); ax.grid(True, color="#333333", lw=0.3, ls="--")
     return fig
 
 
@@ -234,6 +261,97 @@ def plot_crosscheck(t):
     return fig
 
 
+# ---------------------------------------------------------------------------
+# Sensitivity: which settings count palms, and which count other trees too?
+# ---------------------------------------------------------------------------
+def smooth_exg():
+    if "smooth" not in _cache:
+        rgb, res = load()
+        r, g, b = rgb
+        exg = (2 * g - r - b) / np.maximum(r + g + b, 1)
+        _cache["smooth"] = ndi.gaussian_filter(exg, SIGMA_M / res)
+        _cache["valid"] = (rgb.sum(0) > 0).astype(int)
+    return _cache["smooth"], _cache["valid"]
+
+
+def detect(threshold, spacing_m):
+    sm, valid = smooth_exg()
+    _, res = load()
+    return peak_local_max(sm, min_distance=int(spacing_m / res), threshold_abs=threshold, labels=valid)
+
+
+def on_grid(peaks):
+    """True for detections with at least 3 neighbours 7-11 m away, as on a planting grid."""
+    _, res = load()
+    xy = peaks * res
+    tree = cKDTree(xy)
+    n_in = np.array([len(tree.query_ball_point(p, 11)) for p in xy])
+    n_close = np.array([len(tree.query_ball_point(p, 7)) for p in xy])
+    return (n_in - n_close) >= 3
+
+
+THRESHOLDS = (0.04, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55)     # 0.04 is the default above; crown peaks start near 0.30
+SPACINGS = (4.0, 5.0, 5.5, 6.0, 7.0)
+
+
+def sensitivity_frame():
+    """Every combination of greenness threshold and minimum spacing, scored with two independent proxies.
+
+    No field count exists, so 'truth' is replaced by what two other sources agree on:
+      * not palm: detections in 50 m cells the satellite palm model scores below 0.2
+        (the drone confirms most of these cells are unplanted);
+      * palm-like: detections in cells the satellite scores above 0.5 that also
+        sit on a planting grid (>= 3 neighbours 7-11 m away).
+    """
+    if "sens" in _cache:
+        return _cache["sens"]
+    d = cells_frame()
+    _, res = load()
+    cell = int(50 / res)
+    p = np.full((d.row.max() + 1, d.col.max() + 1), np.nan)
+    p[d.row, d.col] = d.p2024
+    rows = []
+    for sp in SPACINGS:
+        for th in THRESHOLDS:
+            pk = detect(th, sp)
+            r, c = pk[:, 0] // cell, pk[:, 1] // cell
+            ok = (r < p.shape[0]) & (c < p.shape[1])
+            prob = np.full(len(pk), np.nan); prob[ok] = p[r[ok], c[ok]]
+            grid = on_grid(pk)
+            near, _ = cKDTree(pk * res).query(pk * res, k=2)
+            palm_like = int(((prob > 0.5) & grid).sum())
+            not_palm = int((prob < 0.2).sum())
+            rows.append({"min spacing (m)": sp, "ExG threshold": th, "detections": len(pk),
+                         "palm-like": palm_like, "in non-palm cells": not_palm,
+                         "share palm-like": palm_like / max(len(pk), 1),
+                         "pairs closer than 6 m (%)": 100 * (near[:, 1] < 6).mean()})
+    _cache["sens"] = pd.DataFrame(rows)
+    return _cache["sens"]
+
+
+def plot_sensitivity(t):
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 4))
+    cols = {4.0: "#d95f02", 5.0: "#e6ab02", 5.5: "#1b7837", 6.0: "#1f78b4", 7.0: "#7570b3"}
+    for sp, g in t.groupby("min spacing (m)"):
+        a1.plot(g["in non-palm cells"], g["palm-like"], marker="o", color=cols[sp], label=f"min spacing {sp:g} m")
+        for _, r in g.iterrows():
+            a1.annotate(f'{r["ExG threshold"]:g}', (r["in non-palm cells"], r["palm-like"]), fontsize=6.5,
+                        xytext=(3, 2), textcoords="offset points", color=cols[sp])
+        a2.plot(g["ExG threshold"], g["share palm-like"] * 100, marker="o", color=cols[sp], label=f"{sp:g} m")
+    a1.set_xlabel("detections in cells with no palms (other trees, bushes)"); a1.set_ylabel("palm-like detections")
+    a1.legend(frameon=False, fontsize=8); a1.set_title("Every point is one setting; labels are the ExG threshold", loc="left", fontsize=9)
+    a2.set_xlabel("ExG threshold"); a2.set_ylabel("detections that are palm-like (%)")
+    a2.set_title("Raise the threshold and the share of palms FALLS: the greenest crowns are not palms", loc="left", fontsize=9)
+    for a in (a1, a2):
+        a.spines[["top", "right"]].set_visible(False)
+    best = t.loc[(t["palm-like"] - t["in non-palm cells"]).idxmax()]
+    fig.suptitle(f"Best trade-off: spacing {best['min spacing (m)']:g} m, threshold {best['ExG threshold']:g} "
+                 f"({int(best['palm-like']):,} palm-like, {int(best['in non-palm cells']):,} in non-palm cells)",
+                 x=0.01, ha="left", fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "figure", "name": "ch27-palm-crowns", "figure": figure_crowns,
@@ -252,6 +370,11 @@ def products():
          "floatfmt": (".0f", ".1f", ".1f", ".2f", ".0f"),
          "caption": "The count in numbers. Without field counts this is not an "
                     "accuracy; the spacing check is the evidence available."},
+        {"kind": "table", "name": "ch27-sensitivity", "data": sensitivity_frame,
+         "floatfmt": (".1f", ".2f", ",.0f", ",.0f", ",.0f", ".2f", ".0f"),
+         "caption": "Eighteen settings of the same method, scored against two independent proxies for truth."},
+        {"kind": "chart", "name": "ch27-sensitivity-chart", "data": sensitivity_frame, "plot": plot_sensitivity, "live": False,
+         "caption": "The trade-off between finding palms and counting other trees, for every setting."},
         {"kind": "table", "name": "ch27-crosscheck", "data": crosscheck_table, "columns": ["measure", "shown"],
          "caption": "The drone count against the Forest Data Partnership oil palm model (Sentinel-based, 10 m), cell by cell."},
         {"kind": "chart", "name": "ch27-crosscheck-chart", "data": crosscheck_table, "plot": plot_crosscheck, "live": False,
