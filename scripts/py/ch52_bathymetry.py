@@ -129,6 +129,58 @@ def plot_zones(df):
     return fig
 
 
+# Sensitivity: which choices make the ratio rank the reef zones by depth better?
+# Expected depth rank of each zone (1 shallowest). Spearman rho between this rank and the ratio
+# measures how well a version of the ratio orders depth, without any depth soundings.
+DEPTH_RANK = {"Inner reef flat": 1, "Outer reef flat": 1, "Terrestrial reef flat": 1, "Reef crest": 2,
+              "Shallow lagoon": 3, "Patch reef": 3, "Back reef slope": 4, "Reef slope": 4,
+              "Sheltered reef slope": 4, "Deep lagoon": 5, "Plateau": 5}
+NS = [10.0, 100.0, 1000.0, 10000.0]
+MASKS = {"none": None,
+         "red < 0.02 (threshold copied from clear-water studies)": ("red", 0.02),
+         "NIR < 0.02 (glint and turbid plumes)": ("nir", 0.02)}
+
+
+def _composites():
+    clearest = ee.Image(s2.sort("CLOUDY_PIXEL_PERCENTAGE").first())
+    return {"median of all dry-season scenes": comp,
+            "20th percentile (darkest, less glint)": s2.reduce(ee.Reducer.percentile([20]))
+                .rename(["B2", "B3", "B4", "B8"]).clip(aoi),
+            "single clearest scene": clearest.clip(aoi)}
+
+
+def _stack(c):
+    bands = [c.select("B2").multiply(n).log().divide(c.select("B3").multiply(n).log()).rename(f"r{int(n)}")
+             for n in NS]
+    return ee.Image.cat(bands + [c.select("B4").rename("red"), c.select("B8").rename("nir"), reefs.rename("zone")])
+
+
+def sensitivity_frame():
+    from scipy import stats
+    names = {k: n for k, (_, n, _) in enumerate(REEF)}
+    rows = []
+    for cname, c in _composites().items():
+        pts = (_stack(c).stratifiedSample(numPoints=150, classBand="zone", region=aoi, scale=10, seed=5,
+                                         tileScale=4).getInfo()["features"])
+        d = pd.DataFrame([f["properties"] for f in pts]).dropna()
+        d["rank"] = d.zone.astype(int).map(names).map(DEPTH_RANK)
+        for mname, m in MASKS.items():
+            dd = d if m is None else d[d[m[0]] < m[1]]
+            for n in NS:
+                rho = stats.spearmanr(dd["rank"], dd[f"r{int(n)}"])[0] if len(dd) > 30 else np.nan
+                rows.append({"composite": cname, "mask": mname,
+                             "n": int(n), "spearman_rho": rho,
+                             "points": len(dd)})
+    return pd.DataFrame(rows)
+
+
+def sensitivity_table(d):
+    w = d.pivot_table(index=["composite", "mask"], columns="n", values="spearman_rho", dropna=False, sort=False)
+    w.columns = [f"rho, n={c:,}" for c in w.columns]
+    pts = d.groupby(["composite", "mask"], sort=False)["points"].first()
+    return w.assign(points=pts).reset_index()
+
+
 def products():
     return [
         {"kind": "map", "name": "ch52-truecolour", "image": comp, "region": aoi, "vis": TRUE,
@@ -159,6 +211,10 @@ def products():
          "title": "Reef zones (Allen Coral Atlas)", "source": "Allen Coral Atlas v2. GEE.",
          "caption": "Mapped reef geomorphology for comparison: the shallow reef flats should "
                     "match the shallowest estimated depths."},
+        {"kind": "table", "name": "ch52-sensitivity", "data": sensitivity_frame, "transform": sensitivity_table,
+         "floatfmt": ("", "", ".2f", ".2f", ".2f", ".2f", ",.0f"),
+         "caption": "How well each version of the ratio ranks the reef zones from shallow to deep (Spearman rho; "
+                    "1 = perfect order, 0 = none). Rows: image composite and mask; columns: the constant n. Empty cells: too few points left to test."},
     ]
 
 

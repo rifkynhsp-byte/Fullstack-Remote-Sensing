@@ -35,8 +35,41 @@ Without good depths, the ratio can still be tested as a *relative* depth index. 
 
 The ratio follows that order. Its median rises from about 0.97 on inner and outer reef flats, through 0.975 on the reef crest, about 0.99 in shallow lagoons and about 1.0 on reef slopes, to 1.01 in the deep lagoon and 1.07 on the submerged plateau. The ordering holds even though no depth calibration was possible. The map is therefore a good relative depth map: lighter is shallower. Turning it into metres needs a few dozen measured depths.
 
+## Which choices matter? A sensitivity test
+
+Three choices sit inside this map: the constant $n$, the image composite, and whether to mask "bad" water first. With no depth soundings, we can still score each version by how well it ranks the reef zones from shallow to deep: reef flats rank 1, crest 2, shallow lagoon and patch reef 3, slopes 4, deep lagoon and plateau 5. The script computes the Spearman rank correlation between that order and the ratio for each version. A rho of 1 would be a perfect order; 0 means no order at all.
+
+**The constant n.** With $n$ = 10 the method collapses (rho near 0). Reflectance times 10 is below 1, so the logarithms turn negative and the ratio stops behaving. From $n$ = 100 upwards, $n$ hardly matters: rho changes by less than 0.05. The lesson: understand why a constant is in an equation before you change it.
+
+**The composite.** The single clearest scene ranks the zones best (rho 0.80), ahead of the median of all dry-season scenes (0.77) and the 20th percentile (0.76). The median mixes scenes with different tides, glint and water clarity. One calm, clear scene keeps the physics consistent. The difference is small here, but it points the same way as practice: good satellite bathymetry starts by picking the scene, not by averaging many.
+
+**The mask, and why a copied threshold fails.** Many studies mask water whose red reflectance exceeds about 0.02, treating it as turbid. Here that mask removes almost everything: 6 of 1,350 points survive in the median composite, none in the clearest scene. The reason is physical. Over a shallow, bright reef flat, red light *does* reach the bottom and come back. The median red reflectance is 0.13 on inner reef flats, and even the deep lagoon sits at 0.03 in this processed product. The threshold was set for other water and other processing, and here it deletes precisely the shallow water the method is for.
+
+A mask on near infrared is better physics. Water absorbs NIR within centimetres, so a high NIR value means glint or a surface sediment plume, not a shallow bottom. Even so, it lowers rho to 0.59–0.72. Part of that is range restriction: it removes many of the shallowest points, and a narrower range of depths always correlates less.
+
+The conclusion is not "never mask". Look at what a mask removes before you trust it.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The method is fast (one ratio, minutes in Earth Engine) and excellent for learning: it rests on real optics, and you can see where it works and where it breaks. As a bathymetry product it is a **good relative depth map and not a depth map**:
+
+- The ratio orders the reef zones well (rho up to 0.80).
+- No metre values can be trusted, because the only public calibration (GEBCO) fails at reef scale (R² 0.03).
+- Turbid water, glint, and dark seagrass over sand all add errors that this chapter could not measure.
+
+Use it to show where the shallows and channels are. Do not use it for navigation or engineering.
+
+**What a funded survey would do to make it accurate:**
+
+1. **Echo-sounder transects.** A small boat with a single-beam sounder and GNSS, run along transects across flats, slopes and lagoons, gives thousands of depths in a day. Correct them for tide to the image time, then fit $m_1$ and $m_0$ on half and test on the other half.
+2. **ICESat-2 photons.** The ATL03 product (or the ATL24 bathymetry product) gives laser depths along tracks in clear water, free and global, from NASA Earthdata rather than Earth Engine. It is now the standard calibration source where no boat survey exists.
+3. **Tide correction.** Kepulauan Seribu has a tidal range of around a metre. Every image and every sounding must be referred to the same datum, or the calibration absorbs the tide as error.
+4. **Bottom type.** Fit separate calibrations, or add a bottom-type term, for sand, seagrass and coral. The ratio cancels much of the bottom brightness, not all of it.
+5. **Scene selection and multi-image consistency.** Pick calm, clear, low-glint scenes. Average depth estimates from several good scenes instead of averaging reflectance from all scenes.
+6. **Report error by depth.** Satellite bathymetry is usually good to about 10–15 % of depth in the first 10 m and degrades fast beyond. Show the error curve, not one RMSE.
+
 ## Exercises {.unnumbered}
 
-1. Use a single clear, calm scene instead of the median. Does the ratio separate the zones better or worse?
-2. Mask the ratio where water is turbid (high red reflectance). Which parts of the area remain usable?
+1. Rank the ten clearest dry-season scenes by their Spearman rho against the reef zones. Is the best scene the one with the least cloud? What else distinguishes it (wind, tide, season)?
+2. Map where the NIR mask removes pixels. Are they glint streaks, river plumes, or very shallow flats? Design a mask that removes the first two and keeps the third.
 3. If you can collect even 30 GPS-located depths with a handheld sounder, fit $m_1$ and $m_0$ and produce a depth map in metres.

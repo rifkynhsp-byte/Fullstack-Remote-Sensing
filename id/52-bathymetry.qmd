@@ -35,8 +35,41 @@ Tanpa kedalaman yang baik, rasio tetap bisa diuji sebagai indeks kedalaman *rela
 
 Rasio mengikuti urutan itu. Mediannya naik dari sekitar 0,97 di rataan terumbu dalam dan luar, 0,975 di puncak terumbu, sekitar 0,99 di laguna dangkal, sekitar 1,0 di lereng terumbu, sampai 1,01 di laguna dalam dan 1,07 di dataran tinggi bawah laut. Urutannya bertahan meskipun kalibrasi kedalaman tidak mungkin dilakukan. Karena itu petanya adalah peta kedalaman relatif yang baik: makin terang makin dangkal. Untuk mengubahnya menjadi meter, dibutuhkan beberapa puluh kedalaman hasil pengukuran.
 
+## Pilihan mana yang berpengaruh? Uji sensitivitas
+
+Ada tiga pilihan di dalam peta ini: konstanta $n$, komposit citra, dan apakah air yang "buruk" dimasker dulu. Tanpa data kedalaman, setiap versi tetap bisa dinilai dari seberapa baik ia mengurutkan zona terumbu dari dangkal ke dalam: rataan terumbu peringkat 1, puncak terumbu 2, laguna dangkal dan terumbu tambalan 3, lereng 4, laguna dalam dan dataran 5. Skrip menghitung korelasi peringkat Spearman antara urutan itu dan rasio untuk setiap versi. Rho 1 berarti urutan sempurna; 0 berarti tidak ada urutan sama sekali.
+
+**Konstanta n.** Dengan $n$ = 10 metodenya runtuh (rho mendekati 0). Reflektansi dikali 10 masih di bawah 1, sehingga logaritmanya negatif dan rasionya tidak lagi berperilaku. Dari $n$ = 100 ke atas, $n$ hampir tidak berpengaruh: rho berubah kurang dari 0,05. Pelajarannya: pahami kenapa sebuah konstanta ada di persamaan sebelum mengubahnya.
+
+**Komposit.** Satu citra paling jernih mengurutkan zona paling baik (rho 0,80), di atas median semua citra kemarau (0,77) dan persentil ke-20 (0,76). Median mencampur citra dengan pasang surut, kilau matahari, dan kejernihan air yang berbeda. Satu citra yang tenang dan jernih menjaga fisikanya tetap konsisten. Bedanya kecil di sini, tetapi arahnya sama dengan praktik: batimetri satelit yang baik dimulai dengan memilih citra, bukan merata-ratakan banyak citra.
+
+**Masker, dan kenapa ambang salinan gagal.** Banyak studi memasker air yang reflektansi merahnya di atas sekitar 0,02 karena dianggap keruh. Di sini masker itu menghapus hampir semuanya: 6 dari 1.350 titik tersisa pada komposit median, nol pada citra paling jernih. Alasannya fisis. Di atas rataan terumbu yang dangkal dan terang, cahaya merah *memang* sampai ke dasar lalu kembali. Median reflektansi merah 0,13 di rataan terumbu dalam, dan laguna dalam pun berada di 0,03 pada produk olahan ini. Ambang itu dibuat untuk air lain dan pengolahan lain, dan di sini justru menghapus air dangkal yang menjadi sasaran metode ini.
+
+Masker pada inframerah dekat lebih benar secara fisika. Air menyerap NIR dalam hitungan sentimeter, sehingga nilai NIR tinggi berarti kilau matahari atau gumpalan sedimen di permukaan, bukan dasar yang dangkal. Meski begitu, masker ini menurunkan rho menjadi 0,59–0,72. Sebagian karena penyempitan rentang: masker menghapus banyak titik paling dangkal, dan rentang kedalaman yang lebih sempit selalu berkorelasi lebih lemah.
+
+Kesimpulannya bukan "jangan pernah memasker". Lihat apa yang dihapus masker sebelum mempercayainya.
+
+## Vonis: seberapa jauh peta ini bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Metodenya cepat (satu rasio, beberapa menit di Earth Engine) dan sangat baik untuk belajar: ia berdiri di atas optika yang nyata, dan Anda bisa melihat di mana ia berhasil dan di mana ia gagal. Sebagai produk batimetri, hasilnya **peta kedalaman relatif yang baik, bukan peta kedalaman**:
+
+- Rasio mengurutkan zona terumbu dengan baik (rho hingga 0,80).
+- Nilai meter tidak bisa dipercaya, karena satu-satunya kalibrasi publik (GEBCO) gagal pada skala terumbu (R² 0,03).
+- Air keruh, kilau matahari, dan lamun gelap di atas pasir menambah galat yang tidak bisa diukur di bab ini.
+
+Gunakan untuk menunjukkan di mana perairan dangkal dan alur berada. Jangan dipakai untuk navigasi atau rekayasa.
+
+**Yang akan dilakukan survei berdana agar akurat:**
+
+1. **Transek echo-sounder.** Perahu kecil dengan sounder single-beam dan GNSS, dijalankan menyusuri transek melintasi rataan, lereng, dan laguna, memberi ribuan titik kedalaman dalam sehari. Koreksi terhadap pasang surut pada jam citra, lalu cocokkan $m_1$ dan $m_0$ pada separuh data dan uji pada separuh lainnya.
+2. **Foton ICESat-2.** Produk ATL03 (atau produk batimetri ATL24) memberi kedalaman laser sepanjang lintasan di air jernih, gratis dan global, dari NASA Earthdata, bukan dari Earth Engine. Kini ini sumber kalibrasi standar di tempat tanpa survei perahu.
+3. **Koreksi pasang surut.** Kepulauan Seribu punya tunggang pasang sekitar satu meter. Setiap citra dan setiap titik kedalaman harus dirujuk ke datum yang sama; kalau tidak, kalibrasi menyerap pasang surut sebagai galat.
+4. **Tipe dasar.** Buat kalibrasi terpisah, atau tambahkan suku tipe dasar, untuk pasir, lamun, dan karang. Rasio menghilangkan sebagian besar pengaruh kecerahan dasar, tetapi tidak semuanya.
+5. **Pemilihan citra dan konsistensi antarcitra.** Pilih citra yang tenang, jernih, dan minim kilau. Rata-ratakan taksiran kedalaman dari beberapa citra yang baik, bukan reflektansi dari semua citra.
+6. **Laporkan galat menurut kedalaman.** Batimetri satelit umumnya akurat sekitar 10–15 % kedalaman pada 10 m pertama, lalu cepat memburuk. Tunjukkan kurva galatnya, bukan satu angka RMSE.
+
 ## Latihan {.unnumbered}
 
-1. Pakai satu scene yang jernih dan tenang sebagai pengganti median. Apakah rasio memisahkan zona-zona dengan lebih baik atau lebih buruk?
-2. Saring rasio di tempat airnya keruh (reflektansi merah tinggi). Bagian mana yang masih bisa dipakai?
+1. Urutkan sepuluh citra kemarau paling jernih menurut rho Spearman-nya terhadap zona terumbu. Apakah citra terbaik adalah yang awannya paling sedikit? Apa lagi yang membedakannya (angin, pasang surut, musim)?
+2. Petakan di mana masker NIR menghapus piksel. Apakah itu jejak kilau matahari, gumpalan sungai, atau rataan yang sangat dangkal? Rancang masker yang menghapus dua yang pertama dan mempertahankan yang ketiga.
 3. Kalau Anda bisa mengumpulkan 30 saja titik kedalaman berkoordinat GPS dengan echosounder genggam, cocokkan $m_1$ dan $m_0$ lalu buat peta kedalaman dalam meter.
