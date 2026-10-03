@@ -47,8 +47,39 @@ Tabel kedua menerapkan model yang disimpan, tanpa diubah, di lima tempat. Di dek
 
 Jarak bukanlah hal yang paling menentukan. Sekitar Makassar (kota, sawah, pesisir) mirip dengan campuran kelas di Bandung; gambut, sungai, dan kebun di Pontianak tidak. Model berpindah dengan baik ke tempat yang *mirip* dengan tempat model itu belajar, persis yang diukur oleh uji wilayah keberlakuan di Bab [-@sec-thesisbank] (T14). Sebelum memakai model di tempat baru, pastikan tempat itu berada di dalam wilayah keberlakuannya, dan uji dengan beberapa titik setempat.
 
+## Berapa sampel lokal yang dibutuhkan untuk memperbaiki transfer yang lemah?
+
+Pontianak adalah tempat terlemah (sekitar 0,68). Saran yang biasa adalah "tambahkan data lokal", tetapi berapa banyak? Skrip menjawabnya langsung. Ia menambahkan $k$ sampel lokal per kelas (5 kelas) ke tabel latih Bandung, melatih ulang, lalu menilai pada 500 titik uji Pontianak yang sama. Sebagai pembanding, skrip juga melatih model hanya dari sampel lokal.
+
+Hasilnya mencolok:
+
+- **Tanpa** sampel lokal: 0,68.
+- Dengan hanya **5 per kelas** (25 titik, kerja satu jam): 0,85.
+- Dengan **100 per kelas**: 0,90.
+
+Model yang dilatih *hanya* dari 25 titik lokal itu hampir sama baiknya (0,86) dengan Bandung ditambah lokal. Sebagian besar kenaikan datang dari segelintir titik pertama. Tabel Bandung yang besar hanya menambah sedikit begitu model sudah melihat seperti apa kelas-kelas di Pontianak.
+
+Dua peringatan menjaga kejujuran:
+
+- **Labelnya berasal dari WorldCover,** peta yang sama yang dipakai untuk menilai. Sampel lokal mengajari model tafsiran WorldCover sendiri tentang Pontianak, sehingga kesesuaiannya cepat naik. Sampel lokal sungguhan, hasil interpretasi visual atau dari lapangan, akan lebih bising dan kurvanya lebih landai.
+- **Embedding adalah fitur yang kuat.** Dengan kanal Sentinel-2 mentah, biasanya dibutuhkan lebih banyak sampel untuk kenaikan yang sama.
+
+Pelajarannya tetap berlaku, dan inilah yang paling berguna di bab ini: **sebelum memakai ulang model di tempat yang jauh, luangkan satu jam untuk melabeli beberapa titik lokal.** Pakai pertama-tama untuk menguji model yang dipindahkan, lalu untuk memperbaikinya.
+
+## Vonis: seberapa jauh hasil ini bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Menyimpan dan memuat ulang model itu cepat, dan rute B dengan uji bolak-balik dapat diandalkan. Uji transfer sangat baik untuk belajar, karena menunjukkan bahwa kemampuan model melekat pada tempat, bukan pada modelnya. Sebagai pernyataan akurasi, hasilnya **lemah**: setiap angka di bab ini adalah kesesuaian dengan WorldCover, peta model lain dengan galatnya sendiri (akurasi sekitar 75 % secara global menurut validasinya sendiri). Kegagalan rute A dilaporkan tetapi belum dijelaskan.
+
+**Yang akan dilakukan proyek berdana agar akurat:**
+
+1. **Titik rujukan yang independen.** Labeli sampel acak terstratifikasi per tempat dengan interpretasi visual citra resolusi sangat tinggi, atau kumpulkan di lapangan, mengikuti praktik baik penilaian akurasi [@olofsson2014good]. Laporkan akurasi yang disesuaikan dengan luas beserta selang kepercayaannya, bukan kesesuaian dengan peta lain.
+2. **Cek keberlakuan sebelum setiap pemakaian ulang.** Hitung area of applicability (T14) untuk tempat baru, lalu masker atau tandai piksel di luarnya.
+3. **Sampel lokal sebagai standar.** Anggarkan beberapa puluh label lokal untuk setiap penerapan baru. Pakai pertama-tama untuk menguji, lalu untuk melatih ulang.
+4. **Model berversi.** Simpan tabel latih, pohon, daftar kanal, dan tanggal bersama-sama. Catat skor uji bolak-balik di properti aset, agar siapa pun yang memuatnya bisa memeriksa bahwa model masih berperilaku sama.
+5. **Selidiki rute A dengan kasus minimal.** Model kecil yang dilatih pada beberapa kanal, disimpan, lalu dimuat ulang. Kalau masih menyimpang, laporkan ke pelacak isu Earth Engine dengan contoh yang bisa direproduksi.
+
 ## Latihan {.unnumbered}
 
 1. Simpan model yang dilatih dengan kanal Sentinel-2, bukan embedding, lewat rute A, lalu jalankan uji bolak-balik. Apakah penurunannya juga terjadi?
-2. Tambahkan 50 sampel lokal dari Pontianak ke tabel latih, latih ulang, simpan lewat rute B, lalu lihat seberapa besar kecocokan di Pontianak membaik.
+2. Ulangi percobaan sampel lokal dengan kanal median Sentinel-2, bukan embedding. Berapa sampel lokal per kelas yang dibutuhkan untuk mencapai 0,85 di Pontianak?
 3. Terapkan model di tempat yang sama dengan embedding 2023. Apakah model yang dilatih dengan data 2021 masih cocok dengan WorldCover 2021 di sana?

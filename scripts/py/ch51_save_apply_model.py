@@ -13,17 +13,20 @@ CHAPTER 51 | A model you can hand to someone else.
     4. apply       to four other places, each further from home, and measure
                    agreement with WorldCover there
 
-The asset path below points at the book's own Earth Engine project. Replace
-it with a folder in yours.
+The saved assets live in the book's Earth Engine project and are public, so the
+script runs for anyone as is. To save your own copies, set the environment
+variable BOOK_ASSET_FOLDER to a folder in your project (for example
+projects/YOUR-PROJECT/assets/book); the script then creates them there.
 """
 
+import os
 import time
 
 import ee
 import matplotlib.pyplot as plt
 import pandas as pd
 
-FOLDER = "projects/shaped-producer-482312-m0/assets/book"
+FOLDER = os.environ.get("BOOK_ASSET_FOLDER", "projects/shaped-producer-482312-m0/assets/book")
 TRAIN = FOLDER + "/train_bandung_2021"            # the training table, saved once
 CLF_ASSET = FOLDER + "/lulc_rf_fromtable"          # route A: Export.classifier.toAsset
 TREES = FOLDER + "/lulc_rf_trees"                  # route B: the trees as text, in a table
@@ -132,6 +135,43 @@ def applied_map():
     return embeddings(box).classify(saved_models()[2]).clip(box)
 
 
+# How many local samples does it take to fix a poor transfer? Pontianak, the weakest place.
+LOCAL_K = [0, 5, 10, 25, 50, 100]
+
+
+def local_frame():
+    box = ee.Geometry.Rectangle(PLACES["Pontianak, Kalimantan (800 km)"], None, False)
+    bands = EMB.first().bandNames()
+    home = ee.FeatureCollection(TRAIN)
+    pool = samples(box, 100, 7)                         # local training pool, a different seed from the test
+    test = samples(box, 100, 99)
+    rows = []
+    for k in LOCAL_K:
+        local = pool.randomColumn("r", 3).sort("r").map(lambda f: f.set("one", 1))
+        local = ee.FeatureCollection([local.filter(ee.Filter.eq("label", c)).limit(k) for c in range(len(WC))]).flatten()
+        acc = {}
+        for name, train in (("Bandung + local", home.merge(local)), ("local only", local)):
+            if k == 0 and name == "local only":
+                acc[name] = None
+                continue
+            m = ee.Classifier.smileRandomForest(100, seed=1).train(train, "label", bands)
+            acc[name] = test.classify(m).errorMatrix("label", "classification").accuracy()
+        r = ee.Dictionary({k_: v for k_, v in acc.items() if v is not None}).getInfo()
+        rows.append({"local_per_class": k, "Bandung + local": r.get("Bandung + local"), "local only": r.get("local only")})
+    return pd.DataFrame(rows)
+
+
+def plot_local(d):
+    fig, ax = plt.subplots(figsize=(7, 3.4))
+    ax.plot(d.local_per_class, d["Bandung + local"], "o-", color="#2a78d6", label="Bandung model + local samples")
+    ax.plot(d.local_per_class, d["local only"], "s--", color="#c0392b", label="local samples only")
+    ax.set_xlabel("local training samples per class, Pontianak"); ax.set_ylabel("agreement with WorldCover")
+    ax.set_ylim(0.5, 1); ax.spines[["top", "right"]].set_visible(False); ax.legend(frameon=False, fontsize=8)
+    ax.set_title("A handful of local samples is worth more than distance", loc="left", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
 PAL = ["006400", "ffff4c", "f096ff", "fa0000", "0064c8"]
 
 
@@ -156,6 +196,11 @@ def products():
          "title": "The Bandung model applied in Makassar",
          "source": "Satellite Embedding 2021; model trained on WorldCover near Bandung. GEE.",
          "caption": "A model trained 1,300 km away, used without retraining."},
+        {"kind": "table", "name": "ch51-local", "data": local_frame, "floatfmt": (",.0f", ".2f", ".2f"),
+         "caption": "Pontianak, 500 test points: the Bandung training table plus k local samples per class, "
+                    "against a model trained on the local samples alone."},
+        {"kind": "chart", "name": "ch51-local-chart", "data": local_frame, "plot": plot_local, "live": False,
+         "caption": "Agreement in Pontianak as local samples are added."},
     ]
 
 

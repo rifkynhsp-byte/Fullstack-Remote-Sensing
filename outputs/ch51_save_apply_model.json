@@ -30,5 +30,17 @@
   "kind": "map",
   "caption": "A model trained 1,300 km away, used without retraining.",
   "image": "images/real/ch51-makassar.jpg"
+ },
+ {
+  "name": "ch51-local",
+  "kind": "table",
+  "caption": "Pontianak, 500 test points: the Bandung training table plus k local samples per class, against a model trained on the local samples alone.",
+  "markdown": "|   local_per_class |   Bandung + local |   local only |\n|------------------:|------------------:|-------------:|\n|                 0 |              0.68 |       nan    |\n|                 5 |              0.85 |         0.86 |\n|                10 |              0.84 |         0.86 |\n|                25 |              0.85 |         0.87 |\n|                50 |              0.88 |         0.87 |\n|               100 |              0.90 |         0.90 |"
+ },
+ {
+  "name": "ch51-local-chart",
+  "kind": "chart",
+  "caption": "Agreement in Pontianak as local samples are added.",
+  "image": "images/real/ch51-local-chart.png"
  }
 ]

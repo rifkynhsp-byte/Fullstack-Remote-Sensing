@@ -47,8 +47,39 @@ The second table applies the saved model, unchanged, in five places. Near home i
 
 Distance is not what matters most. Makassar's surroundings (city, rice fields, coast) resemble Bandung's mix of classes; Pontianak's peat, rivers and plantations do not. A model transfers to places that *look like* where it learned, which is exactly what the area-of-applicability test in Chapter [-@sec-thesisbank] (T14) measures. Before reusing a model somewhere new, check that the new place lies inside its applicability, and test it on a few local points.
 
+## How many local samples fix a poor transfer?
+
+Pontianak was the weakest place (about 0.68). The usual advice is to "add local data", but how much? The script answers it directly. It adds $k$ local samples per class (5 classes) to the Bandung training table, retrains, and scores on the same 500 Pontianak test points. For comparison, it also trains a model on the local samples alone.
+
+The result is striking:
+
+- With **no** local samples: 0.68.
+- With just **5 per class** (25 points, an hour of work): 0.85.
+- With **100 per class**: 0.90.
+
+The model trained on the 25 local points *alone* does about as well (0.86) as Bandung plus local. Most of the gain comes from the first handful of points. The large Bandung table adds little once the model has seen what Pontianak's classes look like.
+
+Two cautions keep this honest:
+
+- **The labels here come from WorldCover,** the same map we score against. Local samples teach the model WorldCover's own interpretation of Pontianak, so the agreement climbs quickly. Real local samples, interpreted by eye or collected in the field, will be noisier and the curve flatter.
+- **The embeddings are strong features.** With raw Sentinel-2 bands, more samples would usually be needed for the same gain.
+
+The lesson still holds, and it is the most useful one in this chapter: **before reusing a model far away, spend an hour labelling a few local points.** Use them first to test the transferred model, then to fix it.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** Saving and reloading a model is fast, and route B, with a round-trip test, is reliable. The transfer test is excellent for learning, because it shows that a model's skill belongs to a place, not to the model. As an accuracy statement it is **weak**: every number in this chapter is agreement with WorldCover, another model's map with its own errors (about 75 % accuracy globally by its own validation). Route A's failure is reported but not explained.
+
+**What a funded project would do to make it accurate:**
+
+1. **Independent reference points.** Label a stratified random sample of points per place by visual interpretation of very-high-resolution imagery, or collect them in the field, following good-practice accuracy assessment [@olofsson2014good]. Report area-adjusted accuracy with confidence intervals, not agreement with another map.
+2. **An applicability check before every reuse.** Compute the area of applicability (T14) for the new place, and mask or flag the pixels outside it.
+3. **Local samples as standard.** Budget a few dozen local labels for every new deployment. Use them first to test, then to retrain.
+4. **Versioned models.** Store the training table, the trees, the band list and the date together. Record the round-trip score in the asset's properties, so anyone loading it can check that it still behaves.
+5. **Investigate route A with a minimal case.** A small model trained on a few bands, saved and reloaded. If it still drifts, report it to the Earth Engine issue tracker with the reproducible example.
+
 ## Exercises {.unnumbered}
 
 1. Save a model trained on Sentinel-2 bands instead of embeddings, by route A, and run the round-trip test. Does the drop happen there too?
-2. Add 50 local samples from Pontianak to the training table, retrain, save by route B, and see how much the Pontianak agreement improves.
+2. Repeat the local-samples experiment with Sentinel-2 median bands instead of embeddings. How many local samples per class does it take to reach 0.85 in Pontianak?
 3. Apply the model to the same place in 2023 embeddings. Does a model trained on 2021 still agree with WorldCover 2021 there?

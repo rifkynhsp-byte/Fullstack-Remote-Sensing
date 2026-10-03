@@ -11,6 +11,7 @@ Everything here is readable by anyone with an Earth Engine account, straight fro
 | `.../fullstack_rs/ooh_sydney/shelters`, `banners`, `routes`, `candidates` | 65 | Bus shelters, city banners, bus routes, street candidate locations | City of Sydney open data; OpenStreetMap (ODbL) |
 | `.../fullstack_rs/ooh_sydney/surface_*` (10 images) | 65 | 20 m density surfaces: building surface and volume, bus stations, POIs (all, education, fast food, financial), jobs, night lights, road density | GHSL, VIIRS, OpenStreetMap, City of Sydney |
 | `.../fullstack_rs/surabaya/parks_osm` | 73 | Public parks of at least 0.5 ha in Kota Surabaya | OpenStreetMap (ODbL) |
+| `.../book/train_bandung_2021`, `lulc_rf_fromtable`, `lulc_rf_trees` | 51 | Training table (embeddings + WorldCover label), the saved classifier (route A) and its trees as text (route B) | Satellite Embedding 2021; ESA WorldCover (CC BY 4.0) |
 
 `...` stands for `projects/shaped-producer-482312-m0/assets`. Table field names are cut to 10 characters by the shapefile format used for ingestion.
 
