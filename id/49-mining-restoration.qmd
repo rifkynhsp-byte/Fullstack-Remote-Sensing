@@ -28,6 +28,18 @@ Perusahaan tambang di Indonesia wajib mereklamasi lahan bekas tambang, dan pemer
 
 **Hijau belum tentu tumbuh.** Bahkan di tempat lahan bekas tambang sudah hijau kembali, median tinggi tajuk GEDI-nya sekitar 6 m, dibandingkan sekitar 16 m di lahan yang tidak pernah ditambang. Kehijauan kembali bersama rumput, pakis, semak, atau tanaman penutup yang cepat tumbuh; tinggi, biomassa, dan struktur vegetasi asalnya butuh puluhan tahun. Laporan reklamasi yang hanya menampilkan NDVI melebih-lebihkan keberhasilan.
 
+## Apakah yang lebih tua lebih pulih?
+
+Tabel kohort membagi lahan bekas tambang menurut kapan pertama kali menjadi terbuka. Porsi yang kembali hijau pada 2023 turun teratur menurut umur: 42 % untuk lahan yang ditambang 1995-1999, 39 % untuk 2000-2004, 32 % untuk 2005-2009, dan 23 % untuk 2010-2015. Porsi yang masih terbuka atau berupa kolong naik dari 18 % menjadi 31 %. Lahan yang lebih tua sekadar punya waktu lebih lama, jadi tabel ini mencampur dua hal: seberapa cepat lahan pulih, dan berapa lama ia sudah diberi waktu.
+
+**Kurva survival** memisahkan keduanya. Untuk setiap piksel sampel bekas tambang, kurva mencatat jumlah tahun sampai NDVI tahunan pertama kali mencapai 0,5, atau, bila belum, berapa tahun piksel itu sudah diamati. Piksel yang ditambang 2012 dan masih terbuka pada 2023 belum "gagal"; ia sudah diamati selama 11 tahun, dan estimasi Kaplan-Meier menghitungnya sejauh itu dan tidak lebih (ia *tersensor kanan*). Kurva lalu menjawab: dari lahan yang dibuka, berapa porsi yang kembali hijau setelah t tahun?
+
+Dari 2.533 piksel sampel, separuh lahan bekas tambang mencapai NDVI 0,5 dalam 14 tahun. Kedua kohort berbeda dengan cara yang menarik. Lahan yang ditambang 1995-2004 mulai lebih cepat, sekitar 10 % hijau dalam satu-dua tahun, yang mungkin lahan yang hanya sebentar dikupas, lalu naik perlahan sampai 50 % setelah sekitar 18 tahun. Lahan yang ditambang 2005-2015 mulai lebih lambat tetapi naik lebih cepat, mencapai 50 % setelah sekitar 13 tahun. Alasan yang masuk akal adalah reklamasi yang lebih aktif pada lubang-lubang baru, karena aturan reklamasi dan pascatambang di Indonesia diperketat sekitar 2010; data tidak bisa membuktikannya, dan pemeriksaan catatan reklamasi di lapangan bisa. Bagaimanapun, tabel kohort saja akan menyiratkan kebalikannya, bahwa lubang lama pulih lebih baik, karena tabel itu tidak bisa melihat waktu yang sudah dimiliki tiap kohort.
+
+## Kolong
+
+Tambang timah meninggalkan kolong, kolam di tempat bijih digali di bawah muka air tanah. Dataset JRC Global Surface Water mencatat riwayat air setiap piksel sejak 1984, termasuk air yang sebelumnya tidak ada. Di kotak ini muncul 382 ha air permanen baru dan 884 ha air musiman baru; dari jumlah itu, 151 ha dan 305 ha berada di lahan yang di bab ini diidentifikasi sebagai bekas tambang 1995-2015 (sisanya terbentuk di lahan yang ditambang sebelum 1995 atau dengan cara yang tidak tertangkap aturan NDVI). Kolong-kolong ini adalah perubahan permanen bentang lahan. Sebagian kini dipakai untuk budidaya ikan atau sumber air, sebagian membawa logam berat dari tailing. Laporan reklamasi sebaiknya menghitungnya terpisah, bukan sebagai lahan yang menunggu menjadi hijau.
+
 ## Yang dibutuhkan laporan reklamasi yang jujur
 
 - **Pembanding**, sehingga pemulihan diukur terhadap apa yang hilang, bukan terhadap tanah terbuka.
@@ -40,3 +52,4 @@ Perusahaan tambang di Indonesia wajib mereklamasi lahan bekas tambang, dan pemer
 1. Ubah ambang "hijau kembali" dari 0,6 menjadi 0,5. Seberapa peka porsi lahan yang dianggap pulih?
 2. Bandingkan lubang tambang yang dibuka sebelum 2000 dengan yang dibuka setelah 2010. Apakah yang lebih tua lebih pulih?
 3. Hitung kolongnya: berapa luas air permanen baru yang tercipta akibat penambangan, menurut dataset air permukaan JRC?
+4. Ubah ambang pemulihan di kurva survival dari NDVI 0,5 menjadi 0,6. Berapa lama tambahan waktu yang dibutuhkan agar separuh lahan pulih?

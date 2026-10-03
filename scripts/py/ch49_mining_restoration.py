@@ -127,6 +127,82 @@ def plot_height(df):
     return fig
 
 
+# Does older mean more recovered? Status in 2023 by the period the land was mined
+COHORTS = [(1995, 1999), (2000, 2004), (2005, 2009), (2010, 2015)]
+
+
+def cohort_table():
+    cohort = ee.Image(0)
+    for i, (a, b) in enumerate(COHORTS):
+        cohort = cohort.where(disturbed.gte(a).And(disturbed.lte(b)), i + 1)
+    code = cohort.multiply(10).add(status).updateMask(disturbed.mask())
+    g = (ee.Image.pixelArea().divide(1e4).addBands(code.rename("c"))
+         .reduceRegion(ee.Reducer.sum().group(1, "c"), aoi, 30, maxPixels=1e10, tileScale=8).get("groups").getInfo())
+    d = pd.DataFrame([{"cohort": int(x["c"]) // 10, "status": int(x["c"]) % 10, "ha": x["sum"]} for x in g])
+    w = d.pivot_table(index="cohort", columns="status", values="ha", aggfunc="sum").fillna(0)
+    out = pd.DataFrame({"mined": [f"{a}-{b}" for a, b in COHORTS], "area_ha": w.sum(axis=1).values,
+                        "still bare or ponds": (w[1] / w.sum(axis=1)).values,
+                        "green again": (w[3] / w.sum(axis=1)).values})
+    out["years since mining (to 2023)"] = [f"{2023 - b}-{2023 - a}" for a, b in COHORTS]
+    return out
+
+
+# How long until green again? A survival curve, because recent pits have not had time
+def recovery_frame():
+    """For a sample of mined pixels: years until annual NDVI first reached 0.5, or censored at 2023."""
+    after = annual.filter(ee.Filter.rangeContains("year", 1996, 2023)).map(
+        lambda i: i.select("year").updateMask(i.select("ndvi").gte(0.5).And(i.select("year").gt(disturbed))))
+    recovered = after.reduce(ee.Reducer.min()).rename("recovered_year")
+    smp = (disturbed.rename("mined_year").addBands(recovered.unmask(0))
+           .sample(region=aoi, scale=30, numPixels=100000, seed=9, geometries=False, tileScale=8).limit(4900).getInfo())
+    d = pd.DataFrame([f["properties"] for f in smp["features"]])
+    d["event"] = d.recovered_year > 0
+    d["years"] = np.where(d.event, d.recovered_year - d.mined_year, 2023 - d.mined_year)
+    return d
+
+
+def kaplan_meier(years, event):
+    """Share still not recovered after t years, allowing for pixels observed for different lengths of time."""
+    t = np.sort(np.unique(years[event]))
+    s, out = 1.0, [(0, 1.0)]
+    for ti in t:
+        at_risk = (years >= ti).sum()
+        if at_risk == 0:
+            break
+        s *= 1 - ((years == ti) & event).sum() / at_risk
+        out.append((ti, s))
+    return pd.DataFrame(out, columns=["years", "not_yet_green"])
+
+
+def plot_recovery(d):
+    fig, ax = plt.subplots(figsize=(7.5, 3.6))
+    for (a, b), c in zip([(1995, 2004), (2005, 2015)], ["#3b528b", "#e08214"]):
+        g = d[(d.mined_year >= a) & (d.mined_year <= b)]
+        km = kaplan_meier(g.years.values, g.event.values)
+        ax.step(km.years, 1 - km.not_yet_green, where="post", color=c, lw=2, label=f"mined {a}-{b} (n = {len(g)})")
+    km = kaplan_meier(d.years.values, d.event.values)
+    half = km[km.not_yet_green <= 0.5].years.min()
+    ax.set_xlabel("years since the land was laid bare"); ax.set_ylabel("share that has reached NDVI 0.5")
+    ax.set_ylim(0, 1); ax.legend(frameon=False, fontsize=8, loc="lower right"); ax.spines[["top", "right"]].set_visible(False)
+    ax.set_title(f"Half of the mined land reached NDVI 0.5 within {half:.0f} years (Kaplan-Meier, all pixels)" if pd.notna(half)
+                 else "Fewer than half of the mined pixels have reached NDVI 0.5", loc="left", fontsize=10, fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
+# The ponds: new water created on mined land (JRC Global Surface Water transitions, 1984-2021)
+def ponds_table():
+    trans = ee.Image("JRC/GSW1_4/GlobalSurfaceWater").select("transition")
+    mined_any = first_bare.updateMask(was_green).mask().clip(aoi)          # without the permanent-water exclusion
+    area = ee.Image.pixelArea().divide(1e4)
+    rows = []
+    for code, name in ((2, "new permanent water"), (5, "new seasonal water")):
+        r = (area.updateMask(trans.eq(code)).rename("all").addBands(area.updateMask(trans.eq(code)).updateMask(mined_any).rename("mined"))
+             .reduceRegion(ee.Reducer.sum(), aoi, 30, maxPixels=1e10, tileScale=8).getInfo())
+        rows.append({"water class (1984-2021)": name, "whole box (ha)": r["all"], "on land mined 1995-2015 (ha)": r["mined"]})
+    return pd.DataFrame(rows)
+
+
 def products():
     return [
         {"kind": "map", "name": "ch49-status", "image": status, "region": aoi,
@@ -151,6 +227,13 @@ def products():
         {"kind": "chart", "name": "ch49-height", "data": height_pts, "plot": plot_height,
          "caption": "GEDI canopy height (2019-2023) on never-mined land and on former mining "
                     "land by its 2023 greenness."},
+        {"kind": "table", "name": "ch49-cohorts", "data": cohort_table, "floatfmt": ("", "", ",.0f", ".0%", ".0%"),
+         "columns": ["mined", "years since mining (to 2023)", "area_ha", "still bare or ponds", "green again"],
+         "caption": "Status in 2023 by the period the land was first laid bare."},
+        {"kind": "chart", "name": "ch49-recovery", "data": recovery_frame, "plot": plot_recovery, "live": False,
+         "caption": "Share of mined pixels that have reached NDVI 0.5, by years since mining. Pixels not yet green count until 2023 and then drop out (right-censored), which is what the Kaplan-Meier estimate is for."},
+        {"kind": "table", "name": "ch49-ponds", "data": ponds_table, "floatfmt": ("", ",.0f", ",.0f"),
+         "caption": "Water that did not exist before (JRC Global Surface Water transitions), in the whole box and on land mined 1995-2015."},
     ]
 
 

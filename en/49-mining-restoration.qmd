@@ -28,6 +28,18 @@ Mining companies in Indonesia must reclaim mined land, and governments, buyers a
 
 **Green is not grown.** Even where mined land is green again, its GEDI canopy height has a median of about 6 m, against about 16 m on never-mined land. Greenness returns with grass, ferns, shrubs or a fast-growing planted crop; height, biomass and the structure of the old vegetation take decades. A restoration report that shows only NDVI overstates success.
 
+## Does older mean more recovered?
+
+The cohort table splits the mined land by when it was first laid bare. The share that is green again in 2023 falls steadily with age: 42 % for land mined in 1995-1999, 39 % for 2000-2004, 32 % for 2005-2009 and 23 % for 2010-2015. The share still bare or under ponds rises from 18 % to 31 %. Older land has simply had longer, so this table mixes two things: how fast land recovers, and how long it has been given.
+
+A **survival curve** separates them. For each sampled mined pixel it records the number of years until annual NDVI first reached 0.5, or, if it has not yet, how many years it has been observed. A pixel mined in 2012 that is still bare in 2023 has not "failed"; it has been watched for 11 years, and the Kaplan-Meier estimate counts it exactly that far and no further (it is *right-censored*). The curve then answers: of land laid bare, what share is green again after t years?
+
+Across 2,533 sampled pixels, half of the mined land reached NDVI 0.5 within 14 years. The two cohorts differ in an interesting way. Land mined in 1995-2004 starts quicker, about 10 % green within a year or two, which is probably land that was only briefly stripped, then climbs slowly to 50 % after about 18 years. Land mined in 2005-2015 starts slower but climbs faster, reaching 50 % after about 13 years. A plausible reason is more active reclamation of recent pits, as Indonesia's rules on reclamation and post-mining were tightened around 2010; the data cannot prove that, and a field check of reclamation records would. Either way, the cohort table alone would have suggested the opposite, that older pits recover better, because it cannot see the time each cohort has had.
+
+## The ponds
+
+Tin mining leaves ponds (*kolong*) where the ore was dug below the water table. The JRC Global Surface Water dataset records every pixel's water history from 1984, including water that did not exist before. In the box, 382 ha of new permanent water and 884 ha of new seasonal water appeared; of these, 151 ha and 305 ha lie on the land this chapter identified as mined in 1995-2015 (the rest formed on land mined before 1995 or in ways the NDVI rule does not catch). These ponds are permanent changes to the landscape. Some are now used for fish farming or water supply, and some carry heavy metals from the tailings. A restoration report should count them separately rather than as land waiting to turn green.
+
 ## What an honest restoration report needs
 
 - **A reference**, so recovery is measured against what was lost, not against bare ground.
@@ -40,3 +52,4 @@ Mining companies in Indonesia must reclaim mined land, and governments, buyers a
 1. Change the "green again" threshold from 0.6 to 0.5. How sensitive is the share of recovered land?
 2. Compare pits mined before 2000 with pits mined after 2010. Does older mean more recovered?
 3. Use the ponds: how much new permanent water has mining created, from the JRC surface water dataset?
+4. Change the recovery threshold in the survival curve from NDVI 0.5 to 0.6. How much longer does it take for half of the land to recover?
