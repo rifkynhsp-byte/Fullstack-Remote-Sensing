@@ -53,5 +53,89 @@
   "kind": "map",
   "caption": "Modelled probability of landslide-like terrain, from the app's automatic training.",
   "image": "images/real/p7-rawan-jabar.jpg"
+ },
+ {
+  "name": "p6-runs",
+  "kind": "table",
+  "caption": "Every run in the walk-through: what was entered, and the result cards exactly as the app showed them.",
+  "markdown": "| module              | what was entered (Kota Besi, reporting level Desa)                                                                                       | cards the app showed                                                                                                                      |\n|:--------------------|:-----------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------|\n| Citra               | Sentinel-2 composite, 1 Jun-31 Oct 2024, Cloud Score+ (default), natural colour                                                          | citra tersedia: 62; piksel bersih: 99.6%                                                                                                  |\n| Model               | Model 10 kelas milik sendiri, year 2024, minimum mapping unit 10 px                                                                      | kelas dominan: Kelapa Sawit; luas kelas dominan: 21.109 ha                                                                                |\n| Model               | Dynamic World, year 2024                                                                                                                 | kelas dominan: Pohon; luas kelas dominan: 54.742 ha                                                                                       |\n| Model, then Toolbox | Tinggi tajuk dari GEDI: GEDI 2019-04-01 to 2023-12-31, embeddings 2024, 150 trees; then Toolbox: Statistik zonal, Rerata, 30 m, per desa | kelas dominan: regresi; luas kelas dominan: GEDI rh98; korelasi GEDI: 0.704; tinggi rerata: 10.5 m; hasil: 24 wilayah; lapisan aktif: chm |\n| Deret               | Umur tegakan atau tanaman, 1990-2024, magnitude 0.2                                                                                      | luas terganggu: 33.372; umur rerata: 17.6 th                                                                                              |\n| Deret               | Titik patah LandTrendr, 2000-2024, magnitude 0.2                                                                                         | tahun gangguan dominan: 2012; luas terganggu: 30.460                                                                                      |\n| Tutupan             | K-Means, 6 clusters, Sentinel-2 composite 2024 (no training points needed)                                                               |                                                                                                                                           |"
+ },
+ {
+  "name": "p6-citra",
+  "kind": "map",
+  "caption": "Step 1 of the walk-through: a clean Sentinel-2 composite of the kecamatan, from 62 scenes.",
+  "image": "images/real/p6-citra.jpg"
+ },
+ {
+  "name": "p6-model10",
+  "kind": "map",
+  "caption": "The author's own model, called from its asset: oil palm, rubber, sago, forest and plantations are separate classes.",
+  "image": "images/real/p6-model10.jpg"
+ },
+ {
+  "name": "p6-model10-area",
+  "kind": "table",
+  "caption": "Area per class in Kota Besi from the 10-class model (the app's pie chart, as a table).",
+  "markdown": "| class                     |   area_ha |   share |\n|:--------------------------|----------:|--------:|\n| oil palm (Kelapa Sawit)   |    21,137 |     35% |\n| agriculture (Pertanian)   |    16,438 |     27% |\n| forest (Hutan)            |     9,961 |     16% |\n| rubber (Karet)            |     6,413 |     11% |\n| sago (Sagu)               |     3,560 |      6% |\n| water (Air)               |     1,713 |      3% |\n| open land (Lahan Terbuka) |     1,325 |      2% |\n| mangrove (Mangrove)       |        78 |      0% |\n| plantation (Perkebunan)   |         9 |      0% |\n| rice field (Sawah)        |         3 |      0% |"
+ },
+ {
+  "name": "p6-dw",
+  "kind": "map",
+  "caption": "The global model on the same area: almost everything is 'trees'.",
+  "image": "images/real/p6-dw.jpg"
+ },
+ {
+  "name": "p6-dw-vs-model10",
+  "kind": "table",
+  "caption": "What Dynamic World calls 'trees', split by the 10-class model. A global model sees canopy; a local model sees the crop.",
+  "markdown": "| 10-class model, inside Dynamic World 'trees'   |   area_ha |   share |\n|:-----------------------------------------------|----------:|--------:|\n| oil palm (Kelapa Sawit)                        |    20,080 |     37% |\n| agriculture (Pertanian)                        |    14,095 |     26% |\n| forest (Hutan)                                 |     9,786 |     18% |\n| rubber (Karet)                                 |     6,257 |     11% |\n| sago (Sagu)                                    |     3,483 |      6% |\n| open land (Lahan Terbuka)                      |       640 |      1% |\n| water (Air)                                    |       227 |      0% |\n| mangrove (Mangrove)                            |        78 |      0% |\n| plantation (Perkebunan)                        |         9 |      0% |"
+ },
+ {
+  "name": "p6-chm",
+  "kind": "map",
+  "caption": "GEDI measures height only along its laser tracks; the app learns height from the embeddings and fills the whole area at 10 m.",
+  "image": "images/real/p6-chm.jpg"
+ },
+ {
+  "name": "p6-scatter",
+  "kind": "chart",
+  "caption": "The scatter chart the app now draws under the height map: each dot is one GEDI test shot the model never saw.",
+  "image": "images/real/p6-scatter.png"
+ },
+ {
+  "name": "p6-desa",
+  "kind": "chart",
+  "caption": "Chained in the Toolbox: the height map summarised per desa with Statistik zonal.",
+  "image": "images/real/p6-desa.png"
+ },
+ {
+  "name": "p6-age",
+  "kind": "map",
+  "caption": "Age from the start of the largest LandTrendr growth segment in the annual NBR series.",
+  "image": "images/real/p6-age.jpg"
+ },
+ {
+  "name": "p6-age-years",
+  "kind": "chart",
+  "caption": "The same result as a distribution: when were today's stands established?",
+  "image": "images/real/p6-age-years.png"
+ },
+ {
+  "name": "p6-disturb",
+  "kind": "map",
+  "caption": "Clearing, fire or replanting: the year the NBR series dropped most.",
+  "image": "images/real/p6-disturb.jpg"
+ },
+ {
+  "name": "p6-disturb-years",
+  "kind": "chart",
+  "caption": "The app's chart under the map: hectares disturbed in each year.",
+  "image": "images/real/p6-disturb-years.png"
+ },
+ {
+  "name": "p6-kmeans",
+  "kind": "map",
+  "caption": "Unsupervised clusters: the app groups similar pixels; you name the groups (or train a Random Forest with your own points).",
+  "image": "images/real/p6-kmeans.jpg"
  }
 ]

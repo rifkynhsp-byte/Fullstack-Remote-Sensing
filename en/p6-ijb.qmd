@@ -1,8 +1,8 @@
-# P6 · IJB: Remote Sensing Without Code {#sec-p6-ijb .unnumbered}
+# P6 · IJB Step by Step: From an Area to a Report {#sec-p6-ijb .unnumbered}
 
 ::: {.chapter-goal}
 #### In this chapter
-You will learn to use IJB, an Earth Engine application built by the author, to answer real questions (where did it flood, what burned, how has land cover changed, where is landslide risk highest) by clicking instead of coding. Everything P1 to P5 explained runs inside it: Sentinel-1 radar, Sentinel-2 composites, terrain, GEDI, machine learning. The rest of the book shows the code behind the same ideas; this chapter shows what you can do before writing a single line.
+You will learn to use IJB, an Earth Engine application built by the author, by watching it work, step by step, on real places. First one landscape, Kota Besi in Kotawaringin Timur (Central Kalimantan), through every module: a clean image, the author's own 10-class land-cover model, canopy height learned from the GEDI laser, a per-village summary, plantation age, disturbance history and unsupervised clusters. Then four events: change around the new capital, the 2024 Demak flood, the 2023 peat fires in Ogan Komering Ilir and landslide susceptibility in West Java. Every map and number is the app's own result. No code is needed to use it; the rest of the book shows the code behind the same ideas.
 :::
 
 ## Why an app
@@ -64,15 +64,134 @@ Choose whether statistics and tables are summarised per **province, regency, sub
 
 ### Step 3: choose a module
 
-Ten buttons, ten kinds of question. The table above says which to open for what. The sections below explain each, with the settings that matter.
+Ten buttons, ten kinds of question. The table above says which to open for what. The rest of this chapter goes through them step by step, on real places, with the app's own results.
 
-## The modules
+## How the results in this chapter were made
 
-In every module below, the picture shows the module card on the left, with **the buttons to press outlined in red and numbered in order**, and on the right what the app adds after you press: the result cards and the map legend, copied from the app. The app's own map and numbers depend on your area and dates. After it, an example from this book's coding chapters shows the same kind of analysis. It is **not the app's output**, and the app's map will look different.
+Every map, chart, table and number below was produced by the app itself, not redrawn by the book. Its modules were run headless: the Code Editor interface was replaced by a small harness (`tools/ijb_headless/harness.js`) that types the inputs a user would type and presses the module's own button, then saves the metric cards and the Earth Engine object behind every map layer. The maps below are those objects, computed again by Earth Engine and drawn with coordinates and a scale bar. To repeat a case yourself, open IJB, draw or choose the same area, enter the values in the first table and press the same button.
 
-### Data: the catalogue
+The full listing and every output are at the end of the chapter.
 
-![IJB Data: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-data-en.png){.lightbox fig-alt="IJB Data: before and after pressing the button."}
+## Part A. One landscape, every module: Kota Besi
+
+Kota Besi is a kecamatan of about 600 km² on the Mentaya river in Kotawaringin Timur, the oil palm heartland of Central Kalimantan. It has everything the modules are built for: plantations of different ages, rubber and sago smallholdings, river forest, peat and fire history. Each step below is one module: the clicks, then what the app returned. The table lists every input and every result card.
+
+{{< include _snippets/ch00g_ijb_cases__p6-runs.qmd >}}
+
+For every run, **Step 1** is *Wilayah* (Region): the kecamatan Kota Besi, and **Step 2** is *Satuan Pelaporan* (Reporting unit): *Desa*, so every table comes per village.
+
+### Step A1. Citra: see the place first
+
+![IJB Citra: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-citra-en.png){.lightbox fig-alt="IJB Citra: before and after pressing the button."}
+
+**Clicks:** ① *Citra* · ② *Metode komposit*: *Cloud Score Plus (terbaik)* · ③ dates 1 June to 31 October 2024 (the dry season) · ④ *Kombinasi band*: *Warna alami* (natural colour) · ⑤ *Susun komposit*
+
+**What the app returned:** *citra tersedia* (images available) **62**, *piksel bersih* (clear pixels) **99.6 %**.
+
+{{< include _snippets/ch00g_ijb_cases__p6-citra.qmd >}}
+
+Always look before you analyse. The river and its oxbows, the regular grid of plantation blocks in the north and south, and dark forest along the river are all visible. The five composite methods are explained in Chapter [-@sec-cloud]; Cloud Score+ is the best default in the tropics.
+
+### Step A2. Model: the author's 10-class land-cover model
+
+![IJB Model: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-model-en.png){.lightbox fig-alt="IJB Model: before and after pressing the button."}
+
+**Clicks:** ① *Model* · ② *Mode*: *Model 10 kelas milik sendiri* · ③ *Tahun embedding* (embedding year): *2024* · ④ *Jalankan model*
+
+**What the app returned:** *kelas dominan* (dominant class) **Kelapa Sawit** (oil palm), *luas kelas dominan* **21,109 ha**, with a pie chart of all classes and a CSV download.
+
+{{< include _snippets/ch00g_ijb_cases__p6-model10.qmd >}}
+
+{{< include _snippets/ch00g_ijb_cases__p6-model10-area.qmd >}}
+
+This is the author's own classifier, trained in advance on 64 satellite-embedding bands plus elevation and slope, and stored as an Earth Engine asset. The app loads it and applies it to whatever area you choose, with no samples needed. Its classes are the ones that matter in Indonesian plantation landscapes: **oil palm, rubber and sago** are separate from **forest**, **agriculture** and **plantation** (other estate crops), with water, mangrove, rice field and open land. In Kota Besi, oil palm covers about a third of the kecamatan (35 %), followed by mixed agriculture (27 %), forest along the river (16 %), rubber (11 %) and sago (6 %).
+
+**Why a local model matters.** Run the same module with *Mode*: *Dynamic World*, Google's global land-cover model, on the same area:
+
+{{< include _snippets/ch00g_ijb_cases__p6-dw.qmd >}}
+
+Dynamic World calls 54,742 ha, about nine tenths of Kota Besi, simply "trees". It is not wrong: palms, rubber and forest all have tree canopies. But it cannot say *which* trees, and that is exactly what a plantation agency, a buyer checking deforestation or a tax office needs. Splitting Dynamic World's "trees" with the 10-class model shows what is inside:
+
+{{< include _snippets/ch00g_ijb_cases__p6-dw-vs-model10.qmd >}}
+
+Of what the global model calls trees, the author's model finds 37 % oil palm, 26 % agriculture, 18 % forest, 11 % rubber and 6 % sago. A global map answers "is it green?"; a model trained on local classes answers "what is growing here?". That is the main reason to build your own model (Chapters [-@sec-supervised] and [-@sec-embeddings] show how), and the reason this app ships one.
+
+### Step A3. Model: canopy height from the GEDI laser
+
+**Clicks:** ① *Model* · ② *Mode*: *Tinggi tajuk dari GEDI* (canopy height from GEDI) · ③ GEDI dates 2019-04-01 to 2023-12-31 (default) · ④ *Tahun embedding*: *2024* · ⑤ *Jumlah pohon* (number of trees): 150 · ⑥ *Jalankan model*
+
+**What the app returned:** *korelasi GEDI* (correlation with GEDI) **0.704**, *tinggi rerata* (mean height) **10.5 m**, the height map, a scatter chart, and downloads of the map and of mean height per desa.
+
+{{< include _snippets/ch00g_ijb_cases__p6-chm.qmd >}}
+
+GEDI, a laser on the International Space Station, measures canopy height only along narrow tracks of footprints 25 m wide (Chapter [-@sec-gedi-structure]). The app takes every good-quality footprint in your area (quality flag, no degradation, sensitivity above 0.95), keeps 70 % to train a random-forest regression on the embeddings, elevation and slope, and predicts height for every 10 m pixel. The other 30 % are kept aside to test it.
+
+::: {.callout-note}
+## How to read a scatter chart
+A **scatter chart** puts one dot per observation on two axes. Here the horizontal axis is the height the laser *measured* at a test footprint, and the vertical axis is the height the model *predicted* there. If the model were perfect, every dot would sit on the dashed **1:1 line**.
+
+Read it in three steps:
+
+1. **How tight is the cloud around the line?** That is the correlation (*r*) and the typical error (RMSE, in metres).
+2. **Is the cloud tilted less than the 1:1 line?** The fitted red line has a slope of about 0.5: the model **under-predicts tall canopies and over-predicts short ones**. This is normal for a regression, which pulls predictions towards the average, and it means the map compresses the range: the tallest forest is lower on the map than in reality.
+3. **Are there dots far from the rest?** Those are footprints on a forest edge, a gap or a cloud, worth checking before trusting the map there.
+:::
+
+{{< include _snippets/ch00g_ijb_cases__p6-scatter.qmd >}}
+
+On 400 test footprints the correlation is 0.76 with an RMSE of 3.9 m, and the slope of 0.54 shows the compression. For a landscape of oil palm (10–15 m) and young regrowth it is a good map; for estimating the height of the tallest forest it would need tall-canopy training data or a dedicated height product (Chapter [-@sec-height-scaling]).
+
+### Step A4. Toolbox: chain one result into the next
+
+Every result becomes the *lapisan aktif* (active layer), and every tool in the Toolbox works on the active layer. So, right after the height map:
+
+**Clicks:** ① *Toolbox* · ② *Alat* (Tool): *Statistik zonal* (zonal statistics) · ③ *Statistik*: *Rerata* (mean) · ④ *Jalankan operasi*
+
+**What the app returned:** *hasil* **24 wilayah** (24 villages), with a chart and a CSV of mean canopy height per desa.
+
+{{< include _snippets/ch00g_ijb_cases__p6-desa.qmd >}}
+
+That is a table a district forestry office can use directly: Kota Besi Hilir, with its river forest, has the tallest canopy (14.5 m mean). The other tools chain the same way: threshold, vectorise, segment, filter, buffer, contour (the figure below).
+
+![Chaining tools: every result becomes the active layer for the next one.](images/real/p6-chain-en.png){.lightbox fig-alt="Chaining tools: every result becomes the active layer for the next one."}
+
+### Step A5. Deret: how old, and when did it change?
+
+![IJB Deret: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-deret-en.png){.lightbox fig-alt="IJB Deret: before and after pressing the button."}
+
+**Clicks for age:** ① *Deret* · ② *Mode*: *Umur tegakan atau tanaman* (stand or crop age) · ③ *Rentang tahun*: 1990 to 2024 · ④ *Jalankan analisis*
+
+**What the app returned:** *umur rerata* (mean age) **17.6 years**, over **33,372 ha** with a clear regrowth segment.
+
+{{< include _snippets/ch00g_ijb_cases__p6-age.qmd >}}
+
+{{< include _snippets/ch00g_ijb_cases__p6-age-years.qmd >}}
+
+The app builds an annual Landsat NBR series, runs LandTrendr, and dates the start of the largest growth segment: the year a block was planted or a forest regrew (the same idea as Chapter [-@sec-oil-palm-age], where the GEDI test showed which dates to trust). The distribution of planting years is what a replanting plan starts from. In Kota Besi most stands began between 2007 and 2016, peaking in 2012–2013, so most of the planted area is now 10–19 years old, in its prime. The spike at 1998 is the 1997–98 El Niño: regrowth after the great fires, or the haze-year dates that Chapter [-@sec-oil-palm-age] warned about. Those pixels need checking before anyone plans replanting from them.
+
+**Clicks for disturbance:** the same, with *Mode*: *Titik patah LandTrendr* and years 2000 to 2024.
+
+**What the app returned:** *tahun gangguan dominan* (main disturbance year) **2012**, *luas terganggu* (area disturbed) **30,460 ha**.
+
+{{< include _snippets/ch00g_ijb_cases__p6-disturb.qmd >}}
+
+{{< include _snippets/ch00g_ijb_cases__p6-disturb-years.qmd >}}
+
+The year of the largest drop in NBR marks clearing, fire or replanting. Read the chart with the age map. Clearing peaked in 2010–2012, just before the planting wave of 2011–2013: that is the plantation expansion, cleared and planted within a year or two. Since 2016 little new land has been disturbed. The tall bar at 2000 is partly an edge effect: the first year of the series also collects change from before it. Disturbance with no regrowth after it is a loss worth investigating.
+
+### Step A6. Tutupan: your own classes
+
+![IJB Tutupan: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-tutupan-en.png){.lightbox fig-alt="IJB Tutupan: before and after pressing the button."}
+
+**Clicks (no samples):** ① *Tutupan* · ② *Sumber data*: *Sentinel-2 komposit*, dates 2024 · ③ *Algoritma*: *K-Means* · ④ *Latih dan klasifikasi*
+
+{{< include _snippets/ch00g_ijb_cases__p6-kmeans.qmd >}}
+
+K-Means needs no samples: it groups pixels that look alike into six clusters, and you decide what each cluster is by looking at the image. It is the fastest way to see the structure of a place. For a map you can report, switch *Algoritma* to *Random Forest*, press *Tambah* (Add) for each class, press *Tandai* (Mark) and click examples on the map, then *Latih dan klasifikasi*. The app then reports overall accuracy and kappa and the area of every class (Chapters [-@sec-supervised] and [-@sec-accuracy]); spread your samples over the whole area, because accuracy on points clicked close together is optimistic.
+
+### Step A7. Data: the catalogue behind everything
+
+![IJB Data: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-data-en.png){.lightbox fig-alt="IJB Data: before and after pressing the button."}
 
 **Clicks:** ① *Wilayah* (Region): choose province and regency · ② *Data* · ③ *Kelompok* (Group): *Curah hujan* · ④ *Lapisan* (Layer) · ⑤ *Rentang tanggal* (Date range) · ⑥ *Tampilkan lapisan* (Show layer)
 
@@ -83,173 +202,75 @@ Forty-three ready datasets in thirteen groups: hydrology, rainfall, terrain, lan
 
 **Use it for:** a first look at any place, and background layers before any analysis.
 
-**The same idea in this book's code** (not the app's output)
+## Part B. Four events, four modules
 
-![Annual rainfall (Chapter [-@sec-dataviz]).](images/real/ch29-map-sequential.jpg){.lightbox fig-alt="Annual rainfall."}
+The second half uses the event modules where they matter most, on four real cases.
 
-### Citra: a clean Sentinel-2 image
+### Ubah: change around the new capital, Penajam Paser Utara, 2019 to 2024
 
-![IJB Citra: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-citra-en.png){.lightbox fig-alt="IJB Citra: before and after pressing the button."}
+![IJB Ubah: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-ubah-en.png){.lightbox fig-alt="IJB Ubah: before and after pressing the button."}
 
-**Clicks:** ① *Wilayah* · ② *Citra* · ③ *Metode komposit* (Composite method): *Cloud Score Plus (terbaik)* · ④ *Rentang tanggal* (Date range) · ⑤ *Kombinasi band* (Band combination) · ⑥ *Susun komposit* (Build composite)
+Penajam Paser Utara holds the core of Nusantara, Indonesia's new capital. The Ubah module subtracts the NDVI of a cloud-free 2019 composite from that of 2024 and calls a change real above ±0.2.
 
-**After you press:** the result cards show *citra tersedia* (images available) and *piksel bersih* (clear pixels); the map shows the result layer.
+The app reports **10,923 ha greener-to-browner** and **18,907 ha browner-to-greener**. The map shows where. The tight red pattern of roads and cleared ground in the north around 116.7° E, 0.95° S is the capital's core zone (compare the time-lapse in Chapter [-@sec-visualisation]); the large rectangular green and red blocks across the regency are plantation forestry, harvested in one period and replanted in the other. More greening than browning in a region famous for clearing is not a contradiction: an NDVI difference records plantation regrowth as gain, which is why Chapter [-@sec-eudr] separates forest from tree crops before calling anything deforestation.
 
+{{< include _snippets/ch00g_ijb_cases__p7-ubah-ppu.qmd >}}
 
-Builds a cloud-free composite from all Sentinel-2 images in a date range, not one scene. Five methods: **Cloud Score Plus** (the default and usually the best in the tropics), median with the scene classification mask, greenest pixel, 25th percentile (bright, low-haze) and the single cleanest scene. You set the date range, the maximum cloud per scene, the Cloud Score Plus threshold, the band combination (natural colour, vegetation infrared, urban SWIR, agriculture, or haze penetration) and optionally an index (NDVI, NDWI, NDBI, NBR or NDMI). The app reports how many images were used and how many pixels came out clean. (P1 and Chapter [-@sec-cloud] explain why these choices matter.)
+### Banjir: the Demak flood, March 2024
 
-**The same idea in this book's code** (not the app's output)
+![IJB Banjir: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-banjir-en.png){.lightbox fig-alt="IJB Banjir: before and after pressing the button."}
 
-![A cloud-free median composite (Chapter [-@sec-cloud]).](images/real/ch09-truecolour.jpg){.lightbox fig-alt="A cloud-free median composite."}
+In mid-March 2024, river embankments failed in Demak, Central Java, and floodwater spread across rice fields and villages for weeks. The Banjir module compares a Sentinel-1 image before the event with one after it, finds the backscatter drop that marks open water with an automatic (Otsu) threshold, then removes steep ground, permanent water and land high above the drainage network.
 
-### Tutupan: your own land-cover map
+With the app's defaults and the event dates, it maps **2,341 ha** of new flooding, with about **29,000 people** living in the flooded cells (WorldPop) and 49 mapped buildings hit. Two facts belong next to those numbers. The only descending Sentinel-1 pass in the window is 15 March, early in the event, so this is a snapshot of the first days, not the maximum extent. And a large part of the district appears black in both images: fishponds and paddies already under water in February, which a change-based method cannot count as new flooding by design. The "overlap with past floods" card (35 %) compares the result with the Global Flood Database of 2000-2018 events; a low overlap is expected for a flood caused by a levee breach rather than by the usual rainfall pattern.
 
-![IJB Tutupan: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-tutupan-en.png){.lightbox fig-alt="IJB Tutupan: before and after pressing the button."}
+A district total is not what a disaster office works with. Set the reporting level to **Kecamatan** and the same run gives the exposure table per subdistrict, which the app draws as a chart and offers as a CSV. In Demak, two kecamatan carry most of the flood: **Karang Tengah** (about 1,080 ha flooded, 10,500 people in the flooded cells) and **Bonang** (700 ha, 5,600 people), followed by Sayung, Karanganyar and Wedung. The southern kecamatan, such as Karangawen, show no new water. The boundaries are the official BPS subdistricts, distributed by OCHA, so the names match those on a BPBD situation report.
 
-**Clicks:** ① *Wilayah* · ② *Tutupan* · ③ *Sumber data* (Data source) · ④ *Algoritma* (Algorithm): *Random Forest* · ⑤ *Tambah* (Add) a class · ⑥ *Tandai* (Mark), then click examples on the map · ⑦ *Latih dan klasifikasi* (Train and classify)
+::: {.callout-tip}
+## A habit worth copying from the app: give a mosaic a projection
+The app loads terrain models (FABDEM, Copernicus GLO-30, ALOS AW3D30) as a `mosaic()` of tiles. An Earth Engine mosaic has no native projection: its default grid is one degree, about 111 km. Run `ee.Terrain.slope()` on it unchanged, and the slope is computed on 111 km cells, so a slope mask removes nothing or everything. The app therefore gives each mosaic the projection of its first tile before any terrain operation. Do the same in your own scripts: `.setDefaultProjection(c.first().select(0).projection())`. More generally, **when a result is exactly zero, check the pipeline before reporting it.**
+:::
 
-**After you press:** the result cards show *akurasi keseluruhan* (overall accuracy) and *kappa*, with the area of every class; the map shows the result layer.
+{{< include _snippets/ch00g_ijb_cases__p7-banjir-demak.qmd >}}
 
+{{< include _snippets/ch00g_ijb_cases__p7-banjir-kecamatan.qmd >}}
 
-The supervised classification of Chapter [-@sec-supervised], by clicking:
+{{< include _snippets/ch00g_ijb_cases__p7-banjir-kecamatan-table.qmd >}}
 
-1. Choose the data source (Sentinel-2 composite, Sentinel-1, satellite embeddings, terrain or Dynamic World) and the date range.
-2. **Add your classes** (*Tambah*): for example forest, rice field, settlement, water.
-3. For each class, press *Tandai* and click examples on the map.
-4. Choose the algorithm: Random Forest (recommended), Gradient Tree Boost, SVM, CART, Minimum Distance, or K-Means if you want clusters without samples.
-5. Set the minimum mapping unit to remove speckled single pixels, then press *Latih dan klasifikasi*.
+### Api: the 2023 fire season on the peat of Ogan Komering Ilir
 
-The app reports **overall accuracy and kappa** and the area of every class. Remember Chapter [-@sec-accuracy]: accuracy on points you clicked yourself near each other is optimistic. Spread your samples over the whole area.
+![IJB Api: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-api-en.png){.lightbox fig-alt="IJB Api: before and after pressing the button."}
 
-**The same idea in this book's code** (not the app's output)
+Ogan Komering Ilir in South Sumatra is mostly peat, and 2023 was an El Niño year. The Api module maps burn severity from the change in the normalised burn ratio between Sentinel-2 composites before and after the season, counts FIRMS hotspots, and overlays global peat extent and thickness.
 
-![A random-forest land-cover map (Chapter [-@sec-supervised]).](images/real/ch16-rf.jpg){.lightbox fig-alt="A random-forest land-cover map."}
+The app reports **290,030 ha** in the burn-severity classes and **3,817 hotspots**, and of the burned area, **238,586 ha lies on peat**, with a mean modelled peat depth of **151 cm** under it. That last pair is the point of the module: a hectare of burned peat 1.5 m deep is a very different carbon and health event from a hectare of burned grass.
 
-### Model: ready-made models, including the author's own
+Read the map before the numbers. The post-fire Sentinel-2 composite has whole swaths missing between about 2.8° and 3.6° S, where cloud and haze left no clear observation, so the burned area covers only part of the district; the true figure is higher in that sense. In the other direction, the lowest severity class also catches non-fire change such as harvest and seasonal browning. The 290,030 ha is therefore a screening number for the covered area, to be checked against a burned-area product such as MODIS MCD64A1 (Chapter [-@sec-peat]) before it goes into a report.
 
-![IJB Model: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-model-en.png){.lightbox fig-alt="IJB Model: before and after pressing the button."}
+::: {.callout-tip}
+## Why a card can show "—"
+Some districts are too large for one Earth Engine request, so the app computes areas in tiles (`tileScale`). If a value still cannot be computed, the card shows "—" rather than 0. A missing value must never look like a measured one: "0 ha of burned peat" is a finding, "—" is an honest "not computed". Build the same rule into your own tools.
+:::
 
-**Clicks:** ① *Wilayah* · ② *Model* · ③ *Mode*: *Model 10 kelas milik sendiri*, *Dynamic World* or *Tinggi tajuk dari GEDI* (canopy height from GEDI) · ④ *Tahun embedding* (Embedding year) · ⑤ *Jalankan model* (Run model)
+{{< include _snippets/ch00g_ijb_cases__p7-api-oki.qmd >}}
 
-**After you press:** the result cards show *kelas dominan* (dominant class), *luas kelas dominan* (its area), *korelasi GEDI* (correlation with GEDI) and *tinggi rerata* (mean height); the map shows the result layer.
+### Rawan: landslide susceptibility across West Java
 
+![IJB Rawan: the card before you press (left, buttons in red, in order) and what appears after (right).](images/real/p6-click-rawan-en.png){.lightbox fig-alt="IJB Rawan: before and after pressing the button."}
 
-Three modes:
+The Rawan module trains a random forest on satellite embeddings, terrain, rainfall, soil and land cover, using either points the user places or, automatically, events from the NASA Global Landslide Catalog. In automatic mode the module first counts the catalogue landslides in the area and needs **at least 20**. For Kabupaten Bandung Barat the catalogue holds only 9, so the app asks the user to widen the area or place points by hand. The rule exists for a reason worth understanding. Nine landslides against 200 random "safe" points would let a random forest call everything safe and still score 92 % accuracy, because 92 % is simply the share of safe points. That model would have a kappa of zero and map no hazard at all. When classes are this unbalanced, read kappa, not accuracy.
 
-- **The author's 10-class model**: a classifier trained on satellite embeddings, elevation and slope, mapping plantation, forest, agriculture, open land, water, mangrove, rice field, oil palm, sago and rubber. Choose the embedding year (2021–2025) and press run. No samples needed; the model was trained in advance and is applied to your area.
-- **Dynamic World**: Google's near-real-time land cover, for comparison.
-- **Canopy height from GEDI**: the app takes GEDI laser heights in your area (good-quality shots only), trains a regression on the embeddings, and predicts a wall-to-wall 10 m canopy height map. It reports the correlation with the GEDI shots and the mean height (Chapters [-@sec-height-scaling] and [-@sec-gedi-structure]).
+Across the whole province there are enough events. The app reports **81.3 % validation accuracy and a kappa of 0.38**, with 12,482 ha of high susceptibility.
 
-**The same idea in this book's code** (not the app's output)
+Now look at the map. The highest values are in the Bandung basin and around Bogor, densely built and largely flat, while the steep, wet southern mountains look comparatively safe. This comes from the training data, not from the method. A catalogue compiled from news reports records landslides where people live and roads run, so a model trained on it learns "near towns and roads" as much as "steep, wet, weak slopes". The same bias inflates the "people in susceptible zones" card. Use the automatic mode only to see the method work; for a susceptibility map that will inform planning, place points from a field inventory or a polygon inventory mapped from imagery (Chapter [-@sec-landslide-simple] shows why the news-based catalogue fails as a test set), and check that slope and rainfall, not land cover, carry the model.
 
-![Land cover from satellite embeddings with few samples (Chapter [-@sec-embeddings]).](images/real/ch19-classified.jpg){.lightbox fig-alt="Land cover from satellite embeddings with few samples."}
+{{< include _snippets/ch00g_ijb_cases__p7-rawan-jabar.qmd >}}
 
-![A 10 m canopy height map trained on GEDI (Chapter [-@sec-height-scaling]).](images/real/ch33-eth-map.jpg){.lightbox fig-alt="A 10 m canopy height map trained on GEDI."}
+### Every card, as the app showed it
 
-### Deret: time series
+{{< include _snippets/ch00g_ijb_cases__p7-inputs.qmd >}}
 
-![IJB Deret: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-deret-en.png){.lightbox fig-alt="IJB Deret: before and after pressing the button."}
-
-**Clicks:** ① *Wilayah* · ② *Deret* · ③ *Mode*: *Harmonik dan tren*, *Titik patah LandTrendr* or *Umur tegakan atau tanaman* (stand or crop age) · ④ *Rentang tahun* (Year range) · ⑤ *Jalankan analisis* (Run analysis)
-
-**After you press:** the result cards show *tahun gangguan dominan* (main disturbance year), *luas terganggu* (area disturbed), *umur rerata* (mean age) and *amplitudo musiman* (seasonal amplitude); the map shows the result layer.
-
-
-For when something happened and how long ago (Chapters [-@sec-timeseries] and [-@sec-oil-palm-age]). Four modes: **harmonic model and trend** (separates the season from the long-term trend, reports the seasonal amplitude), **LandTrendr breakpoints** (the year of the main disturbance), **stand or crop age**, and **CCDC breakpoints** (precise break dates, slower). Set the year range, the number of harmonics and the change-magnitude threshold.
-
-**The same idea in this book's code** (not the app's output)
-
-![Plantation age from the year of disturbance (Chapter [-@sec-oil-palm-age]).](images/real/ch44-age.jpg){.lightbox fig-alt="Plantation age from the year of disturbance."}
-
-### Ubah: change between two dates
-
-![IJB Ubah: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-ubah-en.png){.lightbox fig-alt="IJB Ubah: before and after pressing the button."}
-
-**Clicks:** ① *Wilayah* · ② *Ubah* · ③ *Metode* (Method): *Selisih indeks*, *Transisi Dynamic World* or *Klasifikasi ganda* · ④ *Periode pertama* and *Periode kedua* (first and second period) · ⑤ *Jalankan deteksi* (Run detection)
-
-**After you press:** the result cards show *hektar bertambah* (hectares gained) and *hektar berkurang* (hectares lost); the map shows the result layer.
-
-
-Four methods: **index difference** (NDVI, NDWI, NDBI, NBR or NDMI between two periods, with a threshold), **Dynamic World transitions**, **double classification**, and **linear trend**. It reports hectares gained and lost. For the exact date of a change, use Deret instead.
-
-**The same idea in this book's code** (not the app's output)
-
-![New built-up land between two years from Dynamic World (Chapter [-@sec-timeseries]).](images/real/ch21-new-built.jpg){.lightbox fig-alt="New built-up land between two years from Dynamic World."}
-
-![The same change as a chart, year by year.](images/real/ch21-built-series.png){.lightbox fig-alt="The same change as a chart, year by year."}
-
-### Banjir: flood mapping
-
-![IJB Banjir: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-banjir-en.png){.lightbox fig-alt="IJB Banjir: before and after pressing the button."}
-
-**Clicks:** ① *Wilayah*: your regency · ② *Satuan Pelaporan* (Reporting unit): *Desa* (village) · ③ *Banjir* · ④ *Periode sebelum kejadian* and *Periode saat atau sesudah* (before, and during or after) · ⑤ *Arah orbit* (Orbit direction) · ⑥ *Batas HAND* (HAND limit) · ⑦ *Jalankan analisis* (Run analysis)
-
-**After you press:** the result cards show *hektar tergenang* (hectares flooded), *jiwa terpapar* (people exposed), *bangunan* (buildings) and *cocok riwayat* (match with the flood record); the map shows the result layer.
-
-
-The method of Chapter [-@sec-flood] and P5, by clicking:
-
-1. Set a **period before** the flood and a **period during or after** it.
-2. Choose the **orbit direction** (descending or ascending; pick the one that passed during your event).
-3. Choose the **elevation model** (FABDEM by default, with trees and buildings removed) and the **HAND limit**, the height above the nearest drainage beyond which water is not plausible (15 m by default).
-4. Press *Jalankan analisis*.
-
-Behind the button: Sentinel-1 backscatter change, an automatic Otsu threshold, then filters for steep slopes, permanent water and high HAND. The results are **hectares flooded, people exposed, buildings affected** and how well the flood matches the historical flood record. Summarised by your reporting unit, that is a first situation report.
-
-**The same idea in this book's code** (not the app's output)
-
-![Radar flood extent with Otsu threshold and HAND (Chapter [-@sec-flood]).](images/real/ch24-flood-map.jpg){.lightbox fig-alt="Radar flood extent with Otsu threshold and HAND."}
-
-![The HAND check: flooded points sit low on the terrain.](images/real/ch24-flood-hand.png){.lightbox fig-alt="The HAND check: flooded points sit low on the terrain."}
-
-### Api: forest and land fire
-
-![IJB Api: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-api-en.png){.lightbox fig-alt="IJB Api: before and after pressing the button."}
-
-**Clicks:** ① *Wilayah* · ② *Api* · ③ *Periode sebelum* and *Periode sesudah* (before and after) · ④ *Jalankan analisis* (Run analysis)
-
-**After you press:** the result cards show *hektar terbakar* (hectares burned), *titik panas* (hotspots), *hektar gambut* (hectares of peat burned) and *tebal gambut rerata* (mean peat thickness); the map shows the result layer.
-
-
-1. Set a **period before** and a **period after** the fire season.
-2. Press *Jalankan analisis*.
-
-The app computes the difference in Normalised Burn Ratio (dNBR) from Sentinel-2 and splits it into four severity classes, with breaks at dNBR 0.27, 0.44 and 0.66. It overlays FIRMS hotspots and the peat map, and reports **hectares burned, hotspots, hectares of burned peat and the mean peat thickness**. A hectare of burned peat is not a hectare of burned grass (Chapters [-@sec-peat] and [-@sec-carbon-balance]).
-
-**The same idea in this book's code** (not the app's output)
-
-![Burned area on peat in 2015 (Chapter [-@sec-peat]).](images/real/ch37-burn-2015.jpg){.lightbox fig-alt="Burned area on peat in 2015."}
-
-![Hotspots against rainfall, the chart behind the fire numbers.](images/real/ch37-series.png){.lightbox fig-alt="Hotspots against rainfall, the chart behind the fire numbers."}
-
-### Rawan: hazard susceptibility with machine learning
-
-![IJB Rawan: before pressing (left, red buttons in order) and after (right).](images/real/p6-click-rawan-en.png){.lightbox fig-alt="IJB Rawan: before and after pressing the button."}
-
-**Clicks:** ① *Wilayah* · ② *Rawan* · ③ *Jenis bahaya* (Hazard type): *Longsor* (landslide) · ④ *Tandai RAWAN* (mark hazardous), click places · ⑤ *Tandai AMAN* (mark safe), click places · ⑥ *Latih dari titik manual* (Train from manual points)
-
-**After you press:** the result cards show *akurasi validasi* (validation accuracy), *kappa*, *hektar rawan tinggi* (hectares of high susceptibility) and *jiwa di zona rawan* (people in high-susceptibility zones); the map shows the result layer.
-
-
-Maps where landslides or floods are *likely*, not where they happened. A random forest learns from the 64 satellite embedding bands plus slope, elevation, aspect, TWI, HAND, rainfall, soil and land cover.
-
-1. Choose the **hazard** (landslide, flood, or general), the **embedding year** and the **elevation model**.
-2. Give it examples, in one of two ways:
-   - **Automatically**, from the NASA global landslide catalogue (*Latih otomatis*), or
-   - **By hand**: press *Tandai RAWAN* and click places known to be hazardous, then *Tandai AMAN* and click safe places, then *Latih dari titik manual*.
-3. Set the number of trees (120 by default).
-
-It reports **validation accuracy, kappa, hectares of high susceptibility and people living in high-susceptibility zones**. Hand-placed points from people who know the area usually beat a global catalogue.
-
-**The same idea in this book's code** (not the app's output)
-
-![A landslide susceptibility map (Chapter [-@sec-landslide-simple]); Rawan learns its weights with a random forest instead.](images/real/ch50-score.jpg){.lightbox fig-alt="A landslide susceptibility map; Rawan learns its weights with a random forest instead."}
-
-### Toolbox: chain your own workflow
-
-Every result becomes the **active layer**, and every tool works on the active layer, so tools can be chained (figure below). The tools: an **expression calculator** for any band formula, **Otsu threshold**, **raster to vector** (with minimum mapping unit and line simplification), **vector to raster** (buildings, landslides, mangroves or your last vector), **zonal statistics** (mean, sum, maximum, minimum, mode, standard deviation, median), **SNIC object segmentation** (Chapter [-@sec-obia]) and **morphological filters and sieve**.
-
-![Chaining tools: every result becomes the active layer for the next one.](images/real/p6-chain-en.png){.lightbox fig-alt="Chaining tools: every result becomes the active layer for the next one."}
+{{< include _snippets/ch00g_ijb_cases__p7-metrics.qmd >}}
 
 ## Four recipes
 
@@ -261,6 +282,14 @@ Every result becomes the **active layer**, and every tool works on the active la
 
 **A quick land-cover map with no samples.** Model → the 10-class model for the latest embedding year. If your area has classes the model never saw, switch to Tutupan and train your own.
 
+## Reading app results critically
+
+Every case above produced a tidy card with a plausible number. The work was in deciding what each number can bear. Three habits did that work, and they apply to any tool, your own scripts included:
+
+1. **Run it on cases where you know roughly what the answer should be.** A famous flood, a peat district, a construction site.
+2. **Treat exactly zero, exactly 100 % and a perfect-looking accuracy as questions, not answers.**
+3. **Look at the map before the metric.** The ponds already under water in Demak, the cloud gaps in the fire composite and the urban hotspot in the susceptibility map were all visible before any number was read.
+
 ## Using an app responsibly
 
 - **Dates are everything.** A flood map from the wrong week maps rice-field irrigation (Chapter [-@sec-paddy]).
@@ -270,7 +299,13 @@ Every result becomes the **active layer**, and every tool works on the active la
 
 ## Exercises {.unnumbered}
 
-1. Map a flood you know (for example in your own district) with Banjir. Which orbit direction passed closest to the event date?
-2. Train Tutupan twice for the same area: once with five samples per class clustered in one corner, once with twenty spread out. Compare the accuracy and the maps.
-3. Run Model → canopy height for a forest area. Where does the GEDI-trained map disagree most with your expectations?
-4. Use Rawan with manual points in a landslide-prone valley you know. How many points does it take before the map stops changing?
+1. Run Model → *Model 10 kelas milik sendiri* for your own kabupaten, then *Dynamic World* for the same area. Which of the 10 classes does Dynamic World merge, and does it matter for your question?
+2. Run Model → canopy height for a forest area. Read the scatter chart: what is the slope of the cloud, and which canopies does the map under-estimate?
+3. After the height map, use Toolbox → *Statistik zonal* per desa. Which village has the tallest canopy, and what is there on the 10-class map?
+4. Run Deret → age for a plantation district. When were most blocks planted, and how many hectares will reach 25 years in the next five?
+5. Map a flood you know with Banjir, reporting per *Kecamatan*. Which orbit direction passed closest to the event date?
+6. Use Rawan with points you place by hand on mapped landslides from a published inventory. Does the hotspot in the Bandung basin remain?
+
+## The code behind this chapter {.unnumbered}
+
+{{< include _snippets/ch00g_ijb_cases.qmd >}}

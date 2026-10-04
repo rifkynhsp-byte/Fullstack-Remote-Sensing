@@ -216,6 +216,28 @@ def outputs_block(stem: str, lang_code: str) -> str:
     return "\n".join(parts)
 
 
+def item_snippets(stem: str, target_dir: Path) -> int:
+    """One include per recorded product, `<stem>__<name>.qmd`, so a chapter can place a single table or
+    figure next to the step it belongs to (used by the IJB walk-through)."""
+    manifest = OUTPUT_DIR / f"{stem}.json"
+    if not manifest.exists():
+        return 0
+    import json
+    n = 0
+    for item in json.loads(manifest.read_text(encoding="utf-8")):
+        if "error" in item:
+            continue
+        caption = item.get("caption", "").replace("\n", " ")
+        if item["kind"] == "table":
+            body = f"{item['markdown']}\n\n: {caption}\n"
+        elif item["kind"] in ("map", "chart", "animation", "figure"):
+            body = f"![{caption}]({item['image']}){{.lightbox fig-alt=\"{caption}\"}}\n"
+        else:
+            continue
+        (target_dir / f"{stem}__{item['name']}.qmd").write_text(body, encoding="utf-8"); n += 1
+    return n
+
+
 def main() -> int:
     if not SCRIPT_DIR.is_dir():
         print(f"No scripts/ directory at {SCRIPT_DIR}; nothing to do.")
@@ -273,6 +295,7 @@ def main() -> int:
             snippet += outputs_block(py.stem, lang)
             (target_dir / f"{py.stem}.qmd").write_text(snippet, encoding="utf-8")
             written += 1
+            item_snippets(py.stem, target_dir)
 
     print(f"build_snippets: wrote {written} snippet(s), {fell_back} using fallback")
     return 0

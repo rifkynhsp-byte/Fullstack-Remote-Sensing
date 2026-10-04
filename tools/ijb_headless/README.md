@@ -1,7 +1,7 @@
 # IJB headless runner
 
 Runs modules of the IJB app (`users/rifkynauvalhsp/IndrajaBuana`) outside the Code Editor, so the
-book can show results produced by the app's own code (chapter P7).
+book can show results produced by the app's own code (chapter P6).
 
     npm install @google/earthengine
     IJB_SRC=/path/to/clone/of/IndrajaBuana node harness.js job.json

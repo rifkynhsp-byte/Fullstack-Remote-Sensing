@@ -416,8 +416,12 @@ def run(path: Path) -> None:
     WEB_LAYERS.clear()
     _FRAMES.clear()
     items = []
+    # BOOK_ONLY="name1,name2": re-render just these products and merge them into the existing manifest
+    only = set(filter(None, os.environ.get("BOOK_ONLY", "").split(",")))
     for p in module.products():
         name, kind = p["name"], p["kind"]
+        if only and name not in only:
+            continue
         entry = {"name": name, "kind": kind, "caption": p.get("caption", "")}
         try:
             if kind == "map":
@@ -452,6 +456,13 @@ def run(path: Path) -> None:
             entry["error"] = str(err)[:300]
             print(f"  ! {kind:5s} {name}: {entry['error']}")
         items.append(entry)
+    if only:
+        manifest = OUT_DIR / f"{path.stem}.json"
+        old = json.loads(manifest.read_text()) if manifest.exists() else []
+        new = {e["name"]: e for e in items}
+        merged = [new.pop(e["name"], e) for e in old] + list(new.values())
+        manifest.write_text(json.dumps(merged, indent=1, ensure_ascii=False))
+        return
     try:
         html = web_map(path.stem, list(WEB_LAYERS), getattr(module, "COMPARE", None))
         if html:

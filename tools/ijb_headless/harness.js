@@ -116,17 +116,33 @@ function settle(done) {
 // ---------------------------------------------------------------- run
 ee.data.authenticateViaPrivateKey(key, () => {
   ee.initialize(null, null, () => {
-    const mod = req("users/rifkynauvalhsp/IndrajaBuana:" + job.module);
-    mod.bind(K);
     K.state.aoi = ee.FeatureCollection(job.aoi.collection).filter(ee.Filter.eq(job.aoi.field, job.aoi.value)).geometry();
-    mod[job.fn]();
-    // inputs in creation order
-    (job.textboxes || []).forEach((v, i) => { if (v !== null) created.textboxes[i].setValue(v); });
-    (job.selects || []).forEach((v, i) => { if (v !== null) created.selects[i].setValue(v); });
-    (job.sliders || []).forEach((v, i) => { if (v !== null) created.sliders[i].setValue(v); });
-    const btn = created.buttons.find((b) => b._w.label === (job.button || "Jalankan analisis"));
-    console.error("[run]", job.module, job.fn, "inputs:", created.textboxes.map((t) => t.getValue()), created.selects.map((s) => s.getValue()));
-    btn._w.onClickCb();
+    // A job is one module run, optionally followed by job.next steps in the same session (e.g. Model -> Toolbox),
+    // so a later step can work on the previous step's published result, as a user chaining modules would.
+    const steps = [job].concat(job.next || []);
+    const runStep = (k) => {
+      const st = steps[k];
+      const mod = req("users/rifkynauvalhsp/IndrajaBuana:" + st.module);
+      mod.bind(K);
+      const o = { t: created.textboxes.length, s: created.selects.length, l: created.sliders.length, b: created.buttons.length };
+      mod[st.fn]();
+      const tb = created.textboxes.slice(o.t), se = created.selects.slice(o.s), sl = created.sliders.slice(o.l), bt = created.buttons.slice(o.b);
+      (st.textboxes || []).forEach((v, i) => { if (v !== null) tb[i].setValue(v); });
+      (st.selects || []).forEach((v, i) => { if (v !== null) se[i].setValue(v); });
+      (st.sliders || []).forEach((v, i) => { if (v !== null) sl[i].setValue(v); });
+      // choose: set the first select whose items contain the value (robust to widget order)
+      (st.choose || []).forEach((v) => {
+        const s = se.find((x) => (x._w.items || []).indexOf(v) >= 0);
+        if (!s) { console.error("[choose] no select offers", v); process.exit(2); }
+        s.setValue(v); if (s._w.onChangeCb) s._w.onChangeCb(v);
+      });
+      const btn = bt.find((b) => b._w.label === (st.button || "Jalankan analisis"));
+      console.error("[run]", st.module, st.fn, "inputs:", tb.map((x) => x.getValue()), se.map((x) => x.getValue()));
+      btn._w.onClickCb();
+      if (k + 1 < steps.length) { settle(() => runStep(k + 1)); return; }
+      finish();
+    };
+    const finish = () => {
     settle(() => {
       const out = {
         metrics: metrics.map((m) => ({ name: m.name, value: m.label.getValue() })),
@@ -135,11 +151,13 @@ ee.data.authenticateViaPrivateKey(key, () => {
         aoi: ee.Serializer.toJSON(K.state.aoi),
         hazard: K.state.lastHazard ? ee.Serializer.toJSON(K.state.lastHazard) : null,
         result: K.state.lastResult ? ee.Serializer.toJSON(K.state.lastResult) : null,
-        errors: created.labels.filter((l) => l._w.value && /Gagal|Tidak ada|galat/i.test(String(l._w.value))).map((l) => l._w.value),
+        errors: created.labels.filter((l) => l._w.value && /Gagal|Tidak ada|galat|Hanya|tidak bisa|Pastikan|kurang/i.test(String(l._w.value))).map((l) => l._w.value),
       };
       fs.writeFileSync(job.out, JSON.stringify(out));
       console.error("[done]", out.metrics, "layers:", out.layers.map((l) => l.name), "errors:", out.errors);
       process.exit(0);
     });
+    };
+    runStep(0);
   }, (e) => { console.error("init failed", e); process.exit(1); }, null, key.project_id);
 }, (e) => { console.error("auth failed", e); process.exit(1); });

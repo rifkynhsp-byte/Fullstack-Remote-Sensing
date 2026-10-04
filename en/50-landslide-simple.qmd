@@ -74,7 +74,7 @@ Two honest conclusions follow. First, an "optimum" tuned on one area loses half 
 
 1. **A polygon inventory** of landslides mapped from imagery or in the field, for the same kind of trigger (rain or earthquake) as the map is meant for. News-based point catalogues are not a test set.
 2. **A better terrain model.** Slope from a 1 m LiDAR model is a different variable from slope at 30 m (Chapter [-@sec-lidar-terrain-cities]); old landslides under forest only appear in LiDAR.
-3. **Learn the weights from data** with a model and spatially blocked validation, and check that slope, soil and rainfall, not proxies for where people live, carry it (Chapter [-@sec-p7-ijb-cases] shows what happens otherwise).
+3. **Learn the weights from data** with a model and spatially blocked validation, and check that slope, soil and rainfall, not proxies for where people live, carry it (Chapter [-@sec-p6-ijb] shows what happens otherwise).
 4. **Validate on an independent event or area** before the map is used, and tune any threshold on one area and report it on another.
 5. **Predictors from before the event only.** Land cover, NDVI or any image-derived layer must predate the landslides, or the scars leak into the model.
 

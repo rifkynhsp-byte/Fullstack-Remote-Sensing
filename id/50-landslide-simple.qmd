@@ -74,7 +74,7 @@ Ada dua kesimpulan jujur. Pertama, "optimum" yang disetel di satu area kehilanga
 
 1. **Inventaris poligon** longsor yang dipetakan dari citra atau di lapangan, untuk jenis pemicu yang sama (hujan atau gempa) dengan tujuan petanya. Katalog titik berbasis berita bukan data uji.
 2. **Model medan yang lebih baik.** Kemiringan dari model LiDAR 1 m adalah variabel yang berbeda dari kemiringan 30 m (Bab [-@sec-lidar-terrain-cities]); longsor lama di bawah hutan hanya terlihat di LiDAR.
-3. **Pelajari bobotnya dari data** dengan model dan validasi berblok spasial, dan pastikan kemiringan, tanah, dan curah hujan, bukan proksi tempat tinggal orang, yang membawa model (Bab [-@sec-p7-ijb-cases] menunjukkan apa yang terjadi bila tidak).
+3. **Pelajari bobotnya dari data** dengan model dan validasi berblok spasial, dan pastikan kemiringan, tanah, dan curah hujan, bukan proksi tempat tinggal orang, yang membawa model (Bab [-@sec-p6-ijb] menunjukkan apa yang terjadi bila tidak).
 4. **Validasi pada kejadian atau wilayah yang independen** sebelum peta dipakai, dan setel ambang apa pun di satu area lalu laporkan hasilnya di area lain.
 5. **Hanya prediktor dari sebelum kejadian.** Tutupan lahan, NDVI, atau lapisan apa pun dari citra harus lebih tua daripada longsornya, atau bekas longsor bocor ke dalam model.
 
