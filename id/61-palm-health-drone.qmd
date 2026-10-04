@@ -63,6 +63,33 @@ Manajer kebun jarang hanya bertanya "berapa ton yang akan dihasilkan blok ini?".
 - **Register tanam** memastikan umur, dan dengan itu potensinya.
 - **Penerbangan ulang** setiap tahun mengubah peta ini menjadi peta perubahan: sel yang turun dari tahun ke tahun adalah tempat pertama untuk diperiksa.
 
+## Tutupan lahan dari drone: objek, bukan piksel
+
+Peta tutupan lahan dari satelit (Bab [-@sec-supervised], dan langkah demi langkah IJB di P6) melihat piksel 10 m. Drone melihat satu pelepah. Mengklasifikasikan citra 0,3 m piksel demi piksel gagal, karena satu tajuk sawit berisi anak daun hijau, lidi kuning, bayangan, dan tanah, sehingga setiap piksel mendapat kelas berbeda. Jawabannya adalah mengklasifikasikan **objek**.
+
+1. **Objek.** Superpiksel SLIC membagi citra menjadi sekitar 8.000 petak ringkas dengan warna serupa, masing-masing kira-kira seukuran satu tajuk sawit (sekitar 50 m²).
+2. **Fitur per objek.** Warna rerata, indeks excess green, kecerahan, kekasaran (simpangan baku kecerahan lokal, yang membedakan tajuk berpelepah dari hamparan rumput yang halus), dan satu fitur yang hanya dimiliki plot ini: porsi objek yang dekat dengan tajuk yang lolos **uji grid tanam** dari bagian kesehatan.
+3. **Label benih dari aturan.** Hijau di grid tanam adalah sawit. Hijau kasar di luar grid adalah pohon dan semak. Hijau muda yang halus adalah vegetasi rendah. Pucat dan halus adalah tanah terbuka. Sangat gelap adalah bayangan atau air. Aturan ini melabeli sekitar separuh objek dengan yakin.
+4. **Random Forest** belajar dari benih itu dan melabeli setiap objek.
+5. **Pemeriksaan visual**, karena aturan bisa salah: delapan objek acak dari setiap kelas, ditampilkan pada resolusi penuh.
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-map.qmd >}}
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-area.qmd >}}
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-check.qmd >}}
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-check-table.qmd >}}
+
+**Apa yang diajarkan pemeriksaan.** Versi pertama peta keliru dengan cara yang mendidik. Sebagian besar blok sawit di selatan tercat sebagai "tanah terbuka", karena sawit tua berpelepah kecokelatan punya indeks excess green rendah, dan kelas "rumput"-nya sebagian besar semak lebat. Dua perubahan aturan memperbaiki blok sawit itu: tanah terbuka harus pucat *dan* halus, dan apa pun yang berada di grid tanam adalah sawit. Pemeriksaan di atas adalah untuk versi akhir.
+
+Pemeriksaan itu juga memaksa nama kelas yang jujur. RGB 0,3 m tidak bisa membedakan hamparan rumput dari semak rendah yang rapat, jadi kelas itu dinamai sesuai isinya: "semak dan tumbuhan muda (tajuk halus)". Lapangan terbuka di utara adalah rumput kering, dan masuk ke kelas pucat "tanah terbuka, jalan setapak, dan rumput kering". Secara visual, 35 dari 40 objek benar (88 %), dan sawit lawan bukan-sawit benar pada setiap sampel. Dua peringatan:
+
+- **Nama kelas dipilih setelah melihat sampel,** sehingga skornya sedikit terangkat.
+- **Empat puluh objek adalah pemeriksaan kecil.** Penilaian akurasi sungguhan butuh beberapa ratus objek yang dilabeli oleh orang yang mengenal lokasinya, dipilih sebelum peta dilihat (Bab [-@sec-accuracy]).
+
+**Kenapa ini penting.** Kelas sawit mencakup 9,5 ha, seperempat citra, dan sisanya hutan, semak, dan tumbuhan muda di sekitar kebun rakyat. Bagi kebun, ini menunjukkan di mana sawit berakhir dan lahan yang belum ditanam atau ditinggalkan dimulai. Bagi pembeli yang memeriksa aturan deforestasi, ini menunjukkan apakah sawit berbatasan dengan hutan yang tidak boleh dibuka (Bab [-@sec-eudr]).
+
 ## Supaya lebih baik
 
 - **Drone multispektral** membawa kanal red-edge dan inframerah dekat. NDVI dan indeks red-edge peka terhadap klorofil dan struktur daun, bukan hanya warna, dan tidak mudah tertipu tanah yang terlihat di antara pelepah.

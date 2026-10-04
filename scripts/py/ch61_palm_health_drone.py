@@ -270,6 +270,118 @@ def plot_ffb_cells(d):
     return fig
 
 
+
+# ---------------------------------------------------------------------------
+# Land cover from the drone: objects, not pixels
+# ---------------------------------------------------------------------------
+# Names follow what the classes turned out to contain on the visual check (figure_lc_check), not the seed rules
+# intentions: smooth green canopy is mostly shrub and regrowth (RGB cannot separate grass from dense shrub at
+# 0.3 m), and the pale smooth class holds dry grass as well as bare soil and tracks.
+LC = [("oil palm", "#e69f00"), ("trees and bush (rough canopy)", "#1b7837"), ("shrub and regrowth (smooth canopy)", "#a6dba0"),
+      ("bare soil, tracks and dry grass", "#bf812d"), ("shadow and water", "#2c3e50")]
+# Visual check of the 40 random objects in figure_lc_check (seed 3), read by eye at full resolution:
+LC_CHECK = [("oil palm", 8, 8), ("trees and bush (rough canopy)", 7, 8), ("shrub and regrowth (smooth canopy)", 6, 8),
+            ("bare soil, tracks and dry grass", 6, 8), ("shadow and water", 8, 8)]
+
+
+def lc_check_table():
+    d = pd.DataFrame(LC_CHECK, columns=["class", "correct", "checked"])
+    return pd.concat([d, pd.DataFrame([{"class": "all", "correct": d.correct.sum(), "checked": d.checked.sum()}])]).assign(
+        share=lambda x: x.correct / x.checked)
+
+
+def drone_landcover():
+    """SLIC superpixels (about one palm crown each), colour and texture per object, seed labels from simple
+    rules plus the planting grid of the counting chapter, then a Random Forest for every object.
+    Seeds are rules, not truth: the result is checked by eye on a random sample (figure_lc_check)."""
+    if "lc" in _c:
+        return _c["lc"]
+    from skimage.segmentation import slic
+    from sklearn.ensemble import RandomForestClassifier
+    from scipy import ndimage as ndi
+    rgb, res = base.load()
+    img = np.transpose(rgb, (1, 2, 0)); valid = img.sum(2) > 0
+    norm = img / np.percentile(img[valid], 99)
+    seg = slic(np.clip(norm, 0, 1), n_segments=8000, compactness=10, start_label=1, mask=valid)
+    r, g, b = [norm[..., i] for i in range(3)]; s = np.maximum(r + g + b, 1e-6)
+    exg = (2 * g - r - b) / s; bright = (r + g + b) / 3
+    tex = ndi.generic_filter(bright, np.std, size=5)                      # local roughness: crowns are rough, grass smooth
+    labels = np.arange(1, seg.max() + 1)
+    m = lambda a: ndi.mean(a, seg, labels)
+    F = pd.DataFrame({"r": m(r), "g": m(g), "b": m(b), "exg": m(exg), "bright": m(bright), "tex": m(tex),
+                      "tex_sd": ndi.standard_deviation(bright, seg, labels)})
+    # planting-grid proximity: share of the object's pixels within 3.5 m of a crown that passed the grid test
+    d = crowns(); pal = d[d["class"].isin(CLASS_NAMES)]
+    mask = np.zeros(valid.shape, bool); mask[pal.row.values.astype(int), pal.col.values.astype(int)] = True
+    near = ndi.distance_transform_edt(~mask) * res < 3.5
+    F["grid"] = m(near.astype(float))
+    seed = np.full(len(F), -1)
+    green = F.exg > F.exg.quantile(0.45)
+    seed[(F.bright < F.bright.quantile(0.08))] = 4                                     # shadow, water
+    smooth = F.tex < F.tex.median()
+    seed[(F.exg < F.exg.quantile(0.15)) & (F.bright > F.bright.quantile(0.5)) & smooth & (F.grid < 0.3)] = 3   # bare soil, roads: pale AND smooth
+    seed[green & (F.tex < F.tex.quantile(0.25)) & (F.bright > F.bright.quantile(0.6)) & (F.grid < 0.05)] = 2 # grass: smooth AND light green
+    seed[green & (F.tex > F.tex.quantile(0.6)) & (F.grid < 0.05)] = 1                  # rough green off-grid: trees, bush
+    seed[green & (F.grid > 0.6)] = 0                                                   # green on the planting grid: palm
+    rf = RandomForestClassifier(200, random_state=0, min_samples_leaf=3).fit(F[seed >= 0], seed[seed >= 0])
+    cls = rf.predict(F)
+    cls[(F.grid.values > 0.6) & (F.exg.values > F.exg.quantile(0.2))] = 0     # on the planting grid and not bare: palm
+    lc = np.full(seg.shape, -1); lc[seg > 0] = cls[seg[seg > 0] - 1]
+    _c["lc"] = (lc, seg, F.assign(cls=cls, seed=seed), res)
+    return _c["lc"]
+
+
+def figure_lc_map():
+    from matplotlib.colors import ListedColormap
+    lc, seg, F, res = drone_landcover()
+    rgb, _ = base.load(); w, e, s, n = base.lonlat_extent()
+    img = np.clip(np.transpose(rgb, (1, 2, 0)) / np.percentile(rgb[rgb > 0], 99), 0, 1)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+    axes[0].imshow(img, extent=[w, e, s, n]); axes[0].set_title("Drone orthophoto (0.3 m)", loc="left", fontsize=10)
+    axes[1].imshow(np.ma.masked_less(lc, 0), extent=[w, e, s, n], cmap=ListedColormap([c for _, c in LC]), vmin=-0.5, vmax=4.5, interpolation="nearest")
+    axes[1].set_title("Land cover from the drone, by object", loc="left", fontsize=10)
+    from matplotlib.patches import Patch
+    axes[1].legend(handles=[Patch(color=c, label=l) for l, c in LC], loc="lower right", fontsize=7.5, framealpha=0.9)
+    for ax in axes:
+        base.graticule(ax); ax.set_aspect(1 / np.cos(np.radians((s + n) / 2)))
+    fig.tight_layout()
+    return fig
+
+
+def lc_area_table():
+    lc, seg, F, res = drone_landcover()
+    px = np.array([(lc == k).sum() for k in range(len(LC))]) * res ** 2 / 1e4
+    return pd.DataFrame({"class": [l for l, _ in LC], "area_ha": px, "share": px / px.sum()})
+
+
+def lc_sample(n_per=8, seed=3):
+    lc, seg, F, res = drone_landcover()
+    rng = np.random.default_rng(seed); out = []
+    for k in range(len(LC)):
+        ids = np.where(F.cls.values == k)[0]
+        for i in rng.choice(ids, size=min(n_per, len(ids)), replace=False):
+            out.append((k, i + 1))
+    return out
+
+
+def figure_lc_check():
+    """Eight random objects per predicted class, at full resolution, outlined: the honest check of the map."""
+    lc, seg, F, res = drone_landcover(); rgb, _ = base.load()
+    img = np.clip(np.transpose(rgb, (1, 2, 0)) / np.percentile(rgb[rgb > 0], 99), 0, 1)
+    smp = lc_sample(); fig, axes = plt.subplots(len(LC), 8, figsize=(10, 6.6))
+    for ax in axes.ravel(): ax.set_axis_off()
+    from skimage.segmentation import find_boundaries
+    for j, (k, sid) in enumerate(smp):
+        rr, cc = np.where(seg == sid); y, x = int(rr.mean()), int(cc.mean()); h = 22
+        y0, y1, x0, x1 = max(0, y - h), y + h, max(0, x - h), x + h
+        chip = img[y0:y1, x0:x1].copy(); bd = find_boundaries(seg[y0:y1, x0:x1] == sid); chip[bd] = [1, 0, 0]
+        ax = axes[k, j % 8]; ax.imshow(chip); ax.set_title(f"{sid}", fontsize=6)
+        if j % 8 == 0: ax.text(-0.15, 0.5, LC[k][0], transform=ax.transAxes, ha="right", va="center", fontsize=8, color=LC[k][1], weight="bold")
+    fig.suptitle("Random objects from each predicted class (red outline, 13 x 13 m chips): if the rows look alike inside and different between, the map is right", x=0.01, ha="left", fontsize=9)
+    fig.tight_layout()
+    return fig
+
+
 def products():
     return [
         {"kind": "figure", "name": "ch61-map", "figure": figure_map,
@@ -290,6 +402,15 @@ def products():
                     "Only crowns that pass the planting-grid test are counted."},
         {"kind": "chart", "name": "ch61-ffb-cells", "data": ffb_cells_frame, "plot": plot_ffb_cells, "live": False,
          "caption": "Distribution of modelled FFB across the 30 m cells of the block."},
+        {"kind": "figure", "name": "ch61-lc-map", "figure": figure_lc_map,
+         "caption": "Land cover classified from the drone orthophoto, object by object (OpenAerialMap, CC BY 4.0)."},
+        {"kind": "table", "name": "ch61-lc-area", "data": lc_area_table, "floatfmt": ("", ".2f", ".0%"),
+         "caption": "Area of each class in the orthophoto."},
+        {"kind": "figure", "name": "ch61-lc-check", "figure": figure_lc_check,
+         "caption": "The check: random objects of each predicted class at full resolution."},
+        {"kind": "table", "name": "ch61-lc-check-table", "data": lc_check_table, "floatfmt": ("", ".0f", ".0f", ".0%"),
+         "caption": "Visual check of the random objects above, read by eye (8 per class). A small sample: it says the map "
+                    "is usable for palm vs non-palm, and that the shrub and dry-grass classes are approximate."},
         {"kind": "table", "name": "ch61-ffb", "data": ffb_table,
          "floatfmt": ("", ",.0f", ",.0f", ".1f", ".1f", ".1f", ".1f", ".0%"),
          "caption": "Block totals and the spread between cells under three assumptions about how much crown "

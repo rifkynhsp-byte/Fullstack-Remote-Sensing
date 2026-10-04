@@ -298,6 +298,83 @@ def health_vis():
     return cls.visualize(min=1, max=3, palette=["d9f0d3", "fdae61", "b2182b"])
 
 
+
+# ---------------------------------------------------------------------------
+# Fruit as a MAP, not only a total: the age curve per pixel, discounted by canopy health
+# ---------------------------------------------------------------------------
+HEALTH_MULT = (1.0, 0.9, 0.6)      # as expected / below / well below: assumed costs, as in the drone chapter
+DESA = ee.FeatureCollection("projects/shaped-producer-482312-m0/assets/ijb/idn_desa_bps").filterBounds(aoi)
+
+
+def ffb_image():
+    """Modelled FFB in t/ha/yr for every palm pixel: potential(age) x achievement x health multiplier."""
+    a = age.toFloat()
+    pot = (ee.Image(0).where(a.gte(3).And(a.lt(9)), a.subtract(3).divide(6))
+           .where(a.gte(9).And(a.lte(18)), 1)
+           .where(a.gt(18).And(a.lte(25)), ee.Image(1).subtract(a.subtract(18).multiply(0.3 / 7)))
+           .where(a.gt(25), 0.7)).multiply(PEAK_T_HA * ACHIEVE)
+    dev = health_image()
+    mult = (ee.Image(HEALTH_MULT[0]).where(dev.lt(-0.05), HEALTH_MULT[1]).where(dev.lt(-0.15), HEALTH_MULT[2]))
+    return pot.multiply(mult).updateMask(dev.mask()).rename("ffb")
+
+
+def ffb_desa():
+    """Tonnes and t/ha per desa (official BPS boundaries), the unit a district office plans with."""
+    ffb = ffb_image()
+    stack = ffb.multiply(ee.Image.pixelArea().divide(1e4)).rename("t").addBands(ee.Image.pixelArea().divide(1e4).updateMask(ffb.mask()).rename("ha"))
+    fc = stack.reduceRegions(DESA, ee.Reducer.sum(), 30, tileScale=16)
+    d = pd.DataFrame([f["properties"] for f in fc.getInfo()["features"]])
+    d = d[d.ha > 50].assign(t_ha=lambda x: x.t / x.ha)
+    _c["desa"] = d
+    return d.sort_values("t", ascending=False)[["nama", "kab", "ha", "t", "t_ha"]].rename(
+        columns={"nama": "desa", "kab": "kabupaten", "ha": "palm_ha", "t": "ffb_t_per_year", "t_ha": "t_per_ha_yr"}).head(15)
+
+
+def ffb_desa_map():
+    if "desa" not in _c: ffb_desa()
+    d = _c["desa"]
+    fc = DESA.filter(ee.Filter.inList("pcode", d.pcode.tolist())).map(
+        lambda f: f.set("t_ha", ee.Dictionary(dict(zip(d.pcode, d.t_ha.round(2)))).get(f.get("pcode"))))
+    img = fc.reduceToImage(["t_ha"], ee.Reducer.first())
+    edge = ee.Image().byte().paint(DESA, 1, 1)
+    return img.visualize(min=11, max=14.5, palette=["fff7bc", "fec44f", "fe9929", "cc4c02", "662506"]).blend(edge.visualize(palette=["555555"]))
+
+
+# ---------------------------------------------------------------------------
+# N, P, K: what a satellite can and cannot say
+# ---------------------------------------------------------------------------
+def cire_dev():
+    """Red-edge chlorophyll index CIre = B7/B5 - 1 (Gitelson), compared, like NDVI, with palms of the same age."""
+    cire = s2.select("B7").divide(s2.select("B5")).subtract(1).rename("cire").updateMask(core)
+    if "cm_cire" not in _c:
+        g = (cire.addBands(age_int).reduceRegion(ee.Reducer.median().group(1, "age_int"), aoi, 30,
+                                                 maxPixels=1e10, tileScale=16).get("groups").getInfo())
+        _c["cm_cire"] = {int(x["age_int"]): x["median"] for x in g if x.get("median") is not None}
+    cm = _c["cm_cire"]; keys = sorted(cm)
+    rel = cire.divide(age_int.remap(keys, [cm[k] for k in keys])).subtract(1).rename("rel")
+    return rel.updateMask(health_image().mask())
+
+
+def cire_vis():
+    rel = cire_dev()
+    cls = ee.Image(1).where(rel.lt(-0.10), 2).where(rel.lt(-0.25), 3).updateMask(rel.mask())
+    return cls.visualize(min=1, max=3, palette=["d9f0d3", "fdae61", "b2182b"])
+
+
+def cire_table():
+    rel = cire_dev(); dev = health_image()
+    st = (rel.lt(-0.10).rename("low_cire").addBands(dev.lt(-0.05).rename("low_ndvi"))
+          .addBands(rel.lt(-0.10).And(dev.gte(-0.05)).rename("cire_only")))
+    r = st.reduceRegion(ee.Reducer.mean(), aoi, 30, maxPixels=1e10, tileScale=16).getInfo()
+    corr = (rel.addBands(dev).sample(aoi, 30, numPixels=4000, seed=5, tileScale=8)
+            .reduceColumns(ee.Reducer.pearsonsCorrelation(), ["rel", "dev"]).get("correlation").getInfo())
+    return pd.DataFrame([
+        {"measure": "palm area with red-edge chlorophyll > 10 % below its age group", "value": f"{100*r['low_cire']:.0f} %"},
+        {"measure": "palm area with NDVI > 0.05 below its age group (the health map)", "value": f"{100*r['low_ndvi']:.0f} %"},
+        {"measure": "low chlorophyll although NDVI looks normal (a hint NDVI misses)", "value": f"{100*r['cire_only']:.0f} %"},
+        {"measure": "correlation, chlorophyll deviation vs NDVI deviation (4,000 pixels)", "value": f"{corr:.2f}"}])
+
+
 def products():
     src = "GEDI L2A and L4A; Sentinel-2 L2A; Landsat age map (oil palm age chapter). GEE."
     return [
@@ -334,6 +411,26 @@ def products():
                     "curve and from the biomass proportion."},
         {"kind": "chart", "name": "ch60-monthly", "data": monthly_table, "plot": plot_monthly,
          "caption": "Modelled landscape FFB per month from the age curve."},
+        {"kind": "map", "name": "ch60-ffb-map", "image": ffb_image(), "region": aoi,
+         "vis": {"min": 0, "max": 15, "palette": ["ffffe5", "fee391", "fe9929", "cc4c02", "662506"]},
+         "legend": "Modelled FFB (t/ha/yr), 0 to 15", "title": "Fresh fruit bunches, pixel by pixel", "source": src,
+         "caption": "The age curve applied to every palm pixel, discounted where the canopy is below its age group "
+                    "(x0.9 below, x0.6 well below). Young blocks give nothing yet; old blocks are declining."},
+        {"kind": "map", "name": "ch60-ffb-desa", "image": ffb_desa_map(), "region": aoi,
+         "vis": {"bands": ["vis-red", "vis-green", "vis-blue"], "min": 0, "max": 255},
+         "legend": "", "classes": [("11 t/ha/yr or less", "#fff7bc"), ("12", "#fec44f"), ("12.8", "#fe9929"), ("13.6", "#cc4c02"), ("14.5 or more", "#662506")],
+         "title": "Modelled FFB per desa (t/ha of palm per year)", "source": src + " Desa: BPS via OCHA COD-AB.",
+         "caption": "The same model summarised per desa (official BPS boundaries), the unit a district office plans with."},
+        {"kind": "table", "name": "ch60-ffb-desa-table", "data": ffb_desa, "floatfmt": ("", "", ",.0f", ",.0f", ".1f"),
+         "caption": "The 15 desa with the largest modelled FFB output (desa with at least 50 ha of mapped palm)."},
+        {"kind": "map", "name": "ch60-cire", "image": cire_vis(), "region": aoi,
+         "vis": {"bands": ["vis-red", "vis-green", "vis-blue"], "min": 0, "max": 255},
+         "classes": [("chlorophyll as expected for its age", "#d9f0d3"), ("10-25 % below", "#fdae61"), ("more than 25 % below", "#b2182b")],
+         "title": "Red-edge chlorophyll against the palm's own age group, 2023", "source": src,
+         "caption": "CIre = B7/B5 - 1 from Sentinel-2's red-edge bands, a proxy for leaf chlorophyll and so for nitrogen status, "
+                    "compared with palms of the same age."},
+        {"kind": "table", "name": "ch60-cire-table", "data": cire_table,
+         "caption": "How the chlorophyll screen compares with the NDVI health map."},
     ]
 
 

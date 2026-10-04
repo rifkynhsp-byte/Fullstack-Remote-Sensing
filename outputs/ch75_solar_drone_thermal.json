@@ -1,0 +1,26 @@
+[
+ {
+  "name": "ch75-spot-hist",
+  "kind": "chart",
+  "caption": "Hot-spot strength of every module view (16,000 views of modules in 447 frames), log scale.",
+  "image": "images/real/ch75-spot-hist.png"
+ },
+ {
+  "name": "ch75-threshold",
+  "kind": "table",
+  "caption": "How many defects each threshold finds. Repeated sightings of one module in overlapping frames are one event.",
+  "markdown": "|   hot-spot threshold (counts above module median) |   module views flagged |   share of views |   defects (events) |   single-frame events |\n|--------------------------------------------------:|-----------------------:|-----------------:|-------------------:|----------------------:|\n|                                                60 |                    203 |            1.25% |                 18 |                     3 |\n|                                                80 |                    119 |            0.74% |                 11 |                     0 |\n|                                               100 |                     37 |            0.23% |                  5 |                     0 |\n|                                               150 |                     18 |            0.11% |                  3 |                     0 |\n|                                               200 |                     17 |            0.11% |                  3 |                     0 |\n|                                               250 |                     15 |            0.09% |                  3 |                     0 |\n|                                               300 |                      8 |            0.05% |                  2 |                     0 |"
+ },
+ {
+  "name": "ch75-events",
+  "kind": "figure",
+  "caption": "Each defect at its strongest sighting, in raw radiometric counts (PV Hawk example flight, MIT licence).",
+  "image": "images/real/ch75-events.png"
+ },
+ {
+  "name": "ch75-map",
+  "kind": "figure",
+  "caption": "The flight track and the defects, placed at the drone's GPS position.",
+  "image": "images/real/ch75-map.png"
+ }
+]

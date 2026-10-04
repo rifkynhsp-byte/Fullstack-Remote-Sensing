@@ -37,6 +37,38 @@ H adalah tinggi total. Di sini nilainya berasal dari GEDI rh98 pada jejak yang s
 
 **Buah.** Untuk sawit usia prima kedua perkiraan memberi sekitar 15 t TBS per hektare per tahun (14,5 dari kurva umur, 15,0 dari proporsi biomassa), di dalam rentang 8,5 sampai 15,4 t/ha yang dilaporkan untuk hasil aktual di Indonesia [@takeuchi2020oilpalm]. Keduanya berbeda justru di bagian yang paling penting: untuk sawit berumur 19 sampai 24 tahun, proporsi biomassa memberi 17,1 t/ha dibanding 13,1 dari kurva umur, dan untuk umur 25 tahun ke atas 15,1 dibanding 10,1. **Biomassa terus bertambah seiring umur, sementara hasil buah menurun.** Jadi biomassa saja menaksir terlalu tinggi sawit tua, dan piksel demi piksel kedua perkiraan tidak berkorelasi. Di seluruh 84.000 ha yang dipetakan, kurva umur memberi rata-rata sekitar 13,7 t/ha per tahun, sekitar 96.000 t TBS per bulan. Batang bulanan tampak datar karena musim tidak dimodelkan: hasil sebenarnya naik turun sepanjang tahun, dan hanya catatan pabrik kelapa sawit yang bisa menunjukkan seberapa besar.
 
+## Buah sebagai peta, bukan hanya total
+
+Total satu bentang lahan menjawab "berapa banyak?", tetapi pabrik kelapa sawit, koperasi, atau kantor kabupaten butuh "di mana?". Kurva umur yang sama bisa diterapkan ke setiap piksel sawit, bukan hanya ke jejak GEDI. Di tempat tajuk berada di bawah kelompok umurnya sendiri (peta kesehatan di atas), potensinya dipotong: ×0,9 untuk "di bawah" dan ×0,6 untuk "jauh di bawah". Ini potongan asumsi yang sama dengan bab drone, dan dinyatakan terbuka, bukan hasil ukur.
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-ffb-map.qmd >}}
+
+Peta ini menunjukkan siklus hidup kebun. Blok tergelap adalah sawit di masa prima, sekitar 14 t/ha/th. Blok yang lebih terang adalah sawit muda yang belum berbuah penuh, atau blok tua yang menurun, dan keduanya langsung terlihat. Garis putih tipis adalah jalan kebun dan parit yang dibuang sebelum penilaian.
+
+Dijumlahkan per desa dengan batas resmi BPS (batas yang sama yang dipakai aplikasi IJB, P6), peta menjadi tabel perencanaan:
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-ffb-desa.qmd >}}
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-ffb-desa-table.qmd >}}
+
+Penyang saja dimodelkan menghasilkan sekitar 121.000 t TBS per tahun dari 8.600 ha sawit. Sebagian besar desa berada antara 12,6 dan 14,4 t/ha/th, dekat dengan batas atas model (14,5). Itu bukan tanda kabupaten yang sangat produktif. Itu mencerminkan cara kerja model: sebagian besar sawit yang terpetakan berada di masa prima, dan model memberi setiap hektare umur prima 14,5 t yang sama sebelum potongan kesehatan. Hasil panen sesungguhnya antara kebun besar dan kebun rakyat berbeda lebih jauh daripada seluruh rentang peta ini. Catatan pabrik dan kebun adalah satu-satunya cara memasukkan keragaman itu.
+
+## N, P, dan K: apa yang bisa dan tidak bisa dikatakan satelit
+
+Pupuk adalah biaya variabel terbesar di kebun sawit, jadi pertanyaan ini cepat muncul: bisakah nitrogen, fosfor, dan kalium dipetakan dari angkasa? Jawaban jujurnya ada tiga bagian.
+
+**Nitrogen: tidak langsung, lewat klorofil.** Sebagian besar nitrogen daun berada di perangkat fotosintesis, dan kandungan klorofil mengikuti pasokan nitrogen. Klorofil paling jelas mengubah pantulan di **red edge**, kenaikan tajam antara merah dan inframerah dekat. Sentinel-2 punya tiga kanal sempit di sana. Indeks klorofil red-edge **CIre = B7/B5 − 1** [@gitelson2003chlorophyll] mengikuti klorofil daun, dan melaluinya status nitrogen. Seperti NDVI, setiap sawit dibandingkan dengan sawit seumurnya:
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-cire.qmd >}}
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-cire-table.qmd >}}
+
+Penapisan red-edge menandai jauh lebih banyak daripada NDVI: 22 % areal sawit klorofilnya lebih dari 10 % di bawah kelompok umurnya, dibanding 3 % menurut NDVI. Untuk 19 % areal, klorofil rendah padahal NDVI tampak normal. Ini wajar, karena NDVI jenuh di atas tajuk sawit yang rapat sementara red edge tetap merespons. Kedua deviasi tetap sepakat soal polanya (r = 0,76). Red edge adalah peringatan dini yang lebih peka, dan NDVI baru bereaksi ketika masalahnya sudah lanjut.
+
+**Fosfor dan kalium: tidak langsung sama sekali.** Keduanya tidak punya tanda spektral yang bisa dibaca satelit pada tajuk. Kekurangan kalium dan magnesium tampak sebagai menguning dan bercak oranye pada pelepah tua. Ketika itu terlihat dari atas, hasil panen sudah hilang, dan warna yang sama bisa berasal dari kekeringan, genangan di gambut, penyakit, atau pelepah tua yang belum ditunas.
+
+**Untuk apa petanya.** Petak berklorofil rendah adalah *dugaan*, bukan diagnosis. Kegunaannya adalah menentukan **di mana mengambil sampel daun**. Kebun sudah mengambil sampel pelepah tertentu dari sejumlah pohon per blok lalu mengirimnya ke laboratorium. Analisis itu, bersama uji tanah, adalah dasar rekomendasi pemupukan. Peta red-edge membuat pengambilan sampel lebih cerdas: lebih banyak sampel di tempat tajuk tertinggal dari kelompok umurnya, lebih sedikit di tempat lain. Setelah satu musim analisis daun yang dipasangkan, regresi dari CIre ke N daun untuk varietas dan tanah kebun sendiri menjadi mungkin, dan bersamanya peta nitrogen yang bisa dipercaya.
+
 ## Latihan {.unnumbered}
 
 1. Terapkan persamaan Khalid dengan tinggi batang, bukan tinggi total (anggap pelepah menambah 5 m). Apakah hasilnya masuk ke rentang lapangan?

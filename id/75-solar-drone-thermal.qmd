@@ -1,0 +1,117 @@
+# PLTS dari Drone Termal: Menemukan Modul yang Panas {#sec-solar-drone}
+
+::: {.chapter-goal}
+#### Di bab ini
+Anda akan memeriksa pembangkit listrik tenaga surya (PLTS) sungguhan dari kamera termal drone: menemukan setiap modul dalam 2.500 bingkai inframerah, membandingkan masing-masing dengan tetangganya, dan menandai modul yang panas. Di sepanjang jalan, jawaban pertama ternyata sebuah mobil, ambang batas ternyata menentukan segalanya, dan Anda akan belajar kenapa inspeksi PLTS dibaca dalam *selisih* suhu, bukan dalam derajat.
+:::
+
+## Kenapa termal
+
+Bab [-@sec-solar-resource], [-@sec-solar-pv], dan [-@sec-solar-insight] memakai satelit untuk menemukan di mana PLTS berada dan berapa banyak sinar matahari yang diterimanya. Satelit tidak bisa mengatakan modul mana, di antara puluhan ribu modul sebuah pembangkit, yang rusak. Modul yang rusak masih tampak seperti modul pada foto biasa, tetapi ia **lebih hangat**. Sel yang retak, sambungan solder yang putus, atau dioda bypass yang gagal berhenti mengubah sebagian cahaya menjadi listrik, dan energi itu berubah menjadi panas. Dari kamera termal drone, kerusakan itu menyala.
+
+Sel yang panas merugikan dua kali: dayanya hilang, dan lama-kelamaan ia bisa membakar lembar belakang modul. Inspeksi dengan drone kini rutin untuk pembangkit besar, karena menyusuri barisan dengan kamera genggam butuh berminggu-minggu.
+
+## Datanya
+
+Penerbangan ini disertakan bersama PV Hawk, perangkat sumber terbuka untuk termografi PLTS dari drone [@bommes2021pvhawk; @bommes2022georef]:
+
+- **Drone dan kamera:** DJI Matrice 210 dengan kamera termal Zenmuse XT2 (640 × 512 piksel).
+- **Penerbangan:** di atas dua belas barisan pertama sebuah pembangkit besar di Jerman pada pagi 11 Oktober 2021.
+- **Data:** 2.541 bingkai radiometrik dan posisi GPS drone untuk setiap bingkai.
+- **Lisensi:** dirilis bersama repositori PV Hawk berlisensi MIT. Skrip mengunduhnya sekali (828 MB).
+
+**Hasilnya** berupa tabel Earth Engine publik, jadi bisa dipakai tanpa mengunduh apa pun (`fullstack_rs/solar_pvhawk/module_views` dan `.../defects`, tercantum di `data/GEE_ASSETS.md`).
+
+Nilai di setiap bingkai adalah intensitas mentah kamera, bukan derajat. PV Hawk sendiri hanya menormalkannya. Itu bukan masalah, karena inspeksi tidak memerlukan suhu mutlak. Semua modul dalam satu bingkai terlihat pada saat yang sama, di bawah matahari, angin, dan sudut pandang yang sama, jadi **sebuah modul dinilai terhadap tetangganya**. Standar inspeksi termografi juga menilai anomali dari selisih suhu terhadap modul normal.
+
+## Metodenya
+
+1. **Temukan panel.** Setiap bingkai diberi ambang (Otsu, ambang otomatis dari Bab [-@sec-flood]): panel yang tersinari lebih terang daripada tanah di antara barisan.
+2. **Potong menjadi modul.** Satu barisan panel selebar dua modul, dengan celah gelap tegak di tengah dan celah gelap mendatar di pertemuan bingkai modul. Setiap separuh barisan dipotong pada celahnya sendiri, karena barisan agak miring di citra. Potongan dihitung sebagai modul hanya bila berbentuk modul *dan* menjadi bagian dari barisan berisi paling sedikit empat modul.
+3. **Ukur setiap modul:** median pikselnya (kehangatan umumnya) dan persentil ke-99 (titik terpanasnya).
+4. **Dua uji.**
+   - **Anomali seluruh modul:** median modul dibandingkan dengan modul lain dalam bingkai, sebagai skor-z robust.
+   - **Titik panas:** persentil ke-99 dikurangi median modul itu sendiri.
+5. **Satu kerusakan, banyak bingkai.** Bingkai berurutan bertampalan sekitar 95 %, jadi satu kerusakan terlihat berkali-kali. Penampakan di bingkai yang berdekatan dirangkai menjadi satu kejadian.
+6. **Tempatkan.** Setiap kejadian diberi posisi GPS drone, yang tepat sampai tingkat bingkai (sekitar 10 m). Langkah structure-from-motion PV Hawk [@bommes2022georef] membawanya sampai ke modul satu per satu.
+
+Skrip menganalisis setiap bingkai kelima: 447 bingkai dan 16.177 penampakan modul.
+
+## Jawaban pertama ternyata sebuah mobil
+
+Versi pertama langkah 2 tidak punya aturan "barisan empat". Lima "modul" terpanasnya semuanya di bingkai 2525–2540, di akhir penerbangan, dan ternyata itu mobil yang diparkir: persegi panjang hangat seukuran modul di atas tanah yang terang. Setiap inspeksi otomatis bertemu hal seperti ini, entah mobil, atap, rumah inverter, atau orang. Perbaikannya bukan ambang yang lebih baik, melainkan definisi modul yang lebih baik: **modul tidak pernah berdiri sendiri**.
+
+Versi pertama yang sama juga menandai ratusan "modul" yang sebenarnya jalur tanah kasar yang tersinari di tepi barisan panel. Tanah kasar punya persentil ke-99 tinggi, sehingga tampak seperti titik panas. Perbaikannya bersifat fisis: modul yang tersinari tidak *lebih dingin* daripada tetangganya. Penampakan dengan skor-z robust di bawah −1 adalah tanah atau bayangan, bukan modul.
+
+## Ambang batas menentukan segalanya
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-spot-hist.qmd >}}
+Hampir setiap penampakan modul berada dalam satu punuk: piksel terpanasnya 20 sampai 60 hitungan di atas mediannya. Kerusakan berada jauh di ekor, pada 100 sampai 380 hitungan. Di mana tepatnya garis dipasang?
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-threshold.qmd >}}
+Setiap kandidat di bawah ini diperiksa secara visual pada resolusi penuh.
+
+- **Pada 60 atau 80 hitungan** metode melaporkan 18 atau 11 kerusakan. Sebagian besar adalah derau tekstur pada modul di tepi barisan.
+- **Dari 150 sampai 250 hitungan** metode melaporkan tiga kerusakan yang sama: sebuah dataran, tanda jawaban yang stabil.
+- **Pada 100 hitungan** metode menemukan lima, dan kelimanya nyata. Dua tambahannya adalah kerusakan yang lebih lemah (130 dan 108 hitungan) yang terlewat oleh ambang ketat.
+
+Jadi ada pilihan, dan bergantung pada tugasnya:
+
+- **Untuk laporan inspeksi,** pakai 100 dan kirim teknisi ke lima tempat. Titik panas yang terlewat terus membakar.
+- **Untuk membandingkan pembangkit atau tahun** dengan alarm palsu sesedikit mungkin, pakai 150.
+
+Apa pun pilihannya, laporkan ambang bersama jumlahnya.
+
+## Apa yang ditemukan
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-events.qmd >}}
+Kelima kerusakan menunjukkan tiga pola yang dikenali seorang termografer:
+
+- **Kerusakan 1, 2, dan 5:** satu titik panas bundar pada satu sel. Ini khas sel yang retak atau sebagian tertutup bayangan, atau sambungan solder yang rusak.
+- **Kerusakan 3:** pita hangat di sepanjang deretan sel.
+- **Kerusakan 4:** beberapa sel hangat dalam pola teratur di seluruh modul.
+
+Penyebab setiap pola hanya bisa dipastikan di modulnya, dengan citra elektroluminesensi atau kurva I–V. Drone memberi tahu *di mana* harus melihat dan seberapa mendesak, bukan diagnosis akhirnya.
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-map.qmd >}}
+Lima titik panas di dua belas barisan, tanpa modul yang jelas kepanasan seluruhnya, adalah gambaran pembangkit dalam kondisi baik. Pembangkit dengan kotoran, kaca retak, atau dioda yang gagal akan menunjukkan ekor yang jauh lebih tebal pada histogram di atas.
+
+## Vonis: seberapa jauh hasil ini bisa dipercaya, dan bagaimana membuatnya akurat
+
+**Vonis.** Metodenya cepat: beberapa menit per seribu bingkai di laptop, tanpa data latih. Sangat baik untuk belajar, karena setiap langkah bisa dilihat dan diperiksa. Ia **jujur tentang batasnya**:
+
+- Titik panas ditemukan dengan baik: lima dari lima terverifikasi secara visual.
+- Lokasinya hanya sampai tingkat bingkai (sekitar 10 m).
+- Bekerja dalam hitungan kamera, bukan derajat.
+- Uji seluruh modulnya tidak menemukan kerusakan tingkat modul yang jelas di penerbangan ini, jadi belum teruji untuk jenis kerusakan itu.
+
+**Yang ditambahkan inspeksi profesional:**
+
+1. **Kalibrasi radiometrik ke suhu.** Pakai kalibrasi kamera, dengan emisivitas, jarak, suhu langit, dan irradiasi, sehingga anomali bisa dinilai dari selisih suhu dalam kelvin sebagaimana diminta standar inspeksi.
+2. **Irradiasi selama penerbangan.** Ukur, dan terbang hanya di atas batas minimum (biasanya beberapa ratus W/m²): kerusakan baru memanas ketika ada beban.
+3. **Georeferensi tingkat modul.** Structure-from-motion PV Hawk [@bommes2022georef], atau ortomosaik RGB, mengikat setiap anomali ke ID modul dalam tata letak pembangkit.
+4. **Pengklasifikasi terlatih untuk jenis kerusakan** [@bommes2021pvhawk]. Membedakan sel panas dari substring, dioda bypass, atau kotoran.
+5. **Pemeriksaan lapangan pada sampel.** Pastikan dengan citra elektroluminesensi, kurva I–V, atau kamera genggam sebelum mengganti apa pun.
+
+## Latihan {.unnumbered}
+
+1. Ubah `STEP` dari 5 menjadi 2. Apakah ditemukan lebih banyak kerusakan, atau kerusakan yang sama terlihat lebih sering?
+2. Turunkan `Z_MIN` dari −1 menjadi −3. Berapa banyak kandidat baru yang ternyata tanah? Lihat satu per satu.
+3. Uji seluruh modul (`K_MODULE`) tidak menandai kerusakan yang jelas di sini. Buat uji sintetis: hangatkan satu modul dalam sebuah bingkai sebesar 30 hitungan, lalu periksa apakah metodenya menemukannya.
+4. Muat tabel `defects` di Earth Engine dan beri buffer 10 m pada setiap titik. Barisan mana yang harus disusuri teknisi?
+
+::: {.callout-tip collapse="true"}
+## Jawaban
+
+**1.** Sebagian besar lima kerusakan yang sama, masing-masing terlihat di lebih banyak bingkai. Bingkai berurutan bertampalan sekitar 95 %, jadi menganalisis lebih banyak bingkai menambah penampakan, bukan modul baru. Itulah sebabnya `STEP = 5` sudah cukup.
+
+**2.** Sebagian besar akan berupa jalur tanah kasar yang tersinari di tepi barisan, yang persentil ke-99-nya tinggi tetapi lebih dingin daripada modul. Setiap kandidat yang Anda lihat menunjukkan kenapa aturan fisis itu (modul yang tersinari tidak lebih dingin daripada tetangganya) diperlukan.
+
+**3.** Tambahkan 30 pada piksel di dalam satu persegi modul, lalu jalankan ulang `modules` dan skor-z. Dalam bingkai tipikal, median modul menyebar sekitar 12 hitungan (simpangan baku robust; 7 sampai 19 antarbingkai), jadi kenaikan 30 hitungan hanya sekitar 2,5 SD dan `K_MODULE = 4` **tidak** akan menandainya. Dibutuhkan sekitar 50 hitungan. Itulah batas kepekaan uji seluruh modul: ia menangkap modul atau substring yang jelas gagal, bukan yang sedikit hangat.
+
+**4.** `ee.FeatureCollection('projects/shaped-producer-482312-m0/assets/fullstack_rs/solar_pvhawk/defects').map(function (f) { return f.buffer(10); })`. Tampilkan di atas peta dasar: lingkarannya jatuh di empat dari enam jalur terbang, jadi teknisi cukup menyusuri empat bentang pembangkit, bukan kedua belas barisan.
+:::
+
+## Kode di balik bab ini {.unnumbered}
+
+{{< include _snippets/ch75_solar_drone_thermal.qmd >}}

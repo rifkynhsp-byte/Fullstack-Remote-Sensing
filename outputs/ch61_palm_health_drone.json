@@ -41,5 +41,29 @@
   "kind": "table",
   "caption": "Block totals and the spread between cells under three assumptions about how much crown health costs in fruit, plus the upper bound if every detection were a healthy palm.",
   "markdown": "| scenario (health multipliers)                      |   palms |   total_t_yr |   planted_ha |   t_ha_yr_planted |   cells_p10 |   cells_p90 |   cells_below_8_t_ha |\n|:---------------------------------------------------|--------:|-------------:|-------------:|------------------:|------------:|------------:|---------------------:|\n| no health effect                                   |    1306 |          124 |         14.8 |               7.9 |         1.5 |        13.7 |                  49% |\n| mild (base)                                        |    1306 |          115 |         14.8 |               7.3 |         1.3 |        12.2 |                  53% |\n| strong                                             |    1306 |          103 |         14.8 |               6.5 |         1.1 |        11.0 |                  66% |\n| upper bound: all 2,585 detections as healthy palms |    2585 |          246 |        nan   |             nan   |       nan   |       nan   |                 nan% |"
+ },
+ {
+  "name": "ch61-lc-map",
+  "kind": "figure",
+  "caption": "Land cover classified from the drone orthophoto, object by object (OpenAerialMap, CC BY 4.0).",
+  "image": "images/real/ch61-lc-map.png"
+ },
+ {
+  "name": "ch61-lc-area",
+  "kind": "table",
+  "caption": "Area of each class in the orthophoto.",
+  "markdown": "| class                              |   area_ha |   share |\n|:-----------------------------------|----------:|--------:|\n| oil palm                           |      9.49 |     25% |\n| trees and bush (rough canopy)      |     13.38 |     35% |\n| shrub and regrowth (smooth canopy) |      5.53 |     15% |\n| bare soil, tracks and dry grass    |      5.83 |     15% |\n| shadow and water                   |      3.49 |      9% |"
+ },
+ {
+  "name": "ch61-lc-check",
+  "kind": "figure",
+  "caption": "The check: random objects of each predicted class at full resolution.",
+  "image": "images/real/ch61-lc-check.png"
+ },
+ {
+  "name": "ch61-lc-check-table",
+  "kind": "table",
+  "caption": "Visual check of the random objects above, read by eye (8 per class). A small sample: it says the map is usable for palm vs non-palm, and that the shrub and dry-grass classes are approximate.",
+  "markdown": "| class                              |   correct |   checked |   share |\n|:-----------------------------------|----------:|----------:|--------:|\n| oil palm                           |         8 |         8 |    100% |\n| trees and bush (rough canopy)      |         7 |         8 |     88% |\n| shrub and regrowth (smooth canopy) |         6 |         8 |     75% |\n| bare soil, tracks and dry grass    |         6 |         8 |     75% |\n| shadow and water                   |         8 |         8 |    100% |\n| all                                |        35 |        40 |     88% |"
  }
 ]

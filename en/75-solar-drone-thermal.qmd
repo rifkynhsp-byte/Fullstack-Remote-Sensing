@@ -1,0 +1,117 @@
+# Solar Plants from a Thermal Drone: Finding Hot Modules {#sec-solar-drone}
+
+::: {.chapter-goal}
+#### In this chapter
+You will inspect a real photovoltaic plant from a drone's thermal camera: find every module in 2,500 infrared frames, compare each one with its neighbours, and flag the modules that run hot. Along the way the first answer turns out to be a car, the threshold turns out to decide everything, and you will learn why a solar inspection is read in temperature *differences*, not in degrees.
+:::
+
+## Why thermal
+
+Chapters [-@sec-solar-resource], [-@sec-solar-pv] and [-@sec-solar-insight] use satellites to find where solar farms are and how much sun they get. Satellites cannot tell you which of a plant's tens of thousands of modules is failing. A failing module still looks like a module in an ordinary photograph, but it is **warmer**. A cracked cell, a broken solder joint or a failed bypass diode stops converting part of the light into electricity, and that energy turns into heat. Seen from a drone's thermal camera, the defect lights up.
+
+A hot cell matters twice: it loses power, and over time it can burn the module's backsheet. Inspection by drone is now routine for large plants, because walking the rows with a handheld camera takes weeks.
+
+## The data
+
+The flight comes with PV Hawk, an open-source tool for drone thermography of PV plants [@bommes2021pvhawk; @bommes2022georef]:
+
+- **Drone and camera:** a DJI Matrice 210 with a Zenmuse XT2 thermal camera (640 × 512 pixels).
+- **Flight:** over the first twelve rows of a large plant in Germany on the morning of 11 October 2021.
+- **Data:** 2,541 radiometric frames and the drone's GPS position for every frame.
+- **Licence:** released with the MIT-licensed PV Hawk repository. The script downloads it once (828 MB).
+
+The **results** are public Earth Engine tables, so you can use them without downloading anything (`fullstack_rs/solar_pvhawk/module_views` and `.../defects`, listed in `data/GEE_ASSETS.md`).
+
+The values in each frame are raw camera intensities, not degrees. PV Hawk itself only normalises them. That is not a problem, because inspection does not need absolute temperature. Every module in a frame is seen at the same instant, under the same sun, wind and viewing angle, so **a module is judged against its neighbours**. Thermographic inspection standards also rate anomalies by the temperature difference to normal modules.
+
+## The method
+
+1. **Find the panels.** Each frame is thresholded (Otsu, the automatic threshold of Chapter [-@sec-flood]): the sunlit panels are brighter than the ground between the rows.
+2. **Cut them into modules.** A panel row is two modules wide, with a dark vertical gap between them and dark horizontal gaps where module frames meet. Each half of the row is cut at its own gaps, because the rows are slightly slanted in the image. A piece counts as a module only if it has a module's shape *and* belongs to a row of at least four modules.
+3. **Measure each module:** the median of its pixels (its general warmth) and its 99th percentile (its hottest spot).
+4. **Two tests.**
+   - **Whole-module anomaly:** the module median compared with the other modules in the frame, as a robust z-score.
+   - **Hot spot:** the 99th percentile minus the module's own median.
+5. **One defect, many frames.** Consecutive frames overlap by about 95 %, so one defect is seen many times. Sightings in nearby frames are chained into one event.
+6. **Place it.** Each event takes the drone's GPS position, which is accurate to the frame (about 10 m). PV Hawk's structure-from-motion step [@bommes2022georef] takes this to the individual module.
+
+The script analyses every fifth frame: 447 frames and 16,177 views of modules.
+
+## The first answer was a car
+
+The first version of step 2 had no "row of four" rule. Its five hottest "modules" were all in frames 2525–2540, at the end of the flight, and they were a parked car: a warm, module-sized rectangle on bright ground. Every automated inspection meets this, whether a car, a roof, an inverter housing or a person. The fix is not a better threshold but a better definition of what a module is: **a module never stands alone**.
+
+The same first version also flagged hundreds of "modules" that were strips of rough, sunlit ground at the edges of the panel rows. Rough ground has a high 99th percentile, so it looks like a hot spot. The fix is physical: a module in sunlight is not *cooler* than its neighbours. Views with a robust z below −1 are ground or shadow, not modules.
+
+## The threshold decides everything
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-spot-hist.qmd >}}
+Almost every module view sits in one hump: its hottest pixels are 20 to 60 counts above its median. Defects sit far out in the tail, at 100 to 380 counts. Where exactly to put the line?
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-threshold.qmd >}}
+Every candidate below was checked by eye at full resolution.
+
+- **At 60 or 80 counts** the method reports 18 or 11 defects. Most are texture noise in modules at the row edges.
+- **From 150 to 250 counts** it reports the same three defects: a plateau, the sign of a stable answer.
+- **At 100 counts** it finds five, and all five are real. The two extra ones are weaker defects (130 and 108 counts) that the strict thresholds miss.
+
+So there is a choice, and it depends on the job:
+
+- **For an inspection report,** use 100 and send the technician to five places. A missed hot spot keeps burning.
+- **To compare plants or years** with as few false alarms as possible, use 150.
+
+Either way, report the threshold with the count.
+
+## What was found
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-events.qmd >}}
+The five defects show three of the patterns a thermographer recognises:
+
+- **Defects 1, 2 and 5:** a single round hot spot on one cell. This is typical of a cracked or partly shaded cell, or a defective solder joint.
+- **Defect 3:** a warm band along a string of cells.
+- **Defect 4:** several warm cells in a regular pattern across the module.
+
+What causes each pattern can only be confirmed at the module, with an electroluminescence image or an I–V curve. The drone tells you *where* to look and how urgent it is, not the final diagnosis.
+
+{{< include _snippets/ch75_solar_drone_thermal__ch75-map.qmd >}}
+Five hot spots in twelve rows, and no clearly overheated module, is the picture of a plant in good shape. A plant with soiling, cracked glass or failing diodes would show a much fatter tail in the histogram above.
+
+## Verdict: how far to trust this, and how to make it accurate
+
+**Verdict.** The method is fast: a few minutes per thousand frames on a laptop, no training data. It is excellent for learning, because every step can be seen and checked. It is **honest about its limits**:
+
+- It finds hot spots well: five out of five verified by eye.
+- It locates them only to the frame (about 10 m).
+- It works in camera counts, not degrees.
+- Its whole-module test found no clear module-level fault in this flight, so it is untested on that kind of defect.
+
+**What a professional inspection adds:**
+
+1. **Radiometric calibration to temperature.** Use the camera's calibration, with emissivity, distance, sky temperature and irradiance, so anomalies can be graded by temperature difference in kelvin as inspection standards require.
+2. **Irradiance during the flight.** Measure it, and fly only above a minimum (typically several hundred W/m²): a defect only heats up under load.
+3. **Module-level georeferencing.** PV Hawk's structure-from-motion [@bommes2022georef], or an RGB orthomosaic, ties each anomaly to a module ID in the plant's layout.
+4. **A trained classifier for fault types** [@bommes2021pvhawk]. Separate a hot cell from a substring, a bypass diode or soiling.
+5. **A ground check of a sample.** Confirm with an electroluminescence image, I–V curve or handheld camera before replacing anything.
+
+## Exercises {.unnumbered}
+
+1. Change `STEP` from 5 to 2. Do you find more defects, or the same ones seen more often?
+2. Lower `Z_MIN` from −1 to −3. How many of the new candidates are ground? Look at them.
+3. The whole-module test (`K_MODULE`) flagged no clear fault here. Make a synthetic test: warm one module in a frame by 30 counts and check whether the method finds it.
+4. Load the `defects` table in Earth Engine and buffer each point by 10 m. Which rows of the plant should a technician walk?
+
+::: {.callout-tip collapse="true"}
+## Answers
+
+**1.** Mostly the same five, each seen in more frames. Consecutive frames overlap by about 95 %, so analysing more frames adds sightings, not new modules. That is why `STEP = 5` is enough.
+
+**2.** You will mostly get strips of rough, sunlit ground at the row edges, which have a high 99th percentile but are cooler than modules. Each one you look at shows why the physical rule (a module in sunlight is not cooler than its neighbours) is needed.
+
+**3.** Add 30 to the pixels inside one module rectangle and rerun `modules` and the z-score. In a typical frame the module medians spread by about 12 counts (robust standard deviation; 7 to 19 across frames), so a 30-count rise is only about 2.5 SD and `K_MODULE = 4` will **not** flag it. It takes about 50 counts. That is the sensitivity limit of the whole-module test: it catches a clearly failed module or substring, not a slightly warm one.
+
+**4.** `ee.FeatureCollection('projects/shaped-producer-482312-m0/assets/fullstack_rs/solar_pvhawk/defects').map(function (f) { return f.buffer(10); })`. Overlay it on a basemap: the circles fall on four of the six flight lines, so a technician walks four stretches of the plant, not all twelve rows.
+:::
+
+## The code behind this chapter {.unnumbered}
+
+{{< include _snippets/ch75_solar_drone_thermal.qmd >}}

@@ -55,5 +55,35 @@
   "caption": "Modelled landscape FFB per month from the age curve.",
   "image": "images/real/ch60-monthly.png",
   "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"month,ffb_tonnes_model,palm_ha_mapped,mean_t_ha_yr\n2024-01,96059,84021,13.719\n2024-02,96059,84021,13.719\n2024-03,96059,84021,13.719\n2024-04,96059,84021,13.719\n2024-05,96059,84021,13.719\n2024-06,96059,84021,13.719\n2024-07,96059,84021,13.719\n2024-08,96059,84021,13.719\n2024-09,96059,84021,13.719\n2024-10,96059,84021,13.719\n2024-11,96059,84021,13.719\n2024-12,96059,84021,13.719\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_monthly(df):\n    fig, ax = plt.subplots(figsize=(6.8, 3.0))\n    ax.bar(df.month.str[5:], df.ffb_tonnes_model / 1000, color=\"#e6550d\")\n    ax.set_ylabel(\"FFB (thousand t)\")\n    ax.set_xlabel(\"Month of 2024\")\n    ax.set_title(\"Modelled fresh fruit bunches per month (flat: seasonality not modelled)\",\n                 loc=\"left\", fontsize=9)\n    return fig\n\nplot_monthly(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch60-ffb-map",
+  "kind": "map",
+  "caption": "The age curve applied to every palm pixel, discounted where the canopy is below its age group (x0.9 below, x0.6 well below). Young blocks give nothing yet; old blocks are declining.",
+  "image": "images/real/ch60-ffb-map.jpg"
+ },
+ {
+  "name": "ch60-ffb-desa",
+  "kind": "map",
+  "caption": "The same model summarised per desa (official BPS boundaries), the unit a district office plans with.",
+  "image": "images/real/ch60-ffb-desa.jpg"
+ },
+ {
+  "name": "ch60-ffb-desa-table",
+  "kind": "table",
+  "caption": "The 15 desa with the largest modelled FFB output (desa with at least 50 ha of mapped palm).",
+  "markdown": "| desa          | kabupaten          |   palm_ha |   ffb_t_per_year |   t_per_ha_yr |\n|:--------------|:-------------------|----------:|-----------------:|--------------:|\n| Penyang       | Kotawaringin Timur |     8,645 |          121,012 |          14.0 |\n| Lubuk Ranggan | Kotawaringin Timur |     5,742 |           80,322 |          14.0 |\n| Patai         | Kotawaringin Timur |     4,238 |           60,192 |          14.2 |\n| Tanah Putih   | Kotawaringin Timur |     3,883 |           54,698 |          14.1 |\n| Kabuau        | Kotawaringin Timur |     3,674 |           49,192 |          13.4 |\n| Hanjalipan    | Kotawaringin Timur |     3,552 |           48,878 |          13.8 |\n| Rubung Buyung | Kotawaringin Timur |     3,350 |           45,742 |          13.7 |\n| Camba         | Kotawaringin Timur |     2,585 |           37,110 |          14.4 |\n| Pelantaran    | Kotawaringin Timur |     2,642 |           36,049 |          13.6 |\n| Bukit Raya    | Kotawaringin Timur |     2,782 |           35,105 |          12.6 |\n| Keruing       | Kotawaringin Timur |     2,549 |           34,070 |          13.4 |\n| Kenyala       | Kotawaringin Timur |     2,251 |           31,605 |          14.0 |\n| Jemaras       | Kotawaringin Timur |     1,457 |           20,399 |          14.0 |\n| Sebabi        | Kotawaringin Timur |     1,288 |           18,348 |          14.2 |\n| Parenggean    | Kotawaringin Timur |     1,332 |           17,481 |          13.1 |"
+ },
+ {
+  "name": "ch60-cire",
+  "kind": "map",
+  "caption": "CIre = B7/B5 - 1 from Sentinel-2's red-edge bands, a proxy for leaf chlorophyll and so for nitrogen status, compared with palms of the same age.",
+  "image": "images/real/ch60-cire.jpg"
+ },
+ {
+  "name": "ch60-cire-table",
+  "kind": "table",
+  "caption": "How the chlorophyll screen compares with the NDVI health map.",
+  "markdown": "| measure                                                             | value   |\n|:--------------------------------------------------------------------|:--------|\n| palm area with red-edge chlorophyll > 10 % below its age group      | 22 %    |\n| palm area with NDVI > 0.05 below its age group (the health map)     | 3 %     |\n| low chlorophyll although NDVI looks normal (a hint NDVI misses)     | 19 %    |\n| correlation, chlorophyll deviation vs NDVI deviation (4,000 pixels) | 0.76    |"
  }
 ]

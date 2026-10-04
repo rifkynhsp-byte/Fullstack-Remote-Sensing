@@ -63,6 +63,33 @@ A plantation manager rarely asks "how many tonnes will this block give?" alone. 
 - **A planting register** fixes the age, and with it the potential.
 - **A repeat flight** each year turns the map into a change map: cells that fall from one year to the next are where to look first.
 
+## Land cover from the drone: objects, not pixels
+
+Satellite land-cover maps (Chapter [-@sec-supervised], and the IJB walk-through in P6) see a 10 m pixel. A drone sees a single frond. Classifying a 0.3 m image pixel by pixel fails, because one palm crown contains green leaflets, yellow midribs, shadow and soil, and each pixel would get a different class. The answer is to classify **objects**.
+
+1. **Objects.** SLIC superpixels split the image into about 8,000 compact patches of similar colour, each roughly the size of one palm crown (about 50 m²).
+2. **Features per object.** Mean colour, the excess-green index, brightness, roughness (the local standard deviation of brightness, which separates a crown of fronds from a smooth lawn), and one feature only this plot has: the share of the object near a crown that passed the **planting-grid test** from the health section.
+3. **Seed labels from rules.** Green on the planting grid is palm. Rough green off the grid is trees and bush. Smooth light green is low vegetation. Pale and smooth is bare ground. Very dark is shadow or water. The rules label about half of the objects with confidence.
+4. **A Random Forest** learns from those seeds and labels every object.
+5. **A check by eye**, because rules can be wrong: eight random objects of every class, shown at full resolution.
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-map.qmd >}}
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-area.qmd >}}
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-check.qmd >}}
+
+{{< include _snippets/ch61_palm_health_drone__ch61-lc-check-table.qmd >}}
+
+**What the check taught.** The first version of the map was wrong in an instructive way. It painted most of the southern palm block as "bare soil", because older palms with brownish fronds have a low excess-green index, and its "grass" class was mostly dense shrub. Two rule changes fixed the palm block: bare ground must be pale *and* smooth, and anything on the planting grid is palm. The check above is of the final version.
+
+It also forced honest class names. RGB at 0.3 m cannot separate a lawn from dense low shrub, so that class is called what it is: "shrub and regrowth (smooth canopy)". The open field in the north is dry grass, and it falls into the pale "bare soil, tracks and dry grass" class. By eye, 35 of 40 objects are right (88 %), and palm vs non-palm is right in every sampled case. Two cautions:
+
+- **The names were chosen after looking at the samples,** which flatters the score a little.
+- **Forty objects is a small check.** A real accuracy assessment needs a few hundred objects labelled by someone who knows the site, chosen before the map is seen (Chapter [-@sec-accuracy]).
+
+**Why it matters.** The palm class covers 9.5 ha, a quarter of the image, and the rest is forest, bush and regrowth around a smallholding. For a plantation, that tells you where palm ends and where unplanted or abandoned land begins. For a buyer checking deforestation rules, it tells you whether the palm sits next to forest that must not be cleared (Chapter [-@sec-eudr]).
+
 ## Doing better
 
 - **Multispectral drones** carry red-edge and near-infrared bands. NDVI and red-edge indices respond to chlorophyll and leaf structure, not only to colour, and are less fooled by soil showing between the fronds.

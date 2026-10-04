@@ -37,6 +37,38 @@ H is total height. Here it comes from GEDI rh98 at the same footprints used in t
 
 **Fruit.** For prime-age palms both estimates give about 15 t FFB per hectare per year (14.5 from the age curve, 15.0 from the biomass proportion), inside the 8.5 to 15.4 t/ha range reported for actual Indonesian yields [@takeuchi2020oilpalm]. They disagree where it matters most: for palms aged 19 to 24, the biomass proportion gives 17.1 t/ha against 13.1 from the age curve, and for 25+ it gives 15.1 against 10.1. **Biomass keeps rising as palms age, while yield falls.** So biomass alone overestimates old palms, and pixel by pixel the two estimates are uncorrelated. Over the 84,000 ha mapped, the age curve gives about 13.7 t/ha a year on average, about 96,000 t of FFB a month. The monthly bars are flat because seasonality is not modelled: real yields peak and dip through the year, and only mill records can show by how much.
 
+## Fruit as a map, not only a total
+
+A landscape total answers "how much?", but a mill, a cooperative or a district office needs "where?". The same age curve can be applied to every palm pixel instead of to the GEDI footprints. Where the canopy is below its own age group (the health map above), the potential is discounted: ×0.9 for "below" and ×0.6 for "well below". These are the same assumed costs as in the drone chapter, and they are stated, not measured.
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-ffb-map.qmd >}}
+
+The map shows the life cycle of the plantations. The darkest blocks are palms in their prime years, at about 14 t/ha/yr. Lighter blocks are young palms that do not yet bear fully, or old blocks in decline, and they stand out at a glance. The thin white lines are the estate roads and drains removed before scoring.
+
+Summed per desa with the official BPS boundaries (the same boundaries the IJB app uses, P6), the map becomes a planning table:
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-ffb-desa.qmd >}}
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-ffb-desa-table.qmd >}}
+
+Penyang alone is modelled at about 121,000 t of FFB a year from 8,600 ha of palm. Most desa sit between 12.6 and 14.4 t/ha/yr, close to the ceiling of the model (14.5). That is not a sign of a very productive district. It reflects how the model works: most of the mapped palm is in its prime years, and the model gives every prime-age hectare the same 14.5 t before the health discount. Real yields differ between estates and smallholders by more than the whole range of this map. Mill and estate records are the only way to put that variation in.
+
+## N, P and K: what a satellite can and cannot say
+
+Fertiliser is the largest variable cost in an oil palm plantation, so the question comes up quickly: can we map nitrogen, phosphorus and potassium from space? The honest answer has three parts.
+
+**Nitrogen: indirectly, through chlorophyll.** Most leaf nitrogen sits in the photosynthetic machinery, and chlorophyll content follows nitrogen supply. Chlorophyll changes reflectance most clearly in the **red edge**, the steep rise between red and near infrared. Sentinel-2 has three narrow bands there. The red-edge chlorophyll index **CIre = B7/B5 − 1** [@gitelson2003chlorophyll] tracks leaf chlorophyll, and through it nitrogen status. As with NDVI, each palm is compared with palms of its own age:
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-cire.qmd >}}
+
+{{< include _snippets/ch60_oil_palm_yield__ch60-cire-table.qmd >}}
+
+The red-edge screen flags far more than NDVI: 22 % of the palm area is more than 10 % below its age group in chlorophyll, against 3 % on NDVI. For 19 % of the area, chlorophyll is low while NDVI looks normal. This is expected, because NDVI saturates over a closed palm canopy while the red edge keeps responding. The two deviations still agree on the pattern (r = 0.76). The red edge is the more sensitive early warning, and NDVI only reacts when the problem is advanced.
+
+**Phosphorus and potassium: not directly.** Neither has a spectral signature a satellite can read in a canopy. Potassium and magnesium deficiency show as yellowing and orange spotting on the older fronds. By the time that shows from above, yield has already been lost, and the same colour can come from drought, waterlogging on peat, disease or old fronds not yet pruned.
+
+**What the map is for.** A low-chlorophyll patch is a *hypothesis*, not a diagnosis. Its use is to decide **where to take leaf samples**. Plantations already sample a set frond of a set number of palms per block and send them to a laboratory. That analysis, with soil tests, is what a fertiliser recommendation rests on. A red-edge map makes the sampling smarter: more samples where the canopy lags its age group, fewer where it does not. After a season of matched leaf analyses, a regression from CIre to leaf N for the estate's own varieties and soils becomes possible, and with it a nitrogen map you can trust.
+
 ## Exercises {.unnumbered}
 
 1. Apply Khalid's equation with trunk height instead of total height (assume the fronds add 5 m). Does the result move into the field range?
