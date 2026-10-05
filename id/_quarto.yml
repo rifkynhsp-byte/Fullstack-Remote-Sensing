@@ -28,7 +28,7 @@ lang: id
 
 book:
   title: "Fluks, Piksel, dan Planet"
-  subtitle: "Alur Kerja End-to-End untuk Mengubah Piksel Penginderaan Jauh Menjadi Wawasan"
+  subtitle: "Alur Kerja End-to-End untuk Mengubah Data Penginderaan Jauh Menjadi Wawasan"
   author:
     - name: "Rifky Nauval Hendrawan"
       affiliation: "Senior Remote Sensing Specialist, APRIL · Master of Engineering Science, UNSW Sydney (2026)"

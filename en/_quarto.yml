@@ -28,7 +28,7 @@ lang: en
 
 book:
   title: "Flux, Pixels and Planet"
-  subtitle: "End-to-End Workflows for Turning Remote Sensing Pixels into Insights"
+  subtitle: "End-to-End Workflows for Turning Remote Sensing Data into Insights"
   author:
     - name: "Rifky Nauval Hendrawan"
       affiliation: "Senior Remote Sensing Specialist, APRIL · Master of Engineering Science, UNSW Sydney (2026)"

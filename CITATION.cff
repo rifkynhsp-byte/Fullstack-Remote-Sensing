@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this book, please cite it as below. Each released version has its own DOI on Zenodo."
 type: book
-title: "Flux, Pixels and Planet: End-to-End Workflows for Turning Remote Sensing Pixels into Insights"
+title: "Flux, Pixels and Planet: End-to-End Workflows for Turning Remote Sensing Data into Insights"
 authors:
   - family-names: Hendrawan
     given-names: Rifky Nauval

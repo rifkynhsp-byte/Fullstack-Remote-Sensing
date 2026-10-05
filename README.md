@@ -1,6 +1,6 @@
 # Flux, Pixels and Planet &middot; Fluks, Piksel, dan Planet
 
-Source for the bilingual book *Flux, Pixels and Planet: End-to-End Workflows for Turning Remote Sensing Pixels into Insights*, by Rifky Nauval Hendrawan.
+Source for the bilingual book *Flux, Pixels and Planet: End-to-End Workflows for Turning Remote Sensing Data into Insights*, by Rifky Nauval Hendrawan.
 
 Built with [Quarto](https://quarto.org). Renders an English site and an Indonesian site, published to GitHub Pages.
 

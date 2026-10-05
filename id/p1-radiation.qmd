@@ -54,56 +54,56 @@ P1 sampai P5 adalah fisika dan rekayasa di balik semua bab lain: energi dan atmo
 
 ## Penginderaan jauh adalah mengukur energi
 
-Penginderaan jauh berarti mengukur sesuatu tanpa menyentuhnya. Satelit tidak pernah menyentuh sawah yang dipetakannya. Yang direkamnya hanyalah energi elektromagnetik yang meninggalkan sawah itu lalu naik sampai ke sensor. Semua yang nanti kita sebut "NDVI", "tutupan lahan", atau "luas genangan" adalah tafsiran atas energi tersebut.
+Penginderaan jauh artinya mengukur sesuatu tanpa menyentuhnya. Satelit tidak pernah menginjak sawah yang dipetakannya. Yang ia rekam hanyalah energi elektromagnetik yang meninggalkan sawah itu dan naik sampai ke sensor. Apa pun yang nanti kita sebut "NDVI", "tutupan lahan", atau "luas genangan", semuanya adalah tafsiran atas energi tersebut.
 
-Jadi pertanyaan pertama selalu: **energinya berasal dari mana?** Jawabannya hanya dua.
+Karena itu, pertanyaan pertama selalu sama: **energinya datang dari mana?** Jawabannya cuma dua.
 
-- Sensor **pasif** merekam energi dari sumber alami. Untuk sensor optis (Landsat, Sentinel-2, SPOT), sumbernya matahari: sensor merekam sinar matahari yang dipantulkan permukaan bumi. Sensor termal merekam energi yang dipancarkan permukaan itu sendiri karena permukaannya hangat.
-- Sensor **aktif** membawa sumber energinya sendiri. Radar mengirim pulsa gelombang mikro lalu merekam pantulannya (P5). LiDAR mengirim pulsa laser (Bab [-@sec-lidar-trees]).
+- Sensor **pasif** merekam energi dari sumber alami. Sensor optis (Landsat, Sentinel-2, SPOT) memakai Matahari: yang direkam adalah sinar Matahari yang dipantulkan permukaan Bumi. Sensor termal merekam energi yang dipancarkan permukaan itu sendiri karena permukaannya hangat.
+- Sensor **aktif** membawa sumber energinya sendiri. Radar mengirim pulsa gelombang mikro lalu merekam gemanya (P5). LiDAR mengirim pulsa laser (Bab [-@sec-lidar-trees]).
 
-Pembedaan sederhana ini menjelaskan banyak hal. Sensor optis butuh siang hari dan langit cerah. Radar bisa bekerja malam hari dan menembus awan, karena radar membawa "senter" sendiri dan memakai panjang gelombang yang lolos melewati awan.
+Pembedaan sederhana ini menjelaskan banyak hal. Sensor optis butuh siang hari dan langit cerah. Radar tetap bekerja di malam hari dan menembus awan, karena ia membawa "senter" sendiri dan memakai panjang gelombang yang lolos melewati awan.
 
 ## Radiasi elektromagnetik: satu gelombang, tiga nama
 
-Radiasi elektromagnetik adalah gelombang medan listrik dan medan magnet yang merambat dengan kecepatan cahaya, $c \approx 3 \times 10^8$ m/s. Medan listrik dan medan magnetnya bergetar saling tegak lurus, dan keduanya tegak lurus terhadap arah rambat. Karena itu gelombang ini disebut gelombang *transversal*. Bunyi adalah gelombang *longitudinal* dan butuh udara untuk merambat. Cahaya bisa melintasi ruang hampa.
+Radiasi elektromagnetik adalah gelombang medan listrik dan medan magnet yang merambat dengan kecepatan cahaya, $c \approx 3 \times 10^8$ m/s. Kedua medan bergetar saling tegak lurus, dan sama-sama tegak lurus terhadap arah rambatnya. Karena itu ia disebut gelombang *transversal*. Bunyi adalah gelombang *longitudinal* dan butuh udara untuk merambat, sedangkan cahaya bisa melintasi ruang hampa.
 
 Tiga besaran menggambarkan gelombang yang sama, dan yang satu selalu bisa dihitung dari yang lain:
 
 $$c = \lambda f \qquad\qquad E = h f = \frac{h c}{\lambda}$$
 
-dengan $\lambda$ panjang gelombang, $f$ frekuensi, dan $E$ energi yang dibawa satu foton ($h$ adalah konstanta Planck). Panjang gelombang yang panjang berarti frekuensi rendah dan energi per foton kecil. Tabel di bagian keluaran menghitungnya untuk kanal-kanal Landsat dan tiga kanal radar. Satu foton biru membawa sekitar 2,6 elektron-volt. Satu foton radar kanal C hanya sekitar 0,00002 eV, seratus ribu kali lebih kecil. Inilah sebabnya radar bisa menembus awan dan hujan hampir tanpa hambatan walau energinya sangat kecil. Ini juga sebabnya insinyur radar lebih suka menyebut *frekuensi* (5,4 GHz), sedangkan orang optis menyebut *panjang gelombang* (0,48 µm). Keduanya membicarakan hal yang sama.
+dengan $\lambda$ panjang gelombang, $f$ frekuensi, dan $E$ energi satu foton ($h$ adalah konstanta Planck). Gelombang yang panjang berarti frekuensinya rendah dan energi per fotonnya kecil. Tabel di bagian keluaran menghitungnya untuk kanal-kanal Landsat dan tiga kanal radar. Satu foton biru membawa sekitar 2,6 elektronvolt, sementara satu foton radar kanal C hanya sekitar 0,00002 eV, seratus ribu kali lebih kecil. Justru karena itulah radar bisa menembus awan dan hujan hampir tanpa hambatan. Ini juga alasan insinyur radar lebih suka menyebut *frekuensi* (5,4 GHz), sedangkan orang optis menyebut *panjang gelombang* (0,48 µm). Keduanya membicarakan hal yang sama.
 
 Bagian spektrum yang dipakai dalam penginderaan jauh, dari yang pendek ke yang panjang:
 
 | Wilayah | Panjang gelombang | Kegunaan |
 |---|---|---|
 | Tampak (biru, hijau, merah) | 0,4 sampai 0,7 µm | yang dilihat mata; air, tanah, warna asli |
-| Inframerah dekat (NIR) | 0,7 sampai 1,3 µm | vegetasi sehat memantulkan kuat |
+| Inframerah dekat (NIR) | 0,7 sampai 1,3 µm | vegetasi sehat memantulkannya dengan kuat |
 | Inframerah gelombang pendek (SWIR) | 1,3 sampai 3 µm | kelembapan daun dan tanah, mineral, api aktif |
 | Inframerah termal (TIR) | 8 sampai 14 µm | panas yang dipancarkan permukaan |
 | Gelombang mikro | 1 mm sampai 1 m | radar dan gelombang mikro pasif |
 
-## Sumber energi: benda hitam
+## Sumber energinya: benda hitam
 
-Setiap benda yang lebih hangat dari nol mutlak memancarkan radiasi elektromagnetik. *Benda hitam* adalah benda ideal yang menyerap semua energi yang mengenainya dan memancarkan energi sebanyak mungkin untuk suhunya. Matahari kira-kira berperilaku seperti benda hitam bersuhu sekitar 5.800 K (sering dibulatkan menjadi 6.000 K). Permukaan bumi kira-kira benda hitam bersuhu sekitar 300 K. Ada tiga hukum yang menjelaskannya:
+Setiap benda yang lebih hangat dari nol mutlak memancarkan radiasi elektromagnetik. *Benda hitam* adalah benda ideal yang menyerap semua energi yang mengenainya dan memancarkan energi sebanyak mungkin untuk suhunya. Matahari kira-kira berperilaku seperti benda hitam bersuhu sekitar 5.800 K (sering dibulatkan menjadi 6.000 K), dan permukaan Bumi seperti benda hitam bersuhu sekitar 300 K. Tiga hukum menjelaskannya:
 
-- **Hukum Planck** memberi kurva lengkapnya: berapa energi yang dipancarkan benda hitam pada setiap panjang gelombang.
-- **Hukum pergeseran Wien** memberi letak puncaknya: $\lambda_{maks} = 2898 / T$ µm. Untuk matahari, puncaknya 0,50 µm, tepat di tengah cahaya tampak; mata kita berevolusi untuk melihat di bagian spektrum tempat matahari paling terang. Untuk bumi, puncaknya 9,7 µm, di inframerah termal.
-- **Hukum Stefan–Boltzmann** memberi jumlah totalnya: $M = \sigma T^4$. Karena pangkat empat, setiap meter persegi permukaan matahari memancarkan sekitar $(5800/300)^4 \approx 140.000$ kali lebih banyak daripada satu meter persegi permukaan bumi.
+- **Hukum Planck** memberi kurva lengkapnya: berapa energi yang dipancarkan pada setiap panjang gelombang.
+- **Hukum pergeseran Wien** memberi letak puncaknya: $\lambda_{maks} = 2898 / T$ µm. Puncak Matahari ada di 0,50 µm, tepat di tengah cahaya tampak; mata kita berevolusi untuk melihat di bagian spektrum tempat Matahari paling terang. Puncak Bumi ada di 9,7 µm, di inframerah termal.
+- **Hukum Stefan-Boltzmann** memberi jumlah totalnya: $M = \sigma T^4$. Karena pangkat empat, setiap meter persegi permukaan Matahari memancarkan sekitar $(5800/300)^4 \approx 140.000$ kali lebih banyak daripada satu meter persegi permukaan Bumi.
 
-Gambar Planck di bagian keluaran menampilkan kedua kurva dalam satu grafik. Perhatikan titik potongnya, di sekitar 4 sampai 5 µm. Di bawah panjang gelombang itu, energi yang sampai ke satelit sebagian besar adalah *sinar matahari yang dipantulkan*. Di atasnya, sebagian besar adalah *pancaran bumi sendiri*. Inilah fakta paling berguna di bab ini:
+Gambar Planck di bagian keluaran menampilkan kedua kurva dalam satu grafik. Perhatikan titik potongnya, di sekitar 4 sampai 5 µm. Di bawah panjang gelombang itu, energi yang sampai ke satelit sebagian besar adalah *sinar Matahari yang dipantulkan*. Di atasnya, sebagian besar adalah *pancaran Bumi sendiri*. Inilah fakta paling berguna di bab ini:
 
-- Kanal optis (tampak, NIR, SWIR) mengukur **pantulan**. Kanal ini menunjukkan permukaan itu *apa*.
-- Kanal termal mengukur **pancaran**. Kanal ini menunjukkan seberapa *hangat* permukaan itu.
-- Di antara sekitar 3 dan 5 µm (inframerah gelombang menengah) keduanya bercampur. Karena itu sensor pendeteksi api memakai wilayah ini: api bersuhu 800 K memuncak di sekitar 3,6 µm dan jauh lebih terang dari sekitarnya.
+- Kanal optis (tampak, NIR, SWIR) mengukur **pantulan**: kanal ini memberi tahu permukaan itu *apa*.
+- Kanal termal mengukur **pancaran**: kanal ini memberi tahu seberapa *hangat* permukaan itu.
+- Di antara sekitar 3 dan 5 µm (inframerah gelombang menengah) keduanya bercampur. Karena itulah sensor pendeteksi api memakai wilayah ini: api bersuhu 800 K memuncak di sekitar 3,6 µm dan jauh lebih terang daripada sekitarnya.
 
 ## Apa yang dilakukan atmosfer
 
-Sebelum sampai ke sensor, energi melewati atmosfer, kadang dua kali (dari matahari ke tanah, lalu dari tanah ke sensor). Ada dua hal yang bisa terjadi di perjalanan.
+Sebelum sampai ke sensor, energi menembus atmosfer, sering kali dua kali: dari Matahari ke tanah, lalu dari tanah ke sensor. Di perjalanan, ada dua hal yang bisa terjadi.
 
-**Serapan (absorpsi).** Gas-gas di atmosfer menyerap energi pada panjang gelombang tertentu. Uap air menyerap di sekitar 0,94, 1,14, 1,38, 1,87, dan 2,7 µm, serta sebagian besar rentang di atas 5 sampai 8 µm. Karbon dioksida menyerap di dekat 2,7, 4,3, dan 15 µm. Ozon menyerap di bawah 0,3 µm (inilah yang melindungi kita dari ultraviolet) dan di dekat 9,6 µm. Rentang yang sedikit diserap disebut **jendela atmosfer**: kira-kira 0,4 sampai 1,3 µm, sekitar 1,6 dan 2,2 µm, 3 sampai 5 µm, 8 sampai 14 µm, dan hampir seluruh gelombang mikro. Kanal satelit sengaja diletakkan di dalam jendela, karena kanal di luar jendela hanya akan melihat atmosfer. Ada satu pengecualian yang cerdik. Kanal 9 Landsat 8 dan kanal 10 Sentinel-2 berada di 1,38 µm, justru *di dalam* pita serapan uap air yang kuat. Uap air di atmosfer bawah menyerap semua energi dari permukaan, sehingga satu-satunya yang bisa dilihat kanal ini adalah awan sirus tipis yang tinggi, di atas sebagian besar uap air. Jadilah kanal ini pendeteksi awan sirus (Bab [-@sec-cloud]).
+**Serapan (absorpsi).** Gas-gas di atmosfer menyerap energi pada panjang gelombang tertentu. Uap air menyerap di sekitar 0,94, 1,14, 1,38, 1,87, dan 2,7 µm, serta sebagian besar rentang di atas 5 sampai 8 µm. Karbon dioksida menyerap di dekat 2,7, 4,3, dan 15 µm. Ozon menyerap di bawah 0,3 µm (itulah yang melindungi kita dari ultraviolet) dan di dekat 9,6 µm. Rentang yang hanya sedikit diserap disebut **jendela atmosfer**: kira-kira 0,4 sampai 1,3 µm, sekitar 1,6 dan 2,2 µm, 3 sampai 5 µm, 8 sampai 14 µm, dan hampir seluruh gelombang mikro. Kanal satelit sengaja diletakkan di dalam jendela, karena kanal di luar jendela hanya akan melihat atmosfer. Ada satu pengecualian yang cerdik: kanal 9 Landsat 8 dan kanal 10 Sentinel-2 berada di 1,38 µm, justru *di dalam* pita serapan uap air yang kuat. Uap air di atmosfer bawah menelan semua energi dari permukaan, sehingga yang masih terlihat oleh kanal ini hanyalah awan sirus tipis di ketinggian, di atas sebagian besar uap air. Jadilah kanal ini pendeteksi awan sirus (Bab [-@sec-cloud]).
 
-**Hamburan.** Partikel dan molekul membelokkan arah energi tanpa menyerapnya. Jenis hamburannya bergantung pada ukuran partikel dibandingkan panjang gelombang:
+**Hamburan.** Partikel dan molekul membelokkan arah energi tanpa menyerapnya. Jenis hamburannya bergantung pada ukuran partikel dibandingkan panjang gelombangnya:
 
 | Jenis | Ukuran partikel | Bergantung panjang gelombang? | Contoh sehari-hari |
 |---|---|---|---|
@@ -111,17 +111,17 @@ Sebelum sampai ke sensor, energi melewati atmosfer, kadang dua kali (dari mataha
 | Mie | kira-kira sebesar λ (asap, debu, kabut asap) | sedikit | kabut kecokelatan di atas kota, gumpalan asap |
 | Non-selektif | jauh lebih besar dari λ (butir awan) | tidak | awan putih dan kabut |
 
-Karena hamburan Rayleigh sebanding dengan $\lambda^{-4}$, cahaya biru (0,45 µm) dihamburkan sekitar $(0,65/0,45)^4 \approx 4,4$ kali lebih banyak daripada cahaya merah (0,65 µm). Itulah sebabnya langit biru. Saat senja, cahaya melewati udara jauh lebih tebal, sebagian besar cahaya biru sudah terhambur keluar, dan yang tersisa sampai ke mata kita hanya merah.
+Karena hamburan Rayleigh sebanding dengan $\lambda^{-4}$, cahaya biru (0,45 µm) dihamburkan sekitar $(0,65/0,45)^4 \approx 4,4$ kali lebih banyak daripada cahaya merah (0,65 µm). Itulah sebabnya langit berwarna biru. Saat senja, cahaya menempuh lapisan udara yang jauh lebih tebal, sebagian besar cahaya biru sudah terhambur keluar, dan yang tersisa sampai ke mata kita hanyalah merah.
 
-Bagi satelit, hamburan menambahkan cahaya yang tidak pernah menyentuh piksel yang sedang diamati. Cahaya tambahan ini disebut **radiansi lintasan** (path radiance). Radiansi inilah yang membuat citra berkabut dan kebiruan, dan tambahannya paling besar di kanal biru.
+Bagi satelit, hamburan menambahkan cahaya yang tidak pernah menyentuh piksel yang sedang diamati. Cahaya tambahan ini disebut ***path radiance*** (radiansi lintasan). Inilah yang membuat citra tampak berkabut dan kebiruan, dan tambahannya paling besar di kanal biru.
 
-## Bukti dari citra sungguhan
+## Buktinya di citra sungguhan
 
-Tab kode memperlihatkannya dengan satu lintasan Sentinel-2 di atas Jakarta pada Juli 2024, yang tersimpan dalam dua tingkat pengolahan. Level-1C adalah reflektansi **puncak atmosfer** (top of atmosphere): yang sampai ke satelit. Level-2A adalah **reflektansi permukaan**: piksel yang sama setelah model koreksi atmosfer menghilangkan pengaruh atmosfer. Piksel sama, menit sama, dua jawaban.
+Tab kode membuktikannya dengan satu lintasan Sentinel-2 di atas Jakarta pada Juli 2024, yang tersimpan dalam dua tingkat pengolahan. Level-1C adalah reflektansi ***top of atmosphere*** (puncak atmosfer): apa yang sampai ke satelit. Level-2A adalah **reflektansi permukaan**: piksel yang sama setelah model koreksi atmosfer membuang pengaruh atmosfer. Piksel yang sama, menit yang sama, dua jawaban.
 
-Selisih keduanya adalah atmosfer itu sendiri, terukur. Di kanal aerosol pesisir dan kanal biru, atmosfer menambah reflektansi sekitar 0,07 sampai 0,12, lebih besar daripada pantulan permukaannya sendiri di kanal-kanal itu. Tambahannya cepat mengecil seiring bertambahnya panjang gelombang, mendekati ramalan $\lambda^{-4}$ dari Rayleigh. Mulai dari tepi merah (red edge), tandanya berbalik: di sana atmosfer justru lebih banyak *mengurangi* cahaya (menyerap dan menghamburkannya keluar dari berkas), sehingga koreksi menaikkan nilainya. Bandingkan dua peta warna asli: kota yang berkabut kebiruan di kiri adalah yang dilihat sensor; yang di kanan adalah wujud permukaannya.
+Selisih keduanya adalah atmosfer itu sendiri, yang kini bisa diukur. Di kanal aerosol pesisir dan kanal biru, atmosfer menambah reflektansi sekitar 0,07 sampai 0,12, lebih besar daripada pantulan permukaannya sendiri di kanal-kanal itu. Tambahan itu cepat mengecil seiring bertambahnya panjang gelombang, mendekati ramalan $\lambda^{-4}$ dari Rayleigh. Mulai dari *red edge*, arahnya berbalik: di sana atmosfer justru lebih banyak *mengurangi* cahaya (menyerap dan menghamburkannya keluar dari berkas), sehingga koreksi menaikkan nilainya. Bandingkan kedua peta warna asli: kota yang berkabut kebiruan di sebelah kiri adalah yang dilihat sensor; yang di kanan adalah wujud permukaannya.
 
-Inilah sebabnya Bab [-@sec-optical] menekankan reflektansi permukaan untuk apa pun yang dibandingkan antartanggal. Atmosfer berubah dari hari ke hari. Permukaan bumi, umumnya, tidak.
+Karena itulah Bab [-@sec-optical] menekankan reflektansi permukaan untuk apa pun yang dibandingkan antartanggal. Atmosfer berubah dari hari ke hari, sedangkan permukaan Bumi umumnya tidak.
 
 ## Apa yang dilakukan permukaan terhadap energi
 
@@ -129,32 +129,32 @@ Energi yang sampai di permukaan terbagi tiga, dan jumlahnya selalu sama dengan e
 
 $$E_{datang} = E_{dipantulkan} + E_{diserap} + E_{diteruskan}$$
 
-Perbandingannya bergantung pada bahan *dan* panjang gelombang. Ketergantungan inilah dasar seluruh penginderaan jauh optis: buat grafik reflektansi terhadap panjang gelombang, dan setiap bahan akan menggambar kurvanya sendiri, yaitu **tanda spektral** (spectral signature, Bab [-@sec-physics]). Daun sehat menyerap cahaya merah dan biru untuk fotosintesis dan memantulkan inframerah dekat dengan kuat. Air jernih menyerap hampir semua NIR. Tanah kering memantulkan makin banyak ke arah SWIR.
+Perbandingannya bergantung pada bahan *dan* panjang gelombang. Ketergantungan inilah fondasi seluruh penginderaan jauh optis: gambarkan reflektansi terhadap panjang gelombang, dan setiap bahan akan menggambar kurvanya sendiri, yaitu ***spectral signature*** atau tanda spektral (Bab [-@sec-physics]). Daun sehat menyerap cahaya merah dan biru untuk fotosintesis dan memantulkan inframerah dekat dengan kuat. Air jernih menelan hampir semua NIR. Tanah kering memantulkan makin banyak ke arah SWIR.
 
 Cara energi dipantulkan sama pentingnya dengan jumlahnya:
 
-- **Pantulan spekular** terjadi pada permukaan yang halus dibandingkan panjang gelombangnya: air tenang, jalan basah, atap kaca. Energi pergi dengan sudut yang sama dengan sudut datangnya, seperti cermin. Sensor yang melihat tegak lurus ke bawah akan melihat air gelap, kecuali posisi matahari pas sehingga muncul kilau (sun glint).
-- **Pantulan baur** (difus) terjadi pada permukaan kasar: tanah, rumput, tajuk pohon. Energi pergi ke segala arah. Permukaan yang baur sempurna disebut *Lambertian*; terlihat sama terangnya dari sudut mana pun.
+- **Pantulan spekular** terjadi pada permukaan yang halus dibandingkan panjang gelombangnya: air tenang, jalan basah, atap kaca. Energi pergi dengan sudut yang sama dengan sudut datangnya, seperti cermin. Sensor yang melihat tegak lurus ke bawah akan melihat air yang gelap, kecuali posisi Matahari pas sehingga muncul kilau (*sun glint*).
+- **Pantulan baur** (difus) terjadi pada permukaan kasar: tanah, rumput, tajuk pohon. Energi menyebar ke segala arah. Permukaan yang baur sempurna disebut *Lambertian*: tampak sama terangnya dari sudut mana pun.
 
-"Halus" dan "kasar" bergantung pada panjang gelombang. Sawah yang baru dibajak itu kasar bagi cahaya tampak (panjang gelombang di bawah satu mikrometer), tetapi bisa halus bagi radar kanal L (24 cm). Karena itulah banjir yang sama bisa tampak gelap di satu citra radar dan terang di citra lain (P5).
+"Halus" dan "kasar" bergantung pada panjang gelombang. Sawah yang baru dibajak itu kasar bagi cahaya tampak (panjang gelombang di bawah satu mikrometer), tetapi bisa halus bagi radar kanal L (24 cm). Itu sebabnya banjir yang sama bisa tampak gelap di satu citra radar dan terang di citra lain (P5).
 
 ## Energi yang dipancarkan dan emisivitas
 
-Sensor termal mengukur energi yang dipancarkan, dan permukaan nyata memancarkan lebih sedikit daripada benda hitam bersuhu sama. Perbandingannya disebut **emisivitas**, $\varepsilon$, antara 0 dan 1. Air dan vegetasi rapat mendekati 0,98 sampai 0,99. Batuan dan tanah kering lebih rendah, dan logam mengilap jauh lebih rendah. Hukum Kirchhoff menghubungkan pancaran dengan serapan: pada panjang gelombang tertentu, penyerap yang baik adalah pemancar yang baik.
+Sensor termal mengukur energi yang dipancarkan, dan permukaan nyata memancarkan lebih sedikit daripada benda hitam bersuhu sama. Perbandingannya disebut **emisivitas**, $\varepsilon$, bernilai antara 0 dan 1. Air dan vegetasi rapat mendekati 0,98 sampai 0,99; batuan dan tanah kering lebih rendah; logam mengilap jauh lebih rendah lagi. Hukum Kirchhoff menghubungkan pancaran dengan serapan: pada panjang gelombang tertentu, penyerap yang baik adalah pemancar yang baik.
 
-Sensor termal mengukur suhu *radian*. Yang biasanya kita inginkan adalah suhu *kinetik*, yaitu angka yang terbaca pada termometer yang menempel. Menurut hukum Stefan–Boltzmann, keduanya berbeda sebesar akar pangkat empat dari emisivitas:
+Sensor termal mengukur suhu *radian*. Yang biasanya kita cari adalah suhu *kinetik*, yaitu angka yang terbaca pada termometer yang ditempelkan. Menurut hukum Stefan-Boltzmann, keduanya berbeda sebesar akar pangkat empat dari emisivitas:
 
 $$T_{radian} = \varepsilon^{1/4} \, T_{kinetik}$$
 
-Gambar emisivitas memperlihatkan kenapa ini penting. Pada 27 °C, permukaan dengan $\varepsilon = 0,92$ tampak sekitar 6 °C lebih dingin daripada benda hitam bersuhu sama. Produk suhu permukaan tanah (Bab [-@sec-statistics], Bab [-@sec-urban-energy]) menaksir emisivitas dari tutupan lahan sebelum mengubah radiansi menjadi suhu. Kesalahan emisivitas menjadi kesalahan suhu.
+Gambar emisivitas menunjukkan mengapa ini penting. Pada 27 °C, permukaan dengan $\varepsilon = 0,92$ tampak sekitar 6 °C lebih dingin daripada benda hitam bersuhu sama. Produk suhu permukaan tanah (Bab [-@sec-statistics], Bab [-@sec-urban-energy]) menaksir emisivitas dari tutupan lahan sebelum mengubah radiansi menjadi suhu. Salah menaksir emisivitas berarti salah menaksir suhu.
 
-Ini juga menjawab pertanyaan klasik: **kenapa Landsat punya kanal termal sedangkan SPOT tidak?** Teleskop Landsat tersusun dari cermin (optik reflektif), dan cermin memantulkan semua panjang gelombang dari biru sampai termal. Kamera SPOT dibangun dengan lensa (optik refraktif). Kaca optik meloloskan cahaya tampak dan inframerah dekat, dan dengan jenis kaca yang tepat sebagian SWIR (SPOT 4 dan 5 menambah kanal SWIR), tetapi kaca tidak tembus inframerah termal. Cermin juga lebih ringan daripada kaca tebal, hal penting untuk apa pun yang diluncurkan ke orbit. Pilihan teleskop membatasi kanal apa saja yang bisa dimiliki sebuah satelit (P3).
+Ini juga menjawab pertanyaan klasik: **mengapa Landsat punya kanal termal sedangkan SPOT tidak?** Teleskop Landsat tersusun dari cermin (optik reflektif), dan cermin memantulkan semua panjang gelombang dari biru sampai termal. Kamera SPOT dibangun dengan lensa (optik refraktif). Kaca optik meloloskan cahaya tampak dan inframerah dekat, dan dengan jenis kaca yang tepat sebagian SWIR (SPOT 4 dan 5 menambah kanal SWIR), tetapi kaca tidak tembus inframerah termal. Cermin juga lebih ringan daripada kaca tebal, hal penting bagi apa pun yang diluncurkan ke orbit. Pilihan teleskop ikut menentukan kanal apa saja yang bisa dimiliki sebuah satelit (P3).
 
 {{< include _snippets/ch00a_radiation.qmd >}}
 
 ## Istilah kunci
 
-**Pasif / aktif**: sumber alami (matahari, bumi) dibandingkan sumber milik sensor sendiri (radar, LiDAR). **Benda hitam**: penyerap dan pemancar ideal. **Hukum Wien**: panjang gelombang puncak = 2898 / T µm. **Jendela atmosfer**: rentang panjang gelombang yang diloloskan atmosfer. **Radiansi lintasan**: cahaya yang dihamburkan atmosfer masuk ke sensor. **Hamburan Rayleigh / Mie / non-selektif**: oleh molekul, oleh aerosol, oleh butir awan. **Reflektansi puncak atmosfer / permukaan**: sebelum dan sesudah koreksi atmosfer. **Spekular / baur**: seperti cermin dibandingkan tersebar ke segala arah. **Emisivitas**: seberapa baik permukaan memancar dibandingkan benda hitam.
+**Pasif / aktif**: sumber alami (matahari, bumi) dibandingkan sumber milik sensor sendiri (radar, LiDAR). **Benda hitam**: penyerap dan pemancar ideal. **Hukum Wien**: panjang gelombang puncak = 2898 / T µm. **Jendela atmosfer**: rentang panjang gelombang yang diloloskan atmosfer. ***Path radiance*** (radiansi lintasan): cahaya yang dihamburkan atmosfer masuk ke sensor. **Hamburan Rayleigh / Mie / non-selektif**: oleh molekul, oleh aerosol, oleh butir awan. **Reflektansi puncak atmosfer / permukaan**: sebelum dan sesudah koreksi atmosfer. **Spekular / baur**: seperti cermin dibandingkan tersebar ke segala arah. **Emisivitas**: seberapa baik permukaan memancar dibandingkan benda hitam.
 
 ## Kuis
 
@@ -165,7 +165,7 @@ Coba jawab setiap soal sebelum membuka kunci jawaban.
 3. Dengan hukum Wien, di panjang gelombang berapa kebakaran hutan bersuhu sekitar 800 K memancar paling kuat? Kanal apa yang Anda pakai untuk mendeteksinya?
 4. Kenapa satelit optis tidak punya kanal di antara sekitar 5 dan 8 µm?
 5. Jelaskan dengan konsep hamburan, kenapa langit biru dan senja merah.
-6. Citra Level-1C sebuah kota tampak berkabut dan kebiruan; citra Level-2A dari lintasan yang sama tidak. Apa yang dihilangkan, dan kenapa kanal biru paling terpengaruh?
+6. Citra Level-1C sebuah kota tampak berkabut dan kebiruan, sedangkan citra Level-2A dari lintasan yang sama tidak. Apa yang dihilangkan, dan mengapa kanal biru paling terpengaruh?
 7. Pada contoh Jakarta, reflektansi inframerah dekat justru *lebih rendah* sebelum dikoreksi. Bagaimana atmosfer bisa membuat sebuah kanal lebih gelap?
 8. Untuk apa kanal 1,38 µm pada Landsat 8 dan Sentinel-2, dan kenapa kanal itu berfungsi?
 9. Dua atap sama-sama bersuhu 40 °C. Emisivitas yang satu 0,98, yang lain 0,90. Mana yang tampak lebih panas bagi sensor termal, dan kira-kira berapa selisihnya?
@@ -180,7 +180,7 @@ Coba jawab setiap soal sebelum membuka kunci jawaban.
 3. $2898/800 \approx 3,6$ µm, inframerah gelombang menengah. Kanal MWIR (sekitar 3,7 sampai 4 µm) paling baik untuk mendeteksi api; SWIR (sekitar 2,2 µm) juga merespons kuat, karena itu komposit SWIR menampakkan api aktif.
 4. Uap air menyerap kuat di rentang itu. Kanal yang diletakkan di sana hanya akan melihat atmosfer, bukan permukaan.
 5. Molekul menghamburkan sebanding $\lambda^{-4}$, sehingga biru dihamburkan sekitar empat kali lebih banyak daripada merah dan sampai ke mata dari segala arah langit. Saat senja, cahaya melewati udara jauh lebih tebal, sebagian besar biru terhambur keluar dari berkas langsung, dan cahaya yang tersisa berwarna merah.
-6. Radiansi lintasan, terutama dari hamburan Rayleigh yang paling kuat pada panjang gelombang pendek.
+6. *Path radiance*, terutama dari hamburan Rayleigh yang paling kuat pada panjang gelombang pendek.
 7. Di sepanjang lintasan, atmosfer juga menyerap dan menghamburkan cahaya *keluar* dari berkas. Di NIR, kehilangan ini lebih besar daripada sedikit cahaya yang terhambur masuk, sehingga nilai di puncak atmosfer lebih rendah daripada nilai di permukaan.
 8. Pendeteksi awan sirus. Kanal ini berada di pita serapan uap air yang kuat. Cahaya dari permukaan dan awan rendah terserap; hanya awan sirus tipis yang tinggi, di atas sebagian besar uap air, yang memantulkan cahaya kembali ke sensor.
 9. Atap dengan emisivitas 0,98. Suhu radiannya $0,98^{1/4}\times313 \approx 311,4$ K dan $0,90^{1/4}\times313 \approx 304,8$ K, selisih sekitar 6,6 °C.
