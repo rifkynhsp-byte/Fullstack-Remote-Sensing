@@ -28,7 +28,7 @@ Kalau ada yang bertanya "seberapa bagus satelit ini?", jawaban jujurnya adalah "
 | **Resolusi temporal** | seberapa sering bisa melihat? | waktu kunjung ulang |
 | **Cakupan spasial** | seberapa luas yang terlihat sekaligus? | lebar sapuan, FOV, ukuran scene |
 
-Banyak soal ujian menyembunyikan salah satunya di balik istilah lain. "IFOV linear", "GSD", dan "ukuran piksel" berarti resolusi spasial. "Lebar sapuan", "FOV", dan "jejak" berarti cakupan. "Tingkat kuantisasi" berarti resolusi radiometrik. Biasakan menerjemahkannya.
+Lembar spesifikasi dan vendor sering menyembunyikan salah satunya di balik istilah lain. "IFOV linear", "GSD", dan "ukuran piksel" berarti resolusi spasial. "Lebar sapuan", "FOV", dan "jejak" berarti cakupan. "Tingkat kuantisasi" berarti resolusi radiometrik. Biasakan menerjemahkannya.
 
 ## Resolusi spasial
 
@@ -45,7 +45,7 @@ Ada dua akibatnya:
 
 Resolusi spektral menggambarkan cara spektrum dibagi: berapa kanal, di mana letaknya, dan seberapa lebar masing-masing. Kanal *pankromatik* adalah satu kanal lebar, biasanya meliputi cahaya tampak. Sensor *multispektral* punya beberapa sampai sekitar selusin kanal. Sensor *hiperspektral* punya ratusan kanal sempit yang bersambung (masing-masing sekitar 10 nm), cukup untuk menggambar spektrum yang hampir utuh bagi setiap piksel.
 
-Gambar kanal di bagian keluaran membandingkan tiga sensor berdasarkan spesifikasi resminya. Gambar ini menjawab soal ujian klasik: *mana yang lebih lebar, kanal 5 Landsat 7 atau kanal 6 Landsat 8?* Keduanya berada di wilayah SWIR yang sama di dekat 1,6 µm, tetapi kanal 5 ETM+ membentang dari 1,55 sampai 1,75 µm (200 nm), sedangkan kanal 6 OLI dari 1,57 sampai 1,65 µm (80 nm). Sensor yang lebih baru memakai kanal yang lebih sempit, yang diletakkan untuk menghindari serapan atmosfer. Landsat 8 mempersempit kanal inframerah dekatnya menjadi 0,85 sampai 0,88 µm untuk menghindari serapan uap air di dekat 0,825 µm. Landsat 8 juga menambah dua kanal: kanal pesisir/aerosol (0,43 sampai 0,45 µm) dan kanal sirus di 1,38 µm (P1).
+Gambar kanal di bagian keluaran membandingkan tiga sensor berdasarkan spesifikasi resminya. Gambar ini menjawab pertanyaan yang penting saat menggabungkan dua generasi Landsat: *mana yang lebih lebar, kanal 5 Landsat 7 atau kanal 6 Landsat 8?* Keduanya berada di wilayah SWIR yang sama di dekat 1,6 µm, tetapi kanal 5 ETM+ membentang dari 1,55 sampai 1,75 µm (200 nm), sedangkan kanal 6 OLI dari 1,57 sampai 1,65 µm (80 nm). Sensor yang lebih baru memakai kanal yang lebih sempit, yang diletakkan untuk menghindari serapan atmosfer. Landsat 8 mempersempit kanal inframerah dekatnya menjadi 0,85 sampai 0,88 µm untuk menghindari serapan uap air di dekat 0,825 µm. Landsat 8 juga menambah dua kanal: kanal pesisir/aerosol (0,43 sampai 0,45 µm) dan kanal sirus di 1,38 µm (P1).
 
 Nomor kanalnya juga berubah. Di Landsat 5 dan 7, inframerah dekat adalah kanal 4. Di Landsat 8 dan 9, inframerah dekat adalah kanal 5, dan kanal 4 adalah merah. Skrip yang menghitung NDVI dengan "kanal 4 dan kanal 3" benar untuk Landsat 7 tetapi salah untuk Landsat 8. Inilah salah satu kesalahan diam-diam yang paling sering muncul dalam kode penginderaan jauh.
 
@@ -57,7 +57,7 @@ Resolusi radiometrik adalah seberapa halus sensor membagi kecerahan. Sinyal dari
 
 $$\text{tingkat keabuan} = 2^{n} \qquad n = \text{bit per piksel}$$
 
-1 bit memberi 2 tingkat (hitam atau putih), 8 bit memberi 256, 12 bit memberi 4.096. Kalau soal ujian menyebut "kecerahan dicuplik menjadi 256 tingkat", jawabannya 8 bit; kalau "1.024 tingkat", 10 bit. Tabel di bagian keluaran mendaftar kedalaman bit sensor-sensor umum: MSS Landsat memakai 6 bit, TM dan ETM+ 8 bit, OLI Landsat 8 12 bit, OLI-2 Landsat 9 14 bit.
+1 bit memberi 2 tingkat (hitam atau putih), 8 bit memberi 256, 12 bit memberi 4.096. Lembar spesifikasi yang menyebut "kecerahan dicuplik menjadi 256 tingkat" berarti 8 bit; "1.024 tingkat" berarti 10 bit. Tabel di bagian keluaran mendaftar kedalaman bit sensor-sensor umum: MSS Landsat memakai 6 bit, TM dan ETM+ 8 bit, OLI Landsat 8 12 bit, OLI-2 Landsat 9 14 bit.
 
 Gambarnya menampilkan satu potongan inframerah dekat Sentinel-2 sungguhan yang disimpan dengan 1, 2, 4, 8, dan 12 bit. Dengan 1 bit, scene berubah menjadi topeng hitam-putih. Dengan 4 bit, tampilannya seperti cetakan poster. Antara 8 dan 12 bit tidak terlihat bedanya di layar, karena layar hanya menampilkan sekitar 256 tingkat dan mata tidak bisa membedakan lebih dari itu. Tingkat tambahan itu tetap penting: pada sasaran gelap seperti air, tempat seluruh sinyal hanya menempati beberapa dari 256 anak tangga, 12 bit menyimpan perbedaan kecil kekeruhan atau kedalaman yang akan hilang terbulatkan pada 8 bit.
 
@@ -93,6 +93,32 @@ Kelima sifat itu berebut sumber daya yang sama dan terbatas:
 Gambar pertukaran menempatkan enam sensor menurut ukuran piksel dan lebar sapuannya. Keenamnya berjajar pada satu garis: WorldView-3 melihat piksel 0,31 m pada jalur selebar 13 km, MODIS melihat piksel 250 m pada 2.330 km, dan Himawari di orbit geostasioner melihat seluruh piringan bumi dengan piksel paling halus 500 m. Tidak ada sensor di pojok kiri atas, yang tajam *sekaligus* luas. Memilih sensor berarti memilih resolusi mana yang paling penting untuk pertanyaan Anda (Bab [-@sec-sensors]).
 
 {{< include _snippets/ch00d_resolution.qmd >}}
+
+## Piksel adalah sampel, bukan gambar
+
+Bagi seorang ahli geofisika, citra adalah **sinyal**: medan yang kontinu (reflektansi di permukaan lahan, hamburan balik, suhu) yang disampel pada interval teratur dalam ruang dan waktu. Semua yang dibahas di atas bersumber dari situ, begitu juga batas-batasnya.
+
+***Sampling*.** Sensor mengintegrasikan energi di seluruh jejak pandangnya lalu mencatat satu angka. Objek yang lebih kecil dari piksel akan terata-ratakan, dan teorema *sampling* Nyquist-Shannon menyatakan bahwa kita butuh paling sedikit dua sampel untuk panjang gelombang terpendek yang ingin dikenali. Piksel 30 m tidak bisa memperlihatkan jalan selebar 30 m dengan andal; piksel 10 m bisa memperlihatkan jalan selebar 20 m. Waktu pun mengikuti aturan yang sama: kunjungan ulang 16 hari tidak akan menangkap banjir yang hanya bertahan empat hari.
+
+**Fourier.** Sinyal apa pun bisa ditulis sebagai jumlah gelombang. Dalam ruang, frekuensi tinggi adalah tepi dan tekstur, sedangkan frekuensi rendah adalah gradasi yang luas: menyaring citra berarti memilih frekuensi mana yang dipertahankan. Dalam waktu, NDVI sawah hanyalah beberapa siklus dominan dalam setahun. Regresi harmonik di Bab [-@sec-timeseries] sesungguhnya adalah deret Fourier terpotong yang dicocokkan pada satu piksel.
+
+**Taylor.** Di sekitar satu titik, kurva mulus apa pun mendekati garis lurus. Karena itulah model linear bekerja pada rentang yang pendek, kesalahan kecil pada masukan menghasilkan kesalahan yang bisa diperkirakan pada keluaran (perambatan galat), dan indeks yang dikalibrasi pada satu musim bisa gagal di musim lain: garis itu sejak awal hanya pendekatan lokal.
+
+**Diskret dan kontinu.** Dunia ini kontinu; setiap analisis bersifat diskret. Setiap pilihan ukuran piksel, rentang tanggal, dan cara merata-ratakan adalah pilihan *sampling*, dan pilihan itu mengubah jawabannya.
+
+## Unit yang bisa diubah: MAUP dan kembarannya dalam waktu
+
+***Modifiable Areal Unit Problem*** (MAUP) adalah kenyataan yang tidak nyaman: statistik yang dihitung per wilayah akan berubah ketika wilayahnya diubah. Kehilangan hutan per kabupaten, per DAS, dan per grid 1 km bisa menceritakan tiga kisah berbeda dari piksel yang sama. Masalah ini punya dua sisi: **skala** (seberapa besar unitnya) dan **zonasi** (di mana batas-batasnya ditarik).
+
+Waktu punya masalah yang sama, yang kadang disebut ***Modifiable Temporal Unit Problem*** (MTUP). Rata-rata tahunan menyembunyikan kekeringan dua minggu; komposit bulanan mencampur banjir dengan dampak sesudahnya; tren 2015 sampai 2020 bisa berbalik arah kalau dimulai dari 2016. Sebelum melaporkan agregat apa pun, tanyakan: apakah kesimpulannya tetap bertahan dengan unit yang berbeda? Bab statistik dan visualisasi data menguji persis hal itu.
+
+## Yang dekat lebih berkaitan: geostatistika
+
+Hukum pertama geografi Tobler menyatakan bahwa segala sesuatu saling berkaitan, tetapi yang dekat lebih berkaitan daripada yang jauh. Geostatistika mengubah prinsip itu menjadi alat. **Variogram** mengukur seberapa cepat dua pengukuran berhenti saling menyerupai seiring bertambahnya jarak; *range*-nya menunjukkan seberapa jauh satu plot lapangan bisa mewakili sekitarnya. Ada dua akibat yang muncul di seluruh buku ini. Titik latih dan titik uji yang berdampingan tidak saling bebas, sehingga pembagian acak melebih-lebihkan akurasi (Bab [-@sec-sampling] memakai blok spasial sebagai gantinya). Dan peta hasil interpolasi titik, entah dengan *kriging* atau dengan model, hanya sebaik struktur spasial yang ada di datanya.
+
+## Dari mana *deep learning* dan deret waktu berasal
+
+*Deep learning* tampak baru, tetapi intinya adalah pengolahan sinyal yang sudah lama. *Convolutional neural network* menggeser filter-filter kecil di atas citra, dan filter itu persis sama dengan *kernel* konvolusi, seperti filter tepi dan tekstur di Bab [-@sec-texture], bedanya bobot *kernel* dipelajari jaringan dari data, bukan dipilih manusia. *Recurrent network* dan *transformer* melakukan hal serupa di sepanjang waktu. Dilihat dari sudut ini, jaringan dalam adalah tumpukan filter raksasa hasil belajar, filter yang sudah dikenal ahli geofisika, dan ia mewarisi batas-batasnya: tidak bisa melihat di bawah interval *sampling*, dan ia mempelajari apa pun yang ada di data latihnya, termasuk biasnya. Fondasi di bagian ini yang membuat Anda bisa menilai kapan kerumitan tambahan itu sepadan.
 
 ## Istilah kunci
 

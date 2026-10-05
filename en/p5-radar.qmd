@@ -16,6 +16,20 @@
 You will learn how an imaging radar works and why it looks to the side; how its resolution is set in range and in azimuth, and why a *synthetic* aperture solves the azimuth problem; why mountains lean towards the radar (foreshortening and layover) and hide behind themselves (shadow); what makes a pixel bright or dark; and what polarisation, speckle and interferometry mean. Geometry is computed, and every claim about backscatter is checked against real Sentinel-1 data.
 :::
 
+## Every sensor is a trade-off
+
+Passive sensors listen to energy the Sun or the Earth already provides; active sensors send their own pulse and time the echo, like a seismic survey with a controlled source. Neither is better. Each sees something the others cannot, and each is blind somewhere.
+
+| Sensor | Energy | What it measures well | Where it fails | Examples |
+|---|---|---|---|---|
+| Optical multispectral | Passive, reflected sunlight | Colour, pigments, water, vegetation condition, species with enough bands | Cloud, haze, night; sees only the top of the canopy | Landsat, Sentinel-2, PlanetScope |
+| Thermal infrared | Passive, emitted heat | Surface temperature, fire, evaporation, urban heat | Cloud; coarse pixels (60 to 100 m); emissivity must be known | Landsat TIRS, ECOSTRESS |
+| Passive microwave | Passive, emitted microwaves | Soil moisture, rain, sea ice, through cloud | Very coarse (10 to 40 km) | SMAP, AMSR2 |
+| Imaging radar (SAR) | Active, microwave echo | Structure, roughness, moisture, water, deformation; day, night, through cloud | Speckle; geometry distortion on slopes; harder to interpret | Sentinel-1, ALOS-2 PALSAR-2, NISAR, Biomass |
+| LiDAR | Active, laser echo | Height, vertical structure, terrain under canopy | Small footprints or small areas; cloud stops the laser; costly from aircraft | GEDI, ICESat-2, airborne and drone LiDAR |
+
+The practical rule follows from the table: **fuse sensors whose blind spots differ.** Radar fills the cloudy months of an optical time series; LiDAR gives the height that optical colour can only hint at; optical gives the species that radar cannot name. Many chapters in this book are built on exactly such pairs.
+
 ## Why radar
 
 Radar (RAdio Detection And Ranging) is an **active** sensor. It sends its own microwave pulses and records the echoes (P1). That gives it three advantages over optical sensors:
@@ -65,7 +79,7 @@ On the ground, the same slant distance covers a longer stretch where the beam hi
 
 $$\delta_{ground} = \frac{\delta_{slant}}{\sin \theta}$$
 
-where $\theta$ is the incidence angle. Because $\theta$ is smaller at near range, $\sin\theta$ is smaller and $\delta_{ground}$ is **larger (worse) at near range and smaller (better) at far range**. This is the opposite of what intuition suggests and a favourite exam question. The left panel of the resolution figure shows it: at 15° incidence the ground-range resolution is almost four times the slant-range value; at 50° it is only 30 % larger. Straight down ($\theta = 0$) it would be infinite, which is the deepest reason why radar must look to the side.
+where $\theta$ is the incidence angle. Because $\theta$ is smaller at near range, $\sin\theta$ is smaller and $\delta_{ground}$ is **larger (worse) at near range and smaller (better) at far range**. This is the opposite of what intuition suggests, and it catches out experienced analysts. The left panel of the resolution figure shows it: at 15° incidence the ground-range resolution is almost four times the slant-range value; at 50° it is only 30 % larger. Straight down ($\theta = 0$) it would be infinite, which is the deepest reason why radar must look to the side.
 
 ## Resolution in azimuth: the synthetic aperture
 

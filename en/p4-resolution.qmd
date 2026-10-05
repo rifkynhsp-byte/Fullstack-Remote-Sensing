@@ -28,7 +28,7 @@ When someone asks "how good is this satellite?", the honest answer is "good at w
 | **Temporal resolution** | how often can I look? | revisit time |
 | **Spatial coverage** | how much do I see at once? | swath width, FOV, scene size |
 
-Many exam questions hide one of these behind different words. "Linear IFOV", "GSD" and "pixel size" are spatial resolution. "Swath", "FOV" and "footprint" are coverage. "Quantization level" is radiometric resolution. Learn to translate.
+Data sheets and vendors often hide one of these behind different words. "Linear IFOV", "GSD" and "pixel size" are spatial resolution. "Swath", "FOV" and "footprint" are coverage. "Quantization level" is radiometric resolution. Learn to translate.
 
 ## Spatial resolution
 
@@ -45,7 +45,7 @@ Two consequences:
 
 Spectral resolution describes how the spectrum is divided: how many bands, where they sit, and how wide each is. A *panchromatic* band is one wide band, usually across the visible range. A *multispectral* sensor has a few to about a dozen bands. A *hyperspectral* sensor has hundreds of narrow, contiguous bands (about 10 nm each), enough to draw a nearly continuous spectrum for every pixel.
 
-The band figure in the output block compares three sensors from the published specifications. It answers a classic exam question: *which is wider, Landsat 7's band 5 or Landsat 8's band 6?* Both are in the same SWIR region near 1.6 µm, but ETM+ band 5 spans 1.55 to 1.75 µm (200 nm) while OLI band 6 spans 1.57 to 1.65 µm (80 nm). Newer sensors use narrower bands, placed to avoid absorption by the atmosphere. Landsat 8 narrowed its near-infrared band to 0.85 to 0.88 µm to avoid a water-vapour absorption near 0.825 µm. It also added two bands: a coastal/aerosol band (0.43 to 0.45 µm) and a cirrus band at 1.38 µm (P1).
+The band figure in the output block compares three sensors from the published specifications. It answers a question that matters when you combine two Landsat generations: *which is wider, Landsat 7's band 5 or Landsat 8's band 6?* Both are in the same SWIR region near 1.6 µm, but ETM+ band 5 spans 1.55 to 1.75 µm (200 nm) while OLI band 6 spans 1.57 to 1.65 µm (80 nm). Newer sensors use narrower bands, placed to avoid absorption by the atmosphere. Landsat 8 narrowed its near-infrared band to 0.85 to 0.88 µm to avoid a water-vapour absorption near 0.825 µm. It also added two bands: a coastal/aerosol band (0.43 to 0.45 µm) and a cirrus band at 1.38 µm (P1).
 
 The band numbers also changed. On Landsat 5 and 7, near infrared is band 4. On Landsat 8 and 9, near infrared is band 5, and band 4 is red. A script that computes NDVI with "band 4 and band 3" is right for Landsat 7 and wrong for Landsat 8. This is one of the most common silent errors in remote sensing code.
 
@@ -57,7 +57,7 @@ Radiometric resolution is how finely a sensor divides brightness. The signal fro
 
 $$\text{grey levels} = 2^{n} \qquad n = \text{bits per pixel}$$
 
-1 bit gives 2 levels (black or white), 8 bits give 256, 12 bits give 4,096. If an exam says "the brightness is sampled into 256 levels", the answer is 8 bits; if it says "1,024 levels", 10 bits. The table in the output block lists the bit depth of common sensors: Landsat MSS used 6 bits, TM and ETM+ 8 bits, Landsat 8 OLI 12 bits, Landsat 9 OLI-2 14 bits.
+1 bit gives 2 levels (black or white), 8 bits give 256, 12 bits give 4,096. A data sheet that says "the brightness is sampled into 256 levels" means 8 bits; "1,024 levels" means 10 bits. The table in the output block lists the bit depth of common sensors: Landsat MSS used 6 bits, TM and ETM+ 8 bits, Landsat 8 OLI 12 bits, Landsat 9 OLI-2 14 bits.
 
 The figure shows one real Sentinel-2 near-infrared patch stored with 1, 2, 4, 8 and 12 bits. With 1 bit the scene becomes a black-and-white mask. With 4 bits it looks like a posterised print. Between 8 and 12 bits you can see no difference on screen, because a screen shows only about 256 levels and the eye cannot tell more. The extra levels still matter: in dark targets such as water, where all the signal fits into a few of the 256 steps, 12 bits keeps small differences in turbidity or depth that 8 bits would round away.
 
@@ -93,6 +93,32 @@ The five properties compete for the same limited resources:
 The trade-off figure places six sensors by pixel size and swath. They fall along a line: WorldView-3 sees 0.31 m pixels over a 13 km strip, MODIS sees 250 m pixels over 2,330 km, and Himawari in geostationary orbit sees the whole disk of the Earth with 500 m pixels at best. No sensor sits in the top-left corner, sharp *and* wide. Choosing a sensor means choosing which resolution matters most for your question (Chapter [-@sec-sensors]).
 
 {{< include _snippets/ch00d_resolution.qmd >}}
+
+## A pixel is a sample, not a picture
+
+To a geophysicist an image is a **signal**: a continuous field (reflectance across the land, backscatter, temperature) sampled at regular intervals in space and time. Everything above follows from that, and so do the limits.
+
+**Sampling.** A sensor integrates the energy over its footprint and records one number. Features smaller than the pixel are averaged away, and the Nyquist-Shannon sampling theorem says you need at least two samples across the shortest wavelength you want to resolve. A 30 m pixel cannot reliably show a 30 m road; a 10 m pixel can show a 20 m road. Time follows the same rule: a 16-day revisit cannot catch a flood that lasts four days.
+
+**Fourier.** Any signal can be written as a sum of waves. In space, the high frequencies are edges and texture, the low frequencies are broad gradients: filtering an image is choosing which frequencies to keep. In time, a rice field's NDVI is a few dominant cycles a year. The harmonic regression of Chapter [-@sec-timeseries] is literally a truncated Fourier series fitted to a pixel.
+
+**Taylor.** Near a point, any smooth curve is close to a straight line. That is why linear models work over short ranges, why a small error in an input produces a predictable error in an output (error propagation), and why an index calibrated in one season can fail in another: the line was only ever a local approximation.
+
+**Discrete and continuous.** The world is continuous; every analysis is discrete. Each choice of pixel size, date window and averaging is a choice of sampling, and it changes the answer.
+
+## The modifiable units: MAUP and its twin in time
+
+The **Modifiable Areal Unit Problem** (MAUP) is the uncomfortable fact that statistics computed over areas change when you change the areas. Forest loss per district, per watershed and per 1 km grid can tell three different stories from the same pixels. It has two parts: **scale** (how big the units are) and **zoning** (where their boundaries fall).
+
+Time has the same problem, sometimes called the **Modifiable Temporal Unit Problem** (MTUP). An annual mean hides a two-week drought; a monthly composite blends a flood with its aftermath; the trend from 2015 to 2020 can reverse if you start in 2016. Before reporting any aggregate, ask: would the conclusion survive a different unit? The chapters on statistics and data visualisation test exactly that.
+
+## Near things are more related: geostatistics
+
+Tobler's first law of geography says everything is related to everything else, but near things are more related than distant things. Geostatistics turns that into a tool. The **variogram** measures how quickly two measurements stop resembling each other as the distance between them grows; its range tells you how far one field plot speaks for its neighbours. Two consequences run through this book. Training and test points that sit next to each other are not independent, so random splits overstate accuracy (Chapter [-@sec-sampling] uses spatial blocks instead). And a map interpolated from points, by kriging or by a model, is only as good as the spatial structure in the data.
+
+## Where deep learning and time series come from
+
+Deep learning looks new, but its core is old signal processing. A convolutional neural network slides small filters over an image, and a filter is exactly a convolution kernel, like the edge and texture filters of Chapter [-@sec-texture], except that the network learns the kernel weights from data instead of a person choosing them. Recurrent networks and transformers do the same along time. Seen this way, a deep network is a very large, learned stack of the filters a geophysicist already knows, and it inherits their limits: it cannot see below the sampling interval, and it learns whatever the training data contains, including its biases. The foundations in this part are what let you judge when it is worth the extra complexity.
 
 ## Key terms
 

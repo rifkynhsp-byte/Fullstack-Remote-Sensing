@@ -16,9 +16,34 @@
 Anda akan mempelajari dari mana energi yang diukur setiap satelit berasal, apa yang dilakukan atmosfer terhadap energi itu di perjalanan, dan apa yang terjadi ketika energi itu sampai di permukaan. Di akhir bab, Anda seharusnya bisa menjelaskan kenapa langit berwarna biru, kenapa Landsat punya kanal termal sedangkan SPOT tidak, dan kenapa citra satelit sebuah kota terlihat berkabut sebelum dikoreksi. Yang terakhir bahkan akan dibuktikan dengan data sungguhan.
 :::
 
+## Cara seorang ahli geofisika memandang Bumi
+
+Saya datang ke penginderaan jauh dari geofisika, dan geofisika mengajarkan satu gagasan sebelum yang lain: **kita tidak perlu menggali untuk tahu apa yang ada di bawah tanah.** Teorema divergensi Gauss mengatakan bahwa semua yang dipancarkan atau diserap sebuah volume tertutup bisa dibaca dari fluks yang menembus permukaannya:
+
+$$\oint_S \mathbf{F}\cdot d\mathbf{A} \;=\; \int_V \nabla\cdot\mathbf{F}\;dV$$
+
+Ukur apa yang mengalir keluar melalui batasnya, maka kita tahu apa yang terjadi di dalamnya. Begitulah survei gravitasi dan magnet menemukan tubuh bijih tanpa satu lubang bor pun, dan persis itu pula yang dilakukan satelit. Satelit tidak pernah menyentuh hutan, sawah, atau banjir. Ia mengukur energi yang meninggalkan permukaan dan merambat ke atas, lalu dari fluks itu kita menyimpulkan apa yang ada di bawah: air atau vegetasi, sehat atau tertekan, tinggi atau pendek.
+
+Gagasan kedua adalah **gelombang**. Gelombang seismik, bunyi, dan cahaya tunduk pada matematika perambatan yang sama: merambat, memantul di tempat mediumnya berubah, terhambur oleh batas yang kasar, dan kehilangan energi di sepanjang jalan. Gema radar dari kebun karet dan pantulan seismik dari lapisan batu pasir adalah fisika yang sama pada panjang gelombang yang berbeda. Begitu Anda melihatnya, P1 sampai P5 bukan lagi lima topik terpisah, melainkan satu cerita.
+
+Gagasan ketiga adalah **sinyal**. Setiap citra adalah pengukuran yang disampel dalam ruang dan waktu, jadi semua perangkat pengolahan sinyal langsung berlaku. Analisis Fourier memecah deret waktu menjadi siklus-siklusnya: musim tanam padi hanyalah beberapa frekuensi yang dominan. Deret Taylor membantu kita melinearkan kurva di sekitar satu titik dan memperkirakan bagaimana galat merambat. Teori *sampling* memberi tahu apa yang tidak akan pernah bisa diperlihatkan piksel 30 m. Statistika dan geostatistika lalu mengajukan pertanyaan yang jujur: apakah perbedaan ini nyata atau hanya derau, dan seberapa jauh satu pengukuran bisa mewakili tetangganya?
+
+## Dari warna daun sampai ton buah sawit
+
+Bisakah satelit menghitung tandan buah segar (TBS) yang akan dipanen sebuah kebun sawit? Dua puluh tahun lalu pertanyaan itu terdengar mengada-ada. Hari ini, itu adalah rantai penalaran yang setiap matanya bisa diuji:
+
+- **warna** tajuk di banyak panjang gelombang membedakan spesies dan memisahkan daun yang sehat dari yang tertekan;
+- **tekstur** dan gelapnya **bayangan** menyimpan informasi tinggi tegakan;
+- **tinggi** memprediksi **biomassa**, melalui persamaan alometrik yang diukur dari pohon yang ditebang;
+- **biomassa** dan kesehatan tajuk memprediksi **produktivitas**, dan produktivitas itulah yang ditimbang di pabrik.
+
+Setiap mata rantai menambah ketidakpastian, dan ujung rantai tidak pernah seakurat pangkalnya. Namun ucapan George Box tetap berlaku: semua model itu salah, tetapi sebagian berguna. Model yang berguna adalah model yang diuji dengan data dan galatnya dilaporkan. Itulah sikap buku ini. Korelasi bukan kausalitas, dan bukan hak kita untuk menolak sebuah hubungan karena terdengar mustahil, atau menerimanya karena terdengar masuk akal. Kita menyusun hipotesis, mengujinya pada data yang belum pernah dilihat model, lalu membiarkan data yang berbicara. "Biomassa dari luar angkasa" dulu hanyalah angan-angan; pada April 2025, Badan Antariksa Eropa (ESA) meluncurkan satelit yang dinamai persis seperti itu.
+
+Untuk apa repot-repot? Karena penginderaan jauh menjawab pertanyaan yang menjadi ukuran kinerja sebuah organisasi. **Kualitas**: apakah tanamannya sehat, apakah petanya benar? **Produktivitas**: berapa hasil lahan ini, dan di mana hasilnya tertinggal? **Biaya**: berapa hari kerja lapangan yang bisa digantikan oleh satu citra? **Keselamatan**: lereng mana yang akan longsor dan sungai mana yang akan meluap, sebelum ada orang yang harus berjalan ke sana? Dan di luar perusahaan, ada ***triple bottom line***: manusia, planet, dan keuntungan, yang diukur, bukan sekadar diklaim. Tujuannya bukan peta yang indah, melainkan angka yang bisa ditindaklanjuti, lengkap dengan ketidakpastiannya.
+
 ::: {.callout-note}
-## Tentang bagian Prinsip
-Bab P1 sampai P5 adalah fisika dan rekayasa yang mendasari seluruh isi buku ini. Urutannya mengikuti mata kuliah prinsip penginderaan jauh di universitas: energi (P1), wahana dan orbit (P2), cara sensor memindai (P3), empat resolusi (P4), dan radar (P5). Setiap bab ditutup dengan kuis. Semua gambar dibuat sendiri: dihitung dari rumus fisika, digambar khusus untuk buku ini, atau dibuat dari data satelit sungguhan di tab kode.
+## Cara membaca bagian Prinsip
+P1 sampai P5 adalah fisika dan rekayasa di balik semua bab lain: energi dan atmosfer (P1), wahana dan orbit (P2), cara sensor memindai (P3), empat resolusi dan arti piksel sebagai sinyal (P4), serta radar (P5). P6 kemudian menerapkan semuanya dalam sebuah aplikasi, tanpa kode. Setiap bab ditutup dengan kuis. Gambar-gambarnya dihitung dari fisika, digambar khusus untuk buku ini, atau dibuat dari data satelit asli di tab kode.
 :::
 
 ## Penginderaan jauh adalah mengukur energi
@@ -34,7 +59,7 @@ Pembedaan sederhana ini menjelaskan banyak hal. Sensor optis butuh siang hari da
 
 ## Radiasi elektromagnetik: satu gelombang, tiga nama
 
-Radiasi elektromagnetik adalah gelombang medan listrik dan medan magnet yang merambat dengan kecepatan cahaya, $c \approx 3 \times 10^8$ m/s. Medan listrik dan medan magnetnya bergetar saling tegak lurus, dan keduanya tegak lurus terhadap arah rambat. Karena itu gelombang ini disebut gelombang *transversal*. Bunyi, yang mungkin dijadikan pembanding oleh dosen Anda, adalah gelombang *longitudinal* dan butuh udara untuk merambat. Cahaya bisa melintasi ruang hampa.
+Radiasi elektromagnetik adalah gelombang medan listrik dan medan magnet yang merambat dengan kecepatan cahaya, $c \approx 3 \times 10^8$ m/s. Medan listrik dan medan magnetnya bergetar saling tegak lurus, dan keduanya tegak lurus terhadap arah rambat. Karena itu gelombang ini disebut gelombang *transversal*. Bunyi adalah gelombang *longitudinal* dan butuh udara untuk merambat. Cahaya bisa melintasi ruang hampa.
 
 Tiga besaran menggambarkan gelombang yang sama, dan yang satu selalu bisa dihitung dari yang lain:
 
@@ -54,7 +79,7 @@ Bagian spektrum yang dipakai dalam penginderaan jauh, dari yang pendek ke yang p
 
 ## Sumber energi: benda hitam
 
-Setiap benda yang lebih hangat dari nol mutlak memancarkan radiasi elektromagnetik. *Benda hitam* adalah benda ideal yang menyerap semua energi yang mengenainya dan memancarkan energi sebanyak mungkin untuk suhunya. Matahari kira-kira berperilaku seperti benda hitam bersuhu sekitar 5.800 K (catatan kuliah mungkin membulatkannya menjadi 6.000 K). Permukaan bumi kira-kira benda hitam bersuhu sekitar 300 K. Ada tiga hukum yang menjelaskannya:
+Setiap benda yang lebih hangat dari nol mutlak memancarkan radiasi elektromagnetik. *Benda hitam* adalah benda ideal yang menyerap semua energi yang mengenainya dan memancarkan energi sebanyak mungkin untuk suhunya. Matahari kira-kira berperilaku seperti benda hitam bersuhu sekitar 5.800 K (sering dibulatkan menjadi 6.000 K). Permukaan bumi kira-kira benda hitam bersuhu sekitar 300 K. Ada tiga hukum yang menjelaskannya:
 
 - **Hukum Planck** memberi kurva lengkapnya: berapa energi yang dipancarkan benda hitam pada setiap panjang gelombang.
 - **Hukum pergeseran Wien** memberi letak puncaknya: $\lambda_{maks} = 2898 / T$ µm. Untuk matahari, puncaknya 0,50 µm, tepat di tengah cahaya tampak; mata kita berevolusi untuk melihat di bagian spektrum tempat matahari paling terang. Untuk bumi, puncaknya 9,7 µm, di inframerah termal.

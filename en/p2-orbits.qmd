@@ -16,6 +16,40 @@
 You will learn what a remote sensing satellite is made of besides its camera, why most Earth observation satellites fly about 700 km up in a near-polar, sun-synchronous orbit, how to tell an ascending pass from a descending one by looking at an image, and why a Landsat scene is a tilted parallelogram. Every claim is checked against orbit physics or against the real archive.
 :::
 
+## Fifty years of looking down
+
+Every sensor in this book has a place in a story that began with weather pictures and ended up weighing forests.
+
+| Year | Mission | What changed |
+|---|---|---|
+| 1960 | TIROS-1 | The first weather satellite: cloud seen from orbit |
+| 1972 | Landsat 1 | The first civilian land-imaging satellite; about 80 m pixels, four bands |
+| 1978 | Seasat | The first civilian imaging radar: seeing through cloud |
+| 1982 | Landsat 4 | The Thematic Mapper: 30 m, seven bands including thermal |
+| 1986 | SPOT-1 | A push broom sensor at 10 to 20 m that could point sideways |
+| 1991 | ERS-1 | Europe's C-band radar, the ancestor of Sentinel-1 |
+| 1999 | Landsat 7, Terra, IKONOS | 15 m panchromatic; daily MODIS; the first 1 m commercial images |
+| 2008 | Landsat archive | Made free for everyone, and global studies exploded |
+| 2013 | Landsat 8 | Push broom OLI, better signal, 12-bit data |
+| 2014-2015 | Sentinel-1 and 2 | Free radar every few days and 10 m optical every five days |
+| 2018 | GEDI, ICESat-2 | Space lasers measuring tree height and ice |
+| 2021 | Landsat 9 | Continuity: the same 30 m, the same 185 km swath |
+| 2025 | Biomass, NISAR | The first P-band radar, built to see through the canopy, and a joint NASA-ISRO L- and S-band radar |
+
+Two patterns run through the table. Each new sensor solved the previous one's blind spot: radar for cloud, lasers for height, long wavelengths for biomass. And every gain came with a trade-off, which is the subject of P4.
+
+## Why is Landsat still 30 m after fifty years?
+
+Landsat 9, launched in 2021, has the same 30 m pixels and the same 185 km swath as Landsat 4 in 1982. That looks like stagnation. It is a decision, and a good one.
+
+**The archive is the instrument.** Landsat's value is not any single image; it is fifty years of measurements of the same places on the same grid, comparable enough to detect change. NASA and the USGS have treated continuity with earlier missions as paramount: a pixel from 1984 and a pixel from 2024 can be compared directly, so a deforestation trend, a growing city or a shrinking lake can be measured across decades. Change the pixel size and every long time series in the world breaks.
+
+**Physics and engineering push back.** Halving the pixel size quadruples the data for the same area. To keep a 185 km swath and a 16-day revisit at 15 m, the satellite would need four times the detectors, storage and downlink, or it would have to give up swath or revisit. P4 calls this the triangle you cannot escape: spatial detail, coverage and revisit compete.
+
+**Others fill the gap.** Since 2015, Sentinel-2 adds 10 m bands and a five-day revisit, and NASA harmonises the two (Harmonized Landsat Sentinel-2) so they can be used as one record. The next generation, Landsat Next, was designed with 10 to 20 m bands, and in 2025 it was sent back for a cheaper design: even improvements must protect the continuity of the record.
+
+The lesson for an analyst: resolution is not quality. The right sensor is the one whose trade-offs match the question.
+
 ## Three segments, not one satellite
 
 People say "Landsat" and picture a satellite. A working remote sensing system has three parts:
@@ -78,7 +112,7 @@ The points where the orbit crosses the equator are the *descending node* and the
 | The orbit is tilted about 8° from north–south, across a 185 km swath | about 185 × tan 8° ≈ 26 km |
 | The Earth rotates during the ≈ 25 s needed to image 170 km along track | ≈ 12 km at the equator, less towards the poles |
 
-The footprint map in the output block shows real Landsat 8 scenes along path 120 across Java. They are parallelograms leaning from north-north-east to south-south-west, exactly as a descending pass should produce. If an exam gives you an image and its orbit arrow, look first for north, then for the direction of flight.
+The footprint map in the output block shows real Landsat 8 scenes along path 120 across Java. They are parallelograms leaning from north-north-east to south-south-west, exactly as a descending pass should produce. Given an image and its orbit arrow, look first for north, then for the direction of flight.
 
 ## Covering the whole Earth: path, row and repeat
 

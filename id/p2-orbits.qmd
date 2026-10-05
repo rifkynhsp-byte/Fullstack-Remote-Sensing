@@ -16,6 +16,40 @@
 Anda akan mempelajari isi sebuah satelit penginderaan jauh selain kameranya, kenapa kebanyakan satelit pengamat bumi terbang sekitar 700 km di atas permukaan dalam orbit hampir-kutub yang sinkron matahari, cara membedakan lintasan naik (ascending) dan turun (descending) hanya dengan melihat citranya, dan kenapa satu scene Landsat berbentuk jajaran genjang yang miring. Setiap klaim dicek dengan fisika orbit atau dengan arsip citra yang sebenarnya.
 :::
 
+## Lima puluh tahun memandang ke bawah
+
+Setiap sensor di buku ini punya tempat dalam sebuah cerita yang dimulai dari foto cuaca dan berakhir dengan menimbang hutan.
+
+| Tahun | Misi | Apa yang berubah |
+|---|---|---|
+| 1960 | TIROS-1 | Satelit cuaca pertama: awan terlihat dari orbit |
+| 1972 | Landsat 1 | Satelit pencitraan daratan sipil pertama; piksel sekitar 80 m, empat kanal |
+| 1978 | Seasat | Radar pencitra sipil pertama: menembus awan |
+| 1982 | Landsat 4 | *Thematic Mapper*: 30 m, tujuh kanal termasuk termal |
+| 1986 | SPOT-1 | Sensor *push broom* 10 sampai 20 m yang bisa membidik ke samping |
+| 1991 | ERS-1 | Radar kanal C milik Eropa, cikal bakal Sentinel-1 |
+| 1999 | Landsat 7, Terra, IKONOS | Pankromatik 15 m; MODIS harian; citra komersial 1 m pertama |
+| 2008 | Arsip Landsat | Digratiskan untuk semua orang, dan studi skala global pun meledak |
+| 2013 | Landsat 8 | OLI berjenis *push broom*, sinyal lebih baik, data 12-bit |
+| 2014-2015 | Sentinel-1 dan 2 | Radar gratis setiap beberapa hari dan citra optis 10 m setiap lima hari |
+| 2018 | GEDI, ICESat-2 | Laser di luar angkasa untuk mengukur tinggi pohon dan es |
+| 2021 | Landsat 9 | Kesinambungan: tetap 30 m, tetap lebar sapuan 185 km |
+| 2025 | Biomass, NISAR | Radar kanal P pertama yang dirancang menembus tajuk, dan radar kanal L dan S hasil kerja sama NASA-ISRO |
+
+Ada dua pola dalam tabel itu. Setiap sensor baru menutup titik buta pendahulunya: radar untuk awan, laser untuk tinggi, gelombang panjang untuk biomassa. Dan setiap kemajuan selalu datang bersama kompromi, yang menjadi pokok bahasan P4.
+
+## Mengapa Landsat masih 30 m setelah lima puluh tahun?
+
+Landsat 9, yang diluncurkan pada 2021, punya piksel 30 m dan lebar sapuan 185 km yang sama dengan Landsat 4 pada 1982. Kelihatannya seperti jalan di tempat. Padahal itu keputusan, dan keputusan yang tepat.
+
+**Arsipnya adalah instrumennya.** Nilai Landsat bukan pada satu citra, melainkan pada lima puluh tahun pengukuran tempat yang sama di grid yang sama, yang cukup konsisten untuk mendeteksi perubahan. NASA dan USGS menjadikan kesinambungan dengan misi sebelumnya sebagai syarat utama: piksel tahun 1984 dan piksel tahun 2024 bisa dibandingkan langsung, sehingga tren deforestasi, pertumbuhan kota, atau danau yang menyusut bisa diukur lintas dekade. Ubah ukuran pikselnya, maka semua deret waktu panjang di dunia ikut rusak.
+
+**Fisika dan rekayasa ikut menahan.** Memperkecil ukuran piksel menjadi setengahnya berarti data untuk luas yang sama menjadi empat kali lipat. Agar tetap mencakup 185 km dengan siklus ulang 16 hari pada resolusi 15 m, satelit butuh empat kali lebih banyak detektor, penyimpanan, dan kapasitas kirim data, atau harus mengorbankan lebar sapuan atau frekuensi kunjungan. P4 menyebutnya segitiga yang tidak bisa dihindari: detail spasial, cakupan, dan frekuensi kunjungan saling berebut.
+
+**Misi lain mengisi celahnya.** Sejak 2015, Sentinel-2 menambahkan kanal 10 m dan kunjungan ulang lima hari, dan NASA menyelaraskan keduanya (*Harmonized Landsat Sentinel-2*) agar bisa dipakai sebagai satu rekaman. Generasi berikutnya, Landsat Next, dirancang dengan kanal 10 sampai 20 m, dan pada 2025 rancangannya dikaji ulang agar lebih hemat: bahkan peningkatan pun harus tetap menjaga kesinambungan rekaman.
+
+Pelajarannya bagi seorang analis: resolusi bukan kualitas. Sensor yang tepat adalah sensor yang kompromi-kompromi teknisnya cocok dengan pertanyaannya.
+
 ## Tiga segmen, bukan satu satelit
 
 Orang menyebut "Landsat" lalu membayangkan satelitnya saja. Padahal sistem penginderaan jauh yang berjalan punya tiga bagian:
@@ -78,7 +112,7 @@ Titik perpotongan orbit dengan khatulistiwa disebut *simpul turun* dan *simpul n
 | Orbit miring sekitar 8° dari arah utara–selatan, sepanjang lebar sapuan 185 km | sekitar 185 × tan 8° ≈ 26 km |
 | Bumi berputar selama ≈ 25 detik yang dibutuhkan untuk merekam 170 km searah lintasan | ≈ 12 km di khatulistiwa, makin kecil ke arah kutub |
 
-Peta jejak scene di bagian keluaran menampilkan scene Landsat 8 yang sebenarnya di sepanjang path 120 yang melintasi Jawa. Bentuknya jajaran genjang yang miring dari utara-timur laut ke selatan-barat daya, persis seperti hasil lintasan turun. Kalau soal ujian memberi Anda sebuah citra beserta panah arah orbitnya, cari dulu arah utara, lalu arah terbangnya.
+Peta jejak scene di bagian keluaran menampilkan scene Landsat 8 yang sebenarnya di sepanjang path 120 yang melintasi Jawa. Bentuknya jajaran genjang yang miring dari utara-timur laut ke selatan-barat daya, persis seperti hasil lintasan turun. Kalau Anda mendapat sebuah citra beserta panah arah orbitnya, cari dulu arah utara, lalu arah terbangnya.
 
 ## Mencakup seluruh bumi: path, row, dan siklus ulang
 

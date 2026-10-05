@@ -16,6 +16,20 @@
 Anda akan mempelajari cara kerja radar pencitra dan kenapa radar melihat ke samping; bagaimana resolusinya ditentukan pada arah range dan azimut, dan kenapa *apertur sintetis* memecahkan masalah azimut; kenapa gunung tampak condong ke arah radar (foreshortening dan layover) dan bersembunyi di balik dirinya sendiri (bayangan); apa yang membuat piksel terang atau gelap; serta apa arti polarisasi, speckle, dan interferometri. Geometrinya dihitung, dan setiap klaim tentang hamburan balik dicek dengan data Sentinel-1 sungguhan.
 :::
 
+## Setiap sensor adalah kompromi
+
+Sensor pasif "mendengarkan" energi yang sudah tersedia dari Matahari atau Bumi; sensor aktif mengirim pulsanya sendiri lalu mengukur waktu gemanya, mirip survei seismik dengan sumber gelombang buatan. Tidak ada yang lebih unggul. Masing-masing melihat sesuatu yang tidak terlihat oleh yang lain, dan masing-masing punya titik buta.
+
+| Sensor | Energi | Yang diukur dengan baik | Kelemahannya | Contoh |
+|---|---|---|---|---|
+| Optis multispektral | Pasif, pantulan cahaya Matahari | Warna, pigmen, air, kondisi vegetasi, spesies bila kanalnya cukup | Awan, kabut asap, malam hari; hanya melihat permukaan tajuk | Landsat, Sentinel-2, PlanetScope |
+| Inframerah termal | Pasif, panas yang dipancarkan | Suhu permukaan, kebakaran, evaporasi, pulau panas perkotaan | Awan; piksel kasar (60 sampai 100 m); emisivitas harus diketahui | Landsat TIRS, ECOSTRESS |
+| Gelombang mikro pasif | Pasif, gelombang mikro yang dipancarkan | Kelembapan tanah, hujan, es laut, menembus awan | Sangat kasar (10 sampai 40 km) | SMAP, AMSR2 |
+| Radar pencitra (SAR) | Aktif, gema gelombang mikro | Struktur, kekasaran, kelembapan, air, deformasi; siang, malam, menembus awan | *Speckle*; distorsi geometri di lereng; lebih sulit ditafsirkan | Sentinel-1, ALOS-2 PALSAR-2, NISAR, Biomass |
+| LiDAR | Aktif, gema laser | Tinggi, struktur vertikal, permukaan tanah di bawah tajuk | Jejak atau cakupan kecil; laser terhenti oleh awan; mahal bila dari pesawat | GEDI, ICESat-2, LiDAR pesawat dan drone |
+
+Aturan praktisnya mengikuti tabel itu: **gabungkan sensor yang titik butanya berbeda.** Radar mengisi bulan-bulan berawan dalam deret waktu optis; LiDAR memberi tinggi yang hanya bisa diisyaratkan oleh warna; citra optis memberi nama spesies yang tidak bisa disebutkan radar. Banyak bab di buku ini dibangun di atas pasangan seperti itu.
+
 ## Kenapa radar
 
 Radar (RAdio Detection And Ranging) adalah sensor **aktif**. Radar mengirim pulsa gelombang mikronya sendiri lalu merekam gemanya (P1). Ini memberinya tiga keunggulan dibandingkan sensor optis:
@@ -65,7 +79,7 @@ Di permukaan, jarak miring yang sama mencakup bentangan lebih panjang di tempat 
 
 $$\delta_{permukaan} = \frac{\delta_{miring}}{\sin \theta}$$
 
-dengan $\theta$ sudut datang. Karena $\theta$ lebih kecil di range dekat, $\sin\theta$ lebih kecil dan $\delta_{permukaan}$ **lebih besar (lebih buruk) di range dekat dan lebih kecil (lebih baik) di range jauh**. Ini berlawanan dengan intuisi, dan menjadi soal ujian favorit. Panel kiri gambar resolusi memperlihatkannya: pada sudut datang 15°, resolusi permukaan hampir empat kali nilai slant range; pada 50°, hanya 30 % lebih besar. Tepat ke bawah ($\theta = 0$) nilainya tak terhingga, dan inilah alasan paling mendasar kenapa radar harus melihat ke samping.
+dengan $\theta$ sudut datang. Karena $\theta$ lebih kecil di range dekat, $\sin\theta$ lebih kecil dan $\delta_{permukaan}$ **lebih besar (lebih buruk) di range dekat dan lebih kecil (lebih baik) di range jauh**. Ini berlawanan dengan intuisi, dan sering menjebak analis yang sudah berpengalaman sekalipun. Panel kiri gambar resolusi memperlihatkannya: pada sudut datang 15°, resolusi permukaan hampir empat kali nilai slant range; pada 50°, hanya 30 % lebih besar. Tepat ke bawah ($\theta = 0$) nilainya tak terhingga, dan inilah alasan paling mendasar kenapa radar harus melihat ke samping.
 
 ## Resolusi pada arah azimut: apertur sintetis
 

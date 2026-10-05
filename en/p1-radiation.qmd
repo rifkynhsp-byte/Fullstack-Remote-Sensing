@@ -16,9 +16,34 @@
 You will learn where the energy measured by every satellite comes from, what the atmosphere does to it on the way, and what a surface does when the energy arrives. By the end you should be able to explain why the sky is blue, why Landsat carries a thermal band but SPOT does not, and why a satellite image of a city looks hazy before correction, and to prove the last one with real data.
 :::
 
+## A geophysicist's way of seeing
+
+I came to remote sensing from geophysics, and geophysics teaches one idea before all others: **you do not have to dig to know what is underground.** Gauss's divergence theorem says that everything a closed volume emits or absorbs can be read from the flux crossing its surface:
+
+$$\oint_S \mathbf{F}\cdot d\mathbf{A} \;=\; \int_V \nabla\cdot\mathbf{F}\;dV$$
+
+Measure what flows out through the boundary, and you know what is happening inside. That is how gravity and magnetic surveys find ore bodies without a borehole, and it is exactly what a satellite does. It never touches the forest, the rice field or the flood. It measures the energy leaving the surface and travelling upward, and from that flux it infers what is down there: water or vegetation, healthy or stressed, tall or short.
+
+The second idea is the **wave**. Seismic waves, sound and light all obey the same mathematics of propagation: they travel, they reflect where the medium changes, they scatter off rough boundaries, they lose energy along the way. A radar echo off a rubber plantation and a seismic reflection off a sandstone layer are the same physics at different wavelengths. Once you see that, P1 to P5 stop being five topics and become one.
+
+The third idea is the **signal**. Every image is a measurement sampled in space and time, so the tools of signal processing apply directly. Fourier analysis splits a series into its cycles: the seasons of a rice field are a few dominant frequencies. A Taylor expansion lets us linearise a curve near a point and estimate how errors propagate. Sampling theory tells us what a 30 m pixel can never show. Statistics and geostatistics then ask the honest questions: is this difference real or noise, and how far does a measurement speak for its neighbours?
+
+## From a leaf's colour to a tonne of fruit
+
+Can a satellite count the fresh fruit bunches an oil palm estate will harvest? Twenty years ago that question sounded unrealistic. Today it is a chain of inference, each link testable:
+
+- the **colour** of a canopy, across many wavelengths, separates species and tells healthy leaves from stressed ones;
+- the **texture** and the depth of **shadows** carry the height of the stand;
+- **height** predicts **biomass**, through allometry measured on felled trees;
+- **biomass** and canopy health predict **productivity**, and productivity is what the mill weighs.
+
+Every link adds uncertainty, and the end of the chain is never as accurate as the start. But George Box's remark holds: all models are wrong, some are useful. The useful ones are the ones tested against data, with the error reported. That is the attitude of this book. Correlation is not causation, and it is not our call to dismiss a relationship because it sounds implausible, or to accept one because it sounds right. We state a hypothesis, test it on data the model has not seen, and let the data talk. "Biomass from space" was once a speculative phrase; in April 2025 the European Space Agency launched a satellite named for it.
+
+Why go to that trouble? Because remote sensing answers questions that organisations are judged on. **Quality**: is the crop healthy, is the map right? **Productivity**: how much will this land yield, and where is it falling behind? **Cost**: how many field days can one image replace? **Safety**: which slope will slide, which river will flood, before anyone has to walk there? And beyond the company, the **triple bottom line**: people, planet and profit, measured instead of claimed. The goal is not a beautiful map. It is a number that someone can act on, with its uncertainty attached.
+
 ::: {.callout-note}
-## The Principles part
-Chapters P1 to P5 are the physics and engineering underneath everything else in this book. They follow the order of a university course in principles of remote sensing: energy (P1), platforms and orbits (P2), how sensors scan (P3), the four resolutions (P4) and radar (P5). Each ends with a quiz. The figures are our own: computed from the physics, drawn for this book, or made from real satellite data in the code tabs.
+## How to read the Principles part
+P1 to P5 are the physics and engineering underneath everything else: energy and the atmosphere (P1), platforms and orbits (P2), how sensors scan (P3), the four resolutions and what a pixel really is as a signal (P4), and radar (P5). P6 then applies all of it in an app, without code. Each chapter ends with a quiz. The figures are computed from the physics, drawn for this book, or made from real satellite data in the code tabs.
 :::
 
 ## Remote sensing is measuring energy
@@ -34,7 +59,7 @@ This one distinction explains a lot. Optical sensors need daylight and a clear s
 
 ## Electromagnetic radiation: one wave, three names
 
-Electromagnetic radiation is a wave of electric and magnetic fields that travels at the speed of light, $c \approx 3 \times 10^8$ m/s. The electric and magnetic fields vibrate at right angles to each other and to the direction of travel. That makes it a *transverse* wave. Sound, which your professor may compare it with, is a *longitudinal* wave and needs air to travel through. Light crosses empty space.
+Electromagnetic radiation is a wave of electric and magnetic fields that travels at the speed of light, $c \approx 3 \times 10^8$ m/s. The electric and magnetic fields vibrate at right angles to each other and to the direction of travel. That makes it a *transverse* wave. Sound is a *longitudinal* wave and needs air to travel through. Light crosses empty space.
 
 Three numbers describe the same wave, and you can always get one from another:
 
@@ -54,7 +79,7 @@ The parts of the spectrum used in remote sensing, from short to long:
 
 ## Where the energy comes from: blackbodies
 
-Every object warmer than absolute zero emits electromagnetic radiation. A *blackbody* is an ideal object that absorbs everything that falls on it and emits the maximum possible for its temperature. The Sun behaves roughly like a blackbody at about 5,800 K (your lecture notes may round it to 6,000 K). The Earth's surface is roughly a blackbody at about 300 K. Three laws describe them:
+Every object warmer than absolute zero emits electromagnetic radiation. A *blackbody* is an ideal object that absorbs everything that falls on it and emits the maximum possible for its temperature. The Sun behaves roughly like a blackbody at about 5,800 K (often rounded to 6,000 K). The Earth's surface is roughly a blackbody at about 300 K. Three laws describe them:
 
 - **Planck's law** gives the whole curve: how much energy a blackbody emits at each wavelength.
 - **Wien's displacement law** gives the peak: $\lambda_{max} = 2898 / T$ µm. For the Sun that is 0.50 µm, in the middle of the visible range; our eyes evolved to see where the Sun is brightest. For the Earth it is 9.7 µm, in the thermal infrared.
