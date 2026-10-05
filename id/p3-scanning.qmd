@@ -20,22 +20,22 @@ Anda akan mempelajari bagaimana sensor di wahana yang bergerak menyusun citra du
 
 Citra satelit punya baris dan kolom. Kedua arah itu berasal dari dua sumber yang berbeda:
 
-- **Searah lintasan (along track)**: arah terbang wahana. Baris baru datang dengan sendirinya, karena wahana terus bergerak maju.
-- **Melintang lintasan (across track)**: tegak lurus arah terbang. Harus ada sesuatu di dalam sensor yang menyusun setiap baris. Cara menyusunnya itulah yang membedakan sistem-sistem pemindaian.
+- ***Along track*** (searah lintasan): arah terbang wahana. Baris baru datang dengan sendirinya, karena wahana terus bergerak maju.
+- ***Across track*** (melintang lintasan): tegak lurus arah terbang. Harus ada sesuatu di dalam sensor yang menyusun setiap baris. Cara menyusunnya itulah yang membedakan sistem-sistem pemindaian.
 
-Radar punya istilah sendiri untuk dua arah yang sama: *azimut* untuk searah lintasan dan *range* untuk melintang lintasan (P5). Lebar permukaan yang terekam melintang lintasan disebut **lebar sapuan** (swath).
+Radar punya istilah sendiri untuk dua arah yang sama: *azimut* untuk searah lintasan dan *range* untuk melintang lintasan (P5). Lebar permukaan yang terekam melintang lintasan disebut ***swath*** (lebar sapuan).
 
 ## Whisk broom: satu piksel demi satu piksel
 
 Pemindai **whisk broom**, disebut juga *pemindai garis* (line scanner), *pemindai cermin*, atau *pemindai optik-mekanik*, memakai cermin yang berputar atau berayun. Cermin itu menyapukan pandangan sebuah detektor kecil melintang lintasan, dari satu tepi sapuan ke tepi lainnya, mengumpulkan piksel satu per satu di sepanjang baris. Setelah itu wahana sudah bergerak maju dan sapuan berikutnya merekam baris berikutnya. Permukaan disapu seperti sapu lidi menyapu lantai, dari situlah namanya.
 
-Karena pemindaian terjadi di depan teleskop, di sisi permukaan bumi, cara ini disebut **pemindaian bidang objek** (object-plane scanning). Landsat 1 sampai 7 semuanya memakainya: MSS di Landsat 1 sampai 5, Thematic Mapper (TM) di Landsat 4 dan 5, dan Enhanced Thematic Mapper Plus (ETM+) di Landsat 7. MODIS di satelit Terra dan Aqua juga whisk broom, dengan lebar sapuan yang sangat besar, 2.330 km.
+Karena pemindaian terjadi di depan teleskop, di sisi permukaan bumi, cara ini disebut ***object-plane scanning*** (pemindaian bidang objek). Landsat 1 sampai 7 semuanya memakainya: MSS di Landsat 1 sampai 5, Thematic Mapper (TM) di Landsat 4 dan 5, dan Enhanced Thematic Mapper Plus (ETM+) di Landsat 7. MODIS di satelit Terra dan Aqua juga whisk broom, dengan lebar sapuan yang sangat besar, 2.330 km.
 
 Supaya setiap piksel mendapat waktu lebih lama, whisk broom sungguhan tidak menyapu satu baris sekali jalan. MSS menyapu 6 baris per ayunan cermin, dengan 6 detektor per kanal. TM menyapu 16 baris, dan merekam baik saat ayunan maju maupun saat kembali.
 
 ## Push broom: satu baris sekaligus
 
-Pemindai **push broom**, disebut juga *pemindai larik* (array scanner) atau *pemindai searah lintasan*, tidak punya cermin yang bergerak. Pemindai ini punya sederet panjang detektor (*larik linear*, ribuan elemen) di bidang fokus teleskop. Setiap detektor melihat satu piksel melintang lintasan, dan seluruh baris direkam sekaligus. Gerak maju wahana "mendorong" deretan itu melintasi permukaan seperti sapu dorong. Elektroniknya membaca detektor satu demi satu. Karena pemindaian terjadi di belakang teleskop, di dalam citra, cara ini disebut **pemindaian bidang citra** (image-plane scanning).
+Pemindai **push broom**, disebut juga *pemindai larik* (array scanner) atau *pemindai searah lintasan*, tidak punya cermin yang bergerak. Pemindai ini punya sederet panjang detektor (*larik linear*, ribuan elemen) di bidang fokus teleskop. Setiap detektor melihat satu piksel melintang lintasan, dan seluruh baris direkam sekaligus. Gerak maju wahana "mendorong" deretan itu melintasi permukaan seperti sapu dorong. Elektroniknya membaca detektor satu demi satu. Karena pemindaian terjadi di belakang teleskop, di dalam citra, cara ini disebut ***image-plane scanning*** (pemindaian bidang citra).
 
 SPOT-1 buatan Prancis (1986) adalah satelit pengamat bumi sipil pertama dengan sensor push broom. Hampir 30 tahun aturannya sederhana: Landsat itu pemindai garis (whisk broom), SPOT itu pemindai larik (push broom). Lalu Landsat 8 (2013) membawa Operational Land Imager (OLI), sebuah push broom. Landsat 9 juga begitu, demikian pula MultiSpectral Instrument di Sentinel-2. Jadi hati-hati dengan aturan lama. Pernyataan "semua satelit Landsat memakai pemindaian garis" itu **salah**: Landsat 1 sampai 7 ya, Landsat 8 dan 9 tidak. Rancangan yang baik layak ditiru, siapa pun yang membuatnya lebih dulu.
 
@@ -43,7 +43,7 @@ Push broom di pesawat seperti Leica ADS40 memakai tiga larik linear, masing-masi
 
 ## Kamera bingkai
 
-**Kamera bingkai** (frame camera) punya *larik area* detektor dua dimensi, seperti kamera ponsel, dan merekam satu persegi panjang sekaligus. Kamera survei udara, drone, dan banyak satelit kecil memakainya. Bingkai yang berurutan saling tumpang-tindih, dan tumpang-tindih itu menghasilkan stereo, dasar fotogrametri.
+***Frame camera*** (kamera bingkai) punya *larik area* detektor dua dimensi, seperti kamera ponsel, dan merekam satu persegi panjang sekaligus. Kamera survei udara, drone, dan banyak satelit kecil memakainya. Bingkai yang berurutan saling tumpang-tindih, dan tumpang-tindih itu menghasilkan stereo, dasar fotogrametri.
 
 Gambar di bagian keluaran menampilkan ketiga rancangan berdampingan.
 
@@ -60,17 +60,17 @@ IFOV artinya *instantaneous field of view*, medan pandang sesaat: yang dilihat s
 
 $$\text{GSD} \approx H \times \beta$$
 
-Contoh MSS yang sering dipakai di kuliah: $H = 900$ km dan $\beta = 90$ µrad menghasilkan $900.000 \times 0,00009 = 81$ m, piksel MSS "80 m" yang terkenal itu. Lebar sapuan dihitung dari medan pandang sudut:
+Ambil contoh MSS pada Landsat generasi awal: $H = 900$ km dan $\beta = 90$ µrad menghasilkan $900.000 \times 0,00009 = 81$ m, piksel MSS "80 m" yang terkenal itu. Lebar sapuan dihitung dari medan pandang sudut:
 
 $$\text{lebar sapuan} = 2H \tan\left(\frac{\text{FOV}}{2}\right)$$
 
 Kamera SPOT mencakup sudut 4,13° dari ketinggian 832 km, sehingga lebar sapuannya $2 \times 832 \times \tan(2,065°) = 60$ km. Landsat butuh sekitar 15° untuk mencakup 185 km. Jumlah piksel dalam satu baris adalah lebar sapuan ÷ GSD: 60 km ÷ 20 m = 3.000 untuk multispektral SPOT, jadi satu scene SPOT berisi 3.000 × 3.000 = 9 juta piksel. Tabel di bagian keluaran menghitungnya untuk enam sensor.
 
-Hitungan yang sama menjelaskan satu jebakan ujian klasik. Kanal pankromatik SPOT berpiksel 10 m, separuh dari piksel multispektralnya yang 20 m. Dengan prinsip yang sama, kanal pankromatik Landsat berukuran 15 m, separuh dari 30 m. Kenapa kanal pan bisa punya piksel lebih kecil? Karena kanalnya lebar secara spektral: mengumpulkan cahaya dari rentang panjang gelombang yang luas, sehingga detektor yang lebih kecil pun tetap mendapat energi yang cukup. Resolusi spasial dan resolusi spektral berebut cahaya yang jumlahnya terbatas (P4).
+Hitungan yang sama menjelaskan satu hal yang sering mengejutkan. Kanal pankromatik SPOT berpiksel 10 m, separuh dari piksel multispektralnya yang 20 m. Dengan prinsip yang sama, kanal pankromatik Landsat berukuran 15 m, separuh dari 30 m. Kenapa kanal pan bisa punya piksel lebih kecil? Karena kanalnya lebar secara spektral: mengumpulkan cahaya dari rentang panjang gelombang yang luas, sehingga detektor yang lebih kecil pun tetap mendapat energi yang cukup. Resolusi spasial dan resolusi spektral berebut cahaya yang jumlahnya terbatas (P4).
 
-## Waktu tinggal: kenapa push broom menang
+## *Dwell time*: mengapa *push broom* menang
 
-Detektor butuh waktu untuk mengumpulkan cahaya yang cukup agar sinyalnya melampaui derau (noise) detektor itu sendiri. Waktu itu disebut **waktu tinggal** (dwell time). Pada kecepatan permukaan Landsat (6,75 km/s), satelit maju satu baris 30 m dalam sekitar 4,4 milidetik.
+Detektor butuh waktu untuk mengumpulkan cahaya yang cukup agar sinyalnya melampaui *noise* (derau) detektor itu sendiri. Waktu itu disebut ***dwell time*** (waktu tinggal). Pada kecepatan permukaan Landsat (6,75 km/s), satelit maju satu baris 30 m dalam sekitar 4,4 milidetik.
 
 - Push broom punya satu detektor untuk setiap piksel dalam baris, jadi setiap detektor bisa melihat pikselnya selama 4,4 ms penuh.
 - Whisk broom dengan satu detektor harus mengunjungi seluruh 6.167 piksel dalam baris itu dalam 4,4 ms yang sama: 0,7 mikrodetik per piksel, enam ribu kali lebih singkat.
@@ -82,7 +82,7 @@ Waktu tinggal yang lebih lama berarti sinyal lebih banyak untuk derau yang sama.
 |---|---|---|
 | Bagian bergerak | cermin pemindai: bisa aus, bergetar, rusak | tidak ada |
 | Waktu tinggal | sangat singkat | lama: rasio sinyal terhadap derau lebih baik |
-| Detektor yang harus dikalibrasi | sedikit per kanal | ribuan per kanal; selisih kecil antardetektor tampak sebagai belang (striping) |
+| Detektor yang harus dikalibrasi | sedikit per kanal | ribuan per kanal; selisih kecil antardetektor tampak sebagai *striping* (belang) |
 | Medan pandang | bisa sangat lebar (MODIS 2.330 km) | dibatasi optik dan panjang larik |
 | Geometri | setiap piksel pada waktu dan sudut berbeda; butuh koreksi cermat | satu baris pada satu saat; geometri lebih sederhana |
 
@@ -93,7 +93,7 @@ Teleskop sebuah sensor menentukan panjang gelombang apa saja yang bisa direkamny
 - **Optik reflektif** memakai cermin lengkung. Teleskop Landsat adalah sistem cermin. Cermin memantulkan semua panjang gelombang dari biru sampai inframerah termal, dan lebih ringan daripada lensa tebal. Detektor cahaya tampak dan inframerah dekat berada di satu bidang fokus bersuhu normal. Detektor SWIR dan termal berada di **bidang fokus dingin** tersendiri, didinginkan supaya panas instrumen itu sendiri tidak menenggelamkan sinyal termal yang lemah dari permukaan bumi.
 - **Optik refraktif** memakai lensa. HRV di SPOT memakai lensa, salah satu alasan SPOT generasi awal hanya punya kanal tampak dan inframerah dekat.
 
-Dari sini muncul soal ujian yang menarik: *mana yang lebih maju, Landsat atau SPOT?* Soal pemindaian, SPOT lebih dulu: push broom sejak 1986, yang baru dipakai Landsat pada 2013. Soal rentang spektral, Landsat lebih unggul: teleskop cerminnya mencakup tampak, NIR, SWIR, dan termal, sedangkan SPOT awal hanya tampak dan NIR. "Lebih maju" bergantung pada sifat yang dibandingkan.
+Dari sini muncul pertanyaan yang adil: *mana yang lebih maju, Landsat atau SPOT?* Soal pemindaian, SPOT lebih dulu: push broom sejak 1986, yang baru dipakai Landsat pada 2013. Soal rentang spektral, Landsat lebih unggul: teleskop cerminnya mencakup tampak, NIR, SWIR, dan termal, sedangkan SPOT awal hanya tampak dan NIR. "Lebih maju" bergantung pada sifat yang dibandingkan.
 
 ## Melirik ke samping: jurus SPOT
 
@@ -106,7 +106,7 @@ Harganya adalah ukuran piksel. Pada 27°, piksel melintang lintasan sekitar 1,33
 
 ## Ketika cermin rusak: Landsat 7
 
-ETM+ di Landsat 7 punya cermin kecil kedua, yaitu **pengoreksi garis pindai** (scan line corrector, SLC). Karena satelit terus bergerak maju selama cermin utama menyapu, setiap sapuan dengan sendirinya membentuk jalur yang sedikit miring, dan sapuan-sapuan yang berurutan membentuk pola zig-zag. SLC memiringkan pandangan ke belakang selama setiap sapuan untuk meluruskannya, sehingga baris-baris tersusun sejajar. Pada 31 Mei 2003, SLC rusak. Sejak itu setiap citra Landsat 7 punya celah berbentuk baji: sempit di dekat tengah scene, lebar ke arah tepi. Di seluruh scene, sekitar 22 % piksel hilang.
+ETM+ di Landsat 7 punya cermin kecil kedua, yaitu ***scan line corrector*** (SLC, pengoreksi garis pindai). Karena satelit terus bergerak maju selama cermin utama menyapu, setiap sapuan dengan sendirinya membentuk jalur yang sedikit miring, dan sapuan-sapuan yang berurutan membentuk pola zig-zag. SLC memiringkan pandangan ke belakang selama setiap sapuan untuk meluruskannya, sehingga baris-baris tersusun sejajar. Pada 31 Mei 2003, SLC rusak. Sejak itu setiap citra Landsat 7 punya celah berbentuk baji: sempit di dekat tengah scene, lebar ke arah tepi. Di seluruh scene, sekitar 22 % piksel hilang.
 
 Dua peta di bagian keluaran menampilkan wilayah Bandung yang sama dari path dan row yang sama, pada 2001 dan 2015. Di dekat tepi scene ini, porsi piksel yang berisi data turun dari 100 % menjadi 70 %. Inilah akibat paling kasatmata dari rancangan whisk broom di seluruh arsip: satu bagian yang bergerak rusak, dan citra selama 20 tahun menanggung bekasnya. Data Landsat 7 SLC-off masih bisa dipakai, tetapi setiap komposit, mosaik, atau deret waktu yang memakainya harus menangani celah itu.
 

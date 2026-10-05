@@ -60,13 +60,13 @@ IFOV means *instantaneous field of view*: what one detector sees at one instant.
 
 $$\text{GSD} \approx H \times \beta$$
 
-For the MSS example in many lectures: $H = 900$ km and $\beta = 90$ µrad give $900{,}000 \times 0.00009 = 81$ m, the familiar "80 m" MSS pixel. The swath comes from the angular field of view:
+Take the original Landsat MSS: $H = 900$ km and $\beta = 90$ µrad give $900{,}000 \times 0.00009 = 81$ m, the familiar "80 m" MSS pixel. The swath comes from the angular field of view:
 
 $$\text{swath} = 2H \tan\left(\frac{\text{FOV}}{2}\right)$$
 
 SPOT's camera covers an angle of 4.13° from 832 km, so its swath is $2 \times 832 \times \tan(2.065°) = 60$ km. Landsat needs about 15° to cover its 185 km. The number of pixels in a row is swath ÷ GSD: 60 km ÷ 20 m = 3,000 for SPOT multispectral, so one SPOT scene is 3,000 × 3,000 = 9 million pixels. The table in the output block does this for six sensors.
 
-The same arithmetic explains a classic exam trick. SPOT's panchromatic band has 10 m pixels, half its 20 m multispectral pixels. By the same principle Landsat's panchromatic band is 15 m, half of 30 m. Why can a pan band have smaller pixels? Because it is spectrally broad: it collects light over a wide range of wavelengths, so a smaller detector still gathers enough energy. Spatial and spectral resolution compete for the same limited light (P4).
+The same arithmetic explains something that surprises many people. SPOT's panchromatic band has 10 m pixels, half its 20 m multispectral pixels. By the same principle Landsat's panchromatic band is 15 m, half of 30 m. Why can a pan band have smaller pixels? Because it is spectrally broad: it collects light over a wide range of wavelengths, so a smaller detector still gathers enough energy. Spatial and spectral resolution compete for the same limited light (P4).
 
 ## Dwell time: why push brooms won
 
@@ -93,7 +93,7 @@ A sensor's telescope decides which wavelengths it can record at all (P1):
 - **Reflective optics** use curved mirrors. Landsat's telescopes are mirror systems. A mirror reflects every wavelength from blue to thermal infrared, and is lighter than a thick lens. The visible and near-infrared detectors sit on one focal plane at normal temperature. The SWIR and thermal detectors sit on a separate **cold focal plane**, cooled so that the instrument's own heat does not swamp the faint thermal signal from the ground.
 - **Refractive optics** use lenses. SPOT's HRV used lenses, which is one reason the early SPOTs had only visible and near-infrared bands.
 
-This leads to a nice exam question: *which is more advanced, Landsat or SPOT?* On scanning, SPOT was ahead: push broom in 1986, which Landsat adopted only in 2013. On spectral range, Landsat was ahead: its mirror telescope covered visible, NIR, SWIR and thermal, while early SPOT covered visible and NIR. "More advanced" depends on the property you compare.
+Which leads to a fair question: *which is more advanced, Landsat or SPOT?* On scanning, SPOT was ahead: push broom in 1986, which Landsat adopted only in 2013. On spectral range, Landsat was ahead: its mirror telescope covered visible, NIR, SWIR and thermal, while early SPOT covered visible and NIR. "More advanced" depends on the property you compare.
 
 ## Pointing sideways: SPOT's trick
 

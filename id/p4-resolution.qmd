@@ -76,8 +76,8 @@ Ada dua catatan:
 
 Layar punya tiga saluran warna: merah, hijau, dan biru. **Komposit warna** memasang satu kanal ke setiap saluran:
 
-- **Warna asli** (true colour) memasang kanal merah di saluran merah, hijau di hijau, biru di biru: pada Landsat 8, kanal 4-3-2. Tampilannya seperti foto.
-- **Warna semu** (false colour) memakai kanal yang tidak bisa dilihat mata. Komposit inframerah dekat klasik memasang NIR di saluran merah, merah di hijau, dan hijau di biru: pada Landsat 8, kanal 5-4-3. Vegetasi sehat, yang memantulkan NIR dengan kuat, menjadi merah terang, seperti pada panel-panel pelabuhan.
+- ***True colour*** (warna asli) memasang kanal merah di saluran merah, hijau di hijau, biru di biru: pada Landsat 8, kanal 4-3-2. Tampilannya seperti foto.
+- ***False colour*** (warna semu) memakai kanal yang tidak bisa dilihat mata. Komposit inframerah dekat klasik memasang NIR di saluran merah, merah di hijau, dan hijau di biru: pada Landsat 8, kanal 5-4-3. Vegetasi sehat, yang memantulkan NIR dengan kuat, menjadi merah terang, seperti pada panel-panel pelabuhan.
 - **Komposit SWIR** seperti Landsat 8 kanal 7-5-4 atau 6-5-4 menampakkan kelembapan, bekas terbakar, dan api aktif (P1).
 
 Komposit kanal-kanal radar selalu berwarna semu, karena panjang gelombang radar tidak punya warna alami.

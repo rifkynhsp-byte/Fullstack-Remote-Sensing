@@ -59,8 +59,8 @@ Radar pencitra tidak melihat tegak lurus ke bawah. Kalau begitu, dua titik yang 
 - **Range dekat / range jauh** (near range / far range): tepi jalur yang disinari, yang paling dekat dan paling jauh dari lintasan tanah. Jalur di antaranya adalah **lebar sapuan**.
 - **Slant range** (jarak miring): garis lurus dari antena ke sebuah titik di permukaan. Radar mengukur jarak di sepanjang garis ini.
 - **Ground range** (jarak permukaan): jarak yang sama setelah diproyeksikan ke permukaan, seperti di peta.
-- **Sudut pandang** (look angle): di radar, antara garis vertikal (arah nadir) dan garis pandang.
-- **Sudut datang** (incidence angle): di permukaan, antara garis pandang dan garis vertikal terhadap permukaan. Di tanah datar (tanpa memperhitungkan kelengkungan bumi) besarnya sama dengan sudut pandang; di lereng, ini menjadi sudut datang *lokal* dan berubah mengikuti kemiringan.
+- ***Look angle*** (sudut pandang): di radar, antara garis vertikal (arah nadir) dan garis pandang.
+- ***Incidence angle*** (sudut datang): di permukaan, antara garis pandang dan garis vertikal terhadap permukaan. Di tanah datar (tanpa memperhitungkan kelengkungan bumi) besarnya sama dengan sudut pandang; di lereng, ini menjadi sudut datang *lokal* dan berubah mengikuti kemiringan.
 - **Sudut depresi**: di radar, antara garis horizontal dan garis pandang. Sudut pandang + sudut depresi = 90°.
 
 Radar juga punya nama sendiri untuk dua arah citra (P3): **azimut** adalah searah lintasan dan **range** adalah melintang lintasan.
@@ -83,9 +83,9 @@ dengan $\theta$ sudut datang. Karena $\theta$ lebih kecil di range dekat, $\sin\
 
 ## Resolusi pada arah azimut: apertur sintetis
 
-Searah lintasan, radar hanya bisa memisahkan dua sasaran kalau keduanya tidak berada dalam berkas pada saat yang sama. Antena nyata sepanjang $L$ menghasilkan berkas selebar kira-kira $\lambda / L$ (difraksi, penyebaran yang sama seperti cahaya setelah melewati celah sempit). Pada slant range $R$, lebar berkas di permukaan adalah $\lambda R / L$. Untuk kanal C ($\lambda$ = 5,55 cm), antena 12,3 m, dan range 850 km, lebarnya sekitar 3,8 km. **Radar apertur nyata** (real aperture radar, RAR) dari orbit akan menghasilkan piksel selebar kilometer searah lintasan.
+Searah lintasan, radar hanya bisa memisahkan dua sasaran kalau keduanya tidak berada dalam berkas pada saat yang sama. Antena nyata sepanjang $L$ menghasilkan berkas selebar kira-kira $\lambda / L$ (difraksi, penyebaran yang sama seperti cahaya setelah melewati celah sempit). Pada slant range $R$, lebar berkas di permukaan adalah $\lambda R / L$. Untuk kanal C ($\lambda$ = 5,55 cm), antena 12,3 m, dan range 850 km, lebarnya sekitar 3,8 km. ***Real aperture radar*** (RAR, radar apertur nyata) dari orbit akan menghasilkan piksel selebar kilometer searah lintasan.
 
-**Radar apertur sintetis** (synthetic aperture radar, SAR) mengubah difraksi dari masalah menjadi alat. Selama satelit terbang, satu sasaran tetap berada di dalam berkas untuk beberapa saat: masuk dari tepi depan berkas, terlihat dari banyak posisi, lalu keluar dari tepi belakang. Radar merekam gemanya, lengkap dengan fasenya yang persis, di setiap posisi itu. Pengolahan lalu menggabungkan semua rekaman seolah-olah berasal dari satu antena raksasa sepanjang seluruh jalur terbang selama sasaran itu terlihat. Jalur itulah **apertur sintetis**.
+***Synthetic aperture radar*** (SAR, radar apertur sintetis) mengubah difraksi dari masalah menjadi alat. Selama satelit terbang, satu sasaran tetap berada di dalam berkas untuk beberapa saat: masuk dari tepi depan berkas, terlihat dari banyak posisi, lalu keluar dari tepi belakang. Radar merekam gemanya, lengkap dengan fasenya yang persis, di setiap posisi itu. Pengolahan lalu menggabungkan semua rekaman seolah-olah berasal dari satu antena raksasa sepanjang seluruh jalur terbang selama sasaran itu terlihat. Jalur itulah **apertur sintetis**.
 
 Sekarang bagian yang mengejutkan. Antena nyata yang *lebih pendek* punya berkas yang *lebih lebar*, sehingga sasaran terlihat lebih lama, sehingga apertur sintetisnya *lebih panjang*, dan resolusi azimutnya *lebih halus*. Hasilnya sama sekali tidak bergantung pada range atau panjang gelombang:
 
@@ -101,7 +101,7 @@ Radar menempatkan setiap gema di citra menurut **jaraknya dari antena**, bukan m
 
 - **Foreshortening** (pemendekan). Lereng yang menghadap radar (*lereng depan*) dicapai lebih dulu di kakinya dan sedikit kemudian di puncaknya. Karena puncaknya juga lebih dekat ke radar, kedua gema tiba lebih berdekatan daripada panjang lerengnya. Lereng tampak **lebih pendek** dan, karena energinya dipadatkan ke lebih sedikit piksel, **lebih terang**. Pada gambar, lereng landai A–B tampak termampatkan. Foreshortening paling kuat di range dekat (sudut datang kecil).
 - **Layover** (rebah). Kalau lereng depan lebih curam daripada sudut datangnya, puncak bukit sebenarnya **lebih dekat** ke radar daripada kakinya. Gema dari puncak tiba *lebih dulu*. Puncak ditempatkan di citra sebelum kakinya sendiri: gunung tampak rebah ke arah radar. Pada gambar, E (puncak) muncul sebelum D (kakinya). Layover juga paling parah di range dekat.
-- **Bayangan** (shadow). Lereng yang membelakangi radar (*lereng belakang*) dan lebih curam daripada sudut singgung berkas tersembunyi di balik puncak. Tidak ada energi yang sampai dan tidak ada gema yang kembali: tampak **hitam pekat** di citra. Bayangan makin parah di **range jauh**, tempat berkas datang dengan sudut lebih rendah. Bayangan satu-satunya dari ketiganya yang juga dimiliki citra optis, tetapi pada citra optis bayangan searah matahari, sedangkan pada citra radar searah radar.
+- ***Shadow*** (bayangan). Lereng yang membelakangi radar (*lereng belakang*) dan lebih curam daripada sudut singgung berkas tersembunyi di balik puncak. Tidak ada energi yang sampai dan tidak ada gema yang kembali: tampak **hitam pekat** di citra. Bayangan makin parah di **range jauh**, tempat berkas datang dengan sudut lebih rendah. Bayangan satu-satunya dari ketiganya yang juga dimiliki citra optis, tetapi pada citra optis bayangan searah matahari, sedangkan pada citra radar searah radar.
 
 Cara singkat mengingatnya: **foreshortening dan layover milik lereng depan dan lebih parah di range dekat; bayangan milik lereng belakang dan lebih parah di range jauh.** Resolusi permukaan juga lebih buruk di range dekat.
 
@@ -109,7 +109,7 @@ Dua peta Sentinel-1 Gunung Rinjani di Lombok memperlihatkannya pada gunung api s
 
 ## Apa yang membuat piksel terang: hamburan balik
 
-Nilai piksel radar adalah **hamburan baliknya** (backscatter), yaitu bagian energi terpancar yang dikirim kembali ke arah antena, biasanya dinyatakan dalam desibel (dB). Nilainya bergantung pada tiga sifat permukaan.
+Nilai piksel radar adalah ***backscatter***-nya (hamburan balik), yaitu bagian energi terpancar yang dikirim kembali ke arah antena, biasanya dinyatakan dalam desibel (dB). Nilainya bergantung pada tiga sifat permukaan.
 
 **Kekasaran, dibandingkan dengan panjang gelombang.** Permukaan disebut "halus" bagi radar kalau variasi ketinggiannya kecil dibandingkan panjang gelombang (aturan yang umum dipakai adalah kriteria Rayleigh, $h < \lambda / (8\cos\theta)$). Permukaan halus memantul secara spekular, seperti cermin (P1), sehingga energinya pergi menjauhi radar. Permukaan kasar menghamburkan secara baur, sehingga sebagian energinya kembali.
 
@@ -117,7 +117,7 @@ Nilai piksel radar adalah **hamburan baliknya** (backscatter), yaitu bagian ener
 
 - **Hamburan permukaan**: dari tanah terbuka, air, jalan. Lemah kalau halus, lebih kuat kalau kasar.
 - **Hamburan volume**: di dalam tajuk, sinyal memantul-mantul di antara daun, ranting, dan cabang sebelum sebagian kembali. Cukup terang dan mengubah polarisasi (di bawah).
-- **Pantulan ganda** (double bounce, dihedral, pantulan sudut): dinding dan tanah, atau batang pohon dan air banjir, membentuk sudut siku yang mengirim energi langsung kembali. Karena itu bangunan dan hutan yang tergenang tampak sangat terang.
+- ***Double bounce*** (pantulan ganda, dihedral, pantulan sudut): dinding dan tanah, atau batang pohon dan air banjir, membentuk sudut siku yang mengirim energi langsung kembali. Karena itu bangunan dan hutan yang tergenang tampak sangat terang.
 
 **Kelembapan.** Air sangat menaikkan *konstanta dielektrik* tanah dan vegetasi, sehingga keduanya memantulkan gelombang mikro lebih kuat. Tanah basah lebih terang daripada tanah kering dengan kekasaran yang sama. Dengan cara inilah radar memetakan kelembapan tanah.
 
