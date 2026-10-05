@@ -40,21 +40,24 @@ Map.centerObject(roi, 9);
 Map.addLayer(frequency, {min: 0, max: 1,
   palette: ['#ffffff', '#c6dbef', '#6baed6', '#2171b5', '#08306b']}, 'Water frequency');
 
-// Flooded area per month, from the monthly maximum extent. Ninety-six
-// monthly sums in one request can fail with "Too many concurrent
-// aggregations"; this version asks for the last four years only (48 months)
-// at 200 m. The Python tab fetches all eight years, one year per request.
-var months = ee.List.sequence(48, 95).map(function (i) {
-  var start = ee.Date('2017-01-01').advance(i, 'month');
-  var m = water.filterDate(start, start.advance(1, 'month'));
-  var km2 = m.max().multiply(ee.Image.pixelArea()).divide(1e6).reduceRegion({
-    reducer: ee.Reducer.sum(), geometry: roi, scale: 200, maxPixels: 1e10,
-    tileScale: 4}).get('water');
-  return ee.Feature(null, {month: start.format('YYYY-MM'), water_km2: km2,
-                           passes: m.size()});
-});
-var monthly = ee.FeatureCollection(months).filter(ee.Filter.gt('passes', 0));
-print(ui.Chart.feature.byFeature(monthly, 'month', ['water_km2'])
+// Flooded area per month, from the monthly maximum extent. Asking for one
+// sum per month launches one aggregation per month, and Earth Engine refuses
+// with "Too many concurrent aggregations". The trick: stack every month as a
+// band of ONE image and sum them all in a single reduceRegion. Same numbers,
+// one aggregation, all eight years.
+var starts = ee.List.sequence(0, 95).map(function (i) { return ee.Date('2017-01-01').advance(i, 'month'); });
+var monthly = ee.ImageCollection(starts.map(function (d) {
+  d = ee.Date(d);
+  var m = water.filterDate(d, d.advance(1, 'month'));
+  return m.max().unmask(0).rename('water').set('month', d.format('YYYY-MM'), 'passes', m.size());
+})).filter(ee.Filter.gt('passes', 0));
+var stack = monthly.toBands().multiply(ee.Image.pixelArea()).divide(1e6);
+var sums = stack.reduceRegion({reducer: ee.Reducer.sum(), geometry: roi, scale: 200, maxPixels: 1e10, tileScale: 4});
+var labels = monthly.aggregate_array('month');
+var monthlyKm2 = ee.FeatureCollection(ee.List.sequence(0, labels.size().subtract(1)).map(function (i) {
+  return ee.Feature(null, {month: labels.get(i), water_km2: sums.values().get(i)});
+}));
+print(ui.Chart.feature.byFeature(monthlyKm2, 'month', ['water_km2'])
   .setOptions({title: 'Water extent per month, middle Mahakam',
                vAxis: {title: 'km²'}, lineWidth: 1, pointSize: 2}));
 

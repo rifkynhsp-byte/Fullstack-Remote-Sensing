@@ -43,19 +43,18 @@ Map.addLayer(shaded, {min: 0, max: 0.8}, 'Dynamic World 2024, shaded by confiden
 // ---------------------------------------------------------------------------
 var builtKm2 = function (year) {
   var c = yearComposite(year);
-  var km2 = c.select('label').eq(BUILT).multiply(ee.Image.pixelArea()).divide(1e6)
-    .reduceRegion({reducer: ee.Reducer.sum(), geometry: area, scale: 10, maxPixels: 1e9})
-    .get('label');
   var yr = dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year, 1, 1).advance(1, 'year'));
-  // The steadier alternative: average the 'built' probability over the year.
-  var km2Prob = yr.select('built').mean().gt(0.5).multiply(ee.Image.pixelArea()).divide(1e6)
-    .reduceRegion({reducer: ee.Reducer.sum(), geometry: area, scale: 10, maxPixels: 1e9})
-    .get('built');
-  return ee.Feature(null, {year: year, built_km2: km2, built_km2_prob: km2Prob,
-                           scenes: yr.size()});
+  // Two answers in one pass: the yearly mode label, and the steadier alternative,
+  // the 'built' probability averaged over the year. One reduceRegion per year keeps
+  // the request under Earth Engine's limit on concurrent aggregations.
+  var both = c.select('label').eq(BUILT).rename('built_km2')
+    .addBands(yr.select('built').mean().gt(0.5).rename('built_km2_prob'))
+    .multiply(ee.Image.pixelArea()).divide(1e6)
+    .reduceRegion({reducer: ee.Reducer.sum(), geometry: area, scale: 30, maxPixels: 1e9, tileScale: 4});   // 30 m is plenty for km²
+  return ee.Feature(null, both).set({year: year, scenes: yr.size()});
 };
 var series = ee.FeatureCollection(ee.List.sequence(2016, 2024).map(builtKm2));
-print('Built-up area by year', series);
+// The chart's own menu (the arrow at its top right) downloads the numbers as CSV.
 print(ui.Chart.feature.byFeature(series, 'year', ['built_km2', 'built_km2_prob'])
   .setOptions({title: 'Built-up area, Dynamic World yearly mode',
                vAxis: {title: 'km²'}, hAxis: {format: '####'}, pointSize: 4}));
