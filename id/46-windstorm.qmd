@@ -1,5 +1,16 @@
 # Kerusakan Hutan akibat Angin Kencang: Siklon Seroja, 2021 {#sec-windstorm}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch46_windstorm`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch46_windstorm) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch46_windstorm.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengukur kerusakan hutan akibat Siklon Tropis Seroja di Nusa Tenggara Timur dengan membandingkan kelembapan tajuk sebelum dan sesudah badai, dan Anda akan belajar kenapa perbandingan sebelum-sesudah tidak cukup kalau minggu-minggu yang sama pada tahun normal tidak dikurangkan. Anda juga akan melihat sensor kedua gagal mengonfirmasi hasilnya, dan bagaimana menyikapinya.

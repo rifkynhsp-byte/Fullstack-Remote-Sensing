@@ -1,5 +1,16 @@
 # The Carbon Balance of a Peat Landscape {#sec-carbon-balance}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch42_carbon_balance`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch42_carbon_balance) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch42_carbon_balance.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will assemble the carbon balance of one peat-rich district, Tanjung Jabung Timur in Jambi, from satellite data: productivity, the biomass stock, losses from clearing and fire, and CO₂ from drained peat. You will also see exactly which terms satellites cannot measure, and why a satellite "carbon balance" is always incomplete.

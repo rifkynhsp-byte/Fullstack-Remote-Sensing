@@ -1,5 +1,18 @@
 # Bagaimana Guncangan Belanja Menjalar dalam Perekonomian: Model Leontief untuk Indonesia {#sec-leontief}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch68_leontief`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch68_leontief.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Ketika satu dolar dibelanjakan untuk membangun jalan, uang itu tidak berhenti di kontraktor. Bab ini membangun model input-output Wassily Leontief untuk Indonesia dari tabel nasional yang terbuka, menghitung berapa output, nilai tambah, lapangan kerja, dan impor yang digerakkan permintaan setiap sektor, mengikuti program konstruksi senilai USD 1 miliar putaran demi putaran, dan menemukan "sektor kunci" yang mengikat perekonomian. Bab ini juga galeri bentuk grafik: *heatmap* matriks, batang bertumpuk per putaran dengan garis konvergensi, *lollipop*, diagram gelembung kuadran, diagram radar, dan diagram *dumbbell*, masing-masing dipilih untuk pertanyaan yang dijawabnya. Python dan R berdampingan.

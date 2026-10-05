@@ -20,7 +20,7 @@ var mine = ee.Geometry.Rectangle([117.40, 0.48, 117.65, 0.75]);   // near Sangat
 // ---------------------------------------------------------------------------
 var dw = ee.ImageCollection('GOOGLE/DYNAMICWORLD/V1').filterBounds(mine);
 var bareIn = function (year) {
-  return dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year + 1, 1, 1))
+  return dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year, 1, 1).advance(1, 'year'))
     .select('bare').mean().gt(0.5);
 };
 var footprint = ee.FeatureCollection(ee.List.sequence(2016, 2024).map(function (y) {

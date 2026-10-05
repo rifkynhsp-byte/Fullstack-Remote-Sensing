@@ -1,5 +1,16 @@
 # P1 · Energi, Gelombang, dan Atmosfer {#sec-p1-radiation .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch00a_radiation`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00a_radiation) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00a_radiation.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mempelajari dari mana energi yang diukur setiap satelit berasal, apa yang dilakukan atmosfer terhadap energi itu di perjalanan, dan apa yang terjadi ketika energi itu sampai di permukaan. Di akhir bab, Anda seharusnya bisa menjelaskan kenapa langit berwarna biru, kenapa Landsat punya kanal termal sedangkan SPOT tidak, dan kenapa citra satelit sebuah kota terlihat berkabut sebelum dikoreksi. Yang terakhir bahkan akan dibuktikan dengan data sungguhan.

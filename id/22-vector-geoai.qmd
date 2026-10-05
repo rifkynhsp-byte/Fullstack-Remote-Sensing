@@ -1,5 +1,18 @@
 # GeoAI Vektor dan Pemilihan Lokasi {#sec-vector}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch22_site_selection`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch22_site_selection.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Alur kerja yang selama ini Anda jalankan pada citra satelit, kini diterapkan pada pertanyaan komersial tanpa satu pun citra di dalamnya. Anda akan membangun permukaan kesesuaian lokasi untuk membuka minimarket, menemukan kebocoran data yang menghasilkan model sempurna namun tak berguna, dan menafsirkan hasilnya dengan SHAP.

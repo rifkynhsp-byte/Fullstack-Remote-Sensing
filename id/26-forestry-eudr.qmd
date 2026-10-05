@@ -1,5 +1,16 @@
 # Kehutanan, Perkebunan, dan EUDR {#sec-eudr}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch26_eudr_check`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch26_eudr_check) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch26_eudr_check.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menyaring plot pemasok terhadap tanggal batas Regulasi Deforestasi Uni Eropa. Yang lebih penting, Anda akan memahami kenapa hasil pertama dari penyaringan seperti ini adalah daftar tempat yang perlu dicek, bukan daftar kebun yang bersalah.

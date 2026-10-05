@@ -1,5 +1,18 @@
 # How a Spending Shock Travels Through an Economy: The Leontief Model of Indonesia {#sec-leontief}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch68_leontief`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch68_leontief.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 When a dollar is spent on a road, it does not stop at the builder. This chapter builds Wassily Leontief's input-output model of Indonesia from an open national table, computes how much output, value added, employment and imports each sector's demand sets in motion, follows a USD 1 billion construction programme round by round, and finds the "key sectors" that tie the economy together. It is also a gallery of chart forms: a matrix heatmap, stacked rounds with a convergence line, lollipops, a quadrant bubble chart, a radar chart and a dumbbell chart, each chosen for the question it answers. Python and R side by side.

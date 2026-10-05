@@ -1,5 +1,18 @@
 # Time Series and Change Detection {#sec-timeseries}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch21_harmonic_alerts`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_harmonic_alerts) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_harmonic_alerts.ipynb)
+- `ch21_dynamic_world_change`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_dynamic_world_change) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_dynamic_world_change.ipynb)
+- `ch21_palu_liquefaction`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_palu_liquefaction) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_palu_liquefaction.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will separate genuine change from the seasons with harmonic regression, first on synthetic data and then on a real pixel cleared for Indonesia's new capital; turn residuals into alerts with persistence rules; map change from radar, which sees through cloud; count change with Dynamic World without fooling yourself; and measure who was inside the changed ground after the 2018 Palu disaster.

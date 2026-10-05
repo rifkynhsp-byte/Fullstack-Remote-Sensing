@@ -1,5 +1,16 @@
 # Spatial Texture Extraction {#sec-texture}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch14_glcm_texture`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch14_glcm_texture) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch14_glcm_texture.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will add pattern to spectrum. Grey level co-occurrence matrix features let a classifier separate a planted monoculture from a structurally complex natural stand when the two reflect almost identically, which is the confusion no amount of spectral engineering can fix.

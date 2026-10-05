@@ -1,5 +1,16 @@
 # Composites and Visualisation {#sec-visualisation}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch13_charts_timelapse`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch13_charts_timelapse) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch13_charts_timelapse.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will move from default stretches to deliberate cartography: false colour combinations that make ecological structure visible, stretch bounds chosen from the histogram rather than by trial and error, and palettes that survive being printed in greyscale or read by a colourblind reviewer.

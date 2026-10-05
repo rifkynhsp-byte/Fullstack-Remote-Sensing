@@ -1,5 +1,16 @@
 # Satellite-Derived Bathymetry: Depth from Colour {#sec-bathymetry}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch52_bathymetry`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch52_bathymetry) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch52_bathymetry.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will estimate water depth around the reefs of Kepulauan Seribu from Sentinel-2 colour, using the Stumpf log-ratio method. You will see why calibrating it against a coarse global chart fails, and how to check it anyway against mapped reef zones. The result is a relative depth map, with an honest statement of what absolute depth would need.

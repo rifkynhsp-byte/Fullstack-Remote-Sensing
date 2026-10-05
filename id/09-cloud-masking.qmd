@@ -1,5 +1,16 @@
 # Cloud Masking dan Komposit {#sec-cloud}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch09_annual_composite`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch09_annual_composite) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch09_annual_composite.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan menghapus awan piksel demi piksel, bukan citra demi citra, lalu meringkas satu tahun citra terkontaminasi menjadi satu composite bersih. Inilah bab yang membuat penginderaan jauh tropis mungkin dikerjakan sama sekali.
@@ -7,19 +18,19 @@ Anda akan menghapus awan piksel demi piksel, bukan citra demi citra, lalu mering
 
 ## Masalah tropis
 
-Di sebagian besar wilayah tropis lembap, citra Sentinel-2 yang benar benar cerah bisa saja tidak ada dalam satu tahun tertentu. Tutupan awan di atas Indonesia ekuatorial, cekungan Kongo, dan Amazon kerap melampaui 70 persen sebagai rata rata tahunan, dan zona pesisir tempat mangrove tumbuh termasuk bagian paling berawan dari wilayah itu karena konveksi yang dipicu angin laut.
+Di sebagian besar wilayah tropis lembap, citra Sentinel-2 yang benar-benar cerah bisa saja tidak ada dalam satu tahun tertentu. Tutupan awan di atas Indonesia ekuatorial, cekungan Kongo, dan Amazon kerap melampaui 70 persen sebagai rata-rata tahunan, dan zona pesisir tempat mangrove tumbuh termasuk bagian paling berawan dari wilayah itu karena konveksi yang dipicu angin laut.
 
 Kalau metode Anda mensyaratkan citra cerah, metode Anda tidak bekerja di sini. Jalan keluarnya adalah berhenti mencari citra yang bagus dan mulai menyusun piksel yang bagus.
 
-Wawasannya sederhana: awan bergerak. Piksel yang tertutup pada 3 Maret bisa jadi cerah pada 18 Maret, dan piksel yang tertutup pada 18 Maret bisa jadi cerah pada tanggal 3. Ambil setiap perekaman dalam setahun, hapus piksel yang terkontaminasi dari masing masing, lalu ambil median dari yang tersisa di setiap lokasi. Keluarannya tidak berlubang meskipun tidak ada satu pun masukan yang bebas lubang, dan setiap titik disusun dari tanggal mana pun yang kebetulan cerah di titik itu.
+Wawasannya sederhana: awan bergerak. Piksel yang tertutup pada 3 Maret bisa jadi cerah pada 18 Maret, dan piksel yang tertutup pada 18 Maret bisa jadi cerah pada tanggal 3. Ambil setiap perekaman dalam setahun, hapus piksel yang terkontaminasi dari masing-masing, lalu ambil median dari yang tersisa di setiap lokasi. Keluarannya tidak berlubang meskipun tidak ada satu pun masukan yang bebas lubang, dan setiap titik disusun dari tanggal mana pun yang kebetulan cerah di titik itu.
 
-![Enam perekaman sintetis atas permukaan yang sama, masing masing dengan awan di tempat berbeda. Tidak ada satu pun yang layak pakai. Median dari yang lolos masking tidak berlubang, dan peta jumlah observasi menunjukkan di mana keyakinannya paling rendah.](images/compositing.png){#fig-compositing}
+![Enam perekaman sintetis atas permukaan yang sama, masing-masing dengan awan di tempat berbeda. Tidak ada satu pun yang layak pakai. Median dari yang lolos masking tidak berlubang, dan peta jumlah observasi menunjukkan di mana keyakinannya paling rendah.](images/compositing.png){#fig-compositing}
 
 @fig-compositing adalah seluruh argumen bab ini dalam satu tampilan. Perhatikan panel kanan bawah: jumlah observasi bersih per piksel berkisar 2 sampai 6. Piksel yang hanya punya dua observasi bukan piksel yang salah, tetapi ia piksel yang keyakinannya jauh lebih rendah daripada tetangganya yang punya enam.
 
 ::: {.callout-note}
 ## Konsep: kenapa median dan bukan mean
-Keduanya mengabaikan piksel yang termask. Bedanya terletak pada apa yang terjadi terhadap kontaminasi yang lolos masking, dan selalu ada yang lolos, terutama cirrus tipis dan kabut di tepi awan. Sisa sisa itu terang, dan mereka menarik mean ke atas. Median tidak terpengaruh kecuali jumlahnya melebihi observasi bersih. Aturan praktisnya: pakai median kecuali Anda punya alasan khusus, dan kalau sebuah piksel punya kurang dari sekitar sepuluh observasi bersih, perlakukan nilainya dengan hati hati.
+Keduanya mengabaikan piksel yang termask. Bedanya terletak pada apa yang terjadi terhadap kontaminasi yang lolos masking, dan selalu ada yang lolos, terutama cirrus tipis dan kabut di tepi awan. Sisa-sisa itu terang, dan mereka menarik mean ke atas. Median tidak terpengaruh kecuali jumlahnya melebihi observasi bersih. Aturan praktisnya: pakai median kecuali Anda punya alasan khusus, dan kalau sebuah piksel punya kurang dari sekitar sepuluh observasi bersih, perlakukan nilainya dengan hati-hati.
 :::
 
 ## Dua jalur cloud masking
@@ -37,7 +48,7 @@ var mask = qa.bitwiseAnd(1 << 10).eq(0)
 
 Ia cepat, dan itulah yang ditampilkan sebagian besar tutorial lama. Kelemahannya nyata: resolusi 60 meter berarti masknya lebih kasar daripada citra yang di-mask, dan ia sama sekali tidak menandai bayangan awan. Di atas delta mangrove, bayangan yang tidak ter-mask terbaca sebagai air gelap dan akan diklasifikasikan begitu.
 
-**Scene Classification Layer**, SCL, adalah metode yang berlaku sekarang untuk data Level-2A. Sen2Cor menetapkan setiap piksel 20 meter ke salah satu dari dua belas kelas, termasuk bayangan awan, sehingga pengujiannya bisa dibaca manusia alih alih bitwise. Buku ini memakai SCL sepanjang isinya.
+**Scene Classification Layer**, SCL, adalah metode yang berlaku sekarang untuk data Level-2A. Sen2Cor menetapkan setiap piksel 20 meter ke salah satu dari dua belas kelas, termasuk bayangan awan, sehingga pengujiannya bisa dibaca manusia alih-alih bitwise. Buku ini memakai SCL sepanjang isinya.
 
 ::: {.callout-warning}
 ## Kesalahan umum: QA60 pada citra terbaru
@@ -69,11 +80,11 @@ return image.updateMask(clear);   // <5>
 
 ## Pilihan cara compositing
 
-`median()` adalah rekomendasi baku, tetapi tiga alternatifnya layak diketahui karena masing masing menjawab pertanyaan yang berbeda.
+`median()` adalah rekomendasi baku, tetapi tiga alternatifnya layak diketahui karena masing-masing menjawab pertanyaan yang berbeda.
 
-**`mosaic()`** mengambil observasi valid terakhir di setiap piksel. Ia cepat dan mempertahankan nilai spektral asli alih alih mensintesis sebuah statistik. Ia juga menghasilkan garis sambungan yang terlihat di tempat wilayah bersebelahan berasal dari tanggal berbeda, sehingga kurang baik untuk pekerjaan kuantitatif dan memadai untuk tinjauan cepat.
+**`mosaic()`** mengambil observasi valid terakhir di setiap piksel. Ia cepat dan mempertahankan nilai spektral asli alih-alih mensintesis sebuah statistik. Ia juga menghasilkan garis sambungan yang terlihat di tempat wilayah bersebelahan berasal dari tanggal berbeda, sehingga kurang baik untuk pekerjaan kuantitatif dan memadai untuk tinjauan cepat.
 
-**`qualityMosaic('NDVI')`** memilih, di setiap piksel, observasi dengan NDVI tertinggi. Hasilnya adalah composite kehijauan puncak, yang merupakan praktik baku dalam pemantauan pertanian ketika Anda ingin tanaman pada perkembangan maksimum. Ia bias secara sistematis ke arah tanggal paling basah, sehingga composite kehijauan puncak bukan ringkasan yang adil untuk kondisi rata rata.
+**`qualityMosaic('NDVI')`** memilih, di setiap piksel, observasi dengan NDVI tertinggi. Hasilnya adalah composite kehijauan puncak, yang merupakan praktik baku dalam pemantauan pertanian ketika Anda ingin tanaman pada perkembangan maksimum. Ia bias secara sistematis ke arah tanggal paling basah, sehingga composite kehijauan puncak bukan ringkasan yang adil untuk kondisi rata-rata.
 
 **`.reduce(ee.Reducer.percentile([25]))`** menghasilkan composite yang lebih gelap. Karena sisa kabut bersifat terang, kuartil bawah sering lebih bersih daripada median di wilayah yang sangat berawan, dengan konsekuensi nilainya bias ke bawah.
 
@@ -119,7 +130,7 @@ fig.update_yaxes(title="P(setidaknya satu tampakan bersih)", tickformat=".0%", r
 bk.show(fig, height=380)
 ```
 
-Baca garis 95 persen. Pada awan lima puluh persen, lima scene sudah cukup, dan itu dua pekan Sentinel-2. Pada awan delapan puluh lima persen Anda perlu sekitar sembilan belas, kira kira satu triwulan. Pada sembilan puluh lima persen, Anda perlu hampir enam puluh, lebih banyak daripada yang diberikan satu orbit Sentinel-2 dalam setahun di sebagian besar sabuk ekuator.
+Baca garis 95 persen. Pada awan lima puluh persen, lima scene sudah cukup, dan itu dua pekan Sentinel-2. Pada awan delapan puluh lima persen Anda perlu sekitar sembilan belas, kira-kira satu triwulan. Pada sembilan puluh lima persen, Anda perlu hampir enam puluh, lebih banyak daripada yang diberikan satu orbit Sentinel-2 dalam setahun di sebagian besar sabuk ekuator.
 
 ```{python}
 #| label: tbl-clear-scenes
@@ -200,7 +211,7 @@ Atau ganti sensor. Radar menembus awan sepenuhnya, karena gelombang mikro pada p
   "id": "ch09-compositing",
   "questions": [
     {
-      "q": "Mengapa bab ini memakai updateMask alih alih mengisi piksel berawan dengan nol?",
+      "q": "Mengapa bab ini memakai updateMask alih-alih mengisi piksel berawan dengan nol?",
       "options": [
         "Lebih cepat",
         "Piksel yang ter-mask dilewati reducer, sedangkan nol akan ikut dihitung dan menarik median ke bawah",
@@ -208,7 +219,7 @@ Atau ganti sensor. Radar menembus awan sepenuhnya, karena gelombang mikro pada p
         "updateMask mempertahankan nama band"
       ],
       "answer": 1,
-      "why": "Inilah inti mekanis compositing. Tanpa data dan nol berperilaku sangat berbeda di bawah reducer, dan mengacaukan keduanya menghasilkan composite yang diam diam terlalu gelap."
+      "why": "Inilah inti mekanis compositing. Tanpa data dan nol berperilaku sangat berbeda di bawah reducer, dan mengacaukan keduanya menghasilkan composite yang diam-diam terlalu gelap."
     },
     {
       "q": "Sebuah skrip warisan tahun 2021 memakai band QA60 untuk cloud masking lalu dijalankan pada citra 2024. Apa yang terjadi?",
@@ -219,7 +230,7 @@ Atau ganti sensor. Radar menembus awan sepenuhnya, karena gelombang mikro pada p
         "Skrip otomatis beralih ke band SCL"
       ],
       "answer": 1,
-      "why": "Kegagalan diam diam adalah jenis yang berbahaya. Composite-nya terlihat masuk akal dan penuh awan, dan tidak ada apa pun di keluaran yang memberi sinyal ada masalah."
+      "why": "Kegagalan diam-diam adalah jenis yang berbahaya. Composite-nya terlihat masuk akal dan penuh awan, dan tidak ada apa pun di keluaran yang memberi sinyal ada masalah."
     },
     {
       "q": "Mengapa skrip compositing sengaja tidak memakai filter persentase awan tingkat citra?",

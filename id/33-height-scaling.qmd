@@ -1,5 +1,16 @@
 # Dari Plot LiDAR ke Peta Biomassa {#sec-height-scaling}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch33_height_scaling`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch33_height_scaling) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch33_height_scaling.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan melihat apa arti "tinggi kanopi" pada ukuran 0,5 m, 10 m, dan 25 m. Anda akan menguji dua peta tinggi kanopi dari satelit terhadap jejak laser GEDI, lalu menelusuri bagaimana kesalahan tinggi berubah menjadi kesalahan biomassa. Inilah jalan yang dilalui setiap peta karbon hutan, dari satu plot yang terukur baik sampai satu bentang lahan utuh.

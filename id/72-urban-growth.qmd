@@ -1,5 +1,16 @@
 # Pertumbuhan Kota: Di Mana Kota Tumbuh, Seberapa Cepat, dan ke Mana Berikutnya {#sec-urban-growth}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch72_urban_growth`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch72_urban_growth) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch72_urban_growth.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Perencana kota, pengembang properti, perusahaan utilitas, dan asuransi mengajukan empat pertanyaan yang sama kepada arsip satelit: berapa banyak orang tinggal di kota, apakah lahan dibangun lebih cepat daripada pertumbuhan penduduk, ke arah mana kota melebar, dan ke mana kota akan tumbuh berikutnya. Anda akan menjawab semuanya dengan data terbuka: urbanisasi Indonesia 1975 hingga 2030 menurut Degree of Urbanisation yang disahkan PBB, time-lapse dan profil radial Jabodetabek, indikator SDG 11.3.1 untuk empat belas kota dan wilayah, model pertumbuhan kota yang dilatih di Python lalu diterapkan ke setiap sel di Earth Engine, dan tujuh tahun pemadatan dari jejak bangunan. Python dan R berdampingan.

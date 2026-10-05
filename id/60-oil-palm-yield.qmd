@@ -1,5 +1,16 @@
 # Sawit dari Umur ke Biomassa, Kesehatan, dan Buah {#sec-oil-palm-yield}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch60_oil_palm_yield`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch60_oil_palm_yield) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch60_oil_palm_yield.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan melanjutkan peta umur tanam dari Bab [-@sec-oil-palm-age]: tinggi sawit menurut umur dari GEDI, biomassa dari persamaan alometrik sawit, kesehatan tajuk dibandingkan dengan kelompok umurnya sendiri, dan perkiraan tandan buah segar (TBS) tahunan dan bulanan untuk bentang perkebunan di Kotawaringin Timur. Bagian biomassa memberi hasil yang tidak nyaman: persamaan sawit yang diterbitkan, bila diterapkan apa adanya, berbeda satu sama lain dan dengan data lapangan sampai ratusan kali lipat. Mengetahui hal itu sebelum melaporkan stok karbon adalah hal paling berguna di bab ini.

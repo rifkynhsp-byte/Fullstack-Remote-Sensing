@@ -1,5 +1,17 @@
 # Visualisasi Data yang Membantu Mengambil Keputusan {#sec-dataviz}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch29_rainfall_charts`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch29_rainfall_charts) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch29_rainfall_charts.ipynb)
+- `ch29_rainfall_maps`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch29_rainfall_maps) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch29_rainfall_maps.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengambil satu tabel nyata dan menampilkannya dengan cara yang buruk, lalu dengan cara yang baik. Sambil jalan, Anda akan memilih warna yang tepat untuk setiap peta, dan mengubah grafik statis menjadi grafik yang bisa dijelajahi pembaca.
@@ -13,7 +25,7 @@ Grafik adalah jawaban atas sebuah pertanyaan. Kalau pertanyaannya tidak bisa diu
 |---|---|
 | Bagaimana pola setahun di setiap kota? | small multiples dengan sumbu yang sama |
 | Seberapa besar variasi satu bulan antar tahun? | pita di sekitar median |
-| Apakah tahun tahun pemicu kering memang kering? | satu titik per tahun, tahun tersebut disorot |
+| Apakah tahun-tahun pemicu kering memang kering? | satu titik per tahun, tahun tersebut disorot |
 | Kapan tepatnya sebuah bulan basah atau kering? | heatmap tahun kali bulan yang interaktif |
 
 ## Contoh nyata: curah hujan yang sama, digrafikkan dengan buruk dan dengan baik
@@ -30,7 +42,7 @@ Warna pada peta bukan hiasan. Warna harus cocok dengan pertanyaannya:
 - **Divergen** (dua warna dengan titik tengah netral) kalau ada titik tengah yang bermakna: di atas atau di bawah normal.
 - **Kategoris** (warna yang berbeda jelas, tanpa urutan) kalau kelasnya tidak punya peringkat: musim yang mana.
 
-Palet pelangi merusak ketiganya. Palet itu memunculkan batas palsu di tempat warnanya melompat, dan gagal untuk sekitar satu dari dua belas laki laki yang buta warna merah hijau.
+Palet pelangi merusak ketiganya. Palet itu memunculkan batas palsu di tempat warnanya melompat, dan gagal untuk sekitar satu dari dua belas laki-laki yang buta warna merah hijau.
 
 {{< include _snippets/ch29_rainfall_maps.qmd >}}
 

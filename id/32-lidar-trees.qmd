@@ -1,5 +1,16 @@
 # LiDAR Udara: Dari Titik ke Pohon {#sec-lidar-trees}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch32_lidar_trees`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch32_lidar_trees) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch32_lidar_trees.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengolah point cloud LiDAR udara dari titik mentah sampai menjadi tabel pohon satu per satu: memeriksa titik, membuat model medan, membuat model tinggi kanopi, mencari puncak pohon, lalu menggambar tajuknya. Alurnya ditulis dalam Python (langsung jalan di sini, hitungan detik) dan dalam R dengan lidR, alat yang dipakai di workshop LiDAR penulis.

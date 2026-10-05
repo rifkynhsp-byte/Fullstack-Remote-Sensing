@@ -1,5 +1,17 @@
 # Synthetic Aperture Radar Fusion {#sec-sar}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch10_multisensor_stack`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch10_multisensor_stack) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch10_multisensor_stack.ipynb)
+- `ch10_sar_water_mahakam`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch10_sar_water_mahakam) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch10_sar_water_mahakam.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will add a sensor that ignores cloud entirely, understand what radar is physically measuring and why it is not a substitute for optical data, and fuse C band and L band backscatter with your optical stack into one analysis ready image.

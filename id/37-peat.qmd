@@ -1,5 +1,17 @@
 # Kebakaran: dari Hutan hingga Lahan Gambut {#sec-peat}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch34_bushfire_wollemi`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch34_bushfire_wollemi) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch34_bushfire_wollemi.ipynb)
+- `ch37_peat_fire`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch37_peat_fire) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch37_peat_fire.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Kebakaran adalah satu bencana yang dilihat dengan dua cara. Pertama, api di atas permukaan: Anda menjawab tiga pertanyaan yang selalu diajukan lembaga penanggulangan kebakaran dan perusahaan asuransi setelah kebakaran besar (seberapa kering bahan bakarnya, bagaimana api menyebar, seberapa parah terbakarnya) untuk Black Summer 2019–20 di Blue Mountains, lalu mengeceknya dengan produk kedua. Kedua, api di bawah permukaan: Anda memetakan gambut di Kalimantan Tengah, menghitung berapa bagian area terbakar di tahun-tahun kebakaran yang jatuh di atas gambut, dan menguji bagaimana api bulanan mengikuti curah hujan. Semua memakai data terbuka.

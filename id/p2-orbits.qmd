@@ -1,5 +1,16 @@
 # P2 · Wahana, Orbit, dan Stasiun Bumi {#sec-p2-orbits .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch00b_orbits`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00b_orbits) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00b_orbits.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mempelajari isi sebuah satelit penginderaan jauh selain kameranya, kenapa kebanyakan satelit pengamat bumi terbang sekitar 700 km di atas permukaan dalam orbit hampir-kutub yang sinkron matahari, cara membedakan lintasan naik (ascending) dan turun (descending) hanya dengan melihat citranya, dan kenapa satu scene Landsat berbentuk jajaran genjang yang miring. Setiap klaim dicek dengan fisika orbit atau dengan arsip citra yang sebenarnya.

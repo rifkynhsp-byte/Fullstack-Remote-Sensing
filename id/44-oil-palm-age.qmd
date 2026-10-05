@@ -1,5 +1,16 @@
 # Kelapa Sawit: Umur, Tinggi, dan Fase Hidup {#sec-oil-palm-age}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch44_oil_palm_age`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch44_oil_palm_age) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch44_oil_palm_age.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menaksir kapan setiap blok kelapa sawit di sebuah bentang lahan Kalimantan Tengah ditanam, memakai 34 tahun arsip Landsat, lalu mengecek jawabannya dengan pengukuran yang independen: tinggi tajuk dari GEDI. Setelah itu umur diubah menjadi fase hidup, dasar perencanaan produktivitas dan kebijakan peremajaan.

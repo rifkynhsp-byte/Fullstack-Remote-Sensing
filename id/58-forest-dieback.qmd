@@ -1,5 +1,16 @@
 # Wabah Hama Hutan dari Antariksa {#sec-forest-dieback}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch58_forest_dieback`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch58_forest_dieback) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch58_forest_dieback.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengikuti sebuah wabah menjalar di hutan, satu musim panas demi satu musim panas: epidemi kumbang kulit kayu yang membunuh sebagian besar pohon spruce di Pegunungan Harz, Jerman, setelah kekeringan 2018. Untuk setiap piksel konifer, Anda akan menemukan tahun tajuknya mengering, memetakan bagaimana kerusakannya menyebar, dan menguji apakah satelit melihat pohon-pohon itu sekarat sebelum tercatat hilang. Ternyata tidak, setidaknya tidak dengan data tahunan, dan hasil negatif itu sama berharganya dengan petanya.

@@ -5,7 +5,7 @@ subtitle: "Pertanyaan pembaca, beserta balasan Anda"
 
 ::: {.callout-warning}
 ## Khusus pengajar
-Halaman ini tidak menampilkan apa pun kecuali Anda masuk sebagai pengajar. Halaman ini tidak disembunyikan, karena menyembunyikan halaman pada situs statis hanyalah pertunjukan. Yang benar benar melindungi adalah row level security di basis data.
+Halaman ini tidak menampilkan apa pun kecuali Anda masuk sebagai pengajar. Halaman ini tidak disembunyikan, karena menyembunyikan halaman pada situs statis hanyalah pertunjukan. Yang benar-benar melindungi adalah row level security di basis data.
 :::
 
 <div id="lms-instructor"></div>

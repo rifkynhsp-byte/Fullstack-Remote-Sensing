@@ -27,4 +27,4 @@ Buka salah satunya dengan menambahkan jalur repositori ke `https://code.eartheng
 | Foundation model embeddings | `GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL` |
 | Mangrove extent reference | Global Mangrove Watch v3 |
 | Canopy height reference | `users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1` |
-| Land cover reference | ESRI Global Land Cover 10 m time series |
+| Land cover reference | ESRI Global Land Cover 10 m deret waktu |

@@ -1,16 +1,20 @@
 # Preface {.unnumbered}
 
-This book teaches Earth observation in the order it has to be learned, not the order it is easiest to publish.
+I wrote my undergraduate thesis in Earth Engine as a Geophysics student at Universitas Padjadjaran, in the DRPRS lab. I did not know then that the same few lines of code would follow me for years: to a carbon start-up in Germany, to plantation forests in Riau, to research with partners in Singapore and forestry teams in Brazil, and finally back to a lecture hall at UNSW Sydney.
 
-Almost every free Google Earth Engine tutorial opens the Code Editor on page one. You paste a script, a green map appears, and you feel like you have learned something. Two weeks later you are asked why your mangrove map put forest on a hillside twenty metres above the tide line, and there is nothing in that tutorial that helps, because it never explained what the numbers in the image physically are.
+Each of those places taught me something the tutorials had not. A map can look clean and still be wrong, because the numbers in the image were never understood as physics. A model can score 94 per cent and still fail in the field, because the samples sat next to each other. A client does not want a classifier; they want to know where, how much, and how sure. This book is those lessons, written down in the order I wish I had learned them: first what a sensor actually measures, then the code, then the problems people pay to have solved.
 
-So this book starts somewhere else. It opens with six Principles chapters, drawn from university lectures, on how a sensor actually sees: radiation, orbits, scanners, resolution and radar, then a point-and-click tour of the IJB app for readers who want results before code. Part I contains no code at all. It answers why we look at the Earth from orbit in the first place, what a satellite is actually measuring when it records a pixel, and how that measurement behaves differently over a leaf, a mudflat and a sheet of water. Only after that do we open the Code Editor, in Part II. That sequence is not a stylistic choice. It is the sequence that six years of teaching this material has shown produces analysts who can debug their own maps instead of asking why the classifier is wrong.
+Most of it comes from project work. Some of it comes from the classroom, where I finally had time to ask why the methods I had been using for years actually work. Both are here, side by side, and every chapter ends with something you can run yourself.
 
 ## Why this book is free
 
-I studied for my Master's at UNSW Sydney on a scholarship from LPDP, the Indonesia Endowment Fund for Education. It is paid for by Indonesian taxpayers, and I count it as a privilege I owe back. This book is part of repaying it: everything I have learned, from university lectures to years of project work, written down and given away, so that any Indonesian student, officer or engineer, and anyone else who wants it, can learn it without a scholarship, a course fee or a company account.
+I studied at UNSW on a scholarship from LPDP, the Indonesia Endowment Fund for Education, paid for by Indonesian taxpayers. I count it as a privilege I owe back. This book is part of repaying it: so that any Indonesian student, officer or engineer, and anyone else who wants it, can learn this work without a scholarship, a course fee or a company account.
 
-The need is real. Indonesia is a country of more than seventeen thousand islands, and many of its hardest problems are spatial: where forest is being lost, which hillsides will slide in the next rain, which neighbourhoods will flood, where a new road or plantation should and should not go. Satellite data to answer those questions now exists and is free, yet the questions often still go unanswered, because the area is vast, the data are heavy, local ground data are scarce, and there are too few people trained to turn the two into decisions. Every geospatial engineer who learns to do this work well becomes a multiplier: one person can map a whole province, train a team, and make the next decision a little better informed. If this book helps produce more of them, it has done its job.
+The need is real. Indonesia has more than seventeen thousand islands, and many of its hardest problems are spatial: where forest is being lost, which hillsides will slide in the next rain, which neighbourhoods will flood. The satellite data to answer them is free. What is missing is people trained to turn it into decisions, and every geospatial engineer who learns to do this well becomes a multiplier.
+
+## Thank you
+
+At UNSW Sydney, three people supported my learning in remote sensing and GIS: **Professor Samsung Lim**, my supervisor, **Professor Linlin Ge** and **Professor Shawn Laffan**. They gave me their time, their questions and their patience, and they helped a practitioner learn to think like a researcher. This book is, in part, a thank-you to them. What is good in this book owes them a great deal; the mistakes are mine.
 
 ::: {.callout-tip}
 ## Reading edition (Word)
@@ -66,7 +70,7 @@ Three shortcuts through the material, depending on why you came.
 
 ## How the code works
 
-Every listing is a real file from `scripts/`, generated into the page at build time. Copy any of them into the Code Editor and press Run. Nothing here is pseudocode and nothing is a fragment that only works in context.
+Every listing is a real file from `scripts/`, generated into the page at build time. Each chapter opens with two buttons: **Open in Code Editor** loads the JavaScript straight into Earth Engine, and **Open in Colab** opens the Python notebook, ready to run. Nothing here is pseudocode and nothing is a fragment that only works in context.
 
 Under each listing is the output that code produced when the book was built: the real maps, charts and tables, not screenshots and not illustrations. That is deliberate. You can check your own run against it, a result is never described that the code did not actually produce, and when a number in the text looks surprising you can see where it came from. Where a chapter needs data that is not in Earth Engine or in a stable public archive, such as a drone image or a frozen timetable, the script downloads the exact files used for the book, so your run can match the printed one. Those [data snapshots](https://github.com/rifkynhsp-byte/Fullstack-Remote-Sensing/releases/tag/data-v1) are listed with their sources and licences.
 
@@ -80,13 +84,7 @@ Open [code.earthengine.google.com](https://code.earthengine.google.com), paste, 
 
 ## What this site does beyond being a book
 
-The chapters are the point, but the site around them keeps track of where you are.
-
-Your reading position, chapter completion, knowledge check scores and private notes are all recorded, and the [progress dashboard](dashboard.qmd) collects them. Nothing is sent anywhere unless you sign in; by default it lives in your browser.
-
-Knowledge checks appear at the end of several chapters. They are one question at a time with an explanation after each answer, right or wrong, because the moment just after answering is when an explanation lands hardest.
-
-The **Ask a question** button sits in the corner of every page. It carries the chapter you are reading with it, so you never have to explain where you are. Questions reach me at [rifky.nhsp@gmail.com](mailto:rifky.nhsp@gmail.com), and I would rather have a badly worded question than a reader stuck for a week.
+Your reading position, chapter progress, quiz scores and notes are kept in your browser and gathered on the [progress dashboard](dashboard.qmd). The **Ask a question** button on every page sends your question to me with the chapter attached; a badly worded question is better than a week stuck.
 
 ## Conventions
 

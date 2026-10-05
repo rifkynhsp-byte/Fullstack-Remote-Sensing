@@ -1,5 +1,16 @@
 # MRV: Measuring, Reporting and Verifying Forest Carbon {#sec-mrv}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch41_mrv`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch41_mrv) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch41_mrv.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will run a complete, small MRV exercise for one district: activity data from two independent forest-loss maps, an emission factor from GEDI biomass, Monte Carlo uncertainty, a reference level, and the results table a report would carry. Along the way you will see the decisions that move the answer most, and which of them a verifier will ask about first.

@@ -1,5 +1,18 @@
 # Statistics Every Remote Sensing Analyst Needs {#sec-stats-basics}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch70_statistics`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch70_statistics.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 A confusion matrix tells you how often a map is right. It does not tell you whether two places really differ, how sure you are of an average, what counts as unusual, or how much one thing changes with another. This chapter teaches the statistics that answer those questions, all on one real question: **how much hotter is built-up land in Greater Bandung, and does greenery cool it?** You will meet the mean and the median, the standard deviation and the interquartile range, z-scores and outliers, the central limit theorem, confidence intervals and the bootstrap, the t, Mann–Whitney and Kolmogorov–Smirnov tests, and regression with the diagnostic plots that should come before believing it. Python and R side by side.

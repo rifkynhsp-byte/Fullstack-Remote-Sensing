@@ -1,5 +1,18 @@
 # Kesehatan Sawit dari Drone {#sec-palm-health}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch61_palm_health_drone`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch61_palm_health_drone.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengambil pohon sawit yang dihitung dari ortofoto drone di Bab [-@sec-agriculture], memberi setiap tajuk skor kehijauan, lalu mengelompokkannya menjadi sehat, sedang, dan buruk. Di tengah jalan, galeri contoh tajuk mengungkap bahwa separuh "sawit" itu sebenarnya bukan sawit, dan Anda akan belajar kenapa pertanyaan pertama dalam setiap analisis per pohon adalah *apakah objek ini memang yang saya kira?*

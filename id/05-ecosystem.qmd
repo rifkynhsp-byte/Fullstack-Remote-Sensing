@@ -1,5 +1,16 @@
 # Menjelajah Ekosistem GEE {#sec-ecosystem}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch05_first_script`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch05_first_script) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch05_first_script.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan berkeliling setiap panel Code Editor, menjalankan skrip pertama, membaca model elevasi global, dan membentuk tiga kebiasaan diagnostik yang akan menghemat waktu Anda lebih banyak daripada teknik apa pun di buku ini.
@@ -9,7 +20,7 @@ Anda akan berkeliling setiap panel Code Editor, menjalankan skrip pertama, memba
 
 Earth Engine menyediakan dua cara masuk, dan memilih yang tepat sejak awal menghemat banyak rasa frustrasi.
 
-**Explorer** adalah penjelajah katalog berbasis klik. Anda mencari dataset, menambahkannya ke peta, mengatur peregangan warna, lalu mengekspor. Tidak ada kode sama sekali. Untuk memastikan sebuah dataset benar benar meliput area Anda, atau untuk menunjukkan kepada rekan kerja seperti apa citra Sentinel-2 di atas kabupatennya, Explorer adalah alat tercepat yang tersedia. Ia juga tempat yang aman untuk ditinggalkan bersama pemangku kepentingan yang bukan orang teknis.
+**Explorer** adalah penjelajah katalog berbasis klik. Anda mencari dataset, menambahkannya ke peta, mengatur peregangan warna, lalu mengekspor. Tidak ada kode sama sekali. Untuk memastikan sebuah dataset benar-benar meliput area Anda, atau untuk menunjukkan kepada rekan kerja seperti apa citra Sentinel-2 di atas kabupatennya, Explorer adalah alat tercepat yang tersedia. Ia juga tempat yang aman untuk ditinggalkan bersama pemangku kepentingan yang bukan orang teknis.
 
 **Code Editor** adalah tempat buku ini tinggal. Semua yang reproducible, semua yang bisa diotomasi, dan semua yang lebih rumit dari beberapa operasi terjadi di sini. Bayarannya adalah sebuah bahasa pemrograman, yang dibahas Bab [-@sec-javascript] mulai dari nol.
 
@@ -20,7 +31,7 @@ Pakai Explorer untuk pengintaian, lalu pindah ke Code Editor untuk membangun. Ur
 
 ## Empat panel
 
-Buka [code.earthengine.google.com](https://code.earthengine.google.com). Antarmukanya terbagi menjadi empat wilayah, dan masing masing sesuai dengan satu tahap pekerjaan yang berbeda.
+Buka [code.earthengine.google.com](https://code.earthengine.google.com). Antarmukanya terbagi menjadi empat wilayah, dan masing-masing sesuai dengan satu tahap pekerjaan yang berbeda.
 
 **Kiri, perpustakaan.** Tiga tab. *Scripts* menyimpan repositori kode Anda, ditopang Git, artinya pekerjaan Anda terversi dan bisa dibagikan lewat tautan. *Docs* adalah rujukan API yang lengkap dan bisa dicari, dan lebih baik dipakai daripada mencari di web, karena isinya selalu sesuai dengan versi yang sedang berjalan. *Assets* menyimpan data yang Anda unggah sendiri: shapefile batas wilayah, poligon data latih, raster dari sumber lain.
 
@@ -51,11 +62,11 @@ Ketika Anda membentangkan objek yang tercetak, Anda melihat Earth Engine menjela
 
 **Tipe data.** Elevasi SRTM adalah bilangan bulat 16 bit bertanda. Itu penting begitu Anda membaginya, karena pembagian bilangan bulat memotong hasilnya. Bab [-@sec-indices] kembali ke soal ini ketika indeks mulai menghasilkan nol yang mencurigakan.
 
-**Proyeksi dan skala.** Setiap band membawa ukuran piksel aslinya. Ketika Anda menggabungkan band dengan ukuran berbeda, Earth Engine menyelesaikan konfliknya dengan aturan yang terdokumentasi tetapi mudah dilupakan, dan hasilnya bisa diam diam menyampel ulang data 10 meter Anda menjadi 90 meter.
+**Proyeksi dan skala.** Setiap band membawa ukuran piksel aslinya. Ketika Anda menggabungkan band dengan ukuran berbeda, Earth Engine menyelesaikan konfliknya dengan aturan yang terdokumentasi tetapi mudah dilupakan, dan hasilnya bisa diam-diam menyampel ulang data 10 meter Anda menjadi 90 meter.
 
 ## Tiga kebiasaan yang layak dibentuk sekarang
 
-Ini bukan selera gaya. Masing masing mencegah satu kelas galat yang kalau tidak dicegah akan sangat sulit didiagnosis.
+Ini bukan selera gaya. Masing-masing mencegah satu kelas galat yang kalau tidak dicegah akan sangat sulit didiagnosis.
 
 **Cetak sejak awal, cetak sering.** Setelah setiap langkah yang berarti, cetak hasilnya dan lihat. Evaluasi malas berarti kesalahan yang dibuat sekarang baru muncul jauh kemudian, dan pada saat itu penyebabnya sudah tidak terlihat. Perintah `print` adalah cara Anda memaksa evaluasi pada jadwal Anda sendiri.
 
@@ -65,7 +76,7 @@ Ini bukan selera gaya. Masing masing mencegah satu kelas galat yang kalau tidak 
 
 ::: {.callout-note}
 ## Konsep: argumen `shown` dan `opacity`
-`Map.addLayer()` menerima lima argumen, dan dua yang terakhir jarang dipakai orang. Menambahkan layer dengan `shown` bernilai `0` mendaftarkannya di kontrol Layers tanpa menggambarnya di peta, sehingga Anda bisa menumpuk selusin layer diagnostik dan berpindah pindah di antaranya. Sementara `opacity` bernilai `0.5` di atas basemap adalah cara tercepat memeriksa apakah klasifikasi Anda benar benar sejajar dengan objek yang terlihat di permukaan.
+`Map.addLayer()` menerima lima argumen, dan dua yang terakhir jarang dipakai orang. Menambahkan layer dengan `shown` bernilai `0` mendaftarkannya di kontrol Layers tanpa menggambarnya di peta, sehingga Anda bisa menumpuk selusin layer diagnostik dan berpindah pindah di antaranya. Sementara `opacity` bernilai `0.5` di atas basemap adalah cara tercepat memeriksa apakah klasifikasi Anda benar-benar sejajar dengan objek yang terlihat di permukaan.
 :::
 
 ## Catatan tentang aset dan kuota
@@ -120,4 +131,4 @@ Beri aset nama yang deskriptif, karena `projects/proyek-anda/assets/mangrove_tra
 1. Jalankan skripnya, lalu pakai Inspector untuk menemukan elevasi titik tertinggi di dalam batas negara Anda. Bandingkan dengan angka resmi dan jelaskan selisihnya.
 2. Ubah `max` dari 1200 menjadi 3000, jalankan ulang, dan tulis satu kalimat tentang informasi apa yang didapat peta dan apa yang hilang.
 3. Cari `ee.Terrain.slope` di tab Docs. Tambahkan layer slope ke skrip tanpa melihat Bab [-@sec-terrain] lebih dulu.
-4. Simpan skripnya ke sebuah repositori lalu buat URL lewat **Get Link**. Buka di jendela penyamaran untuk memastikan ia benar benar bisa direproduksi.
+4. Simpan skripnya ke sebuah repositori lalu buat URL lewat **Get Link**. Buka di jendela penyamaran untuk memastikan ia benar-benar bisa direproduksi.

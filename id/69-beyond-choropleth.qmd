@@ -1,5 +1,18 @@
 # Peta yang Menjawab Pertanyaan: Melampaui Peta Koroplet {#sec-beyond-choropleth}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch69_beyond_choropleth`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch69_beyond_choropleth.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Peta koroplet, wilayah yang diarsir menurut nilai, adalah peta yang pertama kali digambar semua orang, dan sering kali peta yang salah. Dengan 38 provinsi Indonesia, populasi dari WorldPop, dan cahaya malam dari VIIRS, Anda akan melihat bagaimana peta total menyesatkan, bagaimana tiga skema klasifikasi mengubah angka yang sama menjadi tiga cerita berbeda, bagaimana menaruh dua variabel dalam satu warna, kapan memakai ukuran simbol alih-alih arsiran wilayah, bagaimana titik memperlihatkan apa yang disembunyikan provinsi, dan bagaimana diagram Sankey memperlihatkan perubahan antara dua peta satelit. Python dan R berdampingan; setiap peta tetap memakai garis lintang-bujur (gratikul).

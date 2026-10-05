@@ -1,5 +1,16 @@
 # Satellite Evidence for Policy Enforcement {#sec-enforcement}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch55_enforcement`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch55_enforcement) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch55_enforcement.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will turn public satellite data into the start of an enforcement case: where, when, how much and how we know. Two Indonesian cases: forest clearing inside Gunung Leuser National Park, and new bare ground along rivers in Merangin, Jambi, the signature of unlicensed gold mining. You will also see how a careless baseline year almost doubled a trend.

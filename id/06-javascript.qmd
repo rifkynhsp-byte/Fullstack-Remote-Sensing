@@ -9,7 +9,7 @@ Cukup JavaScript untuk menulis skrip Earth Engine, dan tidak lebih dari itu. Kal
 
 Earth Engine menyediakan dua pustaka klien: JavaScript di Code Editor berbasis peramban, dan Python untuk notebook. Buku ini mengajarkan JavaScript karena ia tidak butuh instalasi, tidak butuh pengelolaan environment, dan tidak butuh urusan autentikasi. Anda membuka satu URL dan langsung bekerja. Lampiran A membahas jalur Python bagi pembaca yang harus menyatukannya dengan pipeline yang sudah ada.
 
-Kabar baiknya, bagian yang benar benar dibutuhkan memang sedikit. Skrip Earth Engine sebagian besar berisi deklarasi, pemanggilan fungsi, dan satu jenis definisi fungsi. Tidak ada kelas yang perlu ditulis, alur kendali hampir tidak ada, dan struktur data yang dipakai nyaris hanya list dan dictionary.
+Kabar baiknya, bagian yang benar-benar dibutuhkan memang sedikit. Skrip Earth Engine sebagian besar berisi deklarasi, pemanggilan fungsi, dan satu jenis definisi fungsi. Tidak ada kelas yang perlu ditulis, alur kendali hampir tidak ada, dan struktur data yang dipakai nyaris hanya list dan dictionary.
 
 ## Variabel
 
@@ -26,7 +26,7 @@ Nama boleh berisi huruf, angka, garis bawah, dan tanda dolar, dan tidak boleh di
 
 ::: {.callout-warning}
 ## Kesalahan umum: tanda kutip pintar
-Teks yang disalin dari Word, Google Docs, PDF, atau jendela chat sering membawa tanda kutip tipografis (`'` dan `'`) alih alih tanda kutip lurus (`'`). JavaScript tidak mengenalinya, dan pesan galat yang muncul menunjuk ke tempat yang keliru. Kalau sebuah baris terlihat benar tetapi tetap gagal, ketik ulang tanda kutipnya dengan tangan. Ini masalah paling umum ketika pembaca menempelkan kode dari sebuah dokumen.
+Teks yang disalin dari Word, Google Docs, PDF, atau jendela chat sering membawa tanda kutip tipografis (`'` dan `'`) alih-alih tanda kutip lurus (`'`). JavaScript tidak mengenalinya, dan pesan galat yang muncul menunjuk ke tempat yang keliru. Kalau sebuah baris terlihat benar tetapi tetap gagal, ketik ulang tanda kutipnya dengan tangan. Ini masalah paling umum ketika pembaca menempelkan kode dari sebuah dokumen.
 :::
 
 ## List dan dictionary
@@ -71,7 +71,7 @@ var enriched = addNdvi(myImage);
 var enrichedCollection = myCollection.map(addNdvi);
 ```
 
-Tiga aturan yang perlu mengendap. Fungsi harus melakukan `return`, kalau tidak `.map()` tidak menerima apa apa dan gagal dengan pesan yang tidak membantu. Variabel yang dideklarasikan di dalam fungsi hanya ada di dalamnya. Dan nama parameternya, `image` di atas, bersifat sembarang dan lokal; menamainya `img` atau `citra` tidak mengubah apa pun.
+Tiga aturan yang perlu mengendap. Fungsi harus melakukan `return`, kalau tidak `.map()` tidak menerima apa-apa dan gagal dengan pesan yang tidak membantu. Variabel yang dideklarasikan di dalam fungsi hanya ada di dalamnya. Dan nama parameternya, `image` di atas, bersifat sembarang dan lokal; menamainya `img` atau `citra` tidak mengubah apa pun.
 
 ## Komentar
 
@@ -86,7 +86,7 @@ Komentar bukan hiasan dalam buku ini, komentar adalah bagian dari pengajaran. Ad
 */
 ```
 
-Ada satu konvensi yang layak diikuti: simpan komentar blok untuk header bagian yang menjelaskan maksud, dan komentar satu baris untuk keputusan. Komentar yang mengulang kodenya (`// pilih band 8`) tidak menambah apa apa. Komentar yang mencatat mengapa band 8 dipilih ketimbang band 8A layak ada di sana.
+Ada satu konvensi yang layak diikuti: simpan komentar blok untuk header bagian yang menjelaskan maksud, dan komentar satu baris untuk keputusan. Komentar yang mengulang kodenya (`// pilih band 8`) tidak menambah apa-apa. Komentar yang mencatat mengapa band 8 dipilih ketimbang band 8A layak ada di sana.
 
 ## Mencetak dan Console
 
@@ -182,5 +182,5 @@ var filtered = collection
 
 1. Tulis satu dictionary parameter visualisasi untuk komposit warna semu memakai band Sentinel-2 B8, B4, dan B3, dengan peregangan yang bisa Anda pertahankan alasannya di atas vegetasi.
 2. Tulis sebuah fungsi yang menerima citra dan mengembalikannya dengan band NDWI. Jangan melihat Bab [-@sec-cloud] lebih dulu.
-3. Sisipkan tanda kutip pintar ke skrip yang sudah jalan, dengan sengaja, lalu baca pesan galatnya baik baik. Mengenalinya sekali menghemat satu jam di kemudian hari.
+3. Sisipkan tanda kutip pintar ke skrip yang sudah jalan, dengan sengaja, lalu baca pesan galatnya baik-baik. Mengenalinya sekali menghemat satu jam di kemudian hari.
 4. Cetak ukuran sebuah koleksi, lalu cetak koleksinya sendiri, dan perhatikan bedanya di Console.

@@ -1,8 +1,19 @@
 # Mengambil Aliran Data Optik {#sec-optical}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch08_optical_search`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch08_optical_search) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch08_optical_search.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan memilih antara Landsat dan Sentinel-2 berdasarkan bukti, bukan kebiasaan, menyaring arsip global menjadi satu citra layak pakai dalam empat baris, dan mengetahui metadata mana yang benar benar layak dijadikan filter.
+Anda akan memilih antara Landsat dan Sentinel-2 berdasarkan bukti, bukan kebiasaan, menyaring arsip global menjadi satu citra layak pakai dalam empat baris, dan mengetahui metadata mana yang benar-benar layak dijadikan filter.
 :::
 
 ## Dua kuda beban
@@ -26,10 +37,10 @@ Banyak proyek serius memakai keduanya: Landsat untuk garis dasar historis, Senti
 
 ::: {.callout-note}
 ## Konsep: red edge
-Sentinel-2 membawa tiga band sempit antara merah dan inframerah dekat, kira kira pada 705, 740, dan 783 nanometer. Serapan klorofil menurun sangat curam di sepanjang interval itu, dan posisi tepat penurunannya bergeser ketika tanaman tertekan, jauh sebelum perubahannya terlihat mata atau terbaca NDVI. Inilah sebabnya Sentinel-2 mengungguli Landsat untuk kondisi tanaman dan deteksi penyakit dengan selisih yang jauh lebih besar daripada yang bisa dijelaskan perbedaan resolusi saja.
+Sentinel-2 membawa tiga band sempit antara merah dan inframerah dekat, kira-kira pada 705, 740, dan 783 nanometer. Serapan klorofil menurun sangat curam di sepanjang interval itu, dan posisi tepat penurunannya bergeser ketika tanaman tertekan, jauh sebelum perubahannya terlihat mata atau terbaca NDVI. Inilah sebabnya Sentinel-2 mengungguli Landsat untuk kondisi tanaman dan deteksi penyakit dengan selisih yang jauh lebih besar daripada yang bisa dijelaskan perbedaan resolusi saja.
 :::
 
-## Koleksi, dan huruf huruf yang menentukan
+## Koleksi, dan huruf-huruf yang menentukan
 
 Pengenal dataset memuat tingkat pemrosesan, dan salah memilih membatalkan pekerjaan kuantitatif tanpa memunculkan galat apa pun.
 
@@ -54,11 +65,11 @@ NDVI yang dihitung pada Level-1C dan NDVI yang dihitung pada Level-2A di atas hu
 
 ## Membaca rantainya
 
-Empat filter mengerjakan tugasnya, dan masing masing bekerja pada hal yang berbeda.
+Empat filter mengerjakan tugasnya, dan masing-masing bekerja pada hal yang berbeda.
 
 `filterDate()` membatasi berdasarkan waktu perekaman. Tanggal akhirnya bersifat eksklusif, dan ini menjebak orang di batas tahun: `filterDate('2023-01-01', '2023-12-31')` melewatkan hari terakhir tahun itu. Pakai `'2024-01-01'` sebagai batas atas kalau Anda memang menginginkan satu tahun penuh.
 
-`filterBounds()` membatasi berdasarkan geografi. Ia menyimpan setiap citra yang jejaknya berpotongan dengan geometri Anda, yang untuk sebuah titik berarti persis citra citra yang meliput titik itu.
+`filterBounds()` membatasi berdasarkan geografi. Ia menyimpan setiap citra yang jejaknya berpotongan dengan geometri Anda, yang untuk sebuah titik berarti persis citra-citra yang meliput titik itu.
 
 `filter(ee.Filter.lt(...))` membatasi berdasarkan metadata. `CLOUDY_PIXEL_PERCENTAGE` hanyalah satu di antara banyak properti yang dibawa citra Sentinel-2. Yang lain yang layak diketahui adalah `MGRS_TILE`, yang mengunci Anda pada satu sel grid tile, dan `SENSING_ORBIT_NUMBER`, yang berguna ketika geometri pengamatan perlu konsisten.
 
@@ -66,7 +77,7 @@ Empat filter mengerjakan tugasnya, dan masing masing bekerja pada hal yang berbe
 
 ::: {.callout-important}
 ## Integritas ilmiah: awan tingkat citra adalah alat tumpul
-`CLOUDY_PIXEL_PERCENTAGE` menjelaskan satu citra utuh, kira kira 110 kilometer persegi. Citra yang dilaporkan 40 persen berawan bisa jadi sepenuhnya cerah di atas area studi Anda yang sepuluh kilometer, dan citra yang dilaporkan 5 persen berawan bisa jadi seluruh awannya duduk tepat di atas lokasi Anda. Memfilter properti ini praktis untuk memilih satu citra yang akan dilihat. Ia alat yang keliru untuk membangun composite, dan Bab [-@sec-cloud] menggantinya dengan cloud masking per piksel.
+`CLOUDY_PIXEL_PERCENTAGE` menjelaskan satu citra utuh, kira-kira 110 kilometer persegi. Citra yang dilaporkan 40 persen berawan bisa jadi sepenuhnya cerah di atas area studi Anda yang sepuluh kilometer, dan citra yang dilaporkan 5 persen berawan bisa jadi seluruh awannya duduk tepat di atas lokasi Anda. Memfilter properti ini praktis untuk memilih satu citra yang akan dilihat. Ia alat yang keliru untuk membangun composite, dan Bab [-@sec-cloud] menggantinya dengan cloud masking per piksel.
 :::
 
 ## Memeriksa sebelum melanjutkan
@@ -121,7 +132,7 @@ Indeks ternormalisasi seperti NDVI kebal terhadap faktor skala murni, karena fak
         "Urutannya harus dibalik"
       ],
       "answer": 1,
-      "why": "Kesalahan kecil yang diam diam membuang satu hari, dan pada perulangan multi tahun ia membuang satu hari setiap tahun."
+      "why": "Kesalahan kecil yang diam-diam membuang satu hari, dan pada perulangan multi tahun ia membuang satu hari setiap tahun."
     },
     {
       "q": "Sebuah citra melaporkan CLOUDY_PIXEL_PERCENTAGE sebesar 40. Bisa dipakai?",

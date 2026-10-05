@@ -1,5 +1,16 @@
 # P3 · How Sensors Scan {#sec-p3-scanning .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch00c_scanning`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00c_scanning) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00c_scanning.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will learn how a sensor on a moving platform builds a two-dimensional image: by sweeping a mirror (whisk broom), by reading a row of detectors (push broom), or by taking whole frames. You will compute pixel size and swath from a sensor's angles and altitude, see why Landsat switched from whisk broom to push broom, why SPOT can tilt its camera, and what the failure of one small mirror did to every Landsat 7 image since 2003.

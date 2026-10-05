@@ -1,5 +1,16 @@
 # Tutupan Lahan Otomatis: Label Gratis dan Satu Model untuk Setiap Tahun {#sec-auto-landcover}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch56_auto_landcover`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch56_auto_landcover) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch56_auto_landcover.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan membuat peta tutupan lahan Lombok tanpa mengumpulkan satu pun titik latih: labelnya diambil dari tempat-tempat di mana dua peta global sepakat, fiturnya adalah satellite embeddings, dan model yang sama memetakan tahun berikutnya tanpa label baru. Lalu Anda akan mengujinya dengan tiga cara dan melihat kenapa akurasi 94 % bisa berdampingan dengan kecocokan 46 % di seperempat pulau yang paling sulit.

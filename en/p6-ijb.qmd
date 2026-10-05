@@ -1,5 +1,17 @@
 # P6 · IJB Step by Step: From an Area to a Report {#sec-p6-ijb .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch00g_ijb_cases`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00g_ijb_cases.ipynb)
+- [Open the IJB app in the Code Editor](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/IndrajaBuana)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will learn to use IJB, an Earth Engine application built by the author, by watching it work, step by step, on real places. First one landscape, Kota Besi in Kotawaringin Timur (Central Kalimantan), through every module: a clean image, the author's own 10-class land-cover model, canopy height learned from the GEDI laser, a per-village summary, plantation age, disturbance history and unsupervised clusters. Then four events: change around the new capital, the 2024 Demak flood, the 2023 peat fires in Ogan Komering Ilir and landslide susceptibility in West Java. Every map and number is the app's own result. No code is needed to use it; the rest of the book shows the code behind the same ideas.

@@ -1,5 +1,16 @@
 # Mining and Stockpiles {#sec-mining}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch25_mining_sangatta`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch25_mining_sangatta) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch25_mining_sangatta.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will answer the three questions a mine operator, a regulator or an insurer actually asks: how fast is the footprint growing, how much material has moved, and where is the ground hot.

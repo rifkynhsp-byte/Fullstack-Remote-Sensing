@@ -1,5 +1,16 @@
 # Mining Against the Services It Removes {#sec-mining-cost-benefit}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch63_mining_cost_benefit`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch63_mining_cost_benefit) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch63_mining_cost_benefit.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will measure what nickel mining around Pomalaa, Kolaka (Southeast Sulawesi), has removed since 2001: the forest area, the carbon it held, and the ecosystem services it provided. Then you will turn those losses into money with published values and compute a **break-even**: how much net benefit each hectare of mining must deliver to outweigh what it took. Satellites cannot tell you whether a mine is worth it. They can tell you the size of the bill.

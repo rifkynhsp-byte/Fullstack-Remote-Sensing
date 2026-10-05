@@ -1,5 +1,16 @@
 # Floating Solar from Space: Watching a Power Plant Appear {#sec-solar-pv}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch57_solar_pv`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch57_solar_pv) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch57_solar_pv.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will find the Cirata floating solar plant in West Java from satellite data alone, measure it against its reported size, and date its construction month by month with radar. On the way, a standard water index fails, shortwave infrared rescues it, and you will see why "how big is the plant" has more than one honest answer.

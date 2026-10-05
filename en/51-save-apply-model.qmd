@@ -1,5 +1,16 @@
 # Train Once, Apply Anywhere: Saving an Earth Engine Model {#sec-save-model}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch51_save_apply_model`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch51_save_apply_model) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch51_save_apply_model.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will train a land-cover model once, save it as an Earth Engine asset, load it in another script, and apply it in four other parts of Indonesia. You will also find that one common way of saving a model changed its answers in our tests, and learn the check that catches this: a reloaded model must reproduce the original's results.

@@ -1,5 +1,16 @@
 # Solar Resource: How Much Electricity Could the Sun Give Here? {#sec-solar-resource}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch64_solar_resource`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch64_solar_resource) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch64_solar_resource.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will map how much sunlight reaches Indonesia, calibrate a simple generation model on a real power plant (Cirata, Chapter [-@sec-solar-pv]), and use it to answer three practical questions: how much electricity the rooftops of North Bandung could make, how much floating panels on Saguling reservoir could make, and whether that is enough for a household or the grid (PLN) is still needed. On the way you will see that Bandung's heavy rain costs surprisingly little sunlight.

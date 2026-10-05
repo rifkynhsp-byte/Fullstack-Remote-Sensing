@@ -1,5 +1,19 @@
 # Out-of-Home Advertising: Footfall, Audience and Inventory in Sydney {#sec-ooh}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch65_ooh_data`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_data.ipynb)
+- `ch65_ooh_sydney`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_sydney.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 A complete commercial location study, in R and in Python side by side. You will predict how many people walk past every candidate location in central Sydney, turn footfall into an audience score for three kinds of advertiser, and rank the bus shelters, banners and bus routes an advertiser can actually buy. Along the way you will meet the two mistakes that make most published footfall models look better than they are.

@@ -1,5 +1,16 @@
 # Keanekaragaman Hayati dari Antariksa: Luas, Bentuk, dan Mutu Habitat {#sec-biodiversity}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch53_biodiversity`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch53_biodiversity) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch53_biodiversity.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengukur apa yang bisa dikatakan satelit tentang keanekaragaman hayati, yaitu habitat, di sekitar Taman Nasional Bukit Barisan Selatan di Sumatra, rumah harimau, gajah, dan badak. Anda akan membandingkan kehilangan hutan di dalam dan di luar taman nasional, menemukan bahwa hutan inti hilang jauh lebih cepat daripada hutan secara keseluruhan, dan memakai GEDI untuk membandingkan mutu struktur hutan yang tersisa.

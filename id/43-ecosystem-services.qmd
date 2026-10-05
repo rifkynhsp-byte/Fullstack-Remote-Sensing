@@ -1,5 +1,16 @@
 # Jasa Ekosistem: Apa yang Diberikan Sebuah Bentang Lahan {#sec-ecosystem-services}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch43_ecosystem_services`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch43_ecosystem_services) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch43_ecosystem_services.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memetakan tiga jasa ekosistem untuk Cekungan Bandung (hasil air, simpanan karbon, dan kualitas habitat), menemukan tempat ketiganya bertumpuk, lalu menjalankan satu skenario penggunaan lahan untuk melihat bagaimana ketiganya saling bertukar. Metodenya mengikuti logika InVEST, perangkat jasa ekosistem yang paling banyak dipakai, tetapi setiap angkanya berasal dari data satelit yang bisa Anda periksa.

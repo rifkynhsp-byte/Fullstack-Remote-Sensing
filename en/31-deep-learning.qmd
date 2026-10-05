@@ -1,5 +1,16 @@
 # Deep Learning for Earth Observation: What Earth Engine Cannot Train {#sec-deeplearning}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch31_unet_mahakam`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch31_unet_mahakam) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch31_unet_mahakam.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will pull image patches and labels out of Earth Engine as NumPy arrays, train a small U-Net on an ordinary CPU, and test it against a Random Forest on the same held-out block. Then you will decide, from numbers, whether the neural network was worth its cost, including what happens when labels are scarce.

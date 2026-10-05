@@ -1,5 +1,16 @@
 # Ensembles and Continuous Prediction {#sec-regression}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch20_mangrove_biomass`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch20_mangrove_biomass) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch20_mangrove_biomass.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will move from classifying categories to predicting quantities: above ground biomass and carbon, calibrated against field plots. On 45 mangrove plots in West Papua, three models are tested honestly, plot by plot, and mostly fail; the chapter shows why, what random forests do to extreme values, and how to put an honest error bar on a carbon total.

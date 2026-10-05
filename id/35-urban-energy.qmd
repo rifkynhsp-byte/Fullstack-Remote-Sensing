@@ -1,5 +1,16 @@
 # Kota dan Energi: Panas Perkotaan dan Lokasi Tenaga Surya {#sec-urban-energy}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch35_urban_energy`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch35_urban_energy) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch35_urban_energy.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memetakan panas permukaan di Surabaya dan mengaitkannya dengan tutupan lahannya. Setelah itu Anda akan menyusun penapisan multikriteria untuk lokasi pembangkit listrik tenaga surya di Sumbawa, lalu menguji seberapa besar jawabannya berubah kalau orang lain yang menentukan bobotnya.

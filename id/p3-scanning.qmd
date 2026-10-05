@@ -1,5 +1,16 @@
 # P3 · Cara Sensor Memindai {#sec-p3-scanning .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch00c_scanning`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00c_scanning) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00c_scanning.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mempelajari bagaimana sensor di wahana yang bergerak menyusun citra dua dimensi: dengan menyapukan cermin (whisk broom), dengan membaca sederet detektor (push broom), atau dengan memotret satu bingkai utuh. Anda akan menghitung ukuran piksel dan lebar sapuan dari sudut dan ketinggian sensor, melihat kenapa Landsat beralih dari whisk broom ke push broom, kenapa SPOT bisa memiringkan kameranya, dan apa akibat rusaknya satu cermin kecil terhadap setiap citra Landsat 7 sejak 2003.

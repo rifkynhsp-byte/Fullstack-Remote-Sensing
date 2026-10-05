@@ -1,5 +1,16 @@
 # Tambang Melawan Jasa yang Dihilangkannya {#sec-mining-cost-benefit}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch63_mining_cost_benefit`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch63_mining_cost_benefit) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch63_mining_cost_benefit.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengukur apa yang telah dihilangkan penambangan nikel di sekitar Pomalaa, Kolaka (Sulawesi Tenggara), sejak 2001: luas hutannya, karbon yang dikandungnya, dan jasa ekosistem yang diberikannya. Lalu Anda akan mengubah kehilangan itu menjadi uang dengan nilai-nilai terbitan, dan menghitung **titik impas**: berapa manfaat bersih yang harus dihasilkan setiap hektare tambang untuk mengimbangi apa yang diambilnya. Satelit tidak bisa memberi tahu apakah sebuah tambang layak. Satelit bisa memberi tahu besarnya tagihan.

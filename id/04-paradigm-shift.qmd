@@ -23,7 +23,7 @@ Akibatnya, pertanyaan mangrove sembilan tahun sekepulauan tadi menjadi skrip sek
 
 ::: {.callout-note}
 ## Konsep: ini bukan sekadar komputer yang lebih cepat
-Laptop yang lebih cepat memperpendek langkah ketiga alur kerja lama. Ia tidak berbuat apa apa untuk langkah pertama dan kedua, dan di situlah waktunya sebenarnya habis. Earth Engine menghapus langkah pertama dan kedua sepenuhnya. Itu perubahan jenis, bukan perubahan derajat, dan itulah sebabnya keterampilan dalam buku ini tidak sekadar SIG yang sama tetapi dihosting.
+Laptop yang lebih cepat memperpendek langkah ketiga alur kerja lama. Ia tidak berbuat apa-apa untuk langkah pertama dan kedua, dan di situlah waktunya sebenarnya habis. Earth Engine menghapus langkah pertama dan kedua sepenuhnya. Itu perubahan jenis, bukan perubahan derajat, dan itulah sebabnya keterampilan dalam buku ini tidak sekadar SIG yang sama tetapi dihosting.
 :::
 
 ## Klien dan server, serta garis di antaranya
@@ -89,7 +89,7 @@ Semua itu tidak mengubah kesimpulannya. Untuk kelas pertanyaan yang dibahas buku
       "why": "Pada alur kerja desktop, berbulan bulan habis untuk memindahkan bita, bukan untuk menjawab pertanyaan. Menghapus tahap itu berbeda dari menghitung lebih cepat."
     },
     {
-      "q": "Anda menulis sepuluh operasi berantai. Kapan komputasinya benar benar terjadi?",
+      "q": "Anda menulis sepuluh operasi berantai. Kapan komputasinya benar-benar terjadi?",
       "options": [
         "Langsung, saat setiap baris dieksekusi",
         "Saat peta memerlukan ubin, print memerlukan nilai, atau ekspor mulai menulis berkas",
@@ -108,7 +108,7 @@ Semua itu tidak mengubah kesimpulannya. Untuk kelas pertanyaan yang dibahas buku
         "Selalu pakai skala paling halus yang tersedia"
       ],
       "answer": 1,
-      "why": "41.200 ha pada 10 m dan 39.800 ha pada 100 m sama sama pernyataan yang bisa dipertahankan tentang bentang lahan yang sama. Melaporkan salah satunya tanpa skala tidak bisa."
+      "why": "41.200 ha pada 10 m dan 39.800 ha pada 100 m sama-sama pernyataan yang bisa dipertahankan tentang bentang lahan yang sama. Melaporkan salah satunya tanpa skala tidak bisa."
     }
   ]
 }
@@ -116,6 +116,6 @@ Semua itu tidak mengubah kesimpulannya. Untuk kelas pertanyaan yang dibahas buku
 
 ## Latihan {.unnumbered}
 
-1. Perkirakan volume unduhan untuk proyek Anda yang terakhir: jumlah citra, ukuran rata rata, dan jam yang habis untuk transfer dan pembongkaran. Simpan angkanya. Itu garis dasar yang sedang Anda gantikan.
+1. Perkirakan volume unduhan untuk proyek Anda yang terakhir: jumlah citra, ukuran rata-rata, dan jam yang habis untuk transfer dan pembongkaran. Simpan angkanya. Itu garis dasar yang sedang Anda gantikan.
 2. Tulis satu kalimat berisi pertanyaan lingkungan yang akan Anda ajukan seandainya volume data bukan kendala. Kembalilah ke kalimat itu setelah Bab [-@sec-accuracy].
 3. Jelaskan perbedaan klien dan server kepada rekan yang tidak menulis kode. Bila penjelasannya lebih dari dua menit, model mentalnya belum mengendap.

@@ -1,5 +1,16 @@
 # P4 · The Four Resolutions {#sec-p4-resolution .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch00d_resolution`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00d_resolution) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00d_resolution.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will learn the four resolutions that describe every imaging sensor (spatial, spectral, radiometric and temporal) plus spatial coverage, how to calculate each, and why no sensor can be best at all of them. Each one is shown with real data: one harbour at three pixel sizes, the band layouts of Landsat 7, Landsat 8 and Sentinel-2, one image at five bit depths, and forty years of the archive over one city.

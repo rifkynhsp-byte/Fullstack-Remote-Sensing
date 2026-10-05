@@ -1,5 +1,16 @@
 # From a LiDAR Plot to a Biomass Map {#sec-height-scaling}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch33_height_scaling`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch33_height_scaling) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch33_height_scaling.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will see what "canopy height" means at 0.5 m, 10 m and 25 m. You will test two satellite height maps against GEDI laser footprints, and trace how an error in height becomes an error in biomass. This is the path every forest carbon map takes, from one well-measured plot to a whole landscape.

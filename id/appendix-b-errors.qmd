@@ -18,13 +18,13 @@ Ini memakan lima menit dan hampir selalu menemukan penyebabnya. Membaca seluruh 
 | Pesan | Penyebab lazim | Perbaikan |
 |---|---|---|
 | `Image.select: Pattern 'X' did not match any bands` | Band berganti nama oleh operasi sebelumnya, atau salah koleksi | `print(image.bandNames())` tepat sebelum baris yang gagal |
-| `User memory limit exceeded` | Terlalu banyak dihitung sekaligus pada wilayah terlalu luas | Naikkan `tileScale` ke 4, 8 atau 16; perkasar `scale`; atau ekspor alih alih menampilkan |
+| `User memory limit exceeded` | Terlalu banyak dihitung sekaligus pada wilayah terlalu luas | Naikkan `tileScale` ke 4, 8 atau 16; perkasar `scale`; atau ekspor alih-alih menampilkan |
 | `Computation timed out` | Rantai terlalu dalam, atau menampilkan hasil mahal secara interaktif | Ekspor ke Asset, lalu muat asetnya untuk ditampilkan |
 | `Collection query aborted after accumulating over 5000 elements` | Mencetak seluruh koleksi | Cetak `.size()` dan `.first()` saja |
 | `Number (Error) Invalid argument` | Nilai klien dan server tercampur | Bungkus dengan `ee.Number`, atau susun ulang agar operasinya tetap di sisi server |
 | `... is not a function` | Metode milik tipe lain, sering Image versus ImageCollection | Cetak objeknya dan periksa tipenya |
 | `Cannot read property of undefined` | Blok Imports hilang setelah salin tempel | Definisikan geometri dalam kode, atau bagikan lewat **Get Link** |
-| Layer tergambar abu abu penuh | Batas peregangan salah untuk rentang datanya | Periksa penskalaan, lalu tetapkan min dan max dari histogram |
+| Layer tergambar abu-abu penuh | Batas peregangan salah untuk rentang datanya | Periksa penskalaan, lalu tetapkan min dan max dari histogram |
 | Layer sama sekali tidak tergambar | Semuanya termask, atau `shown` bernilai false | Cetak versi tanpa mask; periksa logika masknya |
 | `Unexpected token ILLEGAL` | Tanda kutip pintar dari pengolah kata | Ketik ulang tanda kutipnya |
 

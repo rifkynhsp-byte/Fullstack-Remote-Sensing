@@ -1,5 +1,16 @@
 # Urban Growth: Where Cities Grow, How Fast, and Where Next {#sec-urban-growth}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch72_urban_growth`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch72_urban_growth) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch72_urban_growth.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 Urban planners, developers, utilities and insurers all ask the same four questions of a satellite archive: how many people live in cities, is land being built on faster than the population grows, in which direction is the city spreading, and where will it go next. You will answer each with open data: Indonesia's urbanisation from 1975 to 2030 with the UN-endorsed Degree of Urbanisation, a time-lapse and a radial profile of Jabodetabek, the SDG 11.3.1 indicator for fourteen cities and regions, an urban growth model trained in Python and applied to every cell in Earth Engine, and seven years of densification from building footprints. Python and R side by side.

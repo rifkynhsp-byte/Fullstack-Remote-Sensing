@@ -1,5 +1,16 @@
 # MRV: Mengukur, Melaporkan, dan Memverifikasi Karbon Hutan {#sec-mrv}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch41_mrv`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch41_mrv) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch41_mrv.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menjalankan satu latihan MRV yang lengkap tetapi kecil untuk satu kabupaten: data aktivitas dari dua peta kehilangan hutan yang independen, faktor emisi dari biomassa GEDI, ketidakpastian dengan Monte Carlo, tingkat acuan, dan tabel hasil yang akan dimuat sebuah laporan. Sepanjang jalan Anda akan melihat keputusan-keputusan yang paling menggeser jawabannya, dan mana yang paling dulu ditanyakan verifikator.

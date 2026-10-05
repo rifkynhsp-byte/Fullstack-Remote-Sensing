@@ -1,15 +1,27 @@
 # Pembelajaran Terbimbing Klasik {#sec-supervised}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch16_kmeans_bandung`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch16_kmeans_bandung) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch16_kmeans_bandung.ipynb)
+- `ch16_ensemble_classification`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch16_ensemble_classification) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch16_ensemble_classification.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan melatih, menyetel, dan membandingkan tiga classifier, membaca band prediktor mana yang benar benar bekerja, menggabungkan ketiganya menjadi suara terbanyak, lalu membersihkan hasilnya tanpa menghapus objek yang justru sedang Anda petakan.
+Anda akan melatih, menyetel, dan membandingkan tiga classifier, membaca band prediktor mana yang benar-benar bekerja, menggabungkan ketiganya menjadi suara terbanyak, lalu membersihkan hasilnya tanpa menghapus objek yang justru sedang Anda petakan.
 :::
 
 ## Apa yang sebenarnya dikerjakan classifier
 
-Kupas nama nama algoritmanya dan klasifikasi terbimbing tinggal satu operasi: diberi tabel yang setiap barisnya sebuah lokasi, kolomnya pengukuran, dan satu kolomnya label, pelajari aturan yang memprediksi label dari pengukurannya, lalu terapkan aturan itu ke setiap piksel citra.
+Kupas nama-nama algoritmanya dan klasifikasi terbimbing tinggal satu operasi: diberi tabel yang setiap barisnya sebuah lokasi, kolomnya pengukuran, dan satu kolomnya label, pelajari aturan yang memprediksi label dari pengukurannya, lalu terapkan aturan itu ke setiap piksel citra.
 
-Semua isi Bab [-@sec-optical] sampai [-@sec-texture] ada untuk membangun kolomnya. Bab [-@sec-sampling] membangun labelnya. Bab ini adalah langkah terpendek dalam seluruh rantai dan justru yang paling banyak mendapat perhatian, dan itu kira kira kebalikan dari seberapa besar pengaruhnya.
+Semua isi Bab [-@sec-optical] sampai [-@sec-texture] ada untuk membangun kolomnya. Bab [-@sec-sampling] membangun labelnya. Bab ini adalah langkah terpendek dalam seluruh rantai dan justru yang paling banyak mendapat perhatian, dan itu kira-kira kebalikan dari seberapa besar pengaruhnya.
 
 ## Sebelum ada label: klaster
 
@@ -21,7 +33,7 @@ Ada gunanya melihat bagaimana sebuah bentang lahan terbagi dengan sendirinya seb
 
 Earth Engine menyediakan pustaka classifier yang tetap. Tiga di antaranya mencakup hampir semua pekerjaan penginderaan jauh, dan alasan mengetahui ketiganya bukan karena salah satunya terbaik. Alasannya, ketiganya gagal dengan cara berbeda, dan itulah yang membuat ansambel di akhir bab ini bekerja.
 
-**Random Forest** membangun banyak pohon keputusan. Setiap pohon melihat sampel bootstrap dari data latih dan, pada setiap percabangan, subset band yang dipilih acak. Pohon pohon itu lalu memberi suara. Karena galat masing masing pohon sebagian saling bebas, merata ratakannya meniadakan derau, dan itulah sebabnya metode ini sangat sulit dibuat overfitting.
+**Random Forest** membangun banyak pohon keputusan. Setiap pohon melihat sampel bootstrap dari data latih dan, pada setiap percabangan, subset band yang dipilih acak. Pohon-pohon itu lalu memberi suara. Karena galat masing-masing pohon sebagian saling bebas, merata ratakannya meniadakan derau, dan itulah sebabnya metode ini sangat sulit dibuat overfitting.
 
 Ia pilihan baku yang tepat untuk penginderaan jauh karena tiga alasan spesifik. Ia menangani band dengan skala yang sangat berbeda tanpa normalisasi, dan feature stack yang berisi reflektansi 0 sampai 1 berdampingan dengan elevasi dalam meter dan backscatter dalam desibel persis seperti itu. Ia toleran terhadap prediktor yang berkorelasi, dan NDVI, EVI, serta SAVI berkorelasi kuat menurut konstruksinya. Dan ia melaporkan kepentingan fitur, yang menjadi alat diagnosis di bagian berikutnya.
 
@@ -31,9 +43,9 @@ Keterbatasan sejatinya muncul pada regresi, bukan klasifikasi: sebuah forest tid
 
 SVM berbasis jarak, dan ini punya konsekuensi yang terus menerus menjegal orang. Kalau satu band berkisar 0 sampai 1 dan band lain 0 sampai 10.000, band kedua sepenuhnya mendominasi perhitungan jaraknya dan band pertama menjadi tak terlihat oleh model. Persis inilah sebabnya Bab [-@sec-sar] mengonversi digital number PALSAR menjadi gamma nought dan membagi Sentinel-2 dengan 10.000. Langkah itu bukan kerapian. Itu bedanya antara SVM yang bekerja dan SVM yang mengabaikan sebagian besar stack Anda.
 
-**Gradient tree boosting** membangun pohon secara berurutan, masing masing mencocokkan galat yang dibuat pohon pohon sebelumnya. Ia sering menjadi yang paling akurat di antara ketiganya pada data tabular, sekaligus yang paling bersedia overfitting kalau data latihnya berderau, karena mencocokkan residu pohon sebelumnya pada akhirnya berarti mencocokkan derau.
+**Gradient tree boosting** membangun pohon secara berurutan, masing-masing mencocokkan galat yang dibuat pohon-pohon sebelumnya. Ia sering menjadi yang paling akurat di antara ketiganya pada data tabular, sekaligus yang paling bersedia overfitting kalau data latihnya berderau, karena mencocokkan residu pohon sebelumnya pada akhirnya berarti mencocokkan derau.
 
-## Band mana yang benar benar berkontribusi
+## Band mana yang benar-benar berkontribusi
 
 `classifier.explain()` mengembalikan isi internal model yang sudah dilatih, termasuk kepentingan per band. Pada stack yang dibangun susah payah lewat Bab [-@sec-sar] sampai [-@sec-texture], grafik ini menjawab pertanyaan yang bernilai uang sungguhan: apakah band radar, tekstur, dan topografi sepadan dengan usahanya, atau NDVI sedang mengerjakan semuanya sendirian?
 
@@ -41,11 +53,11 @@ Bacalah ke dua arah.
 
 **Band yang mendekati nol adalah beban mati.** Buang lalu latih ulang. Kalau akurasinya bertahan, model baru saja menjadi lebih murah dijalankan, lebih cepat diekspor, dan lebih stabil pada data baru. Pengurangan fitur adalah salah satu dari sedikit kemenangan gratis di bidang ini.
 
-**Band yang mendominasi segalanya layak dicurigai, bukan disyukuri.** Tanyakan apakah ia bisa jadi salinan label yang menyamar. Bab [-@sec-vector] membahas satu kasus nyata ketika jarak ke kompetitor terdekat ternyata persis begitu, dan menghasilkan model yang melaporkan akurasi 100 persen sambil tidak mempelajari apa apa.
+**Band yang mendominasi segalanya layak dicurigai, bukan disyukuri.** Tanyakan apakah ia bisa jadi salinan label yang menyamar. Bab [-@sec-vector] membahas satu kasus nyata ketika jarak ke kompetitor terdekat ternyata persis begitu, dan menghasilkan model yang melaporkan akurasi 100 persen sambil tidak mempelajari apa-apa.
 
 ::: {.callout-tip}
 ## Dari lapangan
-Kepentingan fitur tidak andal ketika prediktornya berkorelasi kuat. Random Forest menyebarkan kepentingan ke seluruh kelompok yang berkorelasi, sehingga NDVI, EVI, dan SAVI bisa masing masing terlihat cukup berguna padahal sebenarnya salah satunya membawa seluruh sinyalnya. Nilai kelompoknya, bukan band satu per satu, dan pastikan dengan membuang satu kelompok lalu melatih ulang alih alih memercayai grafiknya begitu saja.
+Kepentingan fitur tidak andal ketika prediktornya berkorelasi kuat. Random Forest menyebarkan kepentingan ke seluruh kelompok yang berkorelasi, sehingga NDVI, EVI, dan SAVI bisa masing-masing terlihat cukup berguna padahal sebenarnya salah satunya membawa seluruh sinyalnya. Nilai kelompoknya, bukan band satu per satu, dan pastikan dengan membuang satu kelompok lalu melatih ulang alih-alih memercayai grafiknya begitu saja.
 :::
 
 ## Penyetelan, dan tahu kapan berhenti
@@ -67,9 +79,9 @@ Menyusun error matrix dari sampel latih menghasilkan akurasi resubstitusi, yang 
 
 Tumpuk ketiga prediksi sebagai band lalu ambil mode per piksel. Di tempat ketiganya sepakat, tidak ada yang berubah. Di tempat mereka berselisih, mayoritas menang dan galat khas satu model tersingkir oleh suara.
 
-Ini bekerja karena ketiga algoritmanya gagal dengan cara berbeda. Mengansambelkan tiga varian dari algoritma yang sama nyaris tidak menghasilkan apa apa; keragamannya adalah mekanismenya, bukan jumlahnya.
+Ini bekerja karena ketiga algoritmanya gagal dengan cara berbeda. Mengansambelkan tiga varian dari algoritma yang sama nyaris tidak menghasilkan apa-apa; keragamannya adalah mekanismenya, bukan jumlahnya.
 
-Ada manfaat kedua yang lebih sunyi. Tempat tempat ketiganya berselisih membentuk sebuah peta, dan peta itu adalah produk ketidakpastian yang lebih baik daripada sebagian besar produk ketidakpastian formal. Piksel yang oleh Random Forest disebut mangrove, oleh SVM disebut hutan lain, dan oleh gradient boosting disebut mangrove adalah piksel yang layak didatangi orang. Bab [-@sec-accuracy] memakainya ketika memutuskan ke mana anggaran validasi lapangan yang terbatas sebaiknya dibelanjakan.
+Ada manfaat kedua yang lebih sunyi. Tempat-tempat ketiganya berselisih membentuk sebuah peta, dan peta itu adalah produk ketidakpastian yang lebih baik daripada sebagian besar produk ketidakpastian formal. Piksel yang oleh Random Forest disebut mangrove, oleh SVM disebut hutan lain, dan oleh gradient boosting disebut mangrove adalah piksel yang layak didatangi orang. Bab [-@sec-accuracy] memakainya ketika memutuskan ke mana anggaran validasi lapangan yang terbatas sebaiknya dibelanjakan.
 
 ## Pasca pemrosesan tanpa menghapus subjeknya
 
@@ -123,7 +135,7 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
         "Pemungutan suara mengurangi komputasi"
       ],
       "answer": 1,
-      "why": "Keragaman adalah mekanismenya. Mengansambelkan model yang nyaris identik berarti merata ratakan galat yang nyaris identik dan nyaris tidak menghasilkan apa apa."
+      "why": "Keragaman adalah mekanismenya. Mengansambelkan model yang nyaris identik berarti merata ratakan galat yang nyaris identik dan nyaris tidak menghasilkan apa-apa."
     },
     {
       "q": "Satu band menunjukkan kepentingan fitur yang jauh mendominasi. Reaksi yang tepat?",
@@ -134,7 +146,7 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
         "Tambah jumlah pohonnya"
       ],
       "answer": 2,
-      "why": "Kepentingan yang mendominasi sama seringnya merupakan kebocoran ketimbang penemuan. Bab [-@sec-vector] membahas kasus nyata yang persis seperti ini dan menghasilkan model dengan akurasi sempurna yang tidak tahu apa apa."
+      "why": "Kepentingan yang mendominasi sama seringnya merupakan kebocoran ketimbang penemuan. Bab [-@sec-vector] membahas kasus nyata yang persis seperti ini dan menghasilkan model dengan akurasi sempurna yang tidak tahu apa-apa."
     },
     {
       "q": "Apa risiko filter focal mode berjari jari besar di garis pantai mangrove?",
@@ -153,8 +165,8 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
 
 ## Latihan {.unnumbered}
 
-1. Berpindahlah antara ketiga klasifikasi individual di atas jalur mangrove. Tempat mereka berselisih adalah tempat peta Anda benar benar tidak pasti. Simpan layer ketidaksepakatan itu; Bab [-@sec-accuracy] memakainya.
-2. Dengan sengaja cuplik sebelum membagi alih alih sesudah, lalu catat berapa poin akurasi yang dilaporkan naik. Selisih itu adalah besarnya kebohongan.
+1. Berpindahlah antara ketiga klasifikasi individual di atas jalur mangrove. Tempat mereka berselisih adalah tempat peta Anda benar-benar tidak pasti. Simpan layer ketidaksepakatan itu; Bab [-@sec-accuracy] memakainya.
+2. Dengan sengaja cuplik sebelum membagi alih-alih sesudah, lalu catat berapa poin akurasi yang dilaporkan naik. Selisih itu adalah besarnya kebohongan.
 3. Buang tiga band dengan kepentingan terendah lalu latih ulang. Laporkan perubahan akurasinya dan putuskan apakah band itu tetap dipertahankan.
-4. Naikkan jari jari focal mode menjadi 6 piksel lalu temukan satu objek nyata yang dihapusnya.
+4. Naikkan jari-jari focal mode menjadi 6 piksel lalu temukan satu objek nyata yang dihapusnya.
 5. Atur `gamma` SVM menjadi 5 lalu jalankan ulang. Jelaskan seperti apa rupa overfitting di atas peta, berbeda dari rupanya di dalam angka.

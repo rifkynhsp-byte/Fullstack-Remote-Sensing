@@ -1,5 +1,16 @@
 # PLTS Terapung dari Antariksa: Menyaksikan Pembangkit Listrik Muncul {#sec-solar-pv}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch57_solar_pv`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch57_solar_pv) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch57_solar_pv.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menemukan PLTS Terapung Cirata di Jawa Barat hanya dari data satelit, mengukurnya terhadap luas yang dilaporkan, dan menentukan waktu pembangunannya bulan demi bulan dengan radar. Di tengah jalan, indeks air yang biasa dipakai gagal, inframerah gelombang pendek menyelamatkannya, dan Anda akan melihat kenapa pertanyaan "seberapa besar pembangkitnya" punya lebih dari satu jawaban yang jujur.

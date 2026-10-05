@@ -1,5 +1,16 @@
 # Neraca Karbon Bentang Lahan Gambut {#sec-carbon-balance}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch42_carbon_balance`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch42_carbon_balance) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch42_carbon_balance.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menyusun neraca karbon satu kabupaten yang kaya gambut, Tanjung Jabung Timur di Jambi, dari data satelit: produktivitas, cadangan biomassa, kehilangan akibat pembukaan lahan dan kebakaran, serta CO₂ dari gambut yang dikeringkan. Anda juga akan melihat dengan tepat suku mana yang tidak bisa diukur satelit, dan kenapa "neraca karbon" dari satelit selalu tidak lengkap.

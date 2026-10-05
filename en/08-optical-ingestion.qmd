@@ -1,5 +1,16 @@
 # Optical Stream Ingestion {#sec-optical}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch08_optical_search`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch08_optical_search) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch08_optical_search.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will choose between Landsat and Sentinel-2 on evidence rather than habit, filter a global archive down to a usable scene in four lines, and learn which metadata properties are worth filtering on.

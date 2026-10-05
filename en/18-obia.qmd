@@ -1,5 +1,17 @@
 # Object Based Image Analysis {#sec-obia}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch18_obia_snic`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch18_obia_snic)
+- `ch18_landslide_obia_iburi`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch18_landslide_obia_iburi) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch18_landslide_obia_iburi.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will stop classifying pixels and start classifying objects, removing salt and pepper noise, gaining predictors that pixel based work cannot produce, and delivering vector polygons a planner can open in desktop GIS. You will also learn where the approach makes things worse.

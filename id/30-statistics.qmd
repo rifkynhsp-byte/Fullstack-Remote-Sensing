@@ -1,5 +1,17 @@
 # Statistika untuk Deret Waktu dan Peta {#sec-statistics}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch30_lst_quality`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch30_lst_quality) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch30_lst_quality.ipynb)
+- `ch30_trend_spatial`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch30_trend_spatial) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch30_trend_spatial.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memeriksa deret waktu satelit seperti analis yang teliti memeriksa data stasiun cuaca. Lalu Anda akan membuat tren yang bisa dipertanggungjawabkan, dan mengukur seberapa jauh jarak antar sampel sebelum sampel itu berhenti saling mengulang informasi.
@@ -9,7 +21,7 @@ Dasar-dasarnya (rata-rata dan median, sebaran, skor-z dan pencilan, teorema limi
 
 ## Pertama, apa yang hilang dan kenapa
 
-Sebelum menghitung rata rata, tren, atau model apa pun, hitung dulu apa yang tidak ada. Untuk sensor optis dan termal di daerah tropis, sebagian besar data yang hilang disebabkan awan, dan awan tidak muncul secara acak. Awan mengikuti musim hujan. Rata rata dari hari hari yang tersisa menggambarkan hari cerah, bukan semua hari. Itu bias, dan tidak ada metode statistik yang bisa menghapusnya setelahnya.
+Sebelum menghitung rata-rata, tren, atau model apa pun, hitung dulu apa yang tidak ada. Untuk sensor optis dan termal di daerah tropis, sebagian besar data yang hilang disebabkan awan, dan awan tidak muncul secara acak. Awan mengikuti musim hujan. Rata-rata dari hari-hari yang tersisa menggambarkan hari cerah, bukan semua hari. Itu bias, dan tidak ada metode statistik yang bisa menghapusnya setelahnya.
 
 {{< include _snippets/ch30_lst_quality.qmd >}}
 
@@ -28,7 +40,7 @@ Piksel Bandung punya kemiringan −0,38 °C per dekade, dan kelihatan seperti te
 
 ## Seberapa jauh supaya dianggap independen?
 
-Semivariogram menunjukkan bahwa sampel NDVI yang berjarak kurang dari sekitar 14 km di cekungan Bandung masih berbagi sebagian informasinya. Inilah alasan Bab [-@sec-sampling] membagi data latih dan data uji berdasarkan blok, bukan titik acak. Semivariogram juga memberi tahu berapa banyak sampel yang benar benar independen. Seribu titik yang saling berjarak kurang dari 5 km nilainya jauh lebih kecil daripada seribu.
+Semivariogram menunjukkan bahwa sampel NDVI yang berjarak kurang dari sekitar 14 km di cekungan Bandung masih berbagi sebagian informasinya. Inilah alasan Bab [-@sec-sampling] membagi data latih dan data uji berdasarkan blok, bukan titik acak. Semivariogram juga memberi tahu berapa banyak sampel yang benar-benar independen. Seribu titik yang saling berjarak kurang dari 5 km nilainya jauh lebih kecil daripada seribu.
 
 ::: {.callout-tip}
 ## Kapan R lebih tepat
@@ -42,6 +54,6 @@ fit <- fit.variogram(v, vgm("Sph"))   # range, sill, nugget
 
 ## Latihan {.unnumbered}
 
-1. Buang hari hari berlabel QC "other quality" lalu buat ulang grafik data hilang per bulan. Apa yang tersisa untuk dianalisis?
+1. Buang hari-hari berlabel QC "other quality" lalu buat ulang grafik data hilang per bulan. Apa yang tersisa untuk dianalisis?
 2. Ganti Sen's slope dengan kemiringan kuadrat terkecil biasa. Piksel mana yang berubah tanda?
 3. Baca jarak (range) dari semivariogram dan pakai sebagai ukuran blok di validasi silang Bab [-@sec-sampling]. Apakah akurasinya berubah?

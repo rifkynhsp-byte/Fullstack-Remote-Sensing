@@ -1,5 +1,16 @@
 # Tutupan Lahan Ensemble dan Validasi yang Jujur {#sec-ensemble}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch59_ensemble_landcover`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch59_ensemble_landcover) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch59_ensemble_landcover.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan melatih lima classifier berbeda dan dua ensemble pada 2.320 titik berlabel lapangan dalam sepuluh kelas, termasuk sawit, sagu, karet, dan sawah, yang tidak dimiliki peta tutupan lahan global mana pun. Lalu Anda akan memvalidasinya dengan dua cara dan melihat setiap model kehilangan 12 sampai 15 poin akurasi ketika titik-titik yang bertetangga tidak lagi boleh berada di kedua sisi pembagian data. Satu kelas jatuh ke nol. Penurunan itulah hasil terpenting di bab ini.

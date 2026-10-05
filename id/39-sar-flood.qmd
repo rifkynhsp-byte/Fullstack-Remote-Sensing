@@ -1,5 +1,16 @@
 # Banjir di Bawah Awan: Pemetaan Radar Terbimbing di Jakarta, 2020 {#sec-sar-flood}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch39_sar_flood`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch39_sar_flood) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch39_sar_flood.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memetakan banjir Tahun Baru 2020 di Jakarta dengan Sentinel-1 dan Random Forest yang dilatih pada poligon yang digambar tangan. Anda akan menemukan bug satu baris yang menyembunyikan banjir dari model, memperbaikinya, dan memahami kenapa akurasi pelatihan menyebut kedua versi sama-sama sangat baik padahal hanya satu yang benar.
@@ -21,7 +32,7 @@ Bab ini mengikuti skrip GEE101 penulis, "15 - Supervised SAR", yang dibuat untuk
 
 Poligonnya ada di folder `data/` repositori buku ini.
 
-## Bugnya: dua kanal dengan satu nama
+## Galatnya: dua kanal dengan satu nama
 
 Skrip aslinya menumpuk dua tanggal dengan `ee.Image.cat(before, after)` lalu melatih model dengan kanal `'VV'`. Kelihatannya benar. Tetapi kedua citra sama-sama punya kanal bernama `VV` dan `VH`, padahal nama kanal harus unik. Earth Engine mempertahankan nama dari citra pertama dan mengganti nama kanal citra kedua menjadi `VV_1` dan `VH_1`. Akibatnya, memilih `'VV'` hanya mengambil citra **sebelum** banjir. Model diminta menemukan banjir tanpa pernah melihat citra yang diambil sesudahnya.
 

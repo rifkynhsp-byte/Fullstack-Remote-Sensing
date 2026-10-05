@@ -1,5 +1,17 @@
 # P6 · IJB Langkah demi Langkah: dari Wilayah sampai Laporan {#sec-p6-ijb .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch00g_ijb_cases`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00g_ijb_cases.ipynb)
+- [Buka aplikasi IJB di Code Editor](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/IndrajaBuana)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan belajar memakai IJB, aplikasi Earth Engine buatan penulis, dengan melihatnya bekerja langkah demi langkah di tempat nyata. Pertama satu bentang lahan, Kota Besi di Kotawaringin Timur (Kalimantan Tengah), melalui setiap modul: citra yang bersih, model tutupan lahan 10 kelas milik penulis, tinggi tajuk yang dipelajari dari laser GEDI, ringkasan per desa, umur kebun, riwayat gangguan, dan klaster tanpa sampel. Lalu empat kejadian: perubahan di sekitar ibu kota baru, banjir Demak 2024, kebakaran gambut 2023 di Ogan Komering Ilir, dan kerawanan longsor di Jawa Barat. Setiap peta dan angka adalah hasil aplikasi itu sendiri. Tidak perlu kode untuk memakainya; bagian lain buku menunjukkan kode di balik gagasan yang sama.
@@ -32,7 +44,7 @@ Mula-mula aplikasi hanya memuat kerangkanya. Setiap modul baru dibangun saat tom
 | Apa tutupan lahan di sini, menurut kelas saya sendiri? | **Tutupan** | tandai contoh, pilih algoritma, dapatkan peta dengan akurasi dan luas |
 | Saya ingin peta tutupan lahan siap pakai atau peta tinggi kanopi | **Model** | model 10 kelas milik penulis, Dynamic World, atau tinggi kanopi yang dilatih dengan GEDI |
 | Kapan tempat ini berubah, atau berapa umur kebun ini? | **Deret** | harmonik, LandTrendr, umur tegakan, titik patah CCDC |
-| Apa yang berubah di antara dua waktu? | **Ubah** | selisih indeks, transisi Dynamic World, klasifikasi ganda, tren |
+| Apa yang berubah di antara dua waktu? | **Perubahan** | selisih indeks, transisi Dynamic World, klasifikasi ganda, tren |
 | Di mana banjir terjadi, dan siapa yang terdampak? | **Banjir** | perubahan Sentinel-1 dengan ambang Otsu, saringan HAND, lereng, dan air permanen; penduduk dan bangunan |
 | Apa yang terbakar, seberapa parah, dan apakah di gambut? | **Api** | dNBR dalam empat kelas keparahan, titik panas, gambut terbakar dan ketebalannya |
 | Di mana risiko longsor atau banjir paling tinggi? | **Rawan** | random forest pada embedding dan medan, dari titik Anda atau katalog longsor NASA |
@@ -205,7 +217,7 @@ Paruh kedua memakai modul-modul kejadian di tempat yang paling penting, pada emp
 
 ![IJB Ubah: kartu sebelum ditekan (kiri, tombol bergaris merah, berurutan) dan yang muncul sesudahnya (kanan).](images/real/p6-click-ubah-id.png){.lightbox fig-alt="IJB Ubah: sebelum dan sesudah tombol ditekan."}
 
-Penajam Paser Utara memuat inti Nusantara, ibu kota baru Indonesia. Modul Ubah mengurangkan NDVI komposit bebas awan 2019 dari 2024 dan menyebut perubahan nyata bila di atas ±0,2.
+Penajam Paser Utara memuat inti Nusantara, ibu kota baru Indonesia. Modul Perubahan mengurangkan NDVI komposit bebas awan 2019 dari 2024 dan menyebut perubahan nyata bila di atas ±0,2.
 
 Aplikasi melaporkan **10.923 ha** menjadi kurang hijau dan **18.907 ha** menjadi lebih hijau. Petanya menunjukkan di mana. Pola merah rapat berupa jalan dan lahan terbuka di utara sekitar 116,7° BT, 0,95° LS adalah zona inti ibu kota (bandingkan dengan time-lapse di Bab [-@sec-visualisation]); blok-blok persegi besar hijau dan merah di seluruh kabupaten adalah hutan tanaman, dipanen di satu periode dan ditanam ulang di periode lain. Lebih banyak penghijauan daripada pencoklatan di wilayah yang terkenal karena pembukaan lahan bukanlah kontradiksi: selisih NDVI mencatat tumbuhnya kembali hutan tanaman sebagai kenaikan, itulah sebabnya Bab [-@sec-eudr] memisahkan hutan dari tanaman pohon sebelum menyebut apa pun deforestasi.
 

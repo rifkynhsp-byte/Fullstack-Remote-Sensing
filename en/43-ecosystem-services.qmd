@@ -1,5 +1,16 @@
 # Ecosystem Services: What a Landscape Gives {#sec-ecosystem-services}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch43_ecosystem_services`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch43_ecosystem_services) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch43_ecosystem_services.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will map three ecosystem services for the Bandung basin (water yield, carbon storage and habitat quality), find where they overlap, and run one land-use scenario to see how they trade off. The method follows the logic of InVEST, the most widely used ecosystem-service toolkit, but every number comes from satellite data you can inspect.

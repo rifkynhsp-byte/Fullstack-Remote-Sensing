@@ -1,5 +1,17 @@
 # Fire: from Bushfire to Peatland {#sec-peat}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch34_bushfire_wollemi`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch34_bushfire_wollemi) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch34_bushfire_wollemi.ipynb)
+- `ch37_peat_fire`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch37_peat_fire) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch37_peat_fire.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 Fire is one hazard seen two ways. First, a forest fire above ground: you answer the three questions every fire agency and insurer asks after a large fire (how dry was the fuel, how did the fire spread, how badly did it burn) for the 2019–20 Black Summer in the Blue Mountains, and check the answer against a second product. Then fire below ground: you map peat in Central Kalimantan, measure how much of the burned area in fire years lies on it, and test how monthly fire follows rainfall. Everything uses open data.

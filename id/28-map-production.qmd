@@ -1,5 +1,16 @@
 # Produksi Peta dan Laporan Otomatis {#sec-mapproduction}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch28_automated_maps`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch28_automated_maps) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch28_automated_maps.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengubah hasil Earth Engine menjadi peta yang bisa dicetak oleh klien. Setelah itu, peta tersebut ditulis sekali sebagai fungsi, lalu sebuah perulangan membuat seluruh seri peta dan laporan PDF-nya.
@@ -7,7 +18,7 @@ Anda akan mengubah hasil Earth Engine menjadi peta yang bisa dicetak oleh klien.
 
 ## Apa yang membuat peta dianggap selesai
 
-Layer di peta Code Editor adalah hasil. Peta yang selesai adalah dokumen yang bisa dibaca orang lain tanpa perlu Anda jelaskan. Peta seperti itu butuh tujuh unsur, dan masing masing menjawab pertanyaan yang pasti muncul dari pembaca:
+Layer di peta Code Editor adalah hasil. Peta yang selesai adalah dokumen yang bisa dibaca orang lain tanpa perlu Anda jelaskan. Peta seperti itu butuh tujuh unsur, dan masing-masing menjawab pertanyaan yang pasti muncul dari pembaca:
 
 | Unsur | Pertanyaan yang dijawab |
 |---|---|

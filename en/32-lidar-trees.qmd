@@ -1,5 +1,16 @@
 # Airborne LiDAR: From Points to Trees {#sec-lidar-trees}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch32_lidar_trees`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch32_lidar_trees) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch32_lidar_trees.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will take an airborne LiDAR point cloud from raw points to a table of individual trees: check the points, build a terrain model, make a canopy height model, find tree tops and draw crowns. The chain is shown in Python (runs here, in seconds) and in R with lidR, the tool used in the author's LiDAR workshops.

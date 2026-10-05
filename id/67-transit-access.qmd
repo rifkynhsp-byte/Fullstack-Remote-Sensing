@@ -1,5 +1,18 @@
 # Apa yang Diceritakan Jadwal tentang Sebuah Kota: Layanan dan Akses Transportasi Umum di Jakarta {#sec-transit}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch67_transit_access`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch67_transit_access.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Jadwal angkutan umum yang diterbitkan dalam format GTFS adalah dataset tentang kota. Anda akan membaca *feed* TransJakarta menjadi peta jaringan, mengukur seberapa timpang layanan tersebar di 7.771 halte, membandingkan waktu tunggu menurut jenis layanan serta antara hari kerja dan Minggu, lalu menggabungkan jadwal dengan populasi berbasis grid untuk memodelkan berapa bagian warga Jakarta yang tinggal dalam jarak jalan kaki dari layanan yang sering. Python dan R berdampingan, setiap grafik dengan judul utama yang menyatakan temuannya.

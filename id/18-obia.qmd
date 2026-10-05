@@ -1,5 +1,17 @@
 # Analisis Citra Berbasis Objek {#sec-obia}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch18_obia_snic`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch18_obia_snic)
+- `ch18_landslide_obia_iburi`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch18_landslide_obia_iburi) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch18_landslide_obia_iburi.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan berhenti mengklasifikasikan piksel dan mulai mengklasifikasikan objek, menghilangkan derau garam merica, memperoleh prediktor yang tidak bisa dihasilkan pekerjaan berbasis piksel, lalu menyerahkan poligon vektor yang bisa dibuka perencana di SIG desktop. Anda juga akan mengetahui di mana pendekatan ini justru memperburuk keadaan.
@@ -7,7 +19,7 @@ Anda akan berhenti mengklasifikasikan piksel dan mulai mengklasifikasikan objek,
 
 ## Masalah dengan piksel
 
-Piksel sepuluh meter adalah kotak yang sembarang. Tidak ada apa pun di permukaan bumi yang berbentuk kotak sepuluh meter. Batas batas yang penting, yaitu tegakan mangrove, tambak, blok perkebunan, ada pada skalanya sendiri dan dalam bentuknya sendiri, dan memaksakan grid teratur di atasnya adalah kenyamanan sensornya, bukan sifat bentang lahannya.
+Piksel sepuluh meter adalah kotak yang sembarang. Tidak ada apa pun di permukaan bumi yang berbentuk kotak sepuluh meter. Batas-batas yang penting, yaitu tegakan mangrove, tambak, blok perkebunan, ada pada skalanya sendiri dan dalam bentuknya sendiri, dan memaksakan grid teratur di atasnya adalah kenyamanan sensornya, bukan sifat bentang lahannya.
 
 Ada dua konsekuensi, dan keduanya alasan bab ini ada.
 
@@ -16,7 +28,7 @@ Ada dua konsekuensi, dan keduanya alasan bab ini ada.
 **Batas yang tidak terpakai.** Memvektorkan klasifikasi berbasis piksel menghasilkan puluhan ribu kotak bergerigi. Tidak ada yang bisa memasukkan itu ke dalam rencana pengelolaan.
 
 ::: {.callout-warning}
-## Kesalahan umum: menghaluskan alih alih menyegmentasi
+## Kesalahan umum: menghaluskan alih-alih menyegmentasi
 Respons yang jelas terhadap garam merica adalah filter modal, dan Bab [-@sec-supervised] memang memakainya. Ia bekerja, dan ia alat tumpul: ia menghapus derau dan objek kecil yang nyata tanpa membedakan, karena ia memang tidak bisa membedakan keduanya. Filter tiga piksel menghapus satu piksel salah klasifikasi yang terisolasi dan satu petak mangrove asli selebar 20 meter dengan semangat yang sama. Segmentasi menangani sebabnya; penghalusan menangani gejalanya.
 :::
 
@@ -28,13 +40,13 @@ Dua hal berubah karenanya.
 
 Unit analisisnya menjadi sesuatu yang menyerupai objek di permukaan. Setiap piksel di dalam satu objek memperoleh kelas yang sama, sehingga galat terisolasi menjadi mustahil menurut konstruksinya.
 
-Dan satu keluarga prediktor baru menjadi tersedia. Piksel punya nilai. Objek punya rata rata, simpangan baku, ukuran, bentuk, dan keliling. Simpangan baku di dalam objek adalah yang menarik: perkebunan seragam punya varians internal rendah, tegakan alami berstruktur rumit punya varians tinggi, dan keduanya bisa punya rata rata yang identik. Itu wawasan yang sama dengan tekstur GLCM di Bab [-@sec-texture], tiba lewat jalan berbeda dan sering kali lebih bersih.
+Dan satu keluarga prediktor baru menjadi tersedia. Piksel punya nilai. Objek punya rata-rata, simpangan baku, ukuran, bentuk, dan keliling. Simpangan baku di dalam objek adalah yang menarik: perkebunan seragam punya varians internal rendah, tegakan alami berstruktur rumit punya varians tinggi, dan keduanya bisa punya rata-rata yang identik. Itu wawasan yang sama dengan tekstur GLCM di Bab [-@sec-texture], tiba lewat jalan berbeda dan sering kali lebih bersih.
 
 ## SNIC, dan tiga parameternya yang sesungguhnya
 
 Simple Non Iterative Clustering menumbuhkan superpiksel keluar dari grid benih yang teratur, menugaskan setiap piksel ke benih yang paling dekat dalam jarak gabungan spektral dan spasial. Ia cepat, deterministik, dan tersedia di Earth Engine, dan itulah sebabnya ia menjadi algoritma segmentasi yang dipakai buku ini.
 
-Tiga parameter mengerjakan tugasnya, dan masing masing keputusan ekologis, bukan keputusan komputasi.
+Tiga parameter mengerjakan tugasnya, dan masing-masing keputusan ekologis, bukan keputusan komputasi.
 
 **`size`** mengatur jarak antar benih dalam piksel, dan karenanya perkiraan ukuran objeknya. Pada resolusi 10 meter, size 10 menghasilkan objek berukuran sekitar 100 meter. Inilah parameter yang paling perlu dipikirkan, karena menyetelnya lebih besar daripada objek yang Anda petakan membuat objek itu lenyap di dalam objek yang lebih besar. Di atas jalur mangrove yang sempit, kecil lebih aman daripada efisien.
 
@@ -59,7 +71,7 @@ Ini bagian yang jujur, dan bagian yang absen dari sebagian besar pembahasan, yan
 
 **Ia bisa kalah di bentang lahan yang batasnya gradasional.** Peralihan dari mangrove ke hutan dataran melintasi gradien elevasi memang sebuah gradien, bukan sebuah garis. Segmentasi memaksakan batas tegas di suatu tempat di dalamnya, lalu mengikat setiap piksel di dalam objek yang melintangi peralihan itu pada satu jawaban. Classifier berbasis piksel setidaknya menurun secara anggun melintasi peralihan itu, menghasilkan zona campuran yang secara jujur mewakili zona yang memang tidak pasti.
 
-Aturan praktisnya: tanyakan apakah objek yang Anda petakan punya tepi. Kalau punya, segmentasi. Kalau ia memudar, hati hati, dan periksa akurasi per kelas alih alih angka keseluruhan, karena kerugiannya akan terkonsentrasi persis di kelas peralihan yang Anda pedulikan.
+Aturan praktisnya: tanyakan apakah objek yang Anda petakan punya tepi. Kalau punya, segmentasi. Kalau ia memudar, hati-hati, dan periksa akurasi per kelas alih-alih angka keseluruhan, karena kerugiannya akan terkonsentrasi persis di kelas peralihan yang Anda pedulikan.
 
 ::: {.callout-important}
 ## Integritas ilmiah: unit pemetaan minimum wajib masuk metadata
@@ -107,7 +119,7 @@ Klasifikasi berbasis piksel tervektorkan menjadi kekacauan. Kalau yang diserahka
       "options": [
         "NDVI",
         "Elevasi",
-        "Simpangan baku di dalam objek, yang memisahkan perkebunan seragam dari hutan alam berstruktur rumit dengan rata rata yang sama",
+        "Simpangan baku di dalam objek, yang memisahkan perkebunan seragam dari hutan alam berstruktur rumit dengan rata-rata yang sama",
         "Backscatter radar"
       ],
       "answer": 2,
@@ -151,4 +163,4 @@ Pada 6 September 2018, gempa di Hokkaido memicu ribuan longsor dangkal hanya dal
 2. Atur compactness ke 5 lalu bandingkan garis pantainya dengan compactness 0. Jelaskan dalam satu kalimat mengapa compactness cocok untuk lahan pertanian dan tidak untuk delta.
 3. Bandingkan akurasi objek dan piksel per kelas, bukan hanya keseluruhan. Kelas mana yang naik dan mana yang turun, dan apakah itu sesuai dengan argumen batas gradasional di atas?
 4. Naikkan unit pemetaan minimum menjadi 2 hektar lalu laporkan berapa luas mangrove yang lenyap. Angka itu wajib ada di metadata Anda.
-5. Ekspor shapefile berbasis piksel dan berbasis objek lalu buka keduanya di QGIS. Hitung jumlah poligon masing masing. Rasio itu adalah argumen praktis bab ini.
+5. Ekspor shapefile berbasis piksel dan berbasis objek lalu buka keduanya di QGIS. Hitung jumlah poligon masing-masing. Rasio itu adalah argumen praktis bab ini.

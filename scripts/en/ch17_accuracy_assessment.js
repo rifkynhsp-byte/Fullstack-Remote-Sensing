@@ -23,6 +23,24 @@
  *   var aoi = ...
  */
 
+// ---------------------------------------------------------------------------
+// INPUTS. Everything this script needs, so it runs on its own
+// ---------------------------------------------------------------------------
+// The Mahakam Delta and the feature stack from chapter "Synthetic Aperture Radar
+// Fusion", loaded as a module. Replace aoi with your own area (draw it, or use
+// an asset) and the rest follows.
+var aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60]);
+var image2023 = require('users/rifkynauvalhsp/Fullstack-Remote-Sensing:lib_stack').getAnalysisReadyData(2023, aoi);
+// A classification to assess: Random Forest on the stack, trained on 70 per cent
+// of WorldCover-labelled points (chapter "Ground Truth and Sampling Design");
+// the other 30 per cent are the held-out validation set. Bring your own map
+// and field points and replace these lines.
+var labels = require('users/rifkynauvalhsp/Fullstack-Remote-Sensing:book_labels');
+var points = labels.labelledPoints(aoi).randomColumn('random', 42);
+var trainingSet = image2023.sampleRegions({collection: points.filter(ee.Filter.lt('random', 0.7)), properties: ['landcover'], scale: 10, tileScale: 4});
+var validationSet = points.filter(ee.Filter.gte('random', 0.7));
+var classified = image2023.classify(ee.Classifier.smileRandomForest(100).train(trainingSet, 'landcover', image2023.bandNames()));
+
 var CLASS_NAMES = ['Mangrove', 'Other forest', 'Water', 'Bareland', 'Urban'];
 var SCALE = 10;
 

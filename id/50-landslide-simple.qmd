@@ -1,5 +1,16 @@
 # Peta Longsor Pertama, dan Cara Mengujinya {#sec-landslide-simple}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch50_landslide_simple`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch50_landslide_simple) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch50_landslide_simple.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan membuat peta kerawanan longsor paling sederhana yang masih layak dibuat, yaitu tumpang susun berbobot (weighted overlay) dari lereng, curah hujan, dan tutupan lahan untuk Jawa Barat, lalu mengujinya seperti yang dilakukan penelaah. Hasil ujinya sederhana saja, dan justru itu intinya: Anda akan belajar kenapa mutu catatan longsor menentukan apa yang bisa ditunjukkan model mana pun.

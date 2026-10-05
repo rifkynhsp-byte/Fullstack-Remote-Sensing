@@ -1,5 +1,16 @@
 # Flood Under Cloud: Supervised Radar Mapping of Jakarta, 2020 {#sec-sar-flood}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch39_sar_flood`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch39_sar_flood) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch39_sar_flood.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will map the Jakarta New Year flood of 2020 with Sentinel-1 and a Random Forest trained on hand-drawn polygons. You will find a one-line bug that hid the flood from the model, fix it, and learn why training accuracy said both versions were excellent when only one of them was.

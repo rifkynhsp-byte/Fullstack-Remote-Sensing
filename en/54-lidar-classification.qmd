@@ -1,5 +1,18 @@
 # Automatic LiDAR Classification: Finding the Ground {#sec-lidar-classification}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch54_lidar_classification`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch54_lidar_classification.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will classify an airborne LiDAR point cloud automatically: ground first, with a progressive morphological filter, then vegetation by height above it. You will score the result against the classes delivered with the data and find that the point-by-point score misleads, while comparing the terrain models gives the fair answer. The same workflow is given in R with lidR.

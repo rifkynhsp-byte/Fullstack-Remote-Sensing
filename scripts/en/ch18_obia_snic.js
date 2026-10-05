@@ -21,6 +21,22 @@
  *   var trainingPoints = ...                     from chapter “Ground Truth and Sampling Design”
  */
 
+// ---------------------------------------------------------------------------
+// INPUTS. Everything this script needs, so it runs on its own
+// ---------------------------------------------------------------------------
+// The Mahakam Delta and the feature stack from chapter "Synthetic Aperture Radar
+// Fusion", loaded as a module. Replace aoi with your own area (draw it, or use
+// an asset) and the rest follows.
+// Segmentation at 10 m is memory-hungry: a 10 x 10 km corner of the delta keeps it within limits.
+var aoi = ee.Geometry.Rectangle([117.55, -0.80, 117.65, -0.70]);
+var image2023 = require('users/rifkynauvalhsp/Fullstack-Remote-Sensing:lib_stack').getAnalysisReadyData(2023, aoi)
+  // The GLCM texture bands are left out: averaging them per object exceeds the memory limit, and the
+  // per-object standard deviation in PART 3 already measures texture.
+  .select(['B2', 'B3', 'B4', 'B8', 'B11', 'B12', 'NDVI', 'EVI', 'SAVI', 'MNDWI', 'S1_VV', 'S1_VH']);
+// Labelled points (WorldCover stand-ins) for the object classifier.
+// 60 per class: sampling through a segmentation is memory-hungry.
+var trainingPoints = require('users/rifkynauvalhsp/Fullstack-Remote-Sensing:book_labels').labelledPoints(aoi, [60, 60, 60, 60, 60]);
+
 var CLASS_PROPERTY = 'landcover';
 var SCALE = 10;
 
@@ -73,7 +89,7 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
   size: 10,
   compactness: 0,        // let the coastline decide the shapes
   connectivity: 8,
-  neighborhoodSize: 128, // must exceed size, or objects are cut at tile edges
+  neighborhoodSize: 64,  // must exceed size, or objects are cut at tile edges
   seeds: seeds
 });
 
@@ -99,7 +115,7 @@ var objectMeans = image2023
   .reduceConnectedComponents({
     reducer: ee.Reducer.mean(),
     labelBand: 'clusters',
-    maxSize: 1024        // objects larger than this are left unreduced
+    maxSize: 256         // objects larger than this are left unreduced
   });
 
 // Standard deviation within an object is a genuinely new predictor that pixel
@@ -112,12 +128,12 @@ var objectSD = image2023.select(['B8', 'NDVI'])
   .reduceConnectedComponents({
     reducer: ee.Reducer.stdDev(),
     labelBand: 'clusters',
-    maxSize: 1024
+    maxSize: 256
   }).rename(['B8_sd', 'NDVI_sd']);
 
 // Object size in pixels, which separates a large contiguous forest block from
 // a scatter of small patches with the same spectral signature.
-var objectSize = clusters.connectedPixelCount({maxSize: 1024}).rename('object_size');
+var objectSize = clusters.connectedPixelCount({maxSize: 256}).rename('object_size');
 
 var objectStack = objectMeans.addBands(objectSD).addBands(objectSize).float();
 
@@ -136,7 +152,7 @@ var trainingSamples = objectStack.sampleRegions({
   collection: training,
   properties: [CLASS_PROPERTY],
   scale: SCALE,
-  tileScale: 8          // object stacks are memory hungry, start higher
+  tileScale: 16         // object stacks are memory hungry, start higher
 });
 
 var classifier = ee.Classifier.smileRandomForest(100).train({

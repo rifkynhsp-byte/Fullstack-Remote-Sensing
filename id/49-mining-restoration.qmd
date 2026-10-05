@@ -1,5 +1,16 @@
 # Reklamasi Tambang: Apakah Lahannya Pulih? {#sec-mining-restoration}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch49_mining_restoration`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch49_mining_restoration) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch49_mining_restoration.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menemukan lahan yang dibuka tambang timah di Bangka dalam 34 tahun arsip Landsat, mengikuti bagaimana kehijauannya pulih, menggolongkan kondisinya hari ini, lalu mengecek dengan GEDI apakah vegetasi yang tumbuh kembali mirip dengan vegetasi yang hilang. Bab ini menunjukkan kenapa laporan reklamasi yang hanya berdasar kehijauan baru menceritakan separuh kisahnya.

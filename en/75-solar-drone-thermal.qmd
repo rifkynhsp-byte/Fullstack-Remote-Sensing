@@ -1,5 +1,18 @@
 # Solar Plants from a Thermal Drone: Finding Hot Modules {#sec-solar-drone}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch75_solar_drone_thermal`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch75_solar_drone_thermal.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will inspect a real photovoltaic plant from a drone's thermal camera: find every module in 2,500 infrared frames, compare each one with its neighbours, and flag the modules that run hot. Along the way the first answer turns out to be a car, the threshold turns out to decide everything, and you will learn why a solar inspection is read in temperature *differences*, not in degrees.

@@ -1,5 +1,16 @@
 # Land Suitability: Is This Land Right for This Crop? {#sec-land-suitability}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch48_land_suitability`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch48_land_suitability) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch48_land_suitability.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will run an FAO-style land suitability assessment for one crop in one regency, rebuilt from the author's earlier Bentala Aksa project: factor classes, the limiting factor, and the final suitability map. You will also see how one wrong input band turned "not suitable" land into "highly suitable" land, and why a suitability map must always show which factor holds each place back.

@@ -1,5 +1,18 @@
 # Statistika yang Perlu Dikuasai Setiap Analis Penginderaan Jauh {#sec-stats-basics}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch70_statistics`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch70_statistics.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Matriks konfusi memberi tahu seberapa sering sebuah peta benar. Matriks itu tidak memberi tahu apakah dua tempat benar-benar berbeda, seberapa yakin Anda terhadap sebuah rata-rata, apa yang tergolong tidak biasa, atau seberapa besar satu hal berubah bersama hal lain. Bab ini mengajarkan statistika yang menjawab pertanyaan-pertanyaan itu, semuanya pada satu pertanyaan nyata: **seberapa lebih panas lahan terbangun di Bandung Raya, dan apakah kehijauan mendinginkannya?** Anda akan bertemu rata-rata dan median, simpangan baku dan rentang antarkuartil, skor-z dan pencilan, teorema limit pusat, selang kepercayaan dan *bootstrap*, uji t, Mann–Whitney, dan Kolmogorov–Smirnov, serta regresi dengan plot diagnostik yang semestinya dilihat sebelum memercayainya. Python dan R berdampingan.

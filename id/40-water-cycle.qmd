@@ -1,5 +1,16 @@
 # Siklus Air Sebuah DAS {#sec-water-cycle}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch40_water_cycle`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch40_water_cycle) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch40_water_cycle.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menyusun neraca air untuk satu daerah aliran sungai (DAS) utuh, yaitu DAS Kapuas di Kalimantan Barat, dari empat produk satelit dan reanalisis yang saling independen, lalu melihat seberapa dekat neraca itu tertutup. Anda akan mempelajari arti fisik setiap suku, instrumen yang mengukurnya, dan kenapa ilmuwan lingkungan hanya boleh mempercayai neraca ini sejauh neraca itu tertutup.

@@ -1,5 +1,16 @@
 # A First Landslide Map, and How to Test It {#sec-landslide-simple}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch50_landslide_simple`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch50_landslide_simple) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch50_landslide_simple.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will build the simplest landslide susceptibility map worth making, a weighted overlay of slope, rainfall and land cover for West Java, and then test it the way a reviewer would. The test gives a modest result, and that is the point: you will learn why the quality of your landslide records decides what any model can show.

@@ -1,5 +1,16 @@
 # Sumber Daya Surya: Berapa Listrik yang Bisa Diberikan Matahari di Sini? {#sec-solar-resource}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch64_solar_resource`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch64_solar_resource) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch64_solar_resource.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memetakan berapa banyak sinar matahari yang sampai ke Indonesia, mengkalibrasi model pembangkitan sederhana pada pembangkit sungguhan (Cirata, Bab [-@sec-solar-pv]), lalu memakainya untuk menjawab tiga pertanyaan praktis: berapa listrik yang bisa dihasilkan atap-atap di Bandung Utara, berapa yang bisa dihasilkan panel terapung di Waduk Saguling, dan apakah itu cukup untuk rumah tangga atau PLN tetap dibutuhkan. Di tengah jalan Anda akan melihat bahwa hujan lebat Bandung ternyata hanya sedikit mengurangi sinar matahari.

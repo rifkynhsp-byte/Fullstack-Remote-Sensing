@@ -1,5 +1,18 @@
 # Satu Grafik, Satu Pertanyaan: Memvisualisasikan Sumber Daya Surya {#sec-solar-insight}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch66_solar_insight`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch66_solar_insight.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Sepuluh tahun data surya per jam untuk dua kota di Indonesia, 175.000 baris, diubah menjadi lima grafik. Setiap grafik dipilih untuk menjawab satu pertanyaan, dan setiap grafik membawa judul utama yang menyatakan jawabannya. Anda akan belajar mengapa *heatmap* mengalahkan grafik garis untuk setahun data per jam, bagaimana membuat diagram pencar memeriksa hukum fisika, mengapa *box plot* perlu digambari nilai ekstremnya, dan bagaimana *small multiples* membuat mata bisa membandingkan tanpa membaca angka. Kodenya tersedia dalam Python dan R berdampingan.

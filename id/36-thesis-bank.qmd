@@ -1,5 +1,19 @@
 # Garis Depan Riset: Bank Topik Tesis {#sec-thesisbank}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch36_thesis_starter`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36_thesis_starter) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36_thesis_starter.ipynb)
+- `ch36b_bank_carbon`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36b_bank_carbon.ipynb)
+- `ch36c_bank_lidar_hazards`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36c_bank_lidar_hazards) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36c_bank_lidar_hazards.ipynb)
+- `ch36d_bank_methods`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36d_bank_methods.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menemukan lima belas pertanyaan seukuran tesis yang bisa dimulai di Earth Engine, tetapi tidak bisa diselesaikan di sana. Setiap topik dilengkapi alasan kenapa masih terbuka dan eksperimen pertama yang bisa dijalankan dalam seminggu. Setiap topik juga menunjukkan kapan Python harus mengambil alih.
@@ -11,7 +25,7 @@ Setiap topik di bawah adalah titik awal, bukan jaminan kebaruan. Riset bergerak 
 
 ## Pemula yang bisa dijalankan hari ini
 
-GEDI mengukur struktur hutan dengan laser dari antariksa pada titik titik berdiameter 25 m yang tersebar [@dubayah2020gedi]. AlphaEarth embeddings menggambarkan setiap piksel 10 m dengan 64 angka hasil pembelajaran [@brown2025alphaearth]. Bisakah yang kedua menyebarkan yang pertama menjadi peta biomassa yang menyeluruh? Skrip pemula ini menjawabnya dalam satu sore, sekaligus menunjukkan kenapa desain pengujian itu penting.
+GEDI mengukur struktur hutan dengan laser dari antariksa pada titik-titik berdiameter 25 m yang tersebar [@dubayah2020gedi]. AlphaEarth embeddings menggambarkan setiap piksel 10 m dengan 64 angka hasil pembelajaran [@brown2025alphaearth]. Bisakah yang kedua menyebarkan yang pertama menjadi peta biomassa yang menyeluruh? Skrip pemula ini menjawabnya dalam satu sore, sekaligus menunjukkan kenapa desain pengujian itu penting.
 
 {{< include _snippets/ch36_thesis_starter.qmd >}}
 

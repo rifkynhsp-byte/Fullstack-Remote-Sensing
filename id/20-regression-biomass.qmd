@@ -1,5 +1,16 @@
 # Ensemble dan Prediksi Kontinu {#sec-regression}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch20_mangrove_biomass`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch20_mangrove_biomass) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch20_mangrove_biomass.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan beralih dari mengklasifikasi kategori ke memprediksi besaran: biomassa di atas permukaan tanah dan karbon, dikalibrasi dengan plot lapangan. Pada 45 plot mangrove di Papua Barat, tiga model diuji secara jujur, plot demi plot, dan sebagian besar gagal; bab ini menunjukkan mengapa, apa yang dilakukan random forest terhadap nilai ekstrem, dan bagaimana memberi selang galat yang jujur pada total karbon.
@@ -11,7 +22,7 @@ Pengklasifikasi menjawab "yang mana": hutan atau bukan, mangrove atau tambak. Pr
 
 ## Uji nyata pertama: 45 plot lapangan di Papua Barat
 
-Sebelum teori, satu hasil dulu. Tim lapangan CIFOR mengukur biomassa di atas permukaan tanah pada 45 plot mangrove di sekitar Teluk Bintuni, yang dipublikasikan sebagai data terbuka [@murdiyarso2019swampbintuni], mulai dari tambak, hutan yang tumbuh kembali selama 5 sampai 25 tahun, sampai tegakan yang belum terganggu. Skrip ini mencoba tiga cara memprediksi angka tersebut dari citra satelit, lalu menguji masing masing secara jujur dengan mengeluarkan satu plot setiap kali. Hasilnya membuat kita rendah hati, dan alasannya justru lebih berguna daripada skor yang bagus.
+Sebelum teori, satu hasil dulu. Tim lapangan CIFOR mengukur biomassa di atas permukaan tanah pada 45 plot mangrove di sekitar Teluk Bintuni, yang dipublikasikan sebagai data terbuka [@murdiyarso2019swampbintuni], mulai dari tambak, hutan yang tumbuh kembali selama 5 sampai 25 tahun, sampai tegakan yang belum terganggu. Skrip ini mencoba tiga cara memprediksi angka tersebut dari citra satelit, lalu menguji masing-masing secara jujur dengan mengeluarkan satu plot setiap kali. Hasilnya membuat kita rendah hati, dan alasannya justru lebih berguna daripada skor yang bagus.
 
 {{< include _snippets/ch20_mangrove_biomass.qmd >}}
 

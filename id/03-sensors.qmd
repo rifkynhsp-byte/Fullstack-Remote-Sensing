@@ -2,7 +2,7 @@
 
 ::: {.chapter-goal}
 #### Dalam bab ini
-Satelit yang akan benar benar Anda pakai, kelebihan sejati masing masing, dan prosedur pengambilan keputusan untuk memilih di antaranya yang tidak berujung pada memakai yang kemarin dipakai.
+Satelit yang akan benar-benar Anda pakai, kelebihan sejati masing-masing, dan prosedur pengambilan keputusan untuk memilih di antaranya yang tidak berujung pada memakai yang kemarin dipakai.
 :::
 
 ## Tidak ada sensor yang paling benar
@@ -99,7 +99,7 @@ Menggabungkan sensor hampir selalu meningkatkan akurasi, dan selalu menambah ker
 
 Kasus yang jelas membenarkan fusi adalah pemetaan mangrove, karena kekeliruan yang membatasi akurasi adalah antara mangrove dan hutan berdaun lebar rapat lainnya, dan data optik saja tidak dapat menyelesaikannya. Informasi pemisahnya bersifat fisik, bukan spektral: mangrove berada dalam sabuk elevasi sempit di atas muka laut, dan ia berdiri di air, yang menghasilkan tanda tangan pantulan ganda radar yang tidak dimiliki hutan daratan. Menambahkan elevasi dan radar bukan sekadar memperbaiki peta sedikit. Ia memperbaiki galat spesifik yang selama ini membatasi akurasinya.
 
-Kasus yang tidak membenarkan fusi adalah menambah band hanya karena band itu ada. Setiap band yang ditambahkan memakan komputasi, menambah mode kegagalan, dan mengencerkan perhatian klasifikator. Bab [-@sec-supervised] membahas cara membaca kepentingan fitur untuk mengetahui band mana yang benar benar berkontribusi, dan Bab [-@sec-sampling] membahas apa yang harus dilakukan pada yang tidak.
+Kasus yang tidak membenarkan fusi adalah menambah band hanya karena band itu ada. Setiap band yang ditambahkan memakan komputasi, menambah mode kegagalan, dan mengencerkan perhatian klasifikator. Bab [-@sec-supervised] membahas cara membaca kepentingan fitur untuk mengetahui band mana yang benar-benar berkontribusi, dan Bab [-@sec-sampling] membahas apa yang harus dilakukan pada yang tidak.
 
 ::: {.callout-tip}
 ## Dari lapangan
@@ -123,7 +123,7 @@ Sebelum membangun stack fusi, jalankan klasifikasi hanya dengan optik dan catat 
       "why": "Sentinel-2 sama sekali tidak membawa sensor termal. Ketika sebuah syarat bersifat biner seperti ini, ia langsung menentukan jawabannya."
     },
     {
-      "q": "Mengapa menambahkan elevasi dan radar benar benar memperbaiki peta mangrove, sedangkan menambah band optik biasanya tidak?",
+      "q": "Mengapa menambahkan elevasi dan radar benar-benar memperbaiki peta mangrove, sedangkan menambah band optik biasanya tidak?",
       "options": [
         "Karena band yang lebih banyak selalu menaikkan akurasi",
         "Karena kekeliruan yang membatasi adalah dengan hutan berdaun lebar rapat lain, yang dipisahkan oleh struktur dan posisi, bukan oleh spektrum",

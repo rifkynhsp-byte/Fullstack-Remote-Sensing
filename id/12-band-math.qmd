@@ -1,8 +1,19 @@
 # Matematika Band dan Indeks Spektral {#sec-indices}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch12_spectral_indices`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch12_spectral_indices) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch12_spectral_indices.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan membangun pustaka indeks standar dari prinsip dasar, bukan menyalin rumus, mempelajari di mana masing masing berhenti bekerja, dan menulis indeks sendiri dengan `ee.Image.expression`. Indeks yang tidak bisa Anda jelaskan adalah indeks yang tidak bisa Anda debug.
+Anda akan membangun pustaka indeks standar dari prinsip dasar, bukan menyalin rumus, mempelajari di mana masing-masing berhenti bekerja, dan menulis indeks sendiri dengan `ee.Image.expression`. Indeks yang tidak bisa Anda jelaskan adalah indeks yang tidak bisa Anda debug.
 :::
 
 ## Satu bentuk, hampir seluruh bidang ini
@@ -15,9 +26,9 @@ Dua sifat menjelaskan kenapa bentuk ini mendominasi.
 
 Ia **terbatas** antara -1 dan 1 berapa pun besaran masukannya, sehingga nilainya sebanding antar citra, antar sensor, dan antar tanggal tanpa kalibrasi tambahan.
 
-Dan ia **meniadakan efek multiplikatif**. Kalau sebuah lereng berada dalam bayangan sebagian, setiap band diperkecil oleh faktor yang kira kira sama. Faktor itu muncul di pembilang sekaligus penyebut lalu saling meniadakan. Karena itu rasio jauh lebih stabil terhadap kondisi pencahayaan dibanding band tunggal mana pun.
+Dan ia **meniadakan efek multiplikatif**. Kalau sebuah lereng berada dalam bayangan sebagian, setiap band diperkecil oleh faktor yang kira-kira sama. Faktor itu muncul di pembilang sekaligus penyebut lalu saling meniadakan. Karena itu rasio jauh lebih stabil terhadap kondisi pencahayaan dibanding band tunggal mana pun.
 
-Yang tidak diniadakannya adalah efek **penjumlahan**. Radiansi jalur atmosfer menambah nilai pada setiap band, dan tidak merata, dan tidak ada rasio yang menghilangkannya. Inilah alasan konkret Bab [-@sec-optical] bersikeras memakai reflektansi permukaan alih alih puncak atmosfer: koreksinya harus terjadi sebelum indeks dihitung, karena indeks tidak bisa membatalkannya.
+Yang tidak diniadakannya adalah efek **penjumlahan**. Radiansi jalur atmosfer menambah nilai pada setiap band, dan tidak merata, dan tidak ada rasio yang menghilangkannya. Inilah alasan konkret Bab [-@sec-optical] bersikeras memakai reflektansi permukaan alih-alih puncak atmosfer: koreksinya harus terjadi sebelum indeks dihitung, karena indeks tidak bisa membatalkannya.
 
 ## Indeks vegetasi
 
@@ -66,7 +77,7 @@ Meski begitu, indeks adalah fitur yang dirancang tangan, dan Bab [-@sec-embeddin
 
 ::: {.callout-warning}
 ## Kesalahan umum: normalizedDifference menamai band Anda 'nd'
-`normalizedDifference()` menamai keluarannya `nd` apa pun masukannya. Hitung dua indeks tanpa mengganti nama dan Anda punya dua band yang sama sama bernama `nd`; `addBands` menyimpan satu dan membuang yang lain tanpa bersuara.
+`normalizedDifference()` menamai keluarannya `nd` apa pun masukannya. Hitung dua indeks tanpa mengganti nama dan Anda punya dua band yang sama-sama bernama `nd`; `addBands` menyimpan satu dan membuang yang lain tanpa bersuara.
 
 Galatnya muncul jauh di kemudian hari, sebagai classifier yang anehnya mengabaikan prediktor yang Anda yakin sudah ditambahkan. Selalu rangkaikan `.rename()`.
 :::
@@ -216,13 +227,13 @@ Ada setidaknya enam varian "mangrove vegetation index" yang dipublikasikan dan b
         "Ia menghilangkan efek atmosfer sepenuhnya",
         "Efek multiplikatif muncul di pembilang sekaligus penyebut lalu saling meniadakan",
         "Ia mengubah radiansi menjadi reflektansi",
-        "Ia dinormalkan terhadap rata rata citra"
+        "Ia dinormalkan terhadap rata-rata citra"
       ],
       "answer": 1,
-      "why": "Faktor bayangan memperkecil setiap band dengan besaran yang kira kira sama lalu terbagi habis. Perhatikan apa yang TIDAK diniadakannya: radiansi jalur atmosfer yang bersifat penjumlahan, dan itulah sebabnya reflektansi permukaan diperlukan lebih dulu."
+      "why": "Faktor bayangan memperkecil setiap band dengan besaran yang kira-kira sama lalu terbagi habis. Perhatikan apa yang TIDAK diniadakannya: radiansi jalur atmosfer yang bersifat penjumlahan, dan itulah sebabnya reflektansi permukaan diperlukan lebih dulu."
     },
     {
-      "q": "NDVI di area studi hutan tropis Anda berada antara 0,85 dan 0,89 hampir di mana mana. Apa artinya?",
+      "q": "NDVI di area studi hutan tropis Anda berada antara 0,85 dan 0,89 hampir di mana-mana. Apa artinya?",
       "options": [
         "Citranya salah kalibrasi",
         "NDVI sudah jenuh, sehingga ia bisa memisahkan hutan dari bukan hutan tetapi tidak bisa memisahkan utuh dari terdegradasi",
@@ -271,7 +282,7 @@ Ada setidaknya enam varian "mangrove vegetation index" yang dipublikasikan dan b
 
 ## Latihan {.unnumbered}
 
-1. Atur $L = 0$ pada SAVI lalu selisihkan hasilnya dengan NDVI. Pastikan nol di mana mana, lalu jelaskan sebabnya dalam satu kalimat.
+1. Atur $L = 0$ pada SAVI lalu selisihkan hasilnya dengan NDVI. Pastikan nol di mana-mana, lalu jelaskan sebabnya dalam satu kalimat.
 2. Petakan NDWI dan MNDWI di atas area perkotaan lalu temukan di mana keduanya berselisih.
 3. Hitung NDVI pada composite bilangan bulat yang belum diskalakan. Lihat hasilnya dan perhatikan betapa masuk akalnya tampilan sebuah jawaban yang salah.
 4. Buat histogram CMRI dan NDVI di area yang sama. Mana yang bimodal, dan apa artinya bagi pilihan indeks yang Anda serahkan ke classifier?

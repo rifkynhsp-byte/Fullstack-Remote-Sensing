@@ -1,5 +1,16 @@
 # P5 · Dasar-Dasar Radar Pencitra {#sec-p5-radar .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch00e_radar`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00e_radar) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00e_radar.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mempelajari cara kerja radar pencitra dan kenapa radar melihat ke samping; bagaimana resolusinya ditentukan pada arah range dan azimut, dan kenapa *apertur sintetis* memecahkan masalah azimut; kenapa gunung tampak condong ke arah radar (foreshortening dan layover) dan bersembunyi di balik dirinya sendiri (bayangan); apa yang membuat piksel terang atau gelap; serta apa arti polarisasi, speckle, dan interferometri. Geometrinya dihitung, dan setiap klaim tentang hamburan balik dicek dengan data Sentinel-1 sungguhan.

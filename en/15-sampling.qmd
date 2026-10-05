@@ -1,5 +1,17 @@
 # Ground Truth and Sampling Design {#sec-sampling}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch15_sampling_design`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch15_sampling_design) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch15_sampling_design.ipynb)
+- `ch15_block_cross_validation`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch15_block_cross_validation) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch15_block_cross_validation.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will design a training and validation scheme a reviewer cannot dismantle: stratified across classes, balanced so rare classes survive, spatially thinned so neighbouring pixels do not leak between splits, and exported so every later experiment uses the same samples.

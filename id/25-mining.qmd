@@ -1,8 +1,19 @@
 # Pertambangan dan Stockpile {#sec-mining}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch25_mining_sangatta`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch25_mining_sangatta) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch25_mining_sangatta.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
-Anda akan menjawab tiga pertanyaan yang benar benar diajukan oleh operator tambang, regulator, atau perusahaan asuransi: seberapa cepat area terganggu bertambah, berapa banyak material yang sudah dipindahkan, dan di mana permukaan tanah panas.
+Anda akan menjawab tiga pertanyaan yang benar-benar diajukan oleh operator tambang, regulator, atau perusahaan asuransi: seberapa cepat area terganggu bertambah, berapa banyak material yang sudah dipindahkan, dan di mana permukaan tanah panas.
 :::
 
 ## Tiga pertanyaan, tiga sensor
@@ -25,7 +36,7 @@ Area studinya adalah sebuah persegi di dekat Sangatta yang mencakup lubang tamba
 
 ::: {.callout-important}
 ## Integritas ilmiah: model permukaan bukan dasar lubang tambang
-NASADEM (2000) dan Copernicus GLO-30 (2011 sampai 2015) sama sama merekam bagian paling atas dari apa pun yang ada di sana, termasuk tajuk hutan. Hutan setinggi 25 m yang ditebang akan terbaca sebagai "galian" 25 m. Karena itu skrip ini hanya menghitung perubahan di atas ±30 m, dan hanya di dalam area terbuka tahun ini. Cantumkan batas itu di samping setiap angka volume, dan sebutkan tanggal kedua model elevasi, bukan tanggal hari ini.
+NASADEM (2000) dan Copernicus GLO-30 (2011 sampai 2015) sama-sama merekam bagian paling atas dari apa pun yang ada di sana, termasuk tajuk hutan. Hutan setinggi 25 m yang ditebang akan terbaca sebagai "galian" 25 m. Karena itu skrip ini hanya menghitung perubahan di atas ±30 m, dan hanya di dalam area terbuka tahun ini. Cantumkan batas itu di samping setiap angka volume, dan sebutkan tanggal kedua model elevasi, bukan tanggal hari ini.
 :::
 
 ## Seberapa jauh jejak tambang bisa dipercaya?

@@ -1,5 +1,16 @@
 # P2 · Platforms, Orbits and the Ground {#sec-p2-orbits .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch00b_orbits`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00b_orbits) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00b_orbits.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will learn what a remote sensing satellite is made of besides its camera, why most Earth observation satellites fly about 700 km up in a near-polar, sun-synchronous orbit, how to tell an ascending pass from a descending one by looking at an image, and why a Landsat scene is a tilted parallelogram. Every claim is checked against orbit physics or against the real archive.

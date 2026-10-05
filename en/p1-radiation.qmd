@@ -1,5 +1,16 @@
 # P1 · Energy, Waves and the Atmosphere {#sec-p1-radiation .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch00a_radiation`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00a_radiation) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00a_radiation.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will learn where the energy measured by every satellite comes from, what the atmosphere does to it on the way, and what a surface does when the energy arrives. By the end you should be able to explain why the sky is blue, why Landsat carries a thermal band but SPOT does not, and why a satellite image of a city looks hazy before correction, and to prove the last one with real data.

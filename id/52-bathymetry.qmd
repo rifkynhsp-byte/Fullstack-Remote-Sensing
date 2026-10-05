@@ -1,5 +1,16 @@
 # Batimetri dari Satelit: Kedalaman dari Warna {#sec-bathymetry}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch52_bathymetry`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch52_bathymetry) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch52_bathymetry.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menaksir kedalaman air di sekitar terumbu Kepulauan Seribu dari warna Sentinel-2, dengan metode rasio logaritma Stumpf. Anda akan melihat kenapa mengkalibrasinya dengan peta kedalaman global yang kasar gagal, dan bagaimana tetap mengujinya dengan zona-zona terumbu yang sudah dipetakan. Hasilnya peta kedalaman relatif, disertai penjelasan jujur tentang apa yang dibutuhkan untuk kedalaman absolut.

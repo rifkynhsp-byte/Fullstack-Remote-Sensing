@@ -1,5 +1,16 @@
 # Padi Sawah: Musim Tanam, Hasil, dan Satu Tahun yang Buruk {#sec-paddy}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch45_paddy`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch45_paddy) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch45_paddy.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memetakan sawah dan menghitung musim tanamnya menembus awan dengan Sentinel-1, membandingkan kabupaten beririgasi yang intensif (Karawang) dengan komunitas adat di dataran tinggi (Kasepuhan Ciptagelar, Sukabumi), menyusun peta hasil yang jumlahnya sama dengan produksi resmi kabupaten, dan mencari tahu dari mana penurunan produksi Karawang pada 2023 berasal. Dua uji dalam bab ini gagal, dan bab ini sengaja menyimpannya, karena mengetahui apa yang tidak bisa dilihat sebuah metode adalah bagian dari cara memakainya.

@@ -1,5 +1,18 @@
 # What a Timetable Says About a City: Transit Service and Access in Jakarta {#sec-transit}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch67_transit_access`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch67_transit_access.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 A public transport timetable, published in the GTFS format, is a dataset about the city. You will read the TransJakarta feed into a network map, measure how unequally service is spread across 7,771 stops, compare waits by service type and between weekday and Sunday, and then combine the timetable with gridded population to model what share of Jakarta's residents live within a short walk of frequent service. Python and R side by side, every chart with a headline that states its finding.

@@ -28,6 +28,12 @@
  *   var samplePoints = ...   ~20 labelled points per class, property 'landcover'
  */
 
+// ---------------------------------------------------------------------------
+// INPUTS. Everything this script needs, so it runs on its own
+// ---------------------------------------------------------------------------
+// The Mahakam Delta. Replace aoi with your own area (draw it, or use an asset).
+var aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60]);
+
 var YEAR = 2023;
 
 var lulcPalette = ['#075e11', '#358221', '#1A5BAB', '#FFDB5C', '#ED022A'];

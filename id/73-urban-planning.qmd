@@ -1,5 +1,18 @@
 # Perangkat Perencanaan Kota: Ruang Hijau, Taman, Panas, dan Banjir di Surabaya {#sec-urban-planning}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch73_urban_planning`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch73_urban_planning.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Kantor perencanaan tidak membutuhkan peta tutupan lahan. Yang dibutuhkan adalah jawaban per lingkungan: apakah hijaunya cukup, apakah warga bisa berjalan kaki ke taman, di mana paling panas, dan apakah kota membangun di tempat yang tergenang? Anda akan meletakkan Kota Surabaya di atas grid heksagon, mengisi setiap heksagon dengan data terbuka, dan menjawab empat pertanyaan itu. Di sepanjang jalan Anda akan bertemu jebakan regresi yang menjerat banyak studi panas perkotaan yang sudah terbit, mengukur autokorelasi spasial dengan Moran's I, dan membangun indeks prioritas gabungan beserta uji yang menunjukkan seberapa besar peringkatnya bergantung pada bobot. Python dan R berdampingan.

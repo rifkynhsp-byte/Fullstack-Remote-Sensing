@@ -1,5 +1,16 @@
 # Everything GEDI Measures: Structure, Habitat and Fuel {#sec-gedi-structure}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch47_gedi_structure`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch47_gedi_structure) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch47_gedi_structure.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will use the whole GEDI product family, not just biomass: relative height profiles, canopy cover, plant area, the vertical distribution of leaves, and foliage height diversity. You will compare four kinds of tree cover in Jambi, and then test whether the fuel structure GEDI measured in mid-2019 differed between land that burned that year and land that did not.

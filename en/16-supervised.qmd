@@ -1,5 +1,17 @@
 # Classical Supervised Learning {#sec-supervised}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch16_kmeans_bandung`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch16_kmeans_bandung) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch16_kmeans_bandung.ipynb)
+- `ch16_ensemble_classification`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch16_ensemble_classification) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch16_ensemble_classification.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will train, tune and compare three classifiers, read which of your expensive predictor bands are actually doing work, combine the three into a majority vote, and clean the result without deleting the features you are trying to map.

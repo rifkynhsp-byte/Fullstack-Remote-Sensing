@@ -1,5 +1,16 @@
 # Asap dari Angkasa: Kabut Asap 2019, Bingkai demi Bingkai {#sec-haze}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch71_haze_timelapse`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch71_haze_timelapse) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch71_haze_timelapse.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Pada September 2019 asap dari kebakaran gambut dan hutan di Sumatra dan Kalimantan meliburkan sekolah dan membatalkan penerbangan dari Palangka Raya hingga Kuala Lumpur. Anda akan menyaksikan musim itu dua kali, seperti yang dilihat mata dalam warna asli MODIS dan seperti yang dilihat kimia dalam karbon monoksida Sentinel-5P beserta setiap titik api FIRMS, lalu mengubah data yang sama menjadi analisis yang tidak bisa dilakukan animasi sendirian: kapan dan di mana asap memuncak, seberapa tidak biasanya dibandingkan tahun basah, dan berapa hari asap butuh untuk mencapai setiap kota. JavaScript, Python, dan R.

@@ -1,5 +1,16 @@
 # Pertanian dan Perkebunan {#sec-agriculture}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch27_palm_counting`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch27_palm_counting) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch27_palm_counting.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menghitung pohon sawit dari citra drone dengan metode tanpa jaringan saraf, mengecek hasil hitungan tanpa data lapangan, lalu mengubahnya menjadi angka yang dipakai oleh manajer kebun.

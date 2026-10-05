@@ -27,7 +27,7 @@ var dw = ee.ImageCollection('GOOGLE/DYNAMICWORLD/V1').filterBounds(area);
 // STEP 1. One year as a map: the most frequent label, shaded by confidence
 // ---------------------------------------------------------------------------
 var yearComposite = function (year) {
-  var yr = dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year + 1, 1, 1));
+  var yr = dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year, 1, 1).advance(1, 'year'));
   var label = yr.select('label').reduce(ee.Reducer.mode()).rename('label');
   var confidence = yr.select(CLASSES).mean().reduce(ee.Reducer.max());
   return label.addBands(confidence.rename('confidence')).set('year', year);
@@ -46,7 +46,7 @@ var builtKm2 = function (year) {
   var km2 = c.select('label').eq(BUILT).multiply(ee.Image.pixelArea()).divide(1e6)
     .reduceRegion({reducer: ee.Reducer.sum(), geometry: area, scale: 10, maxPixels: 1e9})
     .get('label');
-  var yr = dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year + 1, 1, 1));
+  var yr = dw.filterDate(ee.Date.fromYMD(year, 1, 1), ee.Date.fromYMD(year, 1, 1).advance(1, 'year'));
   // The steadier alternative: average the 'built' probability over the year.
   var km2Prob = yr.select('built').mean().gt(0.5).multiply(ee.Image.pixelArea()).divide(1e6)
     .reduceRegion({reducer: ee.Reducer.sum(), geometry: area, scale: 10, maxPixels: 1e9})

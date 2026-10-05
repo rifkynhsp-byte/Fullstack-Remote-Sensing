@@ -23,7 +23,7 @@ var annual = ee.ImageCollection(ee.List.sequence(2003, 2024).map(function (y) {
 
 var trend = annual.reduce(ee.Reducer.sensSlope()).select('slope').multiply(10)
   .rename('trend').clip(westJava);
-var tau = annual.reduce(ee.Reducer.kendallsCorrelation(2)).select('lst_tau').clip(westJava);
+var tau = annual.reduce(ee.Reducer.kendallsCorrelation(2)).select('tau').clip(westJava);
 
 Map.centerObject(westJava, 8);
 Map.addLayer(trend, {min: -1.5, max: 1.5, palette: ['2166ac', '92c5de', 'f7f7f7',

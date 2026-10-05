@@ -1,5 +1,16 @@
 # Mangrove Growth and Degradation, Year by Year {#sec-mangrove-change}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch62_mangrove_change`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch62_mangrove_change) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch62_mangrove_change.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will map the mangroves of Segara Anakan, a lagoon in Cilacap on the south coast of Java, every year from 2017 to 2024 with one model, compare the result with the Global Mangrove Watch baseline, separate real loss from classification noise, and look *inside* the mangrove that stayed: is its canopy getting healthier or degrading? Area alone cannot answer that question.

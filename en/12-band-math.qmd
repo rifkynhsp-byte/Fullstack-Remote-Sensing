@@ -1,5 +1,16 @@
 # Band Math and Spectral Indices {#sec-indices}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch12_spectral_indices`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch12_spectral_indices) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch12_spectral_indices.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will build the standard index library from first principles rather than copying formulas, learn where each one stops working, and write your own with `ee.Image.expression`. An index you cannot explain is an index you cannot debug.

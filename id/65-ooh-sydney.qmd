@@ -1,5 +1,19 @@
 # Iklan Luar Ruang: Arus Pejalan Kaki, Audiens, dan Inventaris di Sydney {#sec-ooh}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch65_ooh_data`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_data.ipynb)
+- `ch65_ooh_sydney`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_sydney.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Sebuah studi lokasi komersial yang utuh, dalam R dan Python berdampingan. Anda akan memprediksi berapa banyak orang yang berjalan melewati setiap calon lokasi di pusat Kota Sydney, mengubah arus pejalan kaki menjadi skor audiens untuk tiga jenis pengiklan, lalu memeringkat halte bus, spanduk kota, dan rute bus yang benar-benar bisa dibeli pengiklan. Di sepanjang jalan Anda akan bertemu dua kesalahan yang membuat sebagian besar model arus pejalan kaki yang dipublikasikan tampak lebih baik daripada kenyataannya.

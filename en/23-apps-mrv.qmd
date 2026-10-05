@@ -1,5 +1,16 @@
 # Apps: Turning an Analysis into a Tool {#sec-apps}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch23_liveability_app`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch23_liveability_app) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch23_liveability_app.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 Every chapter so far ended with a map on *your* screen. This one ends with a tool on someone else's. You will learn the three parts of an Earth Engine App, the habits that keep one responsive and honest, and then build a complete one: a liveability explorer for Greater Bandung that combines seven public datasets, lets the user decide what matters through sliders, and explains any place they click.

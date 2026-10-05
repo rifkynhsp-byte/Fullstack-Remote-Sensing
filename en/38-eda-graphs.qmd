@@ -1,5 +1,16 @@
 # Exploratory Analysis and Graphs That Explain Themselves {#sec-eda}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch38_eda_graphs`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch38_eda_graphs) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch38_eda_graphs.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will explore a dataset before modelling it. You will also learn five rules that turn a chart people have to decode into one they understand at a glance, each shown as a before-and-after pair.

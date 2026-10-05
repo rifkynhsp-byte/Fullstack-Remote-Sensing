@@ -1,5 +1,16 @@
 # P5 · Imaging Radar Basics {#sec-p5-radar .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch00e_radar`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00e_radar) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00e_radar.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will learn how an imaging radar works and why it looks to the side; how its resolution is set in range and in azimuth, and why a *synthetic* aperture solves the azimuth problem; why mountains lean towards the radar (foreshortening and layover) and hide behind themselves (shadow); what makes a pixel bright or dark; and what polarisation, speckle and interferometry mean. Geometry is computed, and every claim about backscatter is checked against real Sentinel-1 data.

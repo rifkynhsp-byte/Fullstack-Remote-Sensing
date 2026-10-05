@@ -1,5 +1,16 @@
 # Semua yang Diukur GEDI: Struktur, Habitat, dan Bahan Bakar {#sec-gedi-structure}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch47_gedi_structure`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch47_gedi_structure) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch47_gedi_structure.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memakai seluruh keluarga produk GEDI, bukan hanya biomassa: profil tinggi relatif, tutupan tajuk, luas tumbuhan, sebaran daun secara vertikal, dan keragaman tinggi dedaunan. Anda akan membandingkan empat jenis tutupan pohon di Jambi, lalu menguji apakah struktur bahan bakar yang diukur GEDI pada pertengahan 2019 berbeda antara lahan yang terbakar tahun itu dan yang tidak.

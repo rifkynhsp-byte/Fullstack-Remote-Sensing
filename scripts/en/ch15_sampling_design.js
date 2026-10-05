@@ -24,6 +24,15 @@
  */
 
 // ---------------------------------------------------------------------------
+// INPUTS. Everything this script needs, so it runs on its own
+// ---------------------------------------------------------------------------
+// The Mahakam Delta and the feature stack from chapter "Synthetic Aperture Radar
+// Fusion", loaded as a module. Replace aoi with your own area (draw it, or use
+// an asset) and the rest follows.
+var aoi = ee.Geometry.Rectangle([117.30, -1.05, 117.85, -0.60]);
+var image2023 = require('users/rifkynauvalhsp/Fullstack-Remote-Sensing:lib_stack').getAnalysisReadyData(2023, aoi);
+
+// ---------------------------------------------------------------------------
 // CONFIGURATION
 // ---------------------------------------------------------------------------
 var CLASS_PROPERTY = 'landcover';

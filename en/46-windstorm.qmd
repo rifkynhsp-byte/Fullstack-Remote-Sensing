@@ -1,5 +1,16 @@
 # Windstorm Damage to Forest: Cyclone Seroja, 2021 {#sec-windstorm}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch46_windstorm`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch46_windstorm) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch46_windstorm.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will measure forest damage from Tropical Cyclone Seroja in Nusa Tenggara Timur by comparing canopy moisture before and after the storm, and you will learn why a before/after comparison is not enough unless the same weeks of a normal year are subtracted. You will also see a second sensor fail to confirm the result, and what to make of that.

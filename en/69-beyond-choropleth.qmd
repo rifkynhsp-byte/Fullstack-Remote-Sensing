@@ -1,5 +1,18 @@
 # Maps That Answer Questions: Beyond the Choropleth {#sec-beyond-choropleth}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch69_beyond_choropleth`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch69_beyond_choropleth.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 The choropleth, areas shaded by value, is the map everyone draws first, and it is often the wrong one. Using Indonesia's 38 provinces with population from WorldPop and night lights from VIIRS, you will see how a map of totals misleads, how three classification schemes turn the same numbers into three different stories, how to put two variables in one colour, when to size symbols instead of shading areas, how dots show what provinces hide, and how a Sankey diagram shows change between two satellite maps. Python and R side by side; every map keeps its graticule.

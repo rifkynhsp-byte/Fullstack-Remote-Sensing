@@ -5,12 +5,13 @@
  * CHAPTER 39 | Jakarta, 1 January 2020
  * ---------------------------------------------------------------------------
  * Labels: data/jakarta_flood2020_training.geojson in the book repository
- * (50 polygons, 10 per class, drawn by the author). Upload it as a table
- * asset (Assets > New > Shape files / GeoJSON) and put its path below.
+ * (50 polygons, 10 per class, drawn by the author). It is published as a
+ * public Earth Engine table, so the script runs as is; to use your own
+ * polygons, upload them (Assets > New > Shape files / GeoJSON) and change the path.
  *   landcover 1 permanent water, 2 vegetation, 3 flooded vegetation,
  *             4 urban, 5 flooded urban;  polygon 0-9 within each class
  */
-var labels = ee.FeatureCollection('projects/YOUR-PROJECT/assets/jakarta_flood2020_training');
+var labels = ee.FeatureCollection('projects/shaped-producer-482312-m0/assets/fullstack_rs/jakarta_flood/jakarta_flood2020_training');
 var roi = ee.Geometry.Rectangle([106.674, -6.329, 106.995, -6.121], null, false);
 
 var s1 = ee.ImageCollection('COPERNICUS/S1_GRD')

@@ -1,5 +1,17 @@
 # Fusi Radar Apertur Sintetis {#sec-sar}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch10_multisensor_stack`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch10_multisensor_stack) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch10_multisensor_stack.ipynb)
+- `ch10_sar_water_mahakam`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch10_sar_water_mahakam) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch10_sar_water_mahakam.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan menambahkan sensor yang sepenuhnya mengabaikan awan, memahami apa yang sebenarnya diukur radar dan mengapa ia bukan pengganti data optik, lalu memfusikan backscatter C band dan L band dengan stack optik Anda menjadi satu citra siap analisis.
@@ -50,7 +62,7 @@ Untuk mangrove implikasinya langsung. C band melaporkan kondisi tajuk; L band me
 
 Citra radar punya kualitas berbintik yang terlihat seperti derau sensor, dan bukan. Itu **speckle**, dan ia melekat pada pencitraan koheren.
 
-Setiap sel resolusi berisi banyak penghambur individual. Pantulan dari masing masing tiba dengan fase berbeda lalu saling berinterferensi, konstruktif di sebagian sel dan destruktif di sebagian lain. Hasilnya fluktuasi multiplikatif yang tidak bisa dihilangkan sensor sebaik apa pun, karena ia sifat fisikanya, bukan cacat instrumennya.
+Setiap sel resolusi berisi banyak penghambur individual. Pantulan dari masing-masing tiba dengan fase berbeda lalu saling berinterferensi, konstruktif di sebagian sel dan destruktif di sebagian lain. Hasilnya fluktuasi multiplikatif yang tidak bisa dihilangkan sensor sebaik apa pun, karena ia sifat fisikanya, bukan cacat instrumennya.
 
 ![Speckle bersifat multiplikatif dan melekat. Focal median menekannya sambil mempertahankan batas; focal mean menekannya sekaligus mengaburkan batasnya.](images/speckle-filter.png){#fig-speckle}
 
@@ -95,7 +107,7 @@ Filter speckle mengubah nilai piksel, dan filter berbeda mengubahnya dengan cara
 
 ## Kapan fusi sepadan, dan kapan tidak
 
-Menambahkan radar ke stack optik hampir selalu meningkatkan akurasi dan selalu menambah kerumitan. Pertimbangannya adalah apakah peningkatan itu menangani galat yang benar benar sedang membatasi Anda.
+Menambahkan radar ke stack optik hampir selalu meningkatkan akurasi dan selalu menambah kerumitan. Pertimbangannya adalah apakah peningkatan itu menangani galat yang benar-benar sedang membatasi Anda.
 
 Untuk pemetaan mangrove jelas iya. Kekeliruan yang membatasi akurasi adalah dengan hutan berdaun lebar rapat lain, dan data optik tidak bisa menyelesaikannya karena keduanya mirip secara spektral. Radar memisahkannya secara fisik: mangrove yang berdiri di air menghasilkan pantulan ganda, hutan daratan tidak.
 

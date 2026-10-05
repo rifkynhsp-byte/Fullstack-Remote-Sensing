@@ -1,5 +1,16 @@
 # Oil Palm: Age, Height and Life Stage {#sec-oil-palm-age}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch44_oil_palm_age`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch44_oil_palm_age) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch44_oil_palm_age.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will estimate when every oil palm block in a Central Kalimantan landscape was planted, using 34 years of Landsat, and check the answer against an independent measurement: GEDI canopy height. You will then turn age into life stages, the basis of productivity planning and replanting policy.

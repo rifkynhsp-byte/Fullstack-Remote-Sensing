@@ -1,5 +1,16 @@
 # Paradigma GeoAI {#sec-embeddings}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch19_satellite_embeddings`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch19_satellite_embeddings) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch19_satellite_embeddings.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengganti tumpukan fitur buatan tangan dengan embedding satelit tahunan 64 band dari Google, dan menguji klaim yang menyertainya: bahwa peta yang berguna hanya butuh segelintir label. Di Delta Mahakam, lima titik berlabel per kelas dengan embedding menyamai tumpukan Sentinel-2 buatan tangan yang dilatih dengan seratus titik. Anda juga akan mencari tempat yang mirip dengan sebuah rujukan, melihat isi 64 dimensi itu, dan mendeteksi perubahan tanpa mengklasifikasi apa pun, serta melihat di mana pendekatan ini berhenti bekerja.
@@ -107,7 +118,7 @@ Empat batas membuat embedding tidak menggantikan sisa buku ini:
         "Ia tidak bisa digabungkan dengan data lain"
       ],
       "answer": 1,
-      "why": "Granularitas tahunan menempatkan satu kelas pertanyaan di luar jangkauan. Peristiwa tunggal memerlukan time series, dan itu Bab [-@sec-timeseries], dan justru karena itulah pendekatan yang lebih lama tetap diajarkan di sini alih alih diganti."
+      "why": "Granularitas tahunan menempatkan satu kelas pertanyaan di luar jangkauan. Peristiwa tunggal memerlukan deret waktu, dan itu Bab [-@sec-timeseries], dan justru karena itulah pendekatan yang lebih lama tetap diajarkan di sini alih-alih diganti."
     }
   ]
 }

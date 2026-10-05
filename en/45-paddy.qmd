@@ -1,5 +1,16 @@
 # Paddy Rice: Seasons, Yield and a Bad Year {#sec-paddy}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch45_paddy`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch45_paddy) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch45_paddy.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will map rice fields and count their crops through the clouds with Sentinel-1, compare an intensive irrigated district (Karawang) with a traditional upland community (Kasepuhan Ciptagelar, Sukabumi), build a yield map that adds up to the official district production, and find out where Karawang's 2023 production loss came from. Two of the tests in this chapter fail, and the chapter keeps them, because knowing what a method cannot see is part of using it.

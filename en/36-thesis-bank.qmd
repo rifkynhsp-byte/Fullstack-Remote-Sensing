@@ -1,5 +1,19 @@
 # Research Frontiers: A Thesis Topic Bank {#sec-thesisbank}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch36_thesis_starter`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36_thesis_starter) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36_thesis_starter.ipynb)
+- `ch36b_bank_carbon`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36b_bank_carbon.ipynb)
+- `ch36c_bank_lidar_hazards`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36c_bank_lidar_hazards) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36c_bank_lidar_hazards.ipynb)
+- `ch36d_bank_methods`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36d_bank_methods.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will find fifteen thesis-sized questions where Earth Engine gets you started but does not finish the job. Each one comes with the reason it is still open and a first experiment you can run in a week. It also says where Python has to take over.

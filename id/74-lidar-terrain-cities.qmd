@@ -1,5 +1,16 @@
 # LiDAR di Luar Hutan: Medan Longsor dan Kota dalam 3D {#sec-lidar-terrain-cities}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch74_lidar_terrain_cities`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch74_lidar_terrain_cities) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch74_lidar_terrain_cities.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Sebagian besar LiDAR udara di dunia diterbangkan bukan untuk pohon, melainkan untuk medan dan kota: model banjir, inventaris longsor, register bangunan, peta surya. Anda akan memakai dua program LiDAR nasional yang gratis di Earth Engine. Di longsor Oso 2014 di Washington, Anda akan membandingkan model medan LiDAR 1 m dengan DEM global 30 m dan melihat apa yang bisa dan tidak bisa ditunjukkan masing-masing. Di pusat Rotterdam, Anda akan mengurangkan tanah dari permukaan untuk mengukur bangunan, pohon, atap yang cocok untuk panel surya, dan seberapa banyak kota berada di bawah permukaan laut. Python dan R berdampingan.

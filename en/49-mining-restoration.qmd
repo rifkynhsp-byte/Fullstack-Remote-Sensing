@@ -1,5 +1,16 @@
 # Mining Restoration: Is the Land Coming Back? {#sec-mining-restoration}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch49_mining_restoration`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch49_mining_restoration) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch49_mining_restoration.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will find land laid bare by tin mining on Bangka in 34 years of Landsat, follow how its greenness recovered, classify its state today, and check with GEDI whether the vegetation that came back is anything like the vegetation that was lost. The chapter shows why a restoration report based on greenness alone tells only half the story.

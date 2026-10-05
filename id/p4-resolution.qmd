@@ -1,5 +1,16 @@
 # P4 · Empat Resolusi {#sec-p4-resolution .unnumbered}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch00d_resolution`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch00d_resolution) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00d_resolution.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mempelajari empat resolusi yang menggambarkan setiap sensor pencitra (spasial, spektral, radiometrik, dan temporal) ditambah cakupan spasial, cara menghitung masing-masing, dan kenapa tidak ada sensor yang unggul di semuanya. Setiap resolusi ditunjukkan dengan data sungguhan: satu pelabuhan pada tiga ukuran piksel, susunan kanal Landsat 7, Landsat 8, dan Sentinel-2, satu citra pada lima kedalaman bit, dan empat puluh tahun arsip di atas satu kota.

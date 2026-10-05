@@ -1,5 +1,16 @@
 # The GeoAI Paradigm {#sec-embeddings}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch19_satellite_embeddings`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch19_satellite_embeddings) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch19_satellite_embeddings.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will replace a hand-built feature stack with Google's 64-band annual satellite embeddings, and test the claim that comes with them: that a useful map needs only a handful of labels. On the Mahakam Delta, five labelled points per class with embeddings match a hand-built Sentinel-2 stack trained on a hundred. You will also search for places that look like a reference, look inside the 64 dimensions, and detect change without classifying anything, and you will see where the approach stops working.

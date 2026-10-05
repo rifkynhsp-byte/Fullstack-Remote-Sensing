@@ -1,5 +1,16 @@
 # LiDAR Beyond the Forest: Landslide Terrain and a City in 3D {#sec-lidar-terrain-cities}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch74_lidar_terrain_cities`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch74_lidar_terrain_cities) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch74_lidar_terrain_cities.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 Most airborne LiDAR in the world is flown not for trees but for terrain and cities: flood models, landslide inventories, building registers, solar maps. You will use two free national LiDAR programmes in Earth Engine. At the 2014 Oso landslide in Washington you will compare a 1 m LiDAR terrain model with 30 m global DEMs and see what each can and cannot show. In central Rotterdam you will subtract the ground from the surface to measure buildings, trees, roofs suitable for solar panels, and how much of the city lies below sea level. JavaScript is not needed; Python and R side by side.

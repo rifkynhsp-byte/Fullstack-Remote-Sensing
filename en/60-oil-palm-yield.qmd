@@ -1,5 +1,16 @@
 # Oil Palm from Age to Biomass, Health and Fruit {#sec-oil-palm-yield}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch60_oil_palm_yield`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch60_oil_palm_yield) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch60_oil_palm_yield.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will take the planting-age map of Chapter [-@sec-oil-palm-age] further: palm height by age from GEDI, biomass from oil palm allometric equations, canopy health against each palm's own age group, and a fresh-fruit-bunch (FFB) estimate with annual and monthly totals for a plantation landscape in Kotawaringin Timur. The biomass part delivers an uncomfortable result: published palm equations, applied as reported, disagree with each other and with the field by orders of magnitude. Knowing that before you report a carbon stock is the most useful thing in the chapter.

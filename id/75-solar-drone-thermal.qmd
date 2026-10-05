@@ -1,5 +1,18 @@
 # PLTS dari Drone Termal: Menemukan Modul yang Panas {#sec-solar-drone}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch75_solar_drone_thermal`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch75_solar_drone_thermal.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memeriksa pembangkit listrik tenaga surya (PLTS) sungguhan dari kamera termal drone: menemukan setiap modul dalam 2.500 bingkai inframerah, membandingkan masing-masing dengan tetangganya, dan menandai modul yang panas. Di sepanjang jalan, jawaban pertama ternyata sebuah mobil, ambang batas ternyata menentukan segalanya, dan Anda akan belajar kenapa inspeksi PLTS dibaca dalam *selisih* suhu, bukan dalam derajat.

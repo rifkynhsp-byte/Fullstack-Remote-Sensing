@@ -1,5 +1,16 @@
 # Accuracy Assessment {#sec-accuracy}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch17_accuracy_assessment`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch17_accuracy_assessment) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch17_accuracy_assessment.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will build a confusion matrix, read producer and user accuracy correctly, understand why overall accuracy is the least informative number in the table, and report an area estimate with a confidence interval instead of a bare figure.

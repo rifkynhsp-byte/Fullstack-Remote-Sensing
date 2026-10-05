@@ -7,6 +7,7 @@ from the Code Editor.
 
     python tools/publish_gee_assets.py ooh       # chapter 65 inputs
     python tools/publish_gee_assets.py parks     # chapter 73 parks
+    python tools/publish_gee_assets.py jakartaflood   # chapter 39 training polygons
 
 Credentials: the service-account key at $BOOK_EE_KEY
 (~/.config/fullstack-rs/ee-key.json by default). Never commit a key.
@@ -105,6 +106,8 @@ SETS = {
     "ooh": dict(folder="ooh_sydney", src=Path(os.environ.get("OOH_DATA", "data/ooh_sydney")),
                 source="City of Sydney open data, OpenStreetMap, GHSL, VIIRS, WorldPop, ABS Census 2021; built by scripts/py/ch65_ooh_data.py"),
     "parks": dict(folder="surabaya", src=Path("data"), source="OpenStreetMap leisure=park >= 0.5 ha (ODbL)"),
+    "jakartaflood": dict(folder="jakarta_flood", src=Path("data"),
+                         source="Training polygons for the 1 Jan 2020 Jakarta flood, drawn for the book (chapter 39)"),
 }
 
 
@@ -122,6 +125,9 @@ def main(which):
             jobs.append(ingest(gcs, f, f"{folder}/surface_{f.stem}", "image", {"source": s["source"]}))
     elif which == "parks":
         jobs.append(ingest(gcs, s["src"] / "ch73_surabaya_parks.geojson", f"{folder}/parks_osm", "table", {"source": s["source"]}))
+    elif which == "jakartaflood":
+        jobs.append(ingest(gcs, s["src"] / "jakarta_flood2020_training.geojson", f"{folder}/jakarta_flood2020_training",
+                           "table", {"source": s["source"]}))
     wait_and_publish(jobs)
 
 

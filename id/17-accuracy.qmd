@@ -1,8 +1,19 @@
 # Penilaian Akurasi {#sec-accuracy}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch17_accuracy_assessment`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch17_accuracy_assessment) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch17_accuracy_assessment.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
-Anda akan menyusun confusion matrix, membaca akurasi produsen dan akurasi pengguna dengan benar, memahami mengapa akurasi keseluruhan adalah angka paling tidak informatif di dalam tabel itu, lalu melaporkan estimasi luas beserta selang kepercayaan alih alih angka telanjang.
+Anda akan menyusun confusion matrix, membaca akurasi produsen dan akurasi pengguna dengan benar, memahami mengapa akurasi keseluruhan adalah angka paling tidak informatif di dalam tabel itu, lalu melaporkan estimasi luas beserta selang kepercayaan alih-alih angka telanjang.
 :::
 
 ## Bab yang memisahkan peta dari hasil
@@ -27,7 +38,7 @@ Diagonalnya adalah kesepakatan. Semua yang di luar diagonal adalah galat, dan se
 
 : Confusion matrix yang layak dibaca, bukan hanya dinilai {.striped}
 
-Akurasi keseluruhan tabel itu 90 persen, yang terdengar terhormat dan nyaris tidak memberi tahu apa apa. Yang sebenarnya dinyatakan tabel itu adalah mangrove dan hutan lain saling mengacaukan di kedua arah, 23 ke satu arah dan 18 ke arah lain, sementara air praktis sudah selesai. Setiap perbaikan yang layak dikerjakan berada di dalam satu pasangan kelas itu.
+Akurasi keseluruhan tabel itu 90 persen, yang terdengar terhormat dan nyaris tidak memberi tahu apa-apa. Yang sebenarnya dinyatakan tabel itu adalah mangrove dan hutan lain saling mengacaukan di kedua arah, 23 ke satu arah dan 18 ke arah lain, sementara air praktis sudah selesai. Setiap perbaikan yang layak dikerjakan berada di dalam satu pasangan kelas itu.
 
 Pola yang sama muncul lagi pada contoh lima kelas di @fig-confusion, tempat dua kelas tambahan menurunkan angka keseluruhan tanpa mengubah tempat kekeliruan sebenarnya berada.
 
@@ -35,7 +46,7 @@ Pola yang sama muncul lagi pada contoh lima kelas di @fig-confusion, tempat dua 
 
 ### Matriks yang sama, dihitung oleh kode
 
-Tidak ada bagian dari penilaian akurasi yang layak dikerjakan dengan kira kira di kepala. Sel di bawah menghitung matriks di atas ketika halaman ini dibangun, sehingga angka di prosa dan angka di tabel tidak mungkin berpisah jalan.
+Tidak ada bagian dari penilaian akurasi yang layak dikerjakan dengan kira-kira di kepala. Sel di bawah menghitung matriks di atas ketika halaman ini dibangun, sehingga angka di prosa dan angka di tabel tidak mungkin berpisah jalan.
 
 ```{python}
 #| label: tbl-accuracy-live
@@ -113,7 +124,7 @@ for i, nama in enumerate(kelas):
 
 **Akurasi keseluruhan** adalah proporsi titik validasi yang terklasifikasi benar. Ia satu angka yang menggambarkan persoalan banyak kelas, dan ia didominasi kelas mana pun yang luasnya paling besar. Peta yang sempurna di air dan tidak berguna di mangrove bisa melaporkan 88 persen. Kutip angkanya, dan jangan pernah berhenti di situ.
 
-**Akurasi produsen** bertanya: dari mangrove yang benar benar ada, berapa banyak yang ditemukan peta? Kebalikannya adalah **galat omisi**, yaitu apa yang terlewat peta.
+**Akurasi produsen** bertanya: dari mangrove yang benar-benar ada, berapa banyak yang ditemukan peta? Kebalikannya adalah **galat omisi**, yaitu apa yang terlewat peta.
 
 **Akurasi pengguna** bertanya: dari piksel yang disebut peta sebagai mangrove, berapa banyak yang memang mangrove? Kebalikannya adalah **galat komisi**, yaitu apa yang diada adakan peta.
 
@@ -133,7 +144,7 @@ Praatur di bawah adalah empat situasi dari pekerjaan nyata. Yang kedua patut dir
 {{< include ../interactive/confusion-lab.qmd >}}
 
 
-## Kappa, dan mengapa perlu hati hati dengannya
+## Kappa, dan mengapa perlu hati-hati dengannya
 
 Koefisien kappa menyesuaikan kesepakatan yang teramati terhadap kesepakatan yang diharapkan muncul karena kebetulan. Ia muncul di hampir setiap makalah penginderaan jauh selama dua dekade dan kini banyak dikritik.
 
@@ -155,7 +166,7 @@ Selisih beberapa poin itu normal dan memang diharapkan. Selisih dua puluh poin b
 
 ::: {.callout-tip}
 ## Dari lapangan
-Belanjakan anggaran validasi lapangan Anda di tempat model model itu berselisih. Bab [-@sec-supervised] menghasilkan layer yang menunjukkan di mana Random Forest, SVM, dan gradient boosting memberi jawaban berbeda. Mengambil titik validasi dari layer itu, alih alih secara acak, memberi tahu jauh lebih banyak per kunjungan lapangan, karena titik acak sebagian besar mendarat di tempat yang semua model sudah sepakat.
+Belanjakan anggaran validasi lapangan Anda di tempat model-model itu berselisih. Bab [-@sec-supervised] menghasilkan layer yang menunjukkan di mana Random Forest, SVM, dan gradient boosting memberi jawaban berbeda. Mengambil titik validasi dari layer itu, alih-alih secara acak, memberi tahu jauh lebih banyak per kunjungan lapangan, karena titik acak sebagian besar mendarat di tempat yang semua model sudah sepakat.
 :::
 
 ## Alur kerja lengkap
@@ -203,7 +214,7 @@ Setiap anak kalimat di paragraf itu adalah keputusan yang diminta bab ini dan Ba
         "Ia harus dikonversi ke kappa lebih dulu"
       ],
       "answer": 1,
-      "why": "Satu angka untuk persoalan banyak kelas menyembunyikan kinerja per kelas. Akurasi produsen dan pengguna untuk kelas yang benar benar Anda pedulikan adalah angka yang penting."
+      "why": "Satu angka untuk persoalan banyak kelas menyembunyikan kinerja per kelas. Akurasi produsen dan pengguna untuk kelas yang benar-benar Anda pedulikan adalah angka yang penting."
     },
     {
       "q": "Anda membuat peta untuk menopang klaim kredit karbon. Arah galat mana yang lebih berbahaya?",

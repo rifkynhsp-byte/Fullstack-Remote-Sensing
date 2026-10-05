@@ -1,5 +1,16 @@
 # Cloud Masking and Composites {#sec-cloud}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch09_annual_composite`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch09_annual_composite) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch09_annual_composite.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will delete cloud pixel by pixel rather than scene by scene, and reduce a full year of contaminated imagery into one clean composite. This is the chapter that makes tropical remote sensing possible at all.

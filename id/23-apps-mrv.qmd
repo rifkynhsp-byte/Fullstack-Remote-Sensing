@@ -1,5 +1,16 @@
 # Aplikasi: Mengubah Analisis Menjadi Alat {#sec-apps}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch23_liveability_app`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch23_liveability_app) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch23_liveability_app.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Setiap bab sejauh ini berakhir dengan peta di layar *Anda*. Bab ini berakhir dengan alat di layar orang lain. Anda akan mempelajari tiga bagian Earth Engine App, kebiasaan yang membuatnya tetap responsif dan jujur, lalu membangun satu aplikasi lengkap: penjelajah kelayakan huni untuk Bandung Raya yang menggabungkan tujuh dataset publik, membiarkan pengguna menentukan apa yang penting lewat *slider*, dan menjelaskan setiap tempat yang mereka klik.

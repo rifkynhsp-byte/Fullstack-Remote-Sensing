@@ -1,5 +1,16 @@
 # Konteks Topografi dan Hidrologi {#sec-terrain}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch11_terrain`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch11_terrain) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch11_terrain.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan menambahkan peningkatan akurasi termurah yang tersedia di buku ini. Elevasi itu gratis, global, sudah ada di katalog, dan ia memperbaiki kegagalan spesifik yang selama ini membatasi pemetaan mangrove: hutan di lereng bukit yang terklasifikasi sebagai hutan di zona pasang surut.
@@ -41,9 +52,9 @@ Gejalanya aneh dan mudah salah dibaca: peta Anda menemukan mangrove muda yang pe
 
 Ada tiga cara menanganinya, berurut dari yang paling disukai.
 
-**Jangan beri ambang batas sama sekali.** Serahkan elevasi ke classifier sebagai satu prediktor di antara prediktor lain dan biarkan ia mempelajari hubungannya, termasuk offset tajuknya. Inilah yang dilakukan feature stack Bab [-@sec-sar] dan biasanya inilah jawaban yang benar, karena model bisa menimbang elevasi terhadap bukti spektral alih alih dikalahkan oleh angka batas yang Anda pilih sendiri.
+**Jangan beri ambang batas sama sekali.** Serahkan elevasi ke classifier sebagai satu prediktor di antara prediktor lain dan biarkan ia mempelajari hubungannya, termasuk offset tajuknya. Inilah yang dilakukan feature stack Bab [-@sec-sar] dan biasanya inilah jawaban yang benar, karena model bisa menimbang elevasi terhadap bukti spektral alih-alih dikalahkan oleh angka batas yang Anda pilih sendiri.
 
-**Beri ambang batas yang longgar.** Kalau memang perlu aturan, pakai 40 meter, bukan 10. Yang Anda kecualikan lalu adalah hutan lereng, dan itu memang tujuannya, alih alih berusaha mengisolasi zona pasang surut secara presisi, yang tidak bisa ditopang surface model.
+**Beri ambang batas yang longgar.** Kalau memang perlu aturan, pakai 40 meter, bukan 10. Yang Anda kecualikan lalu adalah hutan lereng, dan itu memang tujuannya, alih-alih berusaha mengisolasi zona pasang surut secara presisi, yang tidak bisa ditopang surface model.
 
 **Kurangkan tinggi tajuk.** Produk ETH Global Canopy Height memberi estimasi 10 meter yang bisa diselisihkan dari surface model. Paling benar secara prinsip, paling rapuh dalam praktik, karena dua anggaran galat kini bergabung dan tidak ada yang kecil.
 
@@ -53,7 +64,7 @@ Slope ternyata pemisah yang lebih kuat daripada elevasi, dan alasannya sama seka
 
 Hamparan pasang surut itu datar menurut definisinya. Ia permukaan pengendapan, dibentuk sedimen yang mengendap dari air yang bergerak lambat. Hutan daratan berada di lereng.
 
-Lebih baik lagi, slope sebagian besar kebal terhadap masalah surface model. Offset tajuk kira kira konstan di sepanjang satu tegakan, dan menurunkan sebuah permukaan menghilangkan konstanta. Tajuk yang duduk 25 meter di atas hamparan lumpur yang datar tetap datar.
+Lebih baik lagi, slope sebagian besar kebal terhadap masalah surface model. Offset tajuk kira-kira konstan di sepanjang satu tegakan, dan menurunkan sebuah permukaan menghilangkan konstanta. Tajuk yang duduk 25 meter di atas hamparan lumpur yang datar tetap datar.
 
 ## Jarak ke air
 
@@ -73,13 +84,13 @@ Ada dua cara memakai envelope itu, dan bedanya lebih dari sekadar gaya.
 
 **Sebagai mask, diterapkan setelah klasifikasi.** Apa pun di luar envelope diubah menjadi bukan mangrove. Kasar, efektif, dan ia mengunci pilihan ambang batas Anda ke dalam hasil akhirnya. Kalau envelope-nya keliru di suatu tempat, petanya keliru di situ dan tidak ada bukti apa pun yang bisa membatalkannya.
 
-**Sebagai band prediktor di dalam stack.** Elevasi, slope, dan jarak ke air masuk berdampingan dengan reflektansi, lalu model mempelajari berapa besar bobot yang pantas untuk masing masing. Kalau bukti spektral untuk mangrove sangat kuat pada 45 meter, model masih bisa mengatakan mangrove, dan pada kasus langka semacam itu ia akan benar.
+**Sebagai band prediktor di dalam stack.** Elevasi, slope, dan jarak ke air masuk berdampingan dengan reflektansi, lalu model mempelajari berapa besar bobot yang pantas untuk masing-masing. Kalau bukti spektral untuk mangrove sangat kuat pada 45 meter, model masih bisa mengatakan mangrove, dan pada kasus langka semacam itu ia akan benar.
 
 Pilih yang kedua. Pakai yang pertama hanya kalau Anda punya alasan spesifik yang bisa dipertahankan, dan catat alasannya di bagian metode.
 
 ::: {.callout-tip}
 ## Dari lapangan
-Cetak nilai minimum, maksimum, dan rata rata elevasi di area studi Anda sebelum mengerjakan apa pun. Kalau minimum di area pesisir kembali sebesar 40 meter, batas wilayah Anda sebenarnya tidak menyentuh pantai, dan setiap kesimpulan setelah titik itu berbicara tentang tempat yang keliru. Ini pernah terjadi pada lebih banyak proyek daripada yang mau diakui orang.
+Cetak nilai minimum, maksimum, dan rata-rata elevasi di area studi Anda sebelum mengerjakan apa pun. Kalau minimum di area pesisir kembali sebesar 40 meter, batas wilayah Anda sebenarnya tidak menyentuh pantai, dan setiap kesimpulan setelah titik itu berbicara tentang tempat yang keliru. Ini pernah terjadi pada lebih banyak proyek daripada yang mau diakui orang.
 :::
 
 ## Koreksi topografi, dan kapan perlu repot
@@ -109,7 +120,7 @@ Ujinya empiris dan jujur: petakan aspect, petakan klasifikasi Anda, lalu cari ke
       "q": "Mengapa slope kurang terpengaruh masalah surface model dibanding elevasi?",
       "options": [
         "Slope dihitung pada resolusi lebih kasar",
-        "Offset tajuk kira kira konstan di sepanjang tegakan, dan menurunkan permukaan menghilangkan konstanta",
+        "Offset tajuk kira-kira konstan di sepanjang tegakan, dan menurunkan permukaan menghilangkan konstanta",
         "Slope berasal dari dataset berbeda",
         "Slope diukur dalam derajat, bukan meter"
       ],
@@ -131,7 +142,7 @@ Ujinya empiris dan jujur: petakan aspect, petakan klasifikasi Anda, lalu cari ke
       "q": "Envelope pasang surut sebaiknya dipakai sebagai mask atau sebagai band prediktor?",
       "options": [
         "Sebagai mask, karena itu menjamin tidak ada mangrove di luar zona pasang surut",
-        "Sebagai band prediktor, agar model bisa menimbang elevasi terhadap bukti spektral alih alih dikalahkan ambang batas pilihan Anda",
+        "Sebagai band prediktor, agar model bisa menimbang elevasi terhadap bukti spektral alih-alih dikalahkan ambang batas pilihan Anda",
         "Keduanya sama saja hasilnya",
         "Mask untuk pelatihan, prediktor untuk prediksi"
       ],
@@ -145,6 +156,6 @@ Ujinya empiris dan jujur: petakan aspect, petakan klasifikasi Anda, lalu cari ke
 ## Latihan {.unnumbered}
 
 1. Pakai Inspector pada tegakan mangrove yang tinggi. Bandingkan elevasi yang dilaporkan dengan tinggi tanah yang Anda perkirakan. Selisih itu adalah offset tajuknya.
-2. Ketatkan envelope menjadi di bawah 10 meter lalu petakan apa yang dikecualikannya. Apakah area itu benar benar bukan mangrove?
+2. Ketatkan envelope menjadi di bawah 10 meter lalu petakan apa yang dikecualikannya. Apakah area itu benar-benar bukan mangrove?
 3. Ganti elevasi dengan estimasi hasil pengurangan tajuk lalu bandingkan. Apakah pengurangannya menambah derau lebih banyak daripada yang dihilangkannya?
 4. Petakan aspect di bagian berbukit area studi Anda berdampingan dengan klasifikasinya. Adakah kelas yang mengikuti arah mata angin?

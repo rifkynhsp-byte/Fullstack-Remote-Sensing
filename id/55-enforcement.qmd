@@ -1,5 +1,16 @@
 # Bukti Satelit untuk Penegakan Kebijakan {#sec-enforcement}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch55_enforcement`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch55_enforcement) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch55_enforcement.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengubah data satelit publik menjadi awal sebuah berkas kasus penegakan: di mana, kapan, seberapa luas, dan bagaimana kita tahu. Dua kasus Indonesia: pembukaan hutan di dalam Taman Nasional Gunung Leuser, dan lahan terbuka baru di sepanjang sungai di Merangin, Jambi, jejak khas penambangan emas tanpa izin. Anda juga akan melihat bagaimana tahun pembanding yang dipilih sembarangan hampir menggandakan sebuah tren.

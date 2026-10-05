@@ -1,5 +1,16 @@
 # Forestry, Plantations and the EUDR {#sec-eudr}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch26_eudr_check`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch26_eudr_check) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch26_eudr_check.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will screen supplier plots against the EU Deforestation Regulation cut-off date. More importantly, you will learn why the first result of any such screen is a list of places to look, not a list of guilty farms.

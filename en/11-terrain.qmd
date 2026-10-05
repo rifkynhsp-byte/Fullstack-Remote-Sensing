@@ -1,5 +1,16 @@
 # Terrain and Hydrological Context {#sec-terrain}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch11_terrain`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch11_terrain) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch11_terrain.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will add the cheapest accuracy gain available in this book. Elevation is free, global, already in the catalogue, and it fixes the specific failure that caps mangrove mapping: forest on a hillside being classified as forest in a tidal zone.

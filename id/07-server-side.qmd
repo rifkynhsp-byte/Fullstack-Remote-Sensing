@@ -1,13 +1,25 @@
 # Paradigma Sisi Server {#sec-server-side}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch07_reducers_jatiluhur`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch07_reducers_jatiluhur) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch07_reducers_jatiluhur.ipynb)
+- `ch07_fire_by_regency`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch07_fire_by_regency) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch07_fire_by_regency.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
-Lima tipe objek yang menyusun setiap skrip Earth Engine, dan teknik terpenting di platform ini: memetakan fungsi ke sebuah koleksi alih alih melakukan perulangan.
+Lima tipe objek yang menyusun setiap skrip Earth Engine, dan teknik terpenting di platform ini: memetakan fungsi ke sebuah koleksi alih-alih melakukan perulangan.
 :::
 
 ## Lima wadah
 
-Segala sesuatu di Earth Engine adalah salah satu dari lima hal. Memahami apa yang disimpan masing masing, dan metode apa yang diterimanya, mengubah sebagian besar API dari sesuatu yang dihafal menjadi sesuatu yang bisa disimpulkan.
+Segala sesuatu di Earth Engine adalah salah satu dari lima hal. Memahami apa yang disimpan masing-masing, dan metode apa yang diterimanya, mengubah sebagian besar API dari sesuatu yang dihafal menjadi sesuatu yang bisa disimpulkan.
 
 | Objek | Isinya | Analogi sehari hari |
 |---|---|---|
@@ -36,7 +48,7 @@ var allSpectral = image.select('B.*');            // ekspresi reguler
 ```
 
 ::: {.callout-warning}
-## Kesalahan umum: nama band berubah diam diam
+## Kesalahan umum: nama band berubah diam-diam
 Operasi mengubah nama band, dan nama barunya tidak selalu seperti dugaan.
 `normalizedDifference()` menghasilkan band bernama `nd` kecuali Anda memanggil `.rename()`.
 `reduce(ee.Reducer.median())` menambahkan akhiran `_median` pada setiap nama band, sedangkan bentuk singkat `.median()` membiarkan namanya utuh. Mencampur kedua bentuk itu dalam satu skrip menghasilkan layer yang menolak digambar, dengan galat yang menyebut band yang Anda yakin sudah dibuat. Kalau itu terjadi, jalankan `print(image.bandNames())` lebih dulu.
@@ -58,7 +70,7 @@ for (var i = 0; i < 70; i++) {
 }
 ```
 
-Setiap iterasi perulangan itu berjalan di peramban Anda. Masing masing mengirim permintaan terpisah, menunggu balasan, baru melanjutkan. Tujuh puluh perjalanan berurutan sudah lambat, dan pada koleksi nyata berisi beberapa ribu citra peramban berhenti merespons sama sekali. Lebih buruk lagi, `collection.size()` adalah nilai server, sehingga batas perulangannya harus ditarik ke klien dengan `getInfo()`, yang memblokir semuanya sampai ia kembali.
+Setiap iterasi perulangan itu berjalan di peramban Anda. Masing-masing mengirim permintaan terpisah, menunggu balasan, baru melanjutkan. Tujuh puluh perjalanan berurutan sudah lambat, dan pada koleksi nyata berisi beberapa ribu citra peramban berhenti merespons sama sekali. Lebih buruk lagi, `collection.size()` adalah nilai server, sehingga batas perulangannya harus ditarik ke klien dengan `getInfo()`, yang memblokir semuanya sampai ia kembali.
 
 Padanan sisi servernya satu baris.
 
@@ -66,7 +78,7 @@ Padanan sisi servernya satu baris.
 var results = collection.map(addNdvi);
 ```
 
-Baris itu menyatakan maksud yang sama sebagai satu instruksi. Perencana Google menyebarkannya ke sebanyak mungkin mesin yang dibutuhkan, dan mesin mesin itu berjalan bersamaan, bukan bergantian. Tidak ada apa pun yang kembali ke peramban Anda sampai Anda meminta hasilnya.
+Baris itu menyatakan maksud yang sama sebagai satu instruksi. Perencana Google menyebarkannya ke sebanyak mungkin mesin yang dibutuhkan, dan mesin-mesin itu berjalan bersamaan, bukan bergantian. Tidak ada apa pun yang kembali ke peramban Anda sampai Anda meminta hasilnya.
 
 ### Aturan fungsi yang bisa dipetakan
 
@@ -185,7 +197,7 @@ Filter, map, reduce, act. Bab [-@sec-cloud] mengisi kerangka itu sampai penuh.
 
 ## Di waduk sungguhan: Jatiluhur, 2014 sampai 2024
 
-Semua konsep di atas, dipakai di satu tempat nyata. Jatiluhur adalah waduk yang memasok sebagian besar air Jakarta. Skrip ini menghitung indeks di setiap citra Landsat, meringkas satu tahun dengan tiga cara berbeda, lalu mengubah masker air menjadi satu angka luas untuk setiap musim kemarau. Bandingkan dua peta pertama sebelum melihat grafik: median dan *greenest pixel* sama sama disebut "citra 2019", tetapi hasilnya tidak sama.
+Semua konsep di atas, dipakai di satu tempat nyata. Jatiluhur adalah waduk yang memasok sebagian besar air Jakarta. Skrip ini menghitung indeks di setiap citra Landsat, meringkas satu tahun dengan tiga cara berbeda, lalu mengubah masker air menjadi satu angka luas untuk setiap musim kemarau. Bandingkan dua peta pertama sebelum melihat grafik: median dan *greenest pixel* sama-sama disebut "citra 2019", tetapi hasilnya tidak sama.
 
 {{< include _snippets/ch07_reducers_jatiluhur.qmd >}}
 
@@ -199,5 +211,5 @@ reduceRegion menjawab satu pertanyaan untuk satu wilayah. reduceRegions menjawab
 
 1. Tulis fungsi yang menambahkan band berisi tahun perekaman setiap citra, lalu petakan ke sebuah koleksi. Petunjuk: `image.date().get('year')` dan `ee.Image.constant()`.
 2. Ambil perulangan di atas dan tulis ulang dengan `.map()`. Ukur keduanya kalau Anda cukup sabar, dan catat di titik mana perulangan berhenti sekadar lambat dan mulai tidak bisa dipakai.
-3. Hitung elevasi rata rata area studi Anda pada 30 meter dan pada 300 meter. Jelaskan selisihnya dalam satu kalimat.
+3. Hitung elevasi rata-rata area studi Anda pada 30 meter dan pada 300 meter. Jelaskan selisihnya dalam satu kalimat.
 4. Tulis fungsi yang dipetakan tanpa pernyataan `return`, dengan sengaja, lalu baca galatnya. Galat itu tidak jelas, dan sekali mengenalinya sudah sepadan dengan latihan ini.

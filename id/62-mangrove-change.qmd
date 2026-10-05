@@ -1,5 +1,16 @@
 # Pertumbuhan dan Degradasi Mangrove, Tahun demi Tahun {#sec-mangrove-change}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch62_mangrove_change`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch62_mangrove_change) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch62_mangrove_change.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan memetakan mangrove Segara Anakan, laguna di Cilacap di pantai selatan Jawa, setiap tahun dari 2017 sampai 2024 dengan satu model, membandingkan hasilnya dengan baseline Global Mangrove Watch, memisahkan kehilangan yang nyata dari derau klasifikasi, dan melihat *ke dalam* mangrove yang bertahan: apakah tajuknya makin sehat atau terdegradasi? Luas saja tidak bisa menjawab pertanyaan itu.

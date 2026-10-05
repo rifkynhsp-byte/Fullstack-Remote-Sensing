@@ -1,5 +1,16 @@
 # The Water Cycle of a Basin {#sec-water-cycle}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch40_water_cycle`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch40_water_cycle) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch40_water_cycle.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will build a water balance for a whole river basin, the Kapuas in West Kalimantan, from four independent satellite and reanalysis products, and see how close it comes to closing. You will learn what each term means physically, which instrument measures it, and why an environmental scientist should trust the budget only as far as it closes.

@@ -1,5 +1,16 @@
 # Smoke from Space: the 2019 Haze, Frame by Frame {#sec-haze}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch71_haze_timelapse`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch71_haze_timelapse) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch71_haze_timelapse.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 In September 2019 smoke from peat and forest fires in Sumatra and Kalimantan closed schools and grounded flights from Palangka Raya to Kuala Lumpur. You will watch that season twice, as the eye sees it in MODIS true colour and as chemistry sees it in Sentinel-5P carbon monoxide with every FIRMS fire, and then turn the same data into the analysis an animation cannot do on its own: when the smoke peaked and where, how unusual it was against a wet year, and how many days the smoke took to reach each city. JavaScript, Python and R.

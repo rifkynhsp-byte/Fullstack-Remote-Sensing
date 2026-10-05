@@ -1,5 +1,16 @@
 # A Forest Pest Outbreak from Space {#sec-forest-dieback}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch58_forest_dieback`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch58_forest_dieback) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch58_forest_dieback.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will follow an outbreak through a forest, one summer at a time: the bark beetle epidemic that killed most of the spruce in the Harz mountains of Germany after the 2018 drought. For every conifer pixel you will find the year its canopy dried out, map how the damage spread, and test whether satellites saw the trees dying before they were recorded as lost. They did not, at least not with annual data, and that negative result is worth as much as the map.

@@ -1,5 +1,18 @@
 # Deret Waktu dan Deteksi Perubahan {#sec-timeseries}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch21_harmonic_alerts`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_harmonic_alerts) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_harmonic_alerts.ipynb)
+- `ch21_dynamic_world_change`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_dynamic_world_change) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_dynamic_world_change.ipynb)
+- `ch21_palu_liquefaction`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_palu_liquefaction) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_palu_liquefaction.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan memisahkan perubahan sungguhan dari musim dengan regresi harmonik, mula-mula pada data sintetis lalu pada satu piksel nyata yang dibuka untuk ibu kota baru Indonesia; mengubah residual menjadi peringatan dengan aturan persistensi; memetakan perubahan dari radar, yang menembus awan; menghitung perubahan dengan Dynamic World tanpa menipu diri sendiri; dan mengukur siapa yang berada di tanah yang berubah setelah bencana Palu 2018.
@@ -8,7 +21,7 @@ Anda akan memisahkan perubahan sungguhan dari musim dengan regresi harmonik, mul
 
 ## Regresi harmonik, dalam lima belas baris
 
-Time series optik yang sudah disaring awan di daerah tropis datang sebagai sebaran pengamatan tak beraturan dengan siklus tahunan yang kuat di dalamnya. Persoalan yang timbul: dua tanggal mana pun yang Anda bandingkan berbeda karena dua alasan sekaligus, musimnya bergerak dan mungkin lahannya berubah. Memisahkan keduanya adalah seluruh pekerjaannya.
+Deret waktu optik yang sudah disaring awan di daerah tropis datang sebagai sebaran pengamatan tak beraturan dengan siklus tahunan yang kuat di dalamnya. Persoalan yang timbul: dua tanggal mana pun yang Anda bandingkan berbeda karena dua alasan sekaligus, musimnya bergerak dan mungkin lahannya berubah. Memisahkan keduanya adalah seluruh pekerjaannya.
 
 Regresi harmonik melakukannya dengan memodelkan musim secara eksplisit. Regresikan NDVI pada sebuah intersep, sebuah tren linear, dan satu atau lebih pasangan sinus dan kosinus pada frekuensi tahunan. Kurva yang terpasang adalah fenologi. Yang tersisa, residualnya, adalah segala yang tidak dijelaskan fenologi, dan di situlah perubahan tinggal.
 
@@ -45,7 +58,7 @@ fig.update_yaxes(title="NDVI")
 bk.show(fig, height=400)
 ```
 
-Model itu mengikuti naik turunnya musim dengan rapat, lalu setelah garis putus putus, terus memprediksi vegetasi yang sudah tidak ada. Perpisahan itulah deteksinya.
+Model itu mengikuti naik turunnya musim dengan rapat, lalu setelah garis putus-putus, terus memprediksi vegetasi yang sudah tidak ada. Perpisahan itulah deteksinya.
 
 Sekarang gambarkan apa yang tidak bisa dijelaskan model. Ini langkah yang mengubah grafik untuk dibaca manusia menjadi aturan yang bisa dijalankan mesin.
 
@@ -73,15 +86,15 @@ print(f"rata rata residual setelah kejadian       {residual[~sebelum].mean():+.3
       f"  ({abs(residual[~sebelum].mean()) / sd:.0f} simpangan baku)")
 ```
 
-Rata rata residual setelah kejadian berada sekitar lima belas simpangan baku di bawah nol. Itu bukan ambang yang perlu disetel siapa pun; itu sinyal yang berdiri jauh di atas deraunya, dan itulah yang dibeli oleh model musiman yang dirumuskan dengan benar.
+Rata-rata residual setelah kejadian berada sekitar lima belas simpangan baku di bawah nol. Itu bukan ambang yang perlu disetel siapa pun; itu sinyal yang berdiri jauh di atas deraunya, dan itulah yang dibeli oleh model musiman yang dirumuskan dengan benar.
 
-Tiga kehati hatian sebelum ini menjadi sebuah peringatan dini, dan masing masing akan menjadi satu bagian dalam prosa yang akan datang.
+Tiga kehati hatian sebelum ini menjadi sebuah peringatan dini, dan masing-masing akan menjadi satu bagian dalam prosa yang akan datang.
 
 Satu pengamatan anomali bukan perubahan. Bayangan awan, sirus yang terlewat, artefak sensor: semuanya menghasilkan satu titik buruk. Menuntut kegigihan, biasanya tiga pengamatan berurutan melewati ambang, menghapus hampir semuanya dengan harga keterlambatan beberapa pekan.
 
 Ambangnya milik piksel itu, bukan milik bentang lahan. Piksel dengan riwayat berderau perlu pita lebih lebar daripada piksel yang stabil, dan karena itulah simpangan baku di atas dihitung dari residual piksel itu sendiri, bukan ditetapkan secara global.
 
-Dan penurunan bukan sebuah sebab. Panen, kebakaran, banjir, pembukaan ilegal, dan musim kemarau semuanya menekan NDVI ke bawah. Time series mengatakan kapan dan seberapa besar; ia tidak mengatakan apa yang terjadi, dan laporan yang melewati pembedaan itu tidak bisa dipertahankan.
+Dan penurunan bukan sebuah sebab. Panen, kebakaran, banjir, pembukaan ilegal, dan musim kemarau semuanya menekan NDVI ke bawah. Deret waktu mengatakan kapan dan seberapa besar; ia tidak mengatakan apa yang terjadi, dan laporan yang melewati pembedaan itu tidak bisa dipertahankan.
 
 ::: {.py-live}
 ```python
@@ -176,10 +189,10 @@ for m in bulan:
         "Ia menghapus musiman, dengan harga kepekaan"
       ],
       "answer": 1,
-      "why": "Bayangan awan, sirus yang terlewat, dan artefak sensor masing masing menghasilkan satu titik anomali. Kegigihan menghapus hampir semuanya, dan harganya adalah Anda mengetahui perubahan nyata sedikit lebih lambat."
+      "why": "Bayangan awan, sirus yang terlewat, dan artefak sensor masing-masing menghasilkan satu titik anomali. Kegigihan menghapus hampir semuanya, dan harganya adalah Anda mengetahui perubahan nyata sedikit lebih lambat."
     },
     {
-      "q": "NDVI sebuah piksel turun tajam dan bertahan di bawah. Apa yang sebenarnya bisa dikatakan time series itu?",
+      "q": "NDVI sebuah piksel turun tajam dan bertahan di bawah. Apa yang sebenarnya bisa dikatakan deret waktu itu?",
       "options": [
         "Bahwa telah terjadi pembukaan ilegal",
         "Kapan penurunannya terjadi dan seberapa besar, tetapi bukan apa penyebabnya",

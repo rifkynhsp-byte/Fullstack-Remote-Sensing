@@ -1,5 +1,16 @@
 # Latih Sekali, Terapkan di Mana Saja: Menyimpan Model Earth Engine {#sec-save-model}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch51_save_apply_model`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch51_save_apply_model) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch51_save_apply_model.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan melatih model tutupan lahan sekali, menyimpannya sebagai aset Earth Engine, memuatnya di skrip lain, lalu menerapkannya di empat wilayah lain di Indonesia. Anda juga akan menemukan bahwa salah satu cara menyimpan model yang umum dipakai mengubah jawaban model itu dalam uji kami, dan mempelajari pengecekan yang bisa menangkapnya: model yang dimuat ulang harus menghasilkan jawaban yang sama dengan aslinya.

@@ -1,5 +1,16 @@
 # Cities and Energy: Urban Heat and Solar Siting {#sec-urban-energy}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch35_urban_energy`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch35_urban_energy) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch35_urban_energy.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will map surface heat across Surabaya and link it to what covers the ground. Then you will build a multi-criteria screen for solar farms on Sumbawa and test how much the answer changes when someone else chooses the weights.

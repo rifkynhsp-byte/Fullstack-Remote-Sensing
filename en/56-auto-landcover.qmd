@@ -1,5 +1,16 @@
 # Automatic Land Cover: Free Labels and One Model for Every Year {#sec-auto-landcover}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch56_auto_landcover`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch56_auto_landcover) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch56_auto_landcover.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will build a land-cover map of Lombok without collecting a single training point: the labels come from the places where two global maps agree, the features are satellite embeddings, and the same model maps a later year with no new labels. Then you will test it three ways and see why a 94 % accuracy can sit next to 46 % agreement on the hardest quarter of the island.

@@ -1,5 +1,18 @@
 # An Urban Planning Toolkit: Green Space, Parks, Heat and Flood in Surabaya {#sec-urban-planning}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch73_urban_planning`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch73_urban_planning.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 A planning office does not need a land cover map. It needs answers per neighbourhood: is there enough green, can people walk to a park, where is it hottest, and is the city building where it floods? You will put Kota Surabaya on a grid of hexagons, fill every hexagon with open data, and answer those four questions. Along the way you will meet a regression trap that catches many published urban heat studies, measure spatial autocorrelation with Moran's I, and build a composite priority index together with the test that shows how much its ranking depends on the weights. Python and R side by side.

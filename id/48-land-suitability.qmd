@@ -1,5 +1,16 @@
 # Kesesuaian Lahan: Cocokkah Lahan Ini untuk Tanaman Ini? {#sec-land-suitability}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch48_land_suitability`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch48_land_suitability) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch48_land_suitability.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menjalankan evaluasi kesesuaian lahan ala FAO untuk satu komoditas di satu kabupaten, dibangun ulang dari proyek Bentala Aksa milik penulis: kelas per faktor, faktor pembatas, dan peta kesesuaian akhirnya. Anda juga akan melihat bagaimana satu kanal masukan yang keliru mengubah lahan "tidak sesuai" menjadi "sangat sesuai", dan kenapa peta kesesuaian selalu harus menunjukkan faktor apa yang menahan setiap tempat.

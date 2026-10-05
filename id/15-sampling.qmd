@@ -1,5 +1,17 @@
 # Data Lapangan dan Rancangan Sampling {#sec-sampling}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch15_sampling_design`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch15_sampling_design) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch15_sampling_design.ipynb)
+- `ch15_block_cross_validation`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch15_block_cross_validation) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch15_block_cross_validation.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Dalam bab ini
 Anda akan merancang skema data latih dan validasi yang tidak bisa dibongkar penelaah: terstratifikasi, seimbang agar kelas langka tetap terwakili, ditipiskan secara spasial agar piksel bertetangga tidak bocor antar bagian, dan diekspor supaya setiap percobaan berikutnya memakai sampel yang sama.
@@ -36,7 +48,7 @@ Kedua pendekatan bisa dipertahankan dan keduanya gagal dengan cara berbeda.
 
 **Poligon** menangkap keragaman di dalam kelas. Poligon hutan yang mencakup tajuk tersinari sekaligus celah terbayangi mengajarkan kepada model bahwa keduanya hutan, dan satu titik tidak bisa melakukan itu. Poligon juga mengundang kontaminasi tepi, dan ia menciptakan satu ilusi yang layak disebut namanya.
 
-Tiga puluh poligon pada resolusi Sentinel-2 bisa menghasilkan empat puluh ribu piksel. Itu terlihat seperti data latih yang sangat besar. Bukan. Setiap piksel di dalam satu poligon nyaris identik dengan tetangganya, sehingga ukuran sampel efektifnya lebih dekat ke tiga puluh daripada ke empat puluh ribu. Model yang divalidasi pada piksel piksel itu melaporkan akurasi yang nyaris tidak bermakna, karena piksel validasinya nyaris duplikat piksel latihnya.
+Tiga puluh poligon pada resolusi Sentinel-2 bisa menghasilkan empat puluh ribu piksel. Itu terlihat seperti data latih yang sangat besar. Bukan. Setiap piksel di dalam satu poligon nyaris identik dengan tetangganya, sehingga ukuran sampel efektifnya lebih dekat ke tiga puluh daripada ke empat puluh ribu. Model yang divalidasi pada piksel-piksel itu melaporkan akurasi yang nyaris tidak bermakna, karena piksel validasinya nyaris duplikat piksel latihnya.
 
 **Titik** bersifat presisi dan saling bebas, dan ia kurang mewakili keragaman kecuali Anda menempatkan banyak.
 
@@ -44,7 +56,7 @@ Jalan yang ditempuh buku ini adalah jalan yang biasanya dicapai pekerjaan operas
 
 ## Stratifikasi, dan kenapa sama rata tidak berarti adil
 
-`stratifiedSample()` menjamin sejumlah titik per kelas alih alih mencuplik sebanding dengan luas. Perbedaan itulah seluruh alasan fungsi ini ada.
+`stratifiedSample()` menjamin sejumlah titik per kelas alih-alih mencuplik sebanding dengan luas. Perbedaan itulah seluruh alasan fungsi ini ada.
 
 Pada citra pesisir, air bisa menutupi 40 persen bingkai dan petak mangrove hasil restorasi baru 0,3 persen. Sampling acak proporsional mengembalikan sekitar 400 titik air dan 3 titik restorasi, dan model belajar bahwa menebak air hampir selalu aman. Stratifikasi memaksa kelas langka itu terwakili.
 
@@ -134,13 +146,13 @@ for nama, w in zip(kelas, bobot):
 :::
 
 
-## Autokorelasi spasial, penggelembung akurasi yang diam diam
+## Autokorelasi spasial, penggelembung akurasi yang diam-diam
 
 Dua sampel berjarak sepuluh meter, untuk keperluan praktis, adalah satu sampel yang diukur dua kali. Keduanya berbagi pencahayaan, atmosfer, tajuk, dan sering kali pohon yang sama.
 
 Kalau satu mendarat di data latih dan kembarannya di data validasi, model sedang diuji terhadap data yang secara efektif sudah pernah dilihatnya. Akurasi kembali empat sampai delapan poin terlalu tinggi, secara konsisten, dan tidak ada apa pun di keluarannya yang terlihat keliru.
 
-Inilah alasan utama akurasi internal begitu sering melampaui akurasi lapangan dengan selisih lebar. Ini bukan overfitting dalam pengertian buku teks. Data validasinya memang tidak pernah benar benar independen.
+Inilah alasan utama akurasi internal begitu sering melampaui akurasi lapangan dengan selisih lebar. Ini bukan overfitting dalam pengertian buku teks. Data validasinya memang tidak pernah benar-benar independen.
 
 Perbaikannya adalah penipisan: paksakan jarak minimum antar sampel. Skrip di bawah menempelkan sampel ke grid kasar lalu menyimpan satu per sel, cara yang tidak canggih dan menangkap hampir seluruh manfaat yang tersedia.
 
@@ -180,17 +192,17 @@ Laporkan keduanya, dan beri label yang jelas. Menyebut hanya angka pembagian aca
 
 ### Cara blok memperbaikinya
 
-Bagi area studi menjadi blok blok geografis. Tetapkan **blok utuh** ke setiap fold, jangan pernah titik per titik. Latih pada sebagian blok, uji pada blok yang disisihkan. Model lalu terpaksa menggeneralisasi melintasi ruang, bukan menginterpolasi di dalamnya.
+Bagi area studi menjadi blok-blok geografis. Tetapkan **blok utuh** ke setiap fold, jangan pernah titik per titik. Latih pada sebagian blok, uji pada blok yang disisihkan. Model lalu terpaksa menggeneralisasi melintasi ruang, bukan menginterpolasi di dalamnya.
 
-![Pembagian acak menyisakan titik uji yang selalu dekat dari setiap titik latih. Pembagian blok memindahkan titik uji terdekat kira kira dua setengah kali lebih jauh, dan selisih itulah kebocoran yang sedang dihilangkan.](images/block-cv.png){#fig-blockcv}
+![Pembagian acak menyisakan titik uji yang selalu dekat dari setiap titik latih. Pembagian blok memindahkan titik uji terdekat kira-kira dua setengah kali lebih jauh, dan selisih itulah kebocoran yang sedang dihilangkan.](images/block-cv.png){#fig-blockcv}
 
-Jarak di bawah setiap panel pada @fig-blockcv dihitung, bukan sekadar ilustrasi. Pada pembagian acak, jarak rata rata dari titik latih ke titik uji terdekat adalah 0,53 satuan; pada pembagian blok ia menjadi 1,30.
+Jarak di bawah setiap panel pada @fig-blockcv dihitung, bukan sekadar ilustrasi. Pada pembagian acak, jarak rata-rata dari titik latih ke titik uji terdekat adalah 0,53 satuan; pada pembagian blok ia menjadi 1,30.
 
 Ukuran blok adalah parameter yang menentukan, dan ia keputusan ekologis, bukan keputusan statistik.
 
 Terlalu kecil, dan blok bersebelahan tetap berkorelasi, sehingga Anda hanya membuat pembagian acak sedikit lebih sulit. Terlalu besar, dan setiap fold mencakup bentang lahan yang sama sekali berbeda, sehingga skornya mencerminkan perbedaan bentang lahan, bukan mutu model.
 
-Titik awal yang bisa dipertahankan adalah rentang tempat prediktor Anda masih berkorelasi. Anda bisa memperkirakannya dari semivariogram, atau mendekatinya dari apa yang Anda ketahui tentang bentang lahannya. Di atas delta, skala tempat kondisinya benar benar berubah adalah sub muara, beberapa kilometer.
+Titik awal yang bisa dipertahankan adalah rentang tempat prediktor Anda masih berkorelasi. Anda bisa memperkirakannya dari semivariogram, atau mendekatinya dari apa yang Anda ketahui tentang bentang lahannya. Di atas delta, skala tempat kondisinya benar-benar berubah adalah sub muara, beberapa kilometer.
 
 {{< include _snippets/ch15_block_cross_validation.qmd >}}
 
@@ -198,9 +210,9 @@ Titik awal yang bisa dipertahankan adalah rentang tempat prediktor Anda masih be
 
 Ada dua angka yang keluar, dan keduanya penting.
 
-**Rata rata antar fold** adalah akurasi jujur Anda. Bandingkan dengan angka pembagian acak dari data yang sama. Selisih dua sampai empat poin itu wajar. Selisih sepuluh poin atau lebih berarti pembagian acaknya sedang mengukur sesuatu yang lain dari yang Anda kira.
+**Rata-rata antar fold** adalah akurasi jujur Anda. Bandingkan dengan angka pembagian acak dari data yang sama. Selisih dua sampai empat poin itu wajar. Selisih sepuluh poin atau lebih berarti pembagian acaknya sedang mengukur sesuatu yang lain dari yang Anda kira.
 
-**Simpangan baku antar fold** adalah angka yang hampir tidak pernah dilaporkan siapa pun dan mungkin justru yang lebih berguna. Model yang mencetak 0,84 plus minus 0,02 berpindah tempat dengan andal. Rata rata yang sama pada plus minus 0,15 bekerja di sebagian bentang lahan dan gagal di sebagian lain, dan itu fakta yang seharusnya diketahui seseorang sebelum mengambil keputusan dari petanya.
+**Simpangan baku antar fold** adalah angka yang hampir tidak pernah dilaporkan siapa pun dan mungkin justru yang lebih berguna. Model yang mencetak 0,84 plus minus 0,02 berpindah tempat dengan andal. Rata-rata yang sama pada plus minus 0,15 bekerja di sebagian bentang lahan dan gagal di sebagian lain, dan itu fakta yang seharusnya diketahui seseorang sebelum mengambil keputusan dari petanya.
 
 ::: {.callout-tip}
 ## Dari lapangan
@@ -258,18 +270,18 @@ Selisih antara akurasi internal dan akurasi independen adalah angka yang jujur, 
         "Pelatihan menjadi jauh lebih lambat"
       ],
       "answer": 2,
-      "why": "Kegagalannya diam diam. Petanya terlihat sama, akurasinya beberapa poin terlalu tinggi, dan tidak ada apa pun di keluaran yang memberi sinyal ada masalah."
+      "why": "Kegagalannya diam-diam. Petanya terlihat sama, akurasinya beberapa poin terlalu tinggi, dan tidak ada apa pun di keluaran yang memberi sinyal ada masalah."
     },
     {
       "q": "Anda sudah menipiskan sampel ke jarak minimum 60 m. Mengapa akurasi yang dilaporkan masih bisa menggelembung?",
       "options": [
         "60 m terlalu kecil untuk Sentinel-2",
-        "Sampel dari muara yang sama tetap berbagi pasang surut, kimia air, jenis, dan atmosfer, sehingga model bisa mempelajari tempatnya alih alih kelasnya",
+        "Sampel dari muara yang sama tetap berbagi pasang surut, kimia air, jenis, dan atmosfer, sehingga model bisa mempelajari tempatnya alih-alih kelasnya",
         "Penipisan membuang terlalu banyak sampel untuk bisa diandalkan",
         "Penipisan hanya bekerja untuk sampling berbasis poligon"
       ],
       "answer": 1,
-      "why": "Penipisan menangani gejalanya. Autokorelasi tidak berhenti di 60 m, dan itulah sebabnya validasi silang blok membagi wilayah utuh alih alih memaksakan jarak."
+      "why": "Penipisan menangani gejalanya. Autokorelasi tidak berhenti di 60 m, dan itulah sebabnya validasi silang blok membagi wilayah utuh alih-alih memaksakan jarak."
     },
     {
       "q": "Validasi silang blok memberi 0,84 dengan simpangan baku 0,15 antar fold. Apa yang diberitahukan sebarannya?",
@@ -280,7 +292,7 @@ Selisih antara akurasi internal dan akurasi independen adalah angka yang jujur, 
         "Hasilnya tidak sah dan harus dibuang"
       ],
       "answer": 2,
-      "why": "Rata rata adalah judulnya; sebarannya sering lebih berguna. Sebaran lebar adalah temuan nyata tentang di mana peta bisa dan tidak bisa dipercaya, bukan cacat yang perlu disembunyikan."
+      "why": "Rata-rata adalah judulnya; sebarannya sering lebih berguna. Sebaran lebar adalah temuan nyata tentang di mana peta bisa dan tidak bisa dipercaya, bukan cacat yang perlu disembunyikan."
     },
     {
       "q": "Apa yang TIDAK bisa dideteksi validasi internal?",

@@ -1,5 +1,16 @@
 # Analisis Eksploratif dan Grafik yang Menjelaskan Dirinya Sendiri {#sec-eda}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch38_eda_graphs`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch38_eda_graphs) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch38_eda_graphs.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menjelajahi sebuah dataset sebelum memodelkannya. Anda juga akan mempelajari lima aturan yang mengubah grafik yang harus dipecahkan pembaca menjadi grafik yang langsung dipahami. Setiap aturan ditunjukkan sebagai pasangan sebelum dan sesudah.
@@ -14,16 +25,16 @@ Analisis data eksploratif (EDA) adalah tahap untuk mengenali data yang sebenarny
 3. Adakah nilai yang tidak mungkin benar?
 4. Apakah data punya irama (musim, tren) yang harus dihilangkan dulu sebelum dibandingkan?
 
-Tabel itu sudah memperlihatkan sesuatu yang akan tersembunyi kalau hanya dilihat rata ratanya. Di Kupang dan Makassar, rata rata bulanan jauh di atas median bulanan. Beberapa bulan yang sangat basah menarik rata ratanya naik, padahal sebagian besar bulan jauh lebih kering daripada yang diisyaratkan rata rata.
+Tabel itu sudah memperlihatkan sesuatu yang akan tersembunyi kalau hanya dilihat rata ratanya. Di Kupang dan Makassar, rata-rata bulanan jauh di atas median bulanan. Beberapa bulan yang sangat basah menarik rata ratanya naik, padahal sebagian besar bulan jauh lebih kering daripada yang diisyaratkan rata-rata.
 
 ## Lima aturan membuat grafik
 
 Setiap aturan ditunjukkan sebagai satu pasang panel: di kiri grafik yang biasa ada di laporan, di kanan versi yang lebih baik. Perhatikan betapa kecilnya tambahan usaha yang dibutuhkan.
 
-1. **Tunjukkan sebaran, bukan hanya rata rata.** Batang rata rata menyembunyikan seberapa berbeda tahun yang satu dengan yang lain.
-2. **Jangan hilangkan variasi dengan merata ratakan.** Tidak ada tahun nyata yang persis seperti tahun rata rata. Tunjukkan rentangnya.
+1. **Tunjukkan sebaran, bukan hanya rata-rata.** Batang rata-rata menyembunyikan seberapa berbeda tahun yang satu dengan yang lain.
+2. **Jangan hilangkan variasi dengan merata ratakan.** Tidak ada tahun nyata yang persis seperti tahun rata-rata. Tunjukkan rentangnya.
 3. **Jaga sumbu tetap jujur.** Panjang batang adalah pesannya. Memotong sumbu membuat selisih kecil tampak besar.
-4. **Secukupnya, jangan berlebihan.** Enam warna dan legenda membuat pembaca bekerja keras. Konteks abu abu dengan satu garis yang disorot bercerita lebih jelas.
+4. **Secukupnya, jangan berlebihan.** Enam warna dan legenda membuat pembaca bekerja keras. Konteks abu-abu dengan satu garis yang disorot bercerita lebih jelas.
 5. **Buat grafik menjelaskan dirinya sendiri.** Judul yang menyebutkan temuannya, satuan di setiap sumbu, sumber data, dan label pada titik yang penting.
 
 {{< include _snippets/ch38_eda_graphs.qmd >}}
@@ -55,15 +66,15 @@ Pelajarannya berlaku umum. Penanda kualitas produk adalah saringan pertama, buka
 - Bisakah orang yang belum membaca teksnya mengatakan apa yang ditunjukkan grafik ini?
 - Apakah judulnya menyebutkan temuan, bukan sekadar topik?
 - Apakah setiap sumbu punya satuan, dan sumber datanya tercantum?
-- Apakah variasinya terlihat, atau tersembunyi di balik rata rata?
-- Apakah satu warna, satu sorotan, dan sisanya abu abu akan lebih jelas?
+- Apakah variasinya terlihat, atau tersembunyi di balik rata-rata?
+- Apakah satu warna, satu sorotan, dan sisanya abu-abu akan lebih jelas?
 - Untuk grafik batang: apakah sumbunya mulai dari nol?
 :::
 
 ## Latihan {.unnumbered}
 
 1. Ambil satu grafik dari laporan yang Anda tulis tahun lalu. Terapkan daftar cek di atas dan gambar ulang.
-2. Ulangi Aturan 2 untuk Ambon. Apa yang ditunjukkan pita rentang yang tadinya tersembunyi oleh rata rata?
+2. Ulangi Aturan 2 untuk Ambon. Apa yang ditunjukkan pita rentang yang tadinya tersembunyi oleh rata-rata?
 3. Buat matriks korelasi tanpa menghilangkan musim. Kenapa hampir semuanya jadi berkorelasi kuat?
 4. Ulangi perbandingan ENSO dengan anomali Niño 3.4 bulan Mei-Juni, bukan Juli-Oktober. Berapa besar hubungan itu yang tersisa sebagai ramalan?
 5. Terapkan aturan median bergerak pada seluruh 2019-2024 untuk piksel Bandung yang sama. Apakah pencilan mengumpul di bulan-bulan tertentu?

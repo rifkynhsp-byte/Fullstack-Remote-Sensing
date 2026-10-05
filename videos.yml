@@ -1,0 +1,5 @@
+# One video per chapter: chapter file name (without .qmd): URL
+# YouTube (https://youtu.be/ID or https://www.youtube.com/watch?v=ID), Vimeo, or a direct .mp4 link.
+# Then run: python tools/add_run_links.py
+# Example:
+# 24-flood: https://youtu.be/XXXXXXXXXXX

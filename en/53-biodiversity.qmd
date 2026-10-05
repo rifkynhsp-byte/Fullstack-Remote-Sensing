@@ -1,5 +1,16 @@
 # Biodiversity from Space: Habitat Amount, Shape and Quality {#sec-biodiversity}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch53_biodiversity`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch53_biodiversity) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch53_biodiversity.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will measure what satellites can say about biodiversity, which is habitat, around Bukit Barisan Selatan National Park in Sumatra, home of tigers, elephants and rhinos. You will compare forest loss inside and outside the park, find that interior forest disappears far faster than forest overall, and use GEDI to compare the structural quality of what remains.

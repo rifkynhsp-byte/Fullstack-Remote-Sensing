@@ -1,5 +1,16 @@
 # Ensemble Land Cover and Honest Validation {#sec-ensemble}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch59_ensemble_landcover`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch59_ensemble_landcover) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch59_ensemble_landcover.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 You will train five different classifiers and two ensembles on 2,320 field-labelled points in ten classes, including oil palm, sago, rubber and paddy, which no global land-cover map has. Then you will validate them two ways and watch every model lose 12 to 15 points of accuracy when neighbouring points are no longer allowed on both sides of the split. One class drops to zero. That drop is the most important result in the chapter.

@@ -9,7 +9,7 @@ Sebelum teknik apa pun, tujuannya. Anda akan memahami apa yang membuat sebuah ek
 
 Ada satu mode kegagalan yang cukup sering muncul di bidang ini sampai punya bentuk baku. Seorang analis menghasilkan peta yang secara teknis mulus: awan sudah dibersihkan, klasifikasinya rapi, akurasi keseluruhan sembilan puluh satu persen, kartografinya indah. Tidak ada yang memakainya. Peta itu menjawab pertanyaan yang tidak pernah diajukan siapa pun, pada resolusi yang tidak dibutuhkan siapa pun, untuk batas wilayah yang tidak cocok dengan unit administrasi atau unit pengelolaan mana pun.
 
-Bab bab teknis dalam buku ini tidak ada gunanya tanpa bab ini. Jadi kita mulai di sini: siapa yang membutuhkan peta itu, keputusan apa yang diinformasikannya, dan apa yang harus dilewatinya agar dipercaya.
+Bab-bab teknis dalam buku ini tidak ada gunanya tanpa bab ini. Jadi kita mulai di sini: siapa yang membutuhkan peta itu, keputusan apa yang diinformasikannya, dan apa yang harus dilewatinya agar dipercaya.
 
 ## Studi kasus yang mengalir sepanjang buku
 
@@ -27,7 +27,7 @@ Nilainya pun besar, dalam tiga mata uang yang berbeda.
 
 ::: {.callout-note}
 ## Konsep: satu angka yang lebih penting dari sisanya
-Indonesia memiliki luas mangrove terbesar di dunia. Mangrove mencakup sekitar 2,6 persen luas hutan nasional, tetapi degradasinya secara historis menyumbang mendekati 10 persen emisi gas rumah kaca sektor kehutanan. Ketimpangan itulah seluruh argumen untuk memantau mangrove secara khusus, alih alih memperlakukannya sebagai bagian dari hutan pada umumnya. Area kecil, dipantau dengan baik, menggerakkan angka nasional.
+Indonesia memiliki luas mangrove terbesar di dunia. Mangrove mencakup sekitar 2,6 persen luas hutan nasional, tetapi degradasinya secara historis menyumbang mendekati 10 persen emisi gas rumah kaca sektor kehutanan. Ketimpangan itulah seluruh argumen untuk memantau mangrove secara khusus, alih-alih memperlakukannya sebagai bagian dari hutan pada umumnya. Area kecil, dipantau dengan baik, menggerakkan angka nasional.
 :::
 
 ## Dari peta menjadi instrumen kebijakan
@@ -48,7 +48,7 @@ Bila sebuah bab dalam buku ini pada akhirnya tidak memasok salah satu dari ketig
 
 ## Dari peta menjadi uang
 
-Pasar karbon mengubah perubahan ekosistem yang terukur menjadi pembiayaan. Satu kredit mewakili kira kira satu ton karbon dioksida yang diserap dari atmosfer atau dicegah masuk ke sana. Proyek yang melindungi mangrove yang masih berdiri atau merestorasi yang terdegradasi dapat menerbitkan kredit dan menjualnya.
+Pasar karbon mengubah perubahan ekosistem yang terukur menjadi pembiayaan. Satu kredit mewakili kira-kira satu ton karbon dioksida yang diserap dari atmosfer atau dicegah masuk ke sana. Proyek yang melindungi mangrove yang masih berdiri atau merestorasi yang terdegradasi dapat menerbitkan kredit dan menjualnya.
 
 Kredit blue carbon diperdagangkan dengan premi di atas kredit kehutanan daratan, umumnya pada kisaran 13 sampai 35 dolar per ton berbanding 8 sampai 11,50, karena karbonnya lebih permanen di tanah anaerobik dan karena manfaat sertanya, keanekaragaman hayati dan perlindungan pesisir, mudah dibuktikan. Indonesia diperkirakan memiliki 17 sampai 23 persen ekosistem blue carbon dunia.
 
@@ -110,7 +110,7 @@ Peta yang hanya bisa dibaca spesialis penginderaan jauh sudah gagal di langkah t
         "Publikasi ilmiah yang telah ditelaah sejawat"
       ],
       "answer": 3,
-      "why": "Publikasi adalah praktik baik, bukan syarat. Garis dasar, perubahan, dan ketidakpastian terkuantifikasi adalah tiga hal yang benar benar diperiksa verifikator."
+      "why": "Publikasi adalah praktik baik, bukan syarat. Garis dasar, perubahan, dan ketidakpastian terkuantifikasi adalah tiga hal yang benar-benar diperiksa verifikator."
     },
     {
       "q": "Sebuah peta unggul secara teknis tetapi tidak dipakai siapa pun. Menurut bab ini, apa penyebab paling mungkin?",

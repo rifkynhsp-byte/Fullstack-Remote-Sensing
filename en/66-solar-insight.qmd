@@ -1,5 +1,18 @@
 # One Chart, One Question: Visualising a Solar Resource {#sec-solar-insight}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch66_solar_insight`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch66_solar_insight.ipynb)
+
+This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### In this chapter
 Ten years of hourly solar data for two Indonesian cities, 175,000 rows, turned into five charts. Each chart is chosen to answer one question, and each carries a headline that states its answer. You will learn why a heatmap beats a line plot for a year of hours, how to make a scatter plot check physics, why box plots need their extremes drawn on top, and how small multiples let the eye compare without reading numbers. The code is in Python and R side by side.

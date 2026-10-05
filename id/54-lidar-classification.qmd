@@ -1,5 +1,18 @@
 # Klasifikasi LiDAR Otomatis: Menemukan Permukaan Tanah {#sec-lidar-classification}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch54_lidar_classification`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch54_lidar_classification.ipynb)
+
+Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan mengklasifikasi point cloud LiDAR udara secara otomatis: tanah lebih dulu, dengan progressive morphological filter, lalu vegetasi menurut tinggi di atas tanah. Anda akan menilai hasilnya terhadap kelas bawaan data dan menemukan bahwa nilai titik demi titik menyesatkan, sedangkan membandingkan model medannya memberi jawaban yang adil. Alur kerja yang sama juga diberikan dalam R dengan lidR.

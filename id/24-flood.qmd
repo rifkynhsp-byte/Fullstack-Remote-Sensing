@@ -1,8 +1,19 @@
 # Banjir: Dari Topografi ke Peta Kejadian {#sec-flood}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch24_flood_aceh`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch24_flood_aceh) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch24_flood_aceh.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
-Anda akan membuat produk banjir seperti yang benar benar diserahkan di lapangan: topografi lebih dulu, lalu peta kejadian dari radar, lalu orang dan bangunan di dalamnya, dengan setiap angka dicek terhadap sumber kedua.
+Anda akan membuat produk banjir seperti yang benar-benar diserahkan di lapangan: topografi lebih dulu, lalu peta kejadian dari radar, lalu orang dan bangunan di dalamnya, dengan setiap angka dicek terhadap sumber kedua.
 :::
 
 ## Kenapa topografi lebih dulu
@@ -13,7 +24,7 @@ Layer topografi yang paling berguna di sini bukan ketinggian, melainkan **tinggi
 
 ## Aturan radar, dan kenapa setiap bagiannya ada
 
-Sentinel-1 bisa menembus awan, dan pada banjir di daerah tropis justru itulah intinya. Air yang tenang memantulkan pulsa radar menjauh dari satelit, sehingga lahan yang tergenang terlihat gelap. Aturan di skrip ini punya empat bagian, dan masing masing menghilangkan satu jenis alarm palsu:
+Sentinel-1 bisa menembus awan, dan pada banjir di daerah tropis justru itulah intinya. Air yang tenang memantulkan pulsa radar menjauh dari satelit, sehingga lahan yang tergenang terlihat gelap. Aturan di skrip ini punya empat bagian, dan masing-masing menghilangkan satu jenis alarm palsu:
 
 | Syarat | Yang dihilangkan |
 |---|---|

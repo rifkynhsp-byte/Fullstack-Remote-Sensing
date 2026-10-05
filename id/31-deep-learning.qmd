@@ -1,5 +1,16 @@
 # Deep Learning untuk Observasi Bumi: Yang Tidak Bisa Dilatih di Earth Engine {#sec-deeplearning}
 
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch31_unet_mahakam`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch31_unet_mahakam) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch31_unet_mahakam.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
 ::: {.chapter-goal}
 #### Di bab ini
 Anda akan menarik patch citra dan label dari Earth Engine sebagai array NumPy, melatih U-Net kecil di CPU biasa, lalu mengujinya melawan Random Forest pada blok uji yang sama. Setelah itu Anda akan memutuskan, berdasarkan angka, apakah jaringan saraf itu memang sepadan dengan biayanya.
@@ -55,18 +66,18 @@ Tidak, setidaknya tidak dengan selisih yang berarti. Pada blok uji:
 
 - Random Forest per piksel sesuai dengan WorldCover pada 91,4 % piksel (kappa 0,787), dengan waktu latih 3 detik.
 - U-Net sesuai pada 92,3 % piksel (kappa 0,806), dengan waktu latih sekitar dua menit.
-- Random Forest yang diberi rata rata dan simpangan baku setiap band dalam jendela 5 kali 5 juga mencapai 92,2 % (kappa 0,806), dengan waktu latih 8 detik.
+- Random Forest yang diberi rata-rata dan simpangan baku setiap band dalam jendela 5 kali 5 juga mencapai 92,2 % (kappa 0,806), dengan waktu latih 8 detik.
 
 Random Forest bawaan Earth Engine dari tab Code Editor (100 pohon, 9.000 titik terstratifikasi dari tile yang sama) sesuai pada 90,8 % dari 20.000 piksel sampel di blok uji (kappa 0,77) saat langkah yang sama kami jalankan. Posisinya setara dengan Random Forest scikit-learn.
 
-Sekarang lihat tabel seed. U-Net yang sama, dilatih tiga kali dengan seed acak berbeda, menghasilkan 92,3 %, 92,0 %, dan 91,7 %. Selisih U-Net dengan Random Forest biasa (0,9 poin) kira kira sebesar goyangan U-Net itu sendiri (0,6 poin). Random Forest yang diberi sedikit informasi tetangga bahkan menyamai hasil terbaik U-Net.
+Sekarang lihat tabel seed. U-Net yang sama, dilatih tiga kali dengan seed acak berbeda, menghasilkan 92,3 %, 92,0 %, dan 91,7 %. Selisih U-Net dengan Random Forest biasa (0,9 poin) kira-kira sebesar goyangan U-Net itu sendiri (0,6 poin). Random Forest yang diberi sedikit informasi tetangga bahkan menyamai hasil terbaik U-Net.
 
 ::: {.callout-important}
 ## Integritas ilmiah: laporkan hasil seri apa adanya
 Menulis "U-Net mengungguli Random Forest (92,3 % berbanding 91,4 %)" memang menggoda. Kedua angka itu nyata, tetapi kalimatnya tetap menyesatkan. Satu seed, satu blok uji, dan label dari model lain tidak cukup untuk menopang klaim selisih 0,9 poin. Laporkan sebaran antar seed, sertakan pembanding yang adil yang juga mendapat konteks spasial, dan katakan terus terang kalau biaya tambahannya tidak menghasilkan perbaikan yang terukur.
 :::
 
-Kenapa jaringan saraf tidak unggul? Ada tiga alasan, dan masing masing memberi pelajaran tentang kapan deep learning membantu.
+Kenapa jaringan saraf tidak unggul? Ada tiga alasan, dan masing-masing memberi pelajaran tentang kapan deep learning membantu.
 
 **Labelnya berasal dari classifier lain.** WorldCover dibuat oleh model machine learning dari data Sentinel-1 dan Sentinel-2 pada 10 m, bukan dari bentuk yang digambar orang. U-Net yang dilatih dengannya belajar meniru peta model lain. Ia tidak bisa mempelajari bentuk yang tidak pernah digambar oleh labelnya. Lihat tambak persegi yang gelap di kanan atas panel Sentinel-2: WorldCover menyebut banyak di antaranya mangrove, dan kedua model ikut setuju.
 
@@ -96,7 +107,7 @@ Kalau labelnya berasal dari peta global 10 m dan kelasnya terpisah secara spektr
 
 ## Kapan pindah ke GPU
 
-U-Net di sini sengaja dibuat kecil: patch 64 kali 64, jaringan tiga tingkat, 3,5 juta piksel latih. Waktu latih kira kira sebanding dengan jumlah piksel kali jumlah epoch kali ukuran model. Gandakan ukuran patch, pakai jaringan yang lebih dalam, tambahkan beberapa bulan sebagai band tambahan, dan pekerjaan dua menit berubah menjadi berjam jam di CPU.
+U-Net di sini sengaja dibuat kecil: patch 64 kali 64, jaringan tiga tingkat, 3,5 juta piksel latih. Waktu latih kira-kira sebanding dengan jumlah piksel kali jumlah epoch kali ukuran model. Gandakan ukuran patch, pakai jaringan yang lebih dalam, tambahkan beberapa bulan sebagai band tambahan, dan pekerjaan dua menit berubah menjadi berjam jam di CPU.
 
 Patokan yang dipakai penulis: kalau satu epoch butuh lebih dari beberapa menit di CPU, atau RAM PC tidak cukup, pindahkan pelatihan ke Colab dengan GPU. Sisanya tetap dikerjakan di komputer sendiri. Pola yang terbukti jalan:
 
@@ -154,7 +165,7 @@ Kalau transformasi GeoTIFF tidak sama dengan grid asal patch, prediksinya berges
       "options": [
         "U-Net jelas lebih baik",
         "Random Forest jelas lebih baik karena latihnya lebih cepat",
-        "Selisihnya kira kira sebesar sebaran U-Net antar seed, dan Random Forest dengan statistik 5 kali 5 menyamainya, jadi tidak ada kemenangan yang berarti",
+        "Selisihnya kira-kira sebesar sebaran U-Net antar seed, dan Random Forest dengan statistik 5 kali 5 menyamainya, jadi tidak ada kemenangan yang berarti",
         "Kedua model 92 % akurat di lapangan"
       ],
       "answer": 2,
