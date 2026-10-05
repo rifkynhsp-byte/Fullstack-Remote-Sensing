@@ -66,7 +66,7 @@ Iburi adalah satu-satunya uji yang menunjukkan kemampuan, jadi di sanalah tempat
 - **Hujan seragam di area sekecil ini,** jadi tidak menambah apa-apa.
 - **Tutupan lahannya WorldCover 2021, dipetakan tiga tahun *setelah* gempa 2018.** Bekas longsor yang masih segar tampil sebagai tanah terbuka dan rumput, kelas dengan skor tertinggi.
 
-Lapisan tutupan "memprediksi" longsor karena sudah melihatnya. Inilah **kebocoran** (leakage): informasi dari hasil merembes ke dalam prediktor. Bobot apa pun yang disetel di atasnya tidak berguna untuk gempa berikutnya.
+Lapisan tutupan "memprediksi" longsor karena sudah melihatnya. Inilah ***leakage*** (kebocoran): informasi dari hasil merembes ke dalam prediktor. Bobot apa pun yang disetel di atasnya tidak berguna untuk gempa berikutnya.
 
 Perbaikannya sederhana begitu disadari: selalu pakai prediktor dari **sebelum** kejadian (di sini, tutupan lahan 2017). Kebiasaan inilah pelajaran sebenarnya: kalau hasil tampak lebih baik daripada yang diizinkan fisika, tanyakan bagaimana jawabannya bisa bocor masuk.
 

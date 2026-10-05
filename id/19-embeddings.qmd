@@ -28,7 +28,7 @@ Di sebagian besar buku ini, pengklasifikasi diberi fitur yang Anda bangun sendir
 
 ## Tanpa masker, tanpa indeks, tanpa tekstur
 
-Perhatikan apa yang *tidak* dilakukan skrip. Tidak ada masker awan, tidak ada komposit, tidak ada NDVI, tidak ada tekstur GLCM, dan tidak ada turunan topografi: satu baris memuat embedding tahun itu dan pengklasifikasi langsung dilatih padanya. Pekerjaan itu tidak hilang. Ia terjadi di hulu, di dalam pipeline yang membuat embedding, menurut rancangan dan pengaturan Google. Anda mendapat waktu dan konsistensi. Anda kehilangan kemampuan memeriksa atau mengubah keputusan-keputusan itu, yang menjadi trade-off pertama dari beberapa yang dibahas bab ini.
+Perhatikan apa yang *tidak* dilakukan skrip. Tidak ada masker awan, tidak ada komposit, tidak ada NDVI, tidak ada tekstur GLCM, dan tidak ada turunan topografi: satu baris memuat *embedding* tahun itu dan *classifier* langsung dilatih padanya. Pekerjaan itu tidak hilang. Ia terjadi di hulu, di dalam pipeline yang membuat embedding, menurut rancangan dan pengaturan Google. Anda mendapat waktu dan konsistensi. Anda kehilangan kemampuan memeriksa atau mengubah keputusan-keputusan itu, yang menjadi trade-off pertama dari beberapa yang dibahas bab ini.
 
 Gambar tiga band dari embedding (band A01, A16, A09 sebagai merah, hijau, biru) tidak punya makna fisik. Nilainya adalah bahwa tempat yang mirip mendapat warna mirip sebelum pelatihan apa pun: tepian mangrove, tambak delta, sungai, dan hutan dataran tinggi sudah terpisah.
 
@@ -53,7 +53,7 @@ Dari satu piksel yang disebut mangrove oleh WorldCover dan Global Mangrove Watch
 
 ## Apa isi 64 dimensi itu
 
-Analisis komponen utama (PCA) pada 2.000 vektor sampel menunjukkan bahwa dimensinya jauh dari saling bebas: sembilan komponen memuat 90 % variansi. Bila digambar hanya pada dua komponen pertama, kelas-kelas sudah jatuh di wilayah yang terpisah, air di satu ujung, permukiman di ujung lain, mangrove dan hutan bersama di sisi ketiga, sebelum pengklasifikasi melihat satu label pun. Itulah alasan visual mengapa sedikit label sudah cukup: label hanya perlu menarik batas di ruang yang sudah tertata.
+Analisis komponen utama (PCA) pada 2.000 vektor sampel menunjukkan bahwa dimensinya jauh dari saling bebas: sembilan komponen memuat 90 % variansi. Bila digambar hanya pada dua komponen pertama, kelas-kelas sudah jatuh di wilayah yang terpisah, air di satu ujung, permukiman di ujung lain, mangrove dan hutan bersama di sisi ketiga, sebelum *classifier* melihat satu label pun. Itulah alasan visual mengapa sedikit label sudah cukup: label hanya perlu menarik batas di ruang yang sudah tertata.
 
 PCA juga alat praktis. Bila metode hilir kesulitan dengan 64 masukan yang saling berkorelasi (regresi logistik, klasterisasi berbasis jarak), sepuluh komponen pertama menyimpan hampir semuanya.
 
@@ -61,7 +61,7 @@ PCA juga alat praktis. Bila metode hilir kesulitan dengan 64 masukan yang saling
 
 Embedding tersedia untuk setiap tahun, dan panjang vektornya satu, sehingga hasil kali titik vektor 2018 dan 2023 untuk piksel yang sama adalah kosinus sudut di antara keduanya: 1 berarti piksel tampak sama, nilai lebih rendah berarti telah berubah. Tidak dibutuhkan label kelas, ambang per kelas, atau komposit.
 
-Di delta ini, 3,3 % wilayah punya kemiripan di bawah 0,9 dan 0,4 % di bawah 0,6. Perubahannya mengumpul di pulau-pulau delta: tambak baru dan terbengkalai, mangrove yang ditebang atau tumbuh kembali. Pemeriksaan dengan Dynamic World, pengklasifikasi independen, menunjukkan sinyalnya nyata: di seluruh wilayah, label tahunan Dynamic World berubah di 5 % piksel; di antara piksel dengan kemiripan di bawah 0,6, label itu berubah di 84 %. Makin rendah kemiripannya, makin sering peta independen sepakat bahwa tutupan lahan berubah.
+Di delta ini, 3,3 % wilayah punya kemiripan di bawah 0,9 dan 0,4 % di bawah 0,6. Perubahannya mengumpul di pulau-pulau delta: tambak baru dan terbengkalai, mangrove yang ditebang atau tumbuh kembali. Pemeriksaan dengan Dynamic World, sebuah *classifier* independen, menunjukkan sinyalnya nyata: di seluruh wilayah, label tahunan Dynamic World berubah di 5 % piksel; di antara piksel dengan kemiripan di bawah 0,6, label itu berubah di 84 %. Makin rendah kemiripannya, makin sering peta independen sepakat bahwa tutupan lahan berubah.
 
 ## Batas
 

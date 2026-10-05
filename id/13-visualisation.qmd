@@ -132,7 +132,7 @@ Urutan juga penting: layer yang ditambahkan terakhir digambar di atas. Taruh kla
 
 ## Membuat legenda
 
-Peta kategoris tanpa legenda adalah hiasan. Earth Engine tidak punya legenda otomatis, jadi Anda membangunnya dengan pustaka `ui`. Bab [-@sec-apps] membahasnya dengan benar sebagai bagian pengembangan aplikasi, tetapi versi minimalnya layak dimiliki sekarang.
+Peta kategoris tanpa legenda adalah hiasan. Earth Engine tidak punya legenda otomatis, jadi Anda membangunnya dengan *library* `ui`. Bab [-@sec-apps] membahasnya dengan benar sebagai bagian pengembangan aplikasi, tetapi versi minimalnya layak dimiliki sekarang.
 
 ```javascript
 var legend = ui.Panel({style: {position: 'bottom-left', padding: '8px'}});

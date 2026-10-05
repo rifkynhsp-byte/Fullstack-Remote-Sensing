@@ -21,7 +21,7 @@ Tiga kebiasaan membuat pekerjaan dapat dipulihkan.
 
 ## Alternatif Python
 
-Semua isi buku ini punya padanan Python melalui paket `earthengine-api`, umumnya dengan `var` diganti penugasan biasa dan nama metode camelCase yang tidak berubah.
+Semua isi buku ini punya padanan Python melalui *package* `earthengine-api`, umumnya dengan `var` diganti penugasan biasa dan nama metode camelCase yang tidak berubah.
 
 ```bash
 pip install earthengine-api geemap
@@ -43,7 +43,7 @@ m.add_layer(s2.median(), {"bands": ["B4", "B3", "B2"], "min": 0, "max": 3000}, "
 m
 ```
 
-Pilih Python bila Earth Engine hanya satu tahap dari alur kerja yang lebih panjang, bila Anda memerlukan pustaka yang tidak tersedia di platform, atau bila hasil harus dapat direproduksi di luar peramban. Pilih JavaScript bila Anda ingin Inspector, berbagi seketika, dan tanpa lingkungan yang perlu dirawat.
+Pilih Python bila Earth Engine hanya satu tahap dari alur kerja yang lebih panjang, bila Anda memerlukan *library* yang tidak tersedia di platform, atau bila hasil harus dapat direproduksi di luar peramban. Pilih JavaScript bila Anda ingin Inspector, berbagi seketika, dan tanpa lingkungan yang perlu dirawat.
 
 ## Membangun buku ini secara lokal
 

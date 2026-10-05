@@ -93,7 +93,7 @@ Argumen yang biasa untuk deep learning adalah ia belajar lebih banyak dari data 
 
 Random Forest dengan statistik 5 kali 5 setidaknya sama baiknya dengan U-Net di setiap ukuran. Dengan 21 tile ia mencapai kappa 0,77 dibanding 0,75 untuk U-Net; dengan 106 tile, 0,80 dibanding 0,75. Baru dengan seluruh 212 tile keduanya bertemu (masing-masing 0,806). Kurva U-Net juga tidak monoton: hasilnya lebih buruk dengan separuh tile daripada dengan seperempat. Itulah derau antar-seed yang diukur di atas muncul lagi, dan itulah masalah praktis jaringan yang dilatih dengan sedikit data: bukan hanya lebih lemah, tetapi juga lebih sulit ditebak. Kelas tersulit, "lainnya", bercerita sama: F1-nya berkisar 0,48 sampai 0,65 untuk U-Net di berbagai ukuran, dan 0,52 sampai 0,66 untuk random forest.
 
-Jadi untuk proyek dengan sedikit label, urutan kerjanya jelas: random forest dengan statistik tetangga dulu, jaringan saraf hanya bila labelnya ribuan dan jawabannya bergantung pada bentuk.
+Jadi untuk proyek dengan sedikit label, urutan kerjanya jelas: random forest dengan statistik tetangga dulu, *neural network* hanya bila labelnya ribuan dan jawabannya bergantung pada bentuk.
 
 ## Kapan deep learning sepadan
 

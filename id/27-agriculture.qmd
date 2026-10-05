@@ -13,7 +13,7 @@
 
 ::: {.chapter-goal}
 #### Di bab ini
-Anda akan menghitung pohon sawit dari citra drone dengan metode tanpa jaringan saraf, mengecek hasil hitungan tanpa data lapangan, lalu mengubahnya menjadi angka yang dipakai oleh manajer kebun.
+Anda akan menghitung pohon sawit dari citra drone dengan metode tanpa *neural network*, mengecek hasil hitungan tanpa data lapangan, lalu mengubahnya menjadi angka yang dipakai oleh manajer kebun.
 :::
 
 ## Tidak semua masalah butuh deep learning

@@ -162,7 +162,7 @@ Perbedaan ini adalah inti bab ini.
 
 Keduanya rutin berbeda lima sampai sepuluh poin, dan selisih itu bersifat diagnostik, bukan memalukan.
 
-Selisih beberapa poin itu normal dan memang diharapkan. Selisih dua puluh poin berarti data latih Anda tidak mewakili bentang lahannya, dan penyetelan sebanyak apa pun tidak akan menutupnya, karena masalahnya ada di hulu, di Bab [-@sec-sampling].
+Selisih beberapa poin itu normal dan memang diharapkan. Selisih dua puluh poin berarti data latih Anda tidak mewakili bentang lahannya, dan *tuning* sebanyak apa pun tidak akan menutupnya, karena masalahnya ada di hulu, di Bab [-@sec-sampling].
 
 ::: {.callout-tip}
 ## Dari lapangan

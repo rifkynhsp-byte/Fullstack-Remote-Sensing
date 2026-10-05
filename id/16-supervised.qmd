@@ -62,7 +62,7 @@ Kepentingan fitur tidak andal ketika prediktornya berkorelasi kuat. Random Fores
 
 ## Penyetelan, dan tahu kapan berhenti
 
-Random Forest punya sedikit parameter yang berpengaruh, dan jumlah pohon adalah yang utama. Terlalu sedikit dan ansambelnya tidak stabil; melewati satu titik, akurasinya mendatar dan Anda hanya membayar komputasi.
+Random Forest punya sedikit parameter yang berpengaruh, dan jumlah pohon adalah yang utama. Terlalu sedikit dan *ensemble*-nya tidak stabil; melewati satu titik, akurasinya mendatar dan Anda hanya membayar komputasi.
 
 Skrip di bawah menyapu jumlah pohon lalu membuat grafik akurasi validasi terhadapnya. Bacalah kurvanya, jangan sekadar mengambil nilai maksimumnya. Kalau akurasinya datar sejak 50 pohon, nilai "terbaik" yang dilaporkan itu derau dan 50 adalah pilihan yang jujur: akurasi sama, lebih cepat dijalankan, lebih cepat diekspor.
 
@@ -79,7 +79,7 @@ Menyusun error matrix dari sampel latih menghasilkan akurasi resubstitusi, yang 
 
 Tumpuk ketiga prediksi sebagai band lalu ambil mode per piksel. Di tempat ketiganya sepakat, tidak ada yang berubah. Di tempat mereka berselisih, mayoritas menang dan galat khas satu model tersingkir oleh suara.
 
-Ini bekerja karena ketiga algoritmanya gagal dengan cara berbeda. Mengansambelkan tiga varian dari algoritma yang sama nyaris tidak menghasilkan apa-apa; keragamannya adalah mekanismenya, bukan jumlahnya.
+Ini bekerja karena ketiga algoritmanya gagal dengan cara berbeda. Menggabungkan tiga varian dari algoritma yang sama dalam satu *ensemble* nyaris tidak menghasilkan apa-apa; keragamannya adalah mekanismenya, bukan jumlahnya.
 
 Ada manfaat kedua yang lebih sunyi. Tempat-tempat ketiganya berselisih membentuk sebuah peta, dan peta itu adalah produk ketidakpastian yang lebih baik daripada sebagian besar produk ketidakpastian formal. Piksel yang oleh Random Forest disebut mangrove, oleh SVM disebut hutan lain, dan oleh gradient boosting disebut mangrove adalah piksel yang layak didatangi orang. Bab [-@sec-accuracy] memakainya ketika memutuskan ke mana anggaran validasi lapangan yang terbatas sebaiknya dibelanjakan.
 
@@ -135,7 +135,7 @@ Ekspor klasifikasinya ke Asset, lalu muat aset jadi itu untuk ditampilkan dan un
         "Pemungutan suara mengurangi komputasi"
       ],
       "answer": 1,
-      "why": "Keragaman adalah mekanismenya. Mengansambelkan model yang nyaris identik berarti merata ratakan galat yang nyaris identik dan nyaris tidak menghasilkan apa-apa."
+      "why": "Keragaman adalah mekanismenya. Menggabungkan model yang nyaris identik dalam *ensemble* berarti merata ratakan galat yang nyaris identik dan nyaris tidak menghasilkan apa-apa."
     },
     {
       "q": "Satu band menunjukkan kepentingan fitur yang jauh mendominasi. Reaksi yang tepat?",
