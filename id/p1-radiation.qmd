@@ -28,6 +28,12 @@ Gagasan kedua adalah **gelombang**. Gelombang seismik, bunyi, dan cahaya tunduk 
 
 Gagasan ketiga adalah **sinyal**. Setiap citra adalah pengukuran yang disampel dalam ruang dan waktu, jadi semua perangkat pengolahan sinyal langsung berlaku. Analisis Fourier memecah deret waktu menjadi siklus-siklusnya: musim tanam padi hanyalah beberapa frekuensi yang dominan. Deret Taylor membantu kita melinearkan kurva di sekitar satu titik dan memperkirakan bagaimana galat merambat. Teori *sampling* memberi tahu apa yang tidak akan pernah bisa diperlihatkan piksel 30 m. Statistika dan geostatistika lalu mengajukan pertanyaan yang jujur: apakah perbedaan ini nyata atau hanya derau, dan seberapa jauh satu pengukuran bisa mewakili tetangganya?
 
+## Alasan seorang pegiat lingkungan untuk mengukur
+
+Geofisika memberi saya metodenya; pekerjaan lingkungan memberi saya alasannya. Setiap piksel di buku ini berada di atas sistem yang menjadi sandaran hidup banyak orang: kubah gambut yang hanya menyimpan karbon selama tetap basah, sabuk mangrove yang meredam ombak sebelum sampai ke kampung, dan daerah aliran sungai yang hutannya menentukan apakah hujan berikutnya berubah menjadi banjir. Seorang pegiat lingkungan belajar berpikir dalam **siklus dan aliran** (air, karbon, hara, energi), dalam **ambang batas** yang sekali terlewati tidak bisa kembali, dan dalam **kompromi** antara apa yang dihasilkan sebuah bentang lahan hari ini dan apa yang masih bisa diberikannya esok.
+
+Penginderaan jauh membuat sistem-sistem itu bisa diukur pada skala tempat mereka benar-benar bekerja: satu DAS penuh, satu provinsi penuh, setiap tahun. Fisika memberi tahu apa yang bisa dilihat sensor. Pertanyaan lingkunganlah yang menentukan apa yang layak dilihat, dan mengapa jawabannya penting bagi orang-orang yang mungkin tidak akan pernah membaca buku ini.
+
 ## Dari warna daun sampai ton buah sawit
 
 Bisakah satelit menghitung tandan buah segar (TBS) yang akan dipanen sebuah kebun sawit? Dua puluh tahun lalu pertanyaan itu terdengar mengada-ada. Hari ini, itu adalah rantai penalaran yang setiap matanya bisa diuji:

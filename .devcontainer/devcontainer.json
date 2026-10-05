@@ -12,7 +12,7 @@
   //
   // Free accounts include 60 core hours per month. A build uses a few minutes.
 
-  "name": "Planetary-Scale Cloud GIS",
+  "name": "Flux, Pixels and Planet",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
 
   "features": {

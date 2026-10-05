@@ -1,6 +1,6 @@
 # Prakata {.unnumbered}
 
-Saya menulis skripsi dengan Earth Engine waktu masih kuliah Geofisika di Universitas Padjadjaran, di lab DRPRS. Waktu itu saya tidak menyangka beberapa baris kode yang sama akan terus menemani saya bertahun-tahun kemudian: ke sebuah *start-up* karbon di Jerman, ke hutan tanaman di Riau, ke riset bersama mitra di Singapura dan tim kehutanan di Brasil, lalu kembali duduk di ruang kuliah UNSW Sydney.
+Saya menulis skripsi dengan Earth Engine waktu masih kuliah Geofisika di Universitas Padjadjaran, di lab DRPRS. Geofisika mengajari saya mengukur yang tidak bisa disentuh; bertahun-tahun bekerja di bidang lingkungan mengajari saya apa yang layak diukur. Waktu itu saya tidak menyangka beberapa baris kode yang sama akan terus menemani saya bertahun-tahun kemudian: ke sebuah *start-up* karbon di Jerman, ke hutan tanaman di Riau, ke riset bersama mitra di Singapura dan tim kehutanan di Brasil, lalu kembali duduk di ruang kuliah UNSW Sydney.
 
 Setiap tempat itu mengajarkan hal yang tidak ada di tutorial. Peta bisa terlihat rapi tetapi tetap salah, karena angka di dalam citra tidak pernah dipahami sebagai besaran fisik. Model bisa mencapai akurasi 94 persen tetapi gagal di lapangan, karena sampelnya berdempetan. Klien tidak butuh *classifier*; mereka ingin tahu di mana, berapa banyak, dan seberapa yakin. Buku ini berisi pelajaran-pelajaran itu, ditulis dengan urutan yang dulu saya harap saya pelajari: pertama apa yang sebenarnya diukur sensor, lalu kodenya, lalu persoalan nyata yang ingin diselesaikan orang.
 
@@ -8,9 +8,11 @@ Sebagian besar isinya lahir dari pekerjaan proyek. Sebagian lagi dari ruang kuli
 
 ## Mengapa buku ini gratis
 
-Saya kuliah di UNSW dengan beasiswa LPDP (Lembaga Pengelola Dana Pendidikan), yang dibiayai oleh pembayar pajak Indonesia. Bagi saya, itu amanah yang perlu dikembalikan. Buku ini salah satu cara saya mengembalikannya: supaya mahasiswa, aparatur, dan insinyur Indonesia, juga siapa saja yang mau, bisa mempelajari pekerjaan ini tanpa beasiswa, tanpa biaya kursus, dan tanpa akun perusahaan.
+Saya beruntung bisa mempelajari pekerjaan ini langsung di proyek nyata, bersama orang-orang hebat, dengan persoalan nyata yang harus dipecahkan. Tidak semua orang mendapat kesempatan itu. Buku ini membagikannya: pengetahuan praktis yang saya kumpulkan, saya tuliskan, dan saya berikan cuma-cuma, supaya mahasiswa di Kupang, penyuluh kehutanan di Riau, atau insinyur muda di mana pun bisa membangun kemampuan yang sama dan tumbuh darinya.
 
-Kebutuhannya nyata. Indonesia punya lebih dari tujuh belas ribu pulau, dan banyak persoalan tersulitnya bersifat spasial: di mana hutan berkurang, lereng mana yang akan longsor saat hujan berikutnya, permukiman mana yang akan kebanjiran. Data satelit untuk menjawabnya sudah tersedia dan gratis. Yang masih kurang adalah orang yang terlatih mengolahnya menjadi keputusan, dan setiap insinyur geospasial yang menguasai pekerjaan ini akan menjadi pengganda.
+Buku ini bukan gelar akademik, dan tidak menggantikan program magister maupun pendidikan formal. Ini adalah pengalaman seorang praktisi yang dibuka untuk umum, supaya siapa pun yang mau menekuninya bisa menjadi spesialis SIG atau penginderaan jauh.
+
+Kebutuhannya nyata. Indonesia punya lebih dari tujuh belas ribu pulau, dan banyak persoalan tersulitnya bersifat spasial: di mana hutan berkurang, lereng mana yang akan longsor saat hujan berikutnya, permukiman mana yang akan kebanjiran. Data satelit untuk menjawabnya sudah tersedia dan gratis. Yang masih kurang adalah orang yang terlatih mengolahnya menjadi keputusan. Karena itulah buku ini gratis dan terbuka: setiap orang yang menguasai pekerjaan ini menjadi pengganda, memetakan satu kabupaten, melatih satu tim, dan membuat keputusan berikutnya lebih berdasar.
 
 ## Terima kasih
 
@@ -18,7 +20,7 @@ Di UNSW Sydney, tiga orang mendukung proses belajar saya di bidang penginderaan 
 
 ::: {.callout-tip}
 ## Edisi baca (Word)
-Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode dan hasil setiap bab: [unduh (.docx)](../downloads/planetary-scale-cloud-gis-id.docx).
+Teks dan pembahasan seluruh buku dalam satu dokumen Word, dengan tautan ke kode dan hasil setiap bab: [unduh (.docx)](../downloads/flux-pixels-planet-id.docx).
 :::
 
 ::: {.callout-note}

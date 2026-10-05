@@ -1,6 +1,6 @@
 # Preface {.unnumbered}
 
-I wrote my undergraduate thesis in Earth Engine as a Geophysics student at Universitas Padjadjaran, in the DRPRS lab. I did not know then that the same few lines of code would follow me for years: to a carbon start-up in Germany, to plantation forests in Riau, to research with partners in Singapore and forestry teams in Brazil, and finally back to a lecture hall at UNSW Sydney.
+I wrote my undergraduate thesis in Earth Engine as a Geophysics student at Universitas Padjadjaran, in the DRPRS lab. Geophysics taught me to measure what I cannot touch; years of environmental work taught me what is worth measuring. I did not know then that the same few lines of code would follow me for years: to a carbon start-up in Germany, to plantation forests in Riau, to research with partners in Singapore and forestry teams in Brazil, and finally back to a lecture hall at UNSW Sydney.
 
 Each of those places taught me something the tutorials had not. A map can look clean and still be wrong, because the numbers in the image were never understood as physics. A model can score 94 per cent and still fail in the field, because the samples sat next to each other. A client does not want a classifier; they want to know where, how much, and how sure. This book is those lessons, written down in the order I wish I had learned them: first what a sensor actually measures, then the code, then the problems people pay to have solved.
 
@@ -8,9 +8,11 @@ Most of it comes from project work. Some of it comes from the classroom, where I
 
 ## Why this book is free
 
-I studied at UNSW on a scholarship from LPDP, the Indonesia Endowment Fund for Education, paid for by Indonesian taxpayers. I count it as a privilege I owe back. This book is part of repaying it: so that any Indonesian student, officer or engineer, and anyone else who wants it, can learn this work without a scholarship, a course fee or a company account.
+I had the privilege of learning this work on real projects, next to good people, with real problems to solve. Not everyone gets that chance. This book shares it: the hands-on knowledge I have gathered, written down and given away, so that a student in Kupang, a forestry officer in Riau, a young engineer anywhere, can build the same skills and grow from them.
 
-The need is real. Indonesia has more than seventeen thousand islands, and many of its hardest problems are spatial: where forest is being lost, which hillsides will slide in the next rain, which neighbourhoods will flood. The satellite data to answer them is free. What is missing is people trained to turn it into decisions, and every geospatial engineer who learns to do this well becomes a multiplier.
+It is not a degree, and it does not replace a Master's programme or formal training. It is one practitioner's experience, made open, so that anyone willing to work through it can become a GIS or remote sensing specialist.
+
+The need is real. Indonesia has more than seventeen thousand islands, and many of its hardest problems are spatial: where forest is being lost, which hillsides will slide in the next rain, which neighbourhoods will flood. The satellite data to answer them is free. What is missing is people trained to turn it into decisions. That is why the book is free and open: every person who learns to do this well becomes a multiplier, mapping a district, training a team, and making the next decision better informed.
 
 ## Thank you
 
@@ -18,7 +20,7 @@ At UNSW Sydney, three people supported my learning in remote sensing and GIS: **
 
 ::: {.callout-tip}
 ## Reading edition (Word)
-The text and discussion of the whole book as one Word document, with a link to the code and results of every chapter: [download (.docx)](../downloads/planetary-scale-cloud-gis-en.docx).
+The text and discussion of the whole book as one Word document, with a link to the code and results of every chapter: [download (.docx)](../downloads/flux-pixels-planet-en.docx).
 :::
 
 ::: {.callout-note}

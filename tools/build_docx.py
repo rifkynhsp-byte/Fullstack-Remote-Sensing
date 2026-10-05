@@ -267,7 +267,7 @@ def render(dst, lang, quarto, pythonpath=None):
         raise SystemExit("no .docx produced")
     target = ROOT / "docs" / "downloads"
     target.mkdir(parents=True, exist_ok=True)
-    final = target / f"planetary-scale-cloud-gis-{lang}.docx"
+    final = target / f"flux-pixels-planet-{lang}.docx"
     shutil.copy(out[0], final)
     print(f"  -> {final.relative_to(ROOT)}  ({final.stat().st_size / 1e6:.1f} MB)")
     return final

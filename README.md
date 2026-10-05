@@ -1,6 +1,6 @@
-# Planetary-Scale Cloud GIS &middot; GIS Awan Skala Planet
+# Flux, Pixels and Planet &middot; Fluks, Piksel, dan Planet
 
-Source for the bilingual book *Planetary-Scale Cloud GIS: Earth Engine and GeoAI, taught the way it is actually practised*, by Rifky Nauval Hendrawan.
+Source for the bilingual book *Flux, Pixels and Planet*, by Rifky Nauval Hendrawan.
 
 Built with [Quarto](https://quarto.org). Renders an English site and an Indonesian site, published to GitHub Pages.
 

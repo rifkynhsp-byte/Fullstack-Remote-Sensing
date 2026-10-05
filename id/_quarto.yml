@@ -27,8 +27,7 @@ project:
 lang: id
 
 book:
-  title: "GIS Awan Skala Planet"
-  subtitle: "Earth Engine dan GeoAI, diajarkan seperti yang benar benar dipraktikkan"
+  title: "Fluks, Piksel, dan Planet"
   author:
     - name: "Rifky Nauval Hendrawan"
       affiliation: "Senior Remote Sensing Specialist, APRIL · Master of Engineering Science, UNSW Sydney (2026)"
@@ -227,7 +226,7 @@ format:
           <meta name="theme-color" content="#0f6b57">
           <meta name="apple-mobile-web-app-capable" content="yes">
           <meta name="apple-mobile-web-app-status-bar-style" content="default">
-          <meta name="apple-mobile-web-app-title" content="Cloud GIS">
+          <meta name="apple-mobile-web-app-title" content="Flux Pixels Planet">
           <meta name="mobile-web-app-capable" content="yes">
     include-after-body:
       - text: |

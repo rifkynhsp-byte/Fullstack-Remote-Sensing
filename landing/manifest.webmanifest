@@ -1,6 +1,6 @@
 {
-  "name": "Planetary-Scale Cloud GIS · GIS Awan Skala Planet",
-  "short_name": "Cloud GIS",
+  "name": "Flux, Pixels and Planet · Fluks, Piksel, dan Planet",
+  "short_name": "Flux Pixels Planet",
   "description": "Google Earth Engine and GeoAI for environmental monitoring. Physics first, then code. English and Bahasa Indonesia.",
 
   "start_url": "./en/",

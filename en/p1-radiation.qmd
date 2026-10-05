@@ -28,6 +28,12 @@ The second idea is the **wave**. Seismic waves, sound and light all obey the sam
 
 The third idea is the **signal**. Every image is a measurement sampled in space and time, so the tools of signal processing apply directly. Fourier analysis splits a series into its cycles: the seasons of a rice field are a few dominant frequencies. A Taylor expansion lets us linearise a curve near a point and estimate how errors propagate. Sampling theory tells us what a 30 m pixel can never show. Statistics and geostatistics then ask the honest questions: is this difference real or noise, and how far does a measurement speak for its neighbours?
 
+## An environmentalist's reason to measure
+
+Geophysics gave me the method; environmental work gave me the reason. Every pixel in this book sits on a system that people depend on: a peat dome that stores carbon only while it stays wet, a mangrove belt that breaks the waves before they reach a village, a watershed whose forest decides whether the next rain becomes a flood. An environmentalist learns to think in **cycles and flows** (water, carbon, nutrients, energy), in **thresholds** that, once crossed, do not come back, and in **trade-offs** between what a landscape produces today and what it can still provide tomorrow.
+
+Remote sensing is how those systems become measurable at the scale they actually work: whole catchments, whole provinces, every year. The physics tells us what the sensor can see. The environmental question tells us what is worth looking at, and why the answer matters to someone who will never read this book.
+
 ## From a leaf's colour to a tonne of fruit
 
 Can a satellite count the fresh fruit bunches an oil palm estate will harvest? Twenty years ago that question sounded unrealistic. Today it is a chain of inference, each link testable:
