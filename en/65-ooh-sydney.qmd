@@ -4,8 +4,8 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Run this chapter**
 
-- `ch65_ooh_data`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_data.ipynb)
-- `ch65_ooh_sydney`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_sydney.ipynb)
+- `ch65_ooh_data` &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_data.ipynb)
+- `ch65_ooh_sydney` &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch65_ooh_sydney.ipynb)
 
 This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
 

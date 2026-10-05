@@ -4,7 +4,7 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Jalankan bab ini**
 
-- `ch22_site_selection`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch22_site_selection.ipynb)
+- `ch22_site_selection` &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch22_site_selection.ipynb)
 
 Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
 

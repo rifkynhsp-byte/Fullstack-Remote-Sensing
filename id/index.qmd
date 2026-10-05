@@ -78,7 +78,7 @@ Komentar di dalam skrip itu adalah bagian dari pengajaran, bukan hiasan. Ketika 
 
 ::: {.callout-tip}
 ## Menjalankan kode
-Buka [code.earthengine.google.com](https://code.earthengine.google.com), tempel, tekan **Run**. Akun non komersial gratis mencukupi untuk semua bab kecuali bagian ekspor berat di Bab [-@sec-apps]. Lampiran A membahas pendaftaran dan alternatif Python.
+[![Tambahkan semua skrip buku ke Code Editor](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; Sekali klik, skrip setiap bab masuk ke panel Scripts di Code Editor Earth Engine Anda, di bagian *Reader*. Buka salah satunya lalu tekan **Run**. Setiap bab juga punya tombol **Buka di Code Editor** dan **Buka di Colab** sendiri. Akun nonkomersial gratis mencukupi untuk semua bab kecuali bagian ekspor berat di Bab [-@sec-apps]. Lampiran A membahas cara mendaftar dan alternatif Python.
 :::
 
 

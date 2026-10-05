@@ -4,7 +4,7 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Jalankan bab ini**
 
-- `ch70_statistics`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch70_statistics.ipynb)
+- `ch70_statistics` &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch70_statistics.ipynb)
 
 Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.
 

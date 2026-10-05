@@ -19,14 +19,20 @@ ROOT = Path(__file__).resolve().parent.parent
 GEE = "https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:{}"
 COLAB = "https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/{}.ipynb"
 IJB_APP = "https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/IndrajaBuana"
+ACCEPT = "https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing"
+COLAB_BADGE = "https://colab.research.google.com/assets/colab-badge.svg"
+GEE_BADGE = "https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8"
+REPO_BADGE = "https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853"
 START, END = "<!-- run-links -->", "<!-- /run-links -->"
 TEXT = {
     "en": dict(title="Run this chapter", gee="Open in Code Editor", colab="Open in Colab",
                py_only="This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.",
-               app="Open the IJB app in the Code Editor", setup="First time? Appendix A shows how to sign in to Earth Engine and Colab."),
+               app="Open the IJB app in the Code Editor", setup="First time? Appendix A shows how to sign in to Earth Engine and Colab.",
+               repo="Add all book scripts to your Code Editor (once)"),
     "id": dict(title="Jalankan bab ini", gee="Buka di Code Editor", colab="Buka di Colab",
                py_only="Data bab ini tidak tersedia di Earth Engine, jadi bab ini dijalankan dengan Python (Colab) saja.",
-               app="Buka aplikasi IJB di Code Editor", setup="Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab."),
+               app="Buka aplikasi IJB di Code Editor", setup="Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.",
+               repo="Tambahkan semua skrip buku ke Code Editor Anda (sekali saja)"),
 }
 
 
@@ -60,18 +66,20 @@ def box(lang: str, stems: list[str], ijb: bool, video: str | None = None) -> str
     for s in stems:
         links = []
         if (ROOT / "scripts/en" / f"{s}.js").exists():
-            links.append(f"[{t['gee']}]({GEE.format(s)})"); any_js = True
+            links.append(f"[![{t['gee']}]({GEE_BADGE})]({GEE.format(s)})"); any_js = True
         if (ROOT / "notebooks" / f"{s}.ipynb").exists():
-            links.append(f"[{t['colab']}]({COLAB.format(s)})")
+            links.append(f"[![{t['colab']}]({COLAB_BADGE})]({COLAB.format(s)})")
         if links:
-            lines.append(f"- `{s}`: " + " · ".join(links))
+            lines.append(f"- `{s}` &nbsp; " + " &nbsp; ".join(links))
     if ijb:
         lines.append(f"- [{t['app']}]({IJB_APP})"); any_js = True
-    if not any_js:
-        lines += ["", t["py_only"]]
+    if any_js:
+        lines += ["", f"[![{t['repo']}]({REPO_BADGE})]({ACCEPT}) &nbsp; *{t['setup']}*"]
+    else:
+        lines += ["", t["py_only"], "", f"*{t['setup']}*"]
     if video:
         lines += ["", f"{{{{< video {video} >}}}}"]
-    lines += ["", f"*{t['setup']}*", ":::", END]
+    lines += [":::", END]
     return "\n".join(lines)
 
 

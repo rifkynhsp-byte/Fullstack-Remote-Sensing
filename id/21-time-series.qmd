@@ -4,11 +4,11 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Jalankan bab ini**
 
-- `ch21_harmonic_alerts`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_harmonic_alerts) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_harmonic_alerts.ipynb)
-- `ch21_dynamic_world_change`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_dynamic_world_change) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_dynamic_world_change.ipynb)
-- `ch21_palu_liquefaction`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_palu_liquefaction) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_palu_liquefaction.ipynb)
+- `ch21_harmonic_alerts` &nbsp; [![Buka di Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_harmonic_alerts) &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_harmonic_alerts.ipynb)
+- `ch21_dynamic_world_change` &nbsp; [![Buka di Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_dynamic_world_change) &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_dynamic_world_change.ipynb)
+- `ch21_palu_liquefaction` &nbsp; [![Buka di Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch21_palu_liquefaction) &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch21_palu_liquefaction.ipynb)
 
-*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+[![Tambahkan semua skrip buku ke Code Editor Anda (sekali saja)](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; *Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
 :::
 <!-- /run-links -->
 

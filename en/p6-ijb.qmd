@@ -4,10 +4,10 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Run this chapter**
 
-- `ch00g_ijb_cases`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00g_ijb_cases.ipynb)
+- `ch00g_ijb_cases` &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00g_ijb_cases.ipynb)
 - [Open the IJB app in the Code Editor](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/IndrajaBuana)
 
-*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+[![Add all book scripts to your Code Editor (once)](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; *First time? Appendix A shows how to sign in to Earth Engine and Colab.*
 :::
 <!-- /run-links -->
 

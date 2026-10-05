@@ -4,12 +4,12 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Run this chapter**
 
-- `ch36_thesis_starter`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36_thesis_starter) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36_thesis_starter.ipynb)
-- `ch36b_bank_carbon`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36b_bank_carbon.ipynb)
-- `ch36c_bank_lidar_hazards`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36c_bank_lidar_hazards) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36c_bank_lidar_hazards.ipynb)
-- `ch36d_bank_methods`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36d_bank_methods.ipynb)
+- `ch36_thesis_starter` &nbsp; [![Open in Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36_thesis_starter) &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36_thesis_starter.ipynb)
+- `ch36b_bank_carbon` &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36b_bank_carbon.ipynb)
+- `ch36c_bank_lidar_hazards` &nbsp; [![Open in Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch36c_bank_lidar_hazards) &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36c_bank_lidar_hazards.ipynb)
+- `ch36d_bank_methods` &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch36d_bank_methods.ipynb)
 
-*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+[![Add all book scripts to your Code Editor (once)](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; *First time? Appendix A shows how to sign in to Earth Engine and Colab.*
 :::
 <!-- /run-links -->
 

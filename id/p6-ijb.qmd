@@ -4,10 +4,10 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Jalankan bab ini**
 
-- `ch00g_ijb_cases`: [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00g_ijb_cases.ipynb)
+- `ch00g_ijb_cases` &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch00g_ijb_cases.ipynb)
 - [Buka aplikasi IJB di Code Editor](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/IndrajaBuana)
 
-*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+[![Tambahkan semua skrip buku ke Code Editor Anda (sekali saja)](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; *Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
 :::
 <!-- /run-links -->
 

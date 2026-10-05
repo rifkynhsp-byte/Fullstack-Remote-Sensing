@@ -4,10 +4,10 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Jalankan bab ini**
 
-- `ch34_bushfire_wollemi`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch34_bushfire_wollemi) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch34_bushfire_wollemi.ipynb)
-- `ch37_peat_fire`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch37_peat_fire) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch37_peat_fire.ipynb)
+- `ch34_bushfire_wollemi` &nbsp; [![Buka di Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch34_bushfire_wollemi) &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch34_bushfire_wollemi.ipynb)
+- `ch37_peat_fire` &nbsp; [![Buka di Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch37_peat_fire) &nbsp; [![Buka di Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch37_peat_fire.ipynb)
 
-*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+[![Tambahkan semua skrip buku ke Code Editor Anda (sekali saja)](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; *Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
 :::
 <!-- /run-links -->
 

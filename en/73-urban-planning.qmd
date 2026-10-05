@@ -4,7 +4,7 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Run this chapter**
 
-- `ch73_urban_planning`: [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch73_urban_planning.ipynb)
+- `ch73_urban_planning` &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch73_urban_planning.ipynb)
 
 This chapter's data is not in Earth Engine, so it runs in Python (Colab) only.
 

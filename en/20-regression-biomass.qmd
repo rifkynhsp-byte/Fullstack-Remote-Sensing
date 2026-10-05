@@ -4,9 +4,9 @@
 ::: {.callout-tip .run-links appearance="simple" icon="false"}
 **Run this chapter**
 
-- `ch20_mangrove_biomass`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch20_mangrove_biomass) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch20_mangrove_biomass.ipynb)
+- `ch20_mangrove_biomass` &nbsp; [![Open in Code Editor](https://img.shields.io/badge/Open%20in-Earth%20Engine%20Code%20Editor-1a73e8)](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch20_mangrove_biomass) &nbsp; [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch20_mangrove_biomass.ipynb)
 
-*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+[![Add all book scripts to your Code Editor (once)](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; *First time? Appendix A shows how to sign in to Earth Engine and Colab.*
 :::
 <!-- /run-links -->
 

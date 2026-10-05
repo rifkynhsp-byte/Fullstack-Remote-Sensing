@@ -78,7 +78,7 @@ The comments inside those scripts are the teaching, not decoration. Where a line
 
 ::: {.callout-tip}
 ## Running the code
-Open [code.earthengine.google.com](https://code.earthengine.google.com), paste, press **Run**. A free non commercial account covers every chapter except the export heavy parts of Chapter [-@sec-apps]. Appendix A covers registration and the Python alternative.
+[![Add all book scripts to your Code Editor](https://img.shields.io/badge/Add%20all%20book%20scripts-to%20your%20Code%20Editor-34a853)](https://code.earthengine.google.com/?accept_repo=users/rifkynauvalhsp/Fullstack-Remote-Sensing) &nbsp; One click adds every chapter's script to the Scripts panel of your Earth Engine Code Editor, under *Reader*. Open one and press **Run**. Each chapter also has its own **Open in Code Editor** and **Open in Colab** buttons. A free non commercial account covers every chapter except the export heavy parts of Chapter [-@sec-apps]. Appendix A covers registration and the Python alternative.
 :::
 
 
