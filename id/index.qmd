@@ -86,6 +86,28 @@ Komentar di dalam skrip itu adalah bagian dari pengajaran, bukan hiasan. Ketika 
 
 Posisi baca, kemajuan per bab, skor kuis, dan catatan Anda tersimpan di peramban dan dirangkum di [dasbor kemajuan](dashboard.qmd). Tombol **Ajukan pertanyaan** di setiap halaman mengirim pertanyaan Anda kepada saya lengkap dengan babnya; pertanyaan yang kurang rapi tetap lebih baik daripada tertahan seminggu.
 
+## Seberapa akurat peta di buku ini?
+
+Setiap angka di buku ini dihasilkan oleh kode yang dicetak di sebelahnya, dari data publik, pada tanggal halaman itu dibangun. Karena itu setiap hasil bisa diperiksa. Namun, bisa diperiksa belum tentu siap dipakai untuk mengambil keputusan, dan perbedaannya perlu dijelaskan dengan tepat.
+
+**Arti angka akurasi di sini.** Sebagian besar akurasi di buku ini mengukur kesesuaian dengan peta acuan (ESA WorldCover, Dynamic World, Global Mangrove Watch, atau inventaris yang sudah terbit), bukan kesesuaian dengan kondisi lapangan. Jika sebuah bab memakai peta global sebagai label pengganti, bab itu menyebutkannya, dan angka yang dilaporkan adalah tingkat kesesuaian antara dua peta. Hanya bab yang memakai plot lapangan, pohon tebangan, data pos duga air, atau statistik resmi yang membandingkan dengan hasil pengukuran, dan sumbernya selalu disebutkan.
+
+**Kapan angkanya bisa bergeser.** Menjalankan ulang sebuah bab beberapa bulan kemudian bisa menghasilkan angka yang sedikit berbeda: Dynamic World, GEDI, dan *embedding* diproses ulang, citra baru terus masuk, dan *random seed* memang dikunci tetapi datanya tidak. Selisih beberapa persen itu wajar. Kesimpulan yang berubah tidak wajar, dan layak dilaporkan.
+
+**Di mana metodenya paling lemah di Indonesia.** Tajuk yang rapat menyembunyikan batang dan mengaburkan batas tajuk, awan yang terus-menerus menipiskan rekaman optis, petak lahan petani kecil lebih sempit daripada piksel 10 m, dan produk global sebagian besar dilatih di tempat lain. Bab-bab di buku ini menunjukkan kegagalan semacam itu, bukan menyembunyikannya.
+
+**Apa peta-peta ini, dan apa yang bukan.** Peta-peta ini adalah demonstrasi metode yang berfungsi dan sengaja dibuat agar bisa diaudit. Peta-peta ini bukan produk tersertifikasi untuk sertifikat tanah, kredit karbon, penegakan hukum, penetapan premi asuransi, atau desain rekayasa. Untuk keperluan itu, peta ini adalah titik awal.
+
+**Apa yang diperlukan agar siap untuk keputusan.** Jalurnya sudah jelas, dan setiap langkahnya ada di buku ini:
+
+1. **Data acuan lokal yang diambil dengan benar.** Sampel acak terstratifikasi dari titik lapangan atau citra resolusi tinggi, lalu estimasi luas beserta selang kepercayaannya (Bab [-@sec-accuracy]). Satu langkah ini memberi dampak lebih besar daripada mengganti model apa pun.
+2. **Validasi yang tidak bisa menipu.** Validasi silang berbasis blok spasial dan area uji yang independen (Bab [-@sec-sampling]); laporkan galat yang akan muncul di tempat baru, bukan galat di sebelah data latih.
+3. **Sensor yang sesuai dengan objeknya.** Citra drone atau LiDAR untuk pohon tunggal dan petak lahan kecil, radar di wilayah yang awannya tidak pernah bersih, dan plot lapangan untuk biomassa (Bagian XV dan VIII).
+4. **Kalibrasi dengan pengukuran.** Catatan pabrik kelapa sawit untuk hasil panen, pos duga air untuk banjir, kayu yang diukur per batang untuk volume, tabel sensus untuk penduduk: setiap model di buku ini membaik begitu satu pengukuran lokal ditambahkan.
+5. **Ketidakpastian ikut diserahkan.** Rentang nilai, peluang, atau kelas keyakinan di samping setiap angka, beserta asumsinya, ditulis di tempat yang akan dibaca pengambil keputusan.
+
+Menemukan angka yang tampak keliru? Gunakan tombol **Ajukan pertanyaan** di halaman itu. Laporan kesalahan adalah kontribusi, dan perbaikannya akan dicatat beserta tanggalnya di bab tersebut.
+
 ## Konvensi
 
 ::: {.callout-note}
@@ -106,6 +128,11 @@ Titik di mana kode yang secara teknis benar tetap menghasilkan peta yang tidak d
 ::: {.callout-tip}
 ## Dari lapangan
 Hal yang hanya muncul pada pekerjaan operasional, biasanya dengan cara yang menyakitkan.
+:::
+
+::: {.callout-tip appearance="simple" icon="false"}
+**Jalankan bab ini**
+Kotak di bawah judul setiap bab: buka kode bab itu di Code Editor Earth Engine atau di Colab, cukup sekali klik.
 :::
 
 ## Ucapan terima kasih

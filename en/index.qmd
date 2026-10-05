@@ -86,6 +86,28 @@ The comments inside those scripts are the teaching, not decoration. Where a line
 
 Your reading position, chapter progress, quiz scores and notes are kept in your browser and gathered on the [progress dashboard](dashboard.qmd). The **Ask a question** button on every page sends your question to me with the chapter attached; a badly worded question is better than a week stuck.
 
+## How accurate are the maps in this book?
+
+Every number in this book was produced by the code printed next to it, on public data, on the date the page was built. That makes every result checkable. It does not make every result decision-grade, and it is worth being precise about the difference.
+
+**What an accuracy figure here means.** Most accuracies in the book measure agreement with a reference map (ESA WorldCover, Dynamic World, Global Mangrove Watch, a published inventory), not agreement with the ground. Where a chapter uses a global map as stand-in labels, it says so, and the number it reports is how well two maps agree. Only chapters with field plots, felled trees, gauge records or official statistics compare against measurements, and they name the source.
+
+**Where the numbers move.** Rerunning a chapter months later can give slightly different figures: Dynamic World, GEDI and the embeddings are reprocessed, new scenes arrive, and random seeds are fixed but the data under them are not. Differences of a few per cent are expected; a different conclusion is not, and is worth reporting.
+
+**Where the methods are weakest in Indonesia.** Closed canopy hides stems and blurs crowns; persistent cloud thins the optical record; smallholder mosaics are smaller than a 10 m pixel; global products are trained mostly elsewhere. The chapters show these failures rather than hiding them.
+
+**What the maps are, and are not.** They are working demonstrations of methods, built to be audited. They are not certified products for land titles, carbon credits, legal enforcement, insurance pricing or engineering design. For those, they are the starting point.
+
+**What it takes to make them decision-grade.** The path is well known, and each step is in the book:
+
+1. **Local reference data, sampled properly.** A stratified random sample of field or high-resolution reference points, and area estimates with confidence intervals (Chapter [-@sec-accuracy]). This single step does more than any model change.
+2. **Validation that cannot flatter.** Spatially blocked cross-validation and an independent test area (Chapter [-@sec-sampling]); report the error you would get in a new place, not the error next door.
+3. **The right sensor for the object.** Drone imagery or LiDAR for single trees and small fields, radar where cloud never clears, field plots for biomass (Parts XV and VIII).
+4. **Calibration against measurements.** Mill records for yield, gauges for floods, scaled logs for volume, census tables for people: every model in the book improves when one local measurement is added.
+5. **Uncertainty in the deliverable.** A range, a probability or a confidence class next to every number, and the assumptions stated where a decision-maker will read them.
+
+Found a number that looks wrong? Use **Ask a question** on that page. A reported error is a contribution, and the correction will be dated in the chapter.
+
 ## Conventions
 
 ::: {.callout-note}
@@ -106,6 +128,11 @@ A point where technically valid code still produces a scientifically indefensibl
 ::: {.callout-tip}
 ## From the field
 Something that only shows up in operational work, usually the hard way.
+:::
+
+::: {.callout-tip appearance="simple" icon="false"}
+**Run this chapter**
+The box under every chapter title: open the chapter's code in the Earth Engine Code Editor or in Colab, in one click.
 :::
 
 ## Acknowledgements
