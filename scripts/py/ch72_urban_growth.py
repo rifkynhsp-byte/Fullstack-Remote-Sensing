@@ -1,6 +1,9 @@
 #| title: Urban growth and population: fifty years of Indonesian cities (Python)
 #| description: Measures how Indonesia urbanised from 1975 to 2030 with the GHSL degree of urbanisation, animates Jabodetabek's built-up growth, draws its sprawl as a radial profile, scores twelve cities on SDG 11.3.1 (land consumption against population growth), trains an urban growth model and applies it in Earth Engine, and maps 2016-2023 densification from Google Open Buildings.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 72 | Urban growth: where Indonesian cities grew, how fast, and where next
 

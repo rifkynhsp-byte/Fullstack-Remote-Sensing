@@ -1,6 +1,9 @@
 //| title: Does the benefit outweigh the loss?
 //| description: The forest footprint of nickel mining at Pomalaa since 2001, the carbon it released from GEDI biomass, and the break-even benefit per hectare at stated carbon prices and service values.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 63 | Does the benefit outweigh the loss?
  * ---------------------------------------------------------------------------

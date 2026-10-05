@@ -1,6 +1,9 @@
 //| title: Radar water through the seasons, middle Mahakam
 //| description: Sentinel-1 VV, speckle filtered and thresholded, 2017 to 2024: water frequency and flooded area over time.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 10 | The sensor that sees through the wet season
  * ---------------------------------------------------------------------------

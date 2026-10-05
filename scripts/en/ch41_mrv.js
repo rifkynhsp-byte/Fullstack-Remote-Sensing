@@ -1,6 +1,9 @@
 //| title: Measurement, Reporting and Verification, end to end
 //| description: Activity data from two forest-loss maps, an emission factor from GEDI biomass, and annual emissions for Tebo, Jambi.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 41 | Measurement, Reporting and Verification, done once, end to end
  * ---------------------------------------------------------------------------

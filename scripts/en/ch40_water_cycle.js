@@ -1,6 +1,9 @@
 //| title: The water balance of a river basin, every term from space
 //| description: Precipitation, evapotranspiration, runoff and storage change for the Kapuas basin, 2003-2023, and where the water yield comes from.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 40 | The water balance of a river basin, every term from space
  * ---------------------------------------------------------------------------

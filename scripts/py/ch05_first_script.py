@@ -1,6 +1,9 @@
 #| title: Your first Earth Engine script (Python)
 #| description: The same first script as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 5 | Load a global elevation model, ask what it is, and draw it.
 

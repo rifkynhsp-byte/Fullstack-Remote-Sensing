@@ -1,6 +1,9 @@
 #| title: Transit service and access in Jakarta from GTFS (Python)
 #| description: Reads the public TransJakarta GTFS feed, turns its frequency-based timetable into buses per hour per route and per stop, and combines it with WorldPop to model what share of Jakarta's residents live within a walk of frequent service.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 67 | What a timetable says about a city
 

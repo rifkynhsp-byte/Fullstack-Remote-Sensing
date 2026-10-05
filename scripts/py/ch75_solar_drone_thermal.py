@@ -1,6 +1,9 @@
 #| title: Solar plant inspection from a thermal drone (Python)
 #| description: Every PV module in 2,500 radiometric infrared frames from a drone flight over a real PV plant is segmented, compared with its neighbours in the same frame, and flagged when it runs hot as a whole (a substring or module fault) or has a hot spot (a cell or junction-box fault); the flagged frames are mapped from the drone's GPS.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 75 | Which modules run hot?
 

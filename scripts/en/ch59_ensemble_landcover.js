@@ -1,6 +1,9 @@
 //| title: Many models, one map, and the validation that tells the truth
 //| description: Ten plantation-landscape classes in Riau from satellite embeddings and terrain: three Earth Engine classifiers, a majority vote, and where the models agree.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 59 | Many models, one map, and the validation that tells the truth
  * ---------------------------------------------------------------------------

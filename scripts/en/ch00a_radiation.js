@@ -1,6 +1,9 @@
 //| title: Energy, waves and the atmosphere
 //| description: Measure the atmosphere yourself: the same Sentinel-2 overpass over Jakarta before (Level-1C) and after (Level-2A) atmospheric correction, band by band.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * PRINCIPLES P1 | What the atmosphere does to a satellite measurement
  * ---------------------------------------------------------------------------

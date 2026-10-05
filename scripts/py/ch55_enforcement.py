@@ -1,6 +1,9 @@
 #| title: Satellite evidence for policy enforcement (Python)
 #| description: Two enforcement cases from public data. Forest clearing inside Gunung Leuser National Park year by year, with a dated before/after evidence package for the largest recent clearing; and new bare ground and turbid ponds along rivers in Merangin, Jambi, the signature of unlicensed gold mining, as a list of places to inspect.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 55 | From a map to a case file.
 

@@ -1,6 +1,9 @@
 //| title: Training patches out, a Random Forest baseline in (Code Editor)
 //| description: Build the Mahakam Delta image and label, score an Earth Engine Random Forest on the held-out block, and export the same area as TFRecord patches for PyTorch or TensorFlow.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 31 | The Earth Engine half of a deep learning job
  * ---------------------------------------------------------------------------

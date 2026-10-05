@@ -1,6 +1,9 @@
 #| title: Everything GEDI measures: height, layers, cover and biomass (Python)
 #| description: GEDI's full product family over a Jambi landscape: relative height profiles (L2A), cover, plant area and vertical leaf density (L2B), foliage height diversity, and biomass (L4A), compared for intact forest, degraded forest, oil palm and other tree crops.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 47 | One laser shot, many numbers.
 

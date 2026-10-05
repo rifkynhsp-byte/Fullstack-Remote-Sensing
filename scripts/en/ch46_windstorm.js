@@ -1,6 +1,9 @@
 //| title: Wind damage, separated from the season
 //| description: Cyclone Seroja's damage to forest on Rote and neighbouring islands, as a canopy-water anomaly against a baseline year, checked with Sentinel-1.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 46 | Wind damage, separated from the season
  * ---------------------------------------------------------------------------

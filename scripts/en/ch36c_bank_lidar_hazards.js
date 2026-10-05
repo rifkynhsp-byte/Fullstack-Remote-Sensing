@@ -1,6 +1,9 @@
 //| title: Thesis starters 8, 10, 11 and 12: canopy height, landslide transfer, footprints and radar
 //| description: The Earth Engine parts of starters 8, 10, 11 and 12: two canopy height maps compared, a landslide model trained west and tested east, two building-footprint datasets, and radar inside and outside the Iburi landslides.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 36 | Starters 7 to 12, the Earth Engine parts
  * ---------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 //| title: Peat, drought and fire
 //| description: Peat extent, burned area on and off peat in El Niño years, and monthly fire against rainfall in Central Kalimantan, all from open data.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 37 | Drained peat dries, dry peat burns.
  * ---------------------------------------------------------------------------

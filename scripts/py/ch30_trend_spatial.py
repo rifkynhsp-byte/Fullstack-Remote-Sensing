@@ -1,6 +1,9 @@
 #| title: Trends and spatial autocorrelation (Python)
 #| description: A per-pixel Sen's slope map of land surface temperature over West Java, one pixel's trend with a bootstrap interval, and a semivariogram.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 30 | Two statistics that satellite data needs more than most:
 a robust trend (Sen's slope with a Mann-Kendall test) and a check of how far

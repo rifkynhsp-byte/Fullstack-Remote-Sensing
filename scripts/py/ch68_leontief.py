@@ -1,6 +1,9 @@
 #| title: How a spending shock travels through Indonesia's economy (Python)
 #| description: Builds the Leontief input-output model for Indonesia from the open WIOD national table, computes output, value-added, employment and import multipliers and the backward and forward linkages of every sector, follows a construction shock round by round, and draws the results as a heatmap, stacked rounds, lollipops, a key-sector quadrant, a radar chart and a dumbbell chart.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 68 | How a spending shock travels through an economy
 

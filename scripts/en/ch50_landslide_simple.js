@@ -1,6 +1,9 @@
 //| title: The simplest landslide map worth making
 //| description: A weighted overlay of slope, rain and land cover for West Java, tested against the NASA Global Landslide Catalog and the mapped Iburi 2018 inventory.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 50 | The simplest landslide map worth making
  * ---------------------------------------------------------------------------

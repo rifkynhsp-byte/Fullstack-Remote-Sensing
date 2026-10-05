@@ -1,6 +1,9 @@
 #| title: Mangrove growth and degradation, year by year (Python)
 #| description: Segara Anakan lagoon, Cilacap. A random forest trained on Global Mangrove Watch 2020 and satellite embeddings maps mangrove every year from 2017 to 2024; gain and loss between the ends; inside stable mangrove, a Sentinel-2 moisture trend separates degrading from improving canopy; and Dynamic World says what replaced the lost mangrove.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 62 | Is the mangrove growing or degrading?
 

@@ -1,6 +1,9 @@
 #| title: IJB step by step: every module and four events, from the app's own engine (Python)
 #| description: Renders the results the IJB app itself produced for one landscape run through every module (Kota Besi, Kotawaringin Timur: composite, 10-class model vs Dynamic World, GEDI canopy height and its scatter chart, height per desa, plantation age, disturbance year, K-Means) and for four real cases (the 2024 Demak flood, the 2023 Ogan Komering Ilir fires on peat, landslide susceptibility across West Java, and land change around the new capital), from the saved Earth Engine objects of each run.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P6 | IJB step by step
 

@@ -1,6 +1,9 @@
 //| title: Accuracy assessment and area estimation
 //| description: Confusion matrix, per class metrics, independent validation and area with error bars.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 17 | Proving the map is worth trusting
  * ---------------------------------------------------------------------------

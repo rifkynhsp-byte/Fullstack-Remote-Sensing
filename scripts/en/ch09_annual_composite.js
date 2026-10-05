@@ -1,6 +1,9 @@
 //| title: A cloud free annual composite
 //| description: Mask cloud per pixel, add indices, and reduce a year of imagery to one image.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 9 | From a stack of cloudy scenes to one clean image
  * ---------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 //| title: Three ecosystem services, one landscape, one scenario
 //| description: Water yield, carbon storage and habitat quality for the Bandung basin, their hotspots, and what a cropland expansion scenario costs.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 43 | Three services, one landscape, one scenario
  * ---------------------------------------------------------------------------

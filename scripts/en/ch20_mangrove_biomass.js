@@ -1,6 +1,9 @@
 //| title: Mangrove biomass from 45 field plots
 //| description: Three regression models for above ground biomass, each tested by leaving one plot out.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 20 | From a class to a quantity
  * ---------------------------------------------------------------------------

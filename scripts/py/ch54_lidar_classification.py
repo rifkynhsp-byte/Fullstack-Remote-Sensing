@@ -1,6 +1,9 @@
 #| title: Automatic LiDAR point classification (Python)
 #| description: Ground points found automatically with a progressive morphological filter, vegetation split by height above ground, and the result scored against the classes delivered with the lidR example data.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 54 | Teaching the computer which points are ground.
 

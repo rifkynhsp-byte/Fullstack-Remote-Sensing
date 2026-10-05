@@ -1,6 +1,9 @@
 #| title: Accuracy you can defend, and area with an error bar (Python)
 #| description: The same assessment as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 17 | Confusion matrix, per class accuracy, and an area estimate
 adjusted for map error with a 95 % interval (Olofsson et al. 2014), in Python.

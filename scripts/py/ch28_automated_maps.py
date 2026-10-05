@@ -1,6 +1,9 @@
 #| title: Print-ready maps and an automated report (Python)
 #| description: A map layout built in code, repeated for every district, bound into one PDF report.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 28 | From an Earth Engine image to a map a client can print, then to
 a report that builds itself.

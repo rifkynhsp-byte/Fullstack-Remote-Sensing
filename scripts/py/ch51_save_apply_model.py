@@ -1,6 +1,9 @@
 #| title: Train once, save, apply anywhere: an Earth Engine model as an asset (Python)
 #| description: A Random Forest trained near Bandung is saved as an Earth Engine asset, loaded again, and applied in four other places, with agreement measured in each. The mechanics of reuse, and the limits of transfer.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 51 | A model you can hand to someone else.
 

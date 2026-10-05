@@ -1,6 +1,9 @@
 //| title: Library: the analysis-ready feature stack (chapter 10)
 //| description: getAnalysisReadyData(year, aoi): Sentinel-2, Sentinel-1 and terrain in one image. Used by chapters 15 to 18 through require().
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * LIBRARY | lib_stack
  * The feature stack built in chapter "Synthetic Aperture Radar Fusion", as a module:

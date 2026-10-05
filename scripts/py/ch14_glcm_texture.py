@@ -1,6 +1,9 @@
 #| title: Texture from the grey level co-occurrence matrix (Python)
 #| description: The same texture workflow as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 14 | Quantise one band, compute GLCM, keep four measures, and test
 whether they separate anything. In Python.

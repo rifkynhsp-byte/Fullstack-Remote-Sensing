@@ -1,6 +1,9 @@
 #| title: Finding and inspecting a scene (Python)
 #| description: The same search as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 8 | Filter the archive, pick the clearest scene, look at it.
 

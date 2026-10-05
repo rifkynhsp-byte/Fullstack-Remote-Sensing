@@ -1,6 +1,9 @@
 #| title: Land cover in 2030 and 2035, predicted with machine learning (Python)
 #| description: A random forest learns how Bandung Raya's land cover changed over five years, is tested by predicting 2025 from 2020, and is then run forward to 2030 and 2035.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 76 | Land cover in 2030 and 2035, predicted with machine learning
 

@@ -1,6 +1,9 @@
 #| title: A forest pest outbreak from space: bark beetle in the Harz (Python)
 #| description: Spruce dieback after the 2018 drought in the Harz mountains, Germany. Every conifer pixel's summer canopy moisture (Sentinel-2 NDMI) is compared with 2017; the first year it falls clearly below gives the onset of stress, mapped as a spreading wave and compared with the year Hansen records the trees as lost.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 58 | Seeing an outbreak spread, one summer at a time.
 

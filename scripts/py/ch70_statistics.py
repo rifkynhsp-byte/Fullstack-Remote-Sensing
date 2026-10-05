@@ -1,6 +1,9 @@
 #| title: Statistics every remote sensing analyst needs (Python)
 #| description: One question - how much hotter is built-up land in Greater Bandung, and does greenery cool it? - answered with central tendency and spread, outliers by IQR and z-score, the central limit theorem, confidence intervals and the bootstrap, t, Mann-Whitney and Kolmogorov-Smirnov tests, and regression with its diagnostics.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 70 | Statistics every remote sensing analyst needs
 

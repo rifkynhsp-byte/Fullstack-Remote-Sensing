@@ -1,6 +1,9 @@
 #| title: Harmonic regression, radar change and alert rules on real data (Python)
 #| description: Fits a harmonic model to eight years of Sentinel-2 NDVI at a pixel cleared for the new capital and raises an alert with a persistence rule; applies the same model to every pixel of the core zone, compares it with Sentinel-1 log-ratio change, and measures what a minimum mapping unit and a stable test year do to the change map.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 21 | From fitted seasons to change alerts, on real data
 

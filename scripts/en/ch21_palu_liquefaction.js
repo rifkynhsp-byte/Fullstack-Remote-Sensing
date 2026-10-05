@@ -1,6 +1,9 @@
 //| title: Palu, 28 September 2018: before, after, and who was exposed
 //| description: Sentinel-2 change after the Palu earthquake, split into coastal and inland zones, with buildings and people inside.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 21 | A disaster seen twice, a week apart
  * ---------------------------------------------------------------------------

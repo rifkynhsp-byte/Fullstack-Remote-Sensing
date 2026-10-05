@@ -1,6 +1,9 @@
 #| title: A thesis starter: GEDI biomass from embeddings, tested two ways (Python)
 #| description: The same model and the same two tests as the JavaScript tab, with the scores and plots done in pandas.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 36 | A one-week starting point for three open topics at once:
 embeddings, biomass and LiDAR. GEDI's spaceborne LiDAR gives above ground

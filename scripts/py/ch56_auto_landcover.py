@@ -1,6 +1,9 @@
 #| title: Automatic land cover: labels from map consensus, one model for every year (Python)
 #| description: Lombok. Training labels are taken automatically where ESA WorldCover and Dynamic World agree in 2021, a random forest learns them from satellite embeddings, and the same model maps 2024 with no new samples. Validated on held-out consensus points and against Dynamic World 2024 at random points, including where the two source maps disagree.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 56 | A land-cover map nobody had to label.
 

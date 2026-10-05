@@ -1,6 +1,9 @@
 //| title: How sensors scan
 //| description: See a whisk broom's weak point in the archive: Landsat 7 before and after its scan line corrector failed on 31 May 2003, over the same path and row.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * PRINCIPLES P3 | A scanning mirror you can see in the data
  * ---------------------------------------------------------------------------

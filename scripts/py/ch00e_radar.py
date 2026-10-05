@@ -1,6 +1,9 @@
 #| title: Radar basics (Python)
 #| description: Side-looking geometry, range and azimuth resolution, foreshortening, layover and shadow computed from a hill profile, Sentinel-1 ascending and descending over Rinjani, speckle, and backscatter by land cover.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P5 | Imaging radar, from the geometry up.
 

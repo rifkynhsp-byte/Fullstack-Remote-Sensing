@@ -1,6 +1,9 @@
 #| title: A cloud free annual composite (Python)
 #| description: The same analysis as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 9 | From a stack of cloudy scenes to one clean image, in Python
 

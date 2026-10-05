@@ -1,6 +1,9 @@
 //| title: One footprint, two maps
 //| description: GEDI rh98 footprints against the ETH 10 m and GLAD 30 m canopy height maps over a Sumatran lowland, with the error split by height class, and GEDI's own 1 km biomass grid.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 33 | Scaling up from a LiDAR plot
  * ---------------------------------------------------------------------------

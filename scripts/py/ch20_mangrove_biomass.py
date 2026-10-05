@@ -1,6 +1,9 @@
 #| title: Mangrove biomass from 45 field plots (Python)
 #| description: The same three models and leave-one-out test as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 20 | Above ground biomass from CIFOR field plots in West Papua.
 Straight line on canopy height, random forest on a sensor stack, random

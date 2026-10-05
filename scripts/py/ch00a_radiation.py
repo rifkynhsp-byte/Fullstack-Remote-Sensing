@@ -1,6 +1,9 @@
 #| title: Energy, waves and the atmosphere (Python)
 #| description: Planck curves for the Sun and the Earth, the numbers behind wavelength, frequency and photon energy, and the atmosphere measured directly by comparing top-of-atmosphere and surface reflectance from the same Sentinel-2 scene.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P1 | Every remote sensing measurement starts as electromagnetic
 energy. Three things decide what a sensor can see:

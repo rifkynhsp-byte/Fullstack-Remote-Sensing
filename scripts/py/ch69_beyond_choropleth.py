@@ -1,6 +1,9 @@
 #| title: Maps that answer questions, beyond the choropleth (Python)
 #| description: Indonesia's provinces with population (WorldPop) and night lights (VIIRS) from Earth Engine, drawn six ways - totals against rates, three classification schemes, a bivariate choropleth, proportional symbols with a Dorling cartogram, a dot-density map - and Riau's land-cover change 2004-2024 (MODIS) as a Sankey diagram.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 69 | Maps that answer questions
 

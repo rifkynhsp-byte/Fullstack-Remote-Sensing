@@ -1,6 +1,9 @@
 //| title: Low shot mapping with satellite embeddings
 //| description: The same map as chapter “Classical Supervised Learning”, from 20 points per class and no feature engineering.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 19 | The GeoAI shortcut, and its price
  * ---------------------------------------------------------------------------

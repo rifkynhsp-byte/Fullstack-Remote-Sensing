@@ -1,6 +1,9 @@
 //| title: Spatial block cross validation
 //| description: Partition into geographic blocks so training and testing are spatially decoupled.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 15 | Spatial block cross validation
  * ---------------------------------------------------------------------------

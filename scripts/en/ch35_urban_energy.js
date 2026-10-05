@@ -1,6 +1,9 @@
 //| title: Urban heat and a solar site screen
 //| description: Landsat land surface temperature of Surabaya by land cover, and a weighted-overlay screen for solar farms on Sumbawa built from public layers.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 35 | Two planning questions
  * ---------------------------------------------------------------------------

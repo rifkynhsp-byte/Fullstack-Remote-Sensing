@@ -1,6 +1,9 @@
 //| title: Harmonic regression, radar change and alert rules on real data
 //| description: Fit a seasonal model to Sentinel-2 NDVI in Nusantara's core zone, turn residuals into alerts, and check the change map against Sentinel-1 and Dynamic World.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 21 | From fitted seasons to change alerts, on real data
  * ---------------------------------------------------------------------------

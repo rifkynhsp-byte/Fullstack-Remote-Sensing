@@ -1,6 +1,9 @@
 #| title: Paddy rice: crops per year, timing, calibrated yield and flood failure (Python)
 #| description: Sentinel-1 VH time series of rice in Karawang (intensive, irrigated) and around Kasepuhan Ciptagelar (traditional, upland Sukabumi): crops per year, transplanting months, season length, a yield map calibrated to the official district production, and failed seasons.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 45 | Rice through the clouds, in two very different places.
 

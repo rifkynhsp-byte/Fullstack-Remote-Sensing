@@ -1,6 +1,9 @@
 #| title: The four resolutions (Python)
 #| description: Spatial, spectral, radiometric and temporal resolution, each shown with real data: one harbour at 250, 30 and 10 m; Landsat 7 and 8 band widths; a Sentinel-2 patch at 1 to 12 bits; and forty years of acquisitions over one city.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P4 | Four resolutions and one coverage.
 

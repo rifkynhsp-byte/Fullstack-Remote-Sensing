@@ -1,6 +1,9 @@
 #| title: How sensors scan (Python)
 #| description: Whisk broom, push broom and frame cameras drawn side by side; IFOV, swath and dwell time computed for real sensors; SPOT's off-nadir pointing; and Landsat 7's failed scan line corrector seen in a real image.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P3 | Turning a moving satellite into a two-dimensional image.
 

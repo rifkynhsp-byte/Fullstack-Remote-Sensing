@@ -1,6 +1,9 @@
 #| title: Three classifiers and a vote (Python)
 #| description: The same ensemble as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 16 | Tune a random forest, read its importance, train RF, SVM and
 gradient boosting, and let them vote. In Python.

@@ -1,6 +1,9 @@
 #| title: Vector GeoAI site selection (Python)
 #| description: Minimarket (convenience store) suitability in Kota Bandung on an H3 hexagon grid. OpenStreetMap proximity and density features, WorldPop population from Earth Engine, a manufactured presence/pseudo-absence label, the leakage trap, a Random Forest read with SHAP, and a transparent weighted score.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 22 | The same machine, a commercial question
 

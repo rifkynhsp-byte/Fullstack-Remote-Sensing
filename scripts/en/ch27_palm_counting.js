@@ -1,6 +1,9 @@
 //| title: Counting oil palms without deep learning
 //| description: The author's Earth Engine method: blur a greenness index, keep local maxima, count one point per crown.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 27 | One point per crown, in the Code Editor
  * ---------------------------------------------------------------------------

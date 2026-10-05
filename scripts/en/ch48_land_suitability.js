@@ -1,6 +1,9 @@
 //| title: Land suitability and its limiting factor
 //| description: FAO land evaluation for jarak (Jatropha curcas) in Pangandaran: four factors, the worst one decides, and what reading the wrong rainfall band does.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 48 | Is this land suitable for this crop, and if not, why not?
  * ---------------------------------------------------------------------------

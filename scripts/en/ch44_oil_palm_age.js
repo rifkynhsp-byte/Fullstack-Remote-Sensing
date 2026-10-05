@@ -1,6 +1,9 @@
 //| title: How old is this plantation?
 //| description: Date oil palm planting from the deepest dip in 34 years of Landsat NBR, check it against GEDI height, and map life stages in Kotawaringin Timur.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 44 | How old is this plantation?
  * ---------------------------------------------------------------------------

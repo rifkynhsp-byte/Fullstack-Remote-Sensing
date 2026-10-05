@@ -1,6 +1,9 @@
 #| title: Is mined land recovering? Bangka tin fields (Python)
 #| description: Former tin-mining land on Bangka found in 34 years of Landsat, its greenness recovery against undisturbed forest, its status today, and a GEDI check of whether structure has come back as well as greenness.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 49 | Restoration effectiveness, measured three ways.
 

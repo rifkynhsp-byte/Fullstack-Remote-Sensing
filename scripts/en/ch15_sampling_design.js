@@ -1,6 +1,9 @@
 //| title: Building a defensible training set
 //| description: Stratified sampling, class balance, spatial thinning and an honest split.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 15 | Ground truth and sampling design
  * ---------------------------------------------------------------------------

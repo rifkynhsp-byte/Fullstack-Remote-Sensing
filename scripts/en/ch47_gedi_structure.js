@@ -1,6 +1,9 @@
 //| title: One laser shot, many numbers
 //| description: GEDI height, cover, plant area, foliage height diversity and biomass across intact forest, degraded forest, oil palm and other tree crops in Jambi, and pre-fire fuel in South Sumatra.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 47 | One laser shot, many numbers
  * ---------------------------------------------------------------------------

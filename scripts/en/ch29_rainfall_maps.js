@@ -1,6 +1,9 @@
 //| title: Three maps, three kinds of colour
 //| description: Sequential, diverging and categorical colour on CHIRPS rainfall for Indonesia.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 29 | One dataset, three questions, three colour jobs
  *   How much rain in a year?        sequential: one hue, light to dark

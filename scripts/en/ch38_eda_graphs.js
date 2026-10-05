@@ -1,6 +1,9 @@
 //| title: Exploratory data analysis and graphs that explain themselves
 //| description: The Code Editor side of exploration: a summary of the rainfall table, its distribution, and charts with a stated title, units and a fixed scale.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 38 | Explore in the Code Editor, polish in Python
  * ---------------------------------------------------------------------------

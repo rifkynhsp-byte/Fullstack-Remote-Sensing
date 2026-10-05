@@ -1,6 +1,9 @@
 #| title: An analysis ready multisensor stack (Python)
 #| description: The same fusion as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 10 | Sentinel-2, Sentinel-1, ALOS PALSAR, terrain and texture fused
 into one stack, in Python. The function mirrors getAnalysisReadyData() in

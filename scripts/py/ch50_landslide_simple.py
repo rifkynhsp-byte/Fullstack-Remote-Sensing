@@ -1,6 +1,9 @@
 #| title: A first landslide susceptibility map, and an honest test of it (Python)
 #| description: A weighted overlay of slope, rainfall and land cover for West Java, tested against the NASA Global Landslide Catalog with ROC AUC, against slope alone, and with the location uncertainty of the catalogue taken into account.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 50 | The simplest landslide map worth making.
 

@@ -1,6 +1,9 @@
 #| title: Solar resource, suitability and potential electricity (Python)
 #| description: Sunlight (GHI), temperature and rainfall from ERA5-Land across Indonesia; a generation model calibrated on the Cirata floating plant (reported capacity and output); applied to rooftops in North Bandung (Google Open Buildings, 30 % of roof area) and to floating panels on Saguling reservoir; suitable open land in the Bandung basin; and the share of household electricity it could cover.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 64 | How much electricity could the sun give here?
 

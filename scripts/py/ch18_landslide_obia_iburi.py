@@ -1,6 +1,9 @@
 #| title: Pixels or objects? Earthquake landslides at Iburi (Python)
 #| description: The same detection and scoring as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 18 | Iburi, Hokkaido, 6 September 2018. Before/after Sentinel-2,
 a pixel rule and an object (SNIC) rule, scored against a landslide inventory.

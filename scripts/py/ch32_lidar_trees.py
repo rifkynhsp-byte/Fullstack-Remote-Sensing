@@ -1,6 +1,9 @@
 #| title: From points to trees (Python)
 #| description: Quality check, terrain model, canopy height model, tree tops and crowns from airborne LiDAR, with laspy, SciPy and scikit-image.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 32 | The airborne LiDAR chain the author teaches in R with lidR,
 written here in Python so every step is visible:

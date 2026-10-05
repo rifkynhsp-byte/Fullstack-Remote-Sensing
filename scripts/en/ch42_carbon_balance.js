@@ -1,6 +1,9 @@
 //| title: A landscape carbon balance, term by term
 //| description: Productivity from MODIS, peat drainage by land class with IPCC factors, and clearing and fire losses for Tanjung Jabung Timur, Jambi.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 42 | A landscape carbon balance, term by term
  * ---------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 //| title: A land-cover map nobody had to label
 //| description: Use the agreement of WorldCover and Dynamic World as free training labels for Lombok, train on 2021 satellite embeddings, and update the map to 2024 with no new labels.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 56 | A land-cover map nobody had to label
  * ---------------------------------------------------------------------------

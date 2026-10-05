@@ -1,6 +1,9 @@
 #| title: Thesis starters 1-6: embeddings and biomass (Python)
 #| description: A first experiment for each topic, run on real data: a label learning curve, embedding change against global loss, predictor-year sensitivity at field plots, conformal intervals, and allometry choice.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 36 | One afternoon experiment per topic. None of them is a thesis;
 each one shows that the question is real and gives the first number to beat.

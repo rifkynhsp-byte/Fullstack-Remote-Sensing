@@ -1,6 +1,9 @@
 #| title: Mapping ecosystem services (Python)
 #| description: Water yield, carbon storage and habitat quality for the upper Citarum basin, where they overlap, and what a forest-to-farm scenario would cost, in the spirit of InVEST.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 43 | Three services, one landscape, one scenario.
 

@@ -1,6 +1,9 @@
 #| title: A bushfire from orbit: dryness, progression and burn severity (Python)
 #| description: The same fuel dryness, fire progression and dNBR severity analysis as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 34 | The 2019-20 Black Summer fires in the Wollemi and Blue
 Mountains, New South Wales: how dry the fuel was, how the fire spread, and

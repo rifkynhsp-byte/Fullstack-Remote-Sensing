@@ -1,6 +1,9 @@
 #| title: Peat, drought and fire (Python)
 #| description: Where the peat is in Central Kalimantan, how much of it burned in the El Niño years, and how monthly fire follows monthly rain.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 37 | Tropical peat holds carbon that took thousands of years to
 build. Drained, it dries; dry, it burns; burning, it releases that carbon in

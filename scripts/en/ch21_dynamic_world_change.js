@@ -1,6 +1,9 @@
 //| title: Change through time with Dynamic World
 //| description: Yearly built-up area 2016 to 2024 in the GEE101 Lampung study area, from Dynamic World.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 21 | Near real time land cover, and what a yearly count hides
  * ---------------------------------------------------------------------------

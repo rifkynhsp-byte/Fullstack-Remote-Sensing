@@ -1,6 +1,9 @@
 #| title: Change through time with Dynamic World (Python)
 #| description: The same yearly count and change map as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 21 | Dynamic World in Python: a confidence-shaded map, built-up area
 year by year, and where new built-up land appeared since 2017.

@@ -1,6 +1,9 @@
 #| title: Palu, 28 September 2018: before, after, and who was exposed (Python)
 #| description: The same change detection and exposure count as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 21 | Sentinel-2 change after the 2018 Palu earthquake, split into
 inland (liquefaction flow slides) and coastal (tsunami) zones, with Open

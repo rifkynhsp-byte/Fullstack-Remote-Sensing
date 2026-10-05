@@ -1,6 +1,9 @@
 //| title: A coal mine from orbit: footprint, volume and heat
 //| description: Open-pit growth 2016 to 2024, cut and fill from two elevation models, and thermal hot spots, near Sangatta, East Kalimantan.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 25 | Mining and stockpiles
  * ---------------------------------------------------------------------------

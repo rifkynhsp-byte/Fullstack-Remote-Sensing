@@ -1,6 +1,9 @@
 //| title: Is the mangrove growing or degrading?
 //| description: One model on satellite embeddings for every year at Segara Anakan, gain and loss since 2017, the canopy trend inside stable mangrove, and what replaced the losses.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 62 | Is the mangrove growing or degrading?
  * ---------------------------------------------------------------------------

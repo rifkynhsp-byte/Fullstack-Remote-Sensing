@@ -1,6 +1,9 @@
 //| title: From a map to a case file
 //| description: Forest clearing inside Gunung Leuser National Park as a list of dated, located cases with before and after imagery, and river gold mining near Merangin, Jambi.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 55 | From a map to a case file
  * ---------------------------------------------------------------------------

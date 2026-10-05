@@ -1,6 +1,9 @@
 #| title: MRV for forest carbon: a worked district example (Python)
 #| description: Activity data from two independent forest-loss maps, an emission factor from GEDI biomass with its uncertainty, Monte Carlo emissions, a reference level and a results table, for Tebo district, Jambi.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 41 | Measurement, Reporting and Verification, done once, end to end.
 

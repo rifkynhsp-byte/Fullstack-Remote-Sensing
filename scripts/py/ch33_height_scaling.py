@@ -1,6 +1,9 @@
 #| title: One plot, one footprint, one map (Python)
 #| description: What "canopy height" means at 0.5 m, 10 m and 25 m, how two satellite height maps compare with GEDI footprints over a Sumatran lowland, and what a height error does to biomass.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 33 | Scaling up from a LiDAR plot.
 

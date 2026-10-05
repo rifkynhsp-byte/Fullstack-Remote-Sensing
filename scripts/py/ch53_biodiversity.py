@@ -1,6 +1,9 @@
 #| title: Habitat for biodiversity: forest loss, fragmentation and structure (Python)
 #| description: Around Bukit Barisan Selatan National Park, Sumatra: forest in 2000 and 2023 inside and outside the park, how much core (interior) forest was lost compared with forest overall, and GEDI structural complexity as a measure of habitat quality.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 53 | What satellites can say about biodiversity: habitat.
 

@@ -1,6 +1,9 @@
 #| title: Counting oil palms without deep learning (Python)
 #| description: Excess-green index, a Gaussian blur and local maxima on a drone orthophoto of smallholder oil palm in South Kalimantan.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 27 | One point per crown, from a drone orthophoto.
 

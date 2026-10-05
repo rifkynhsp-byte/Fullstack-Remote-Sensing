@@ -1,6 +1,10 @@
 //| title: Your first Earth Engine script
 //| description: Load a global elevation model, inspect it, and paint it on the map.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist,
+// adapted from the EE101 teaching series by Noel Gorelick, David Gibson, Nicholas Clinton and Hadi
+// Book additions MIT licence; the EE101 parts keep their original terms. Please keep this credit.
+
 /**
  * CHAPTER 5 | Your first Earth Engine script
  * ---------------------------------------------------------------------------

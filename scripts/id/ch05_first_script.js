@@ -1,6 +1,10 @@
 //| title: Skrip Earth Engine pertama Anda
 //| description: Memuat model elevasi global, memeriksanya, dan menggambarnya di peta.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist,
+// adapted from the EE101 teaching series by Noel Gorelick, David Gibson, Nicholas Clinton and Hadi
+// Book additions MIT licence; the EE101 parts keep their original terms. Please keep this credit.
+
 /**
  * BAB 5 | Skrip Earth Engine pertama Anda
  * ---------------------------------------------------------------------------

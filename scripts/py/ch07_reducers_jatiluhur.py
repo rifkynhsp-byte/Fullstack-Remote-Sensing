@@ -1,6 +1,9 @@
 #| title: Images, collections and reducers on a real reservoir (Python)
 #| description: The same analysis as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 7 | map(), three reductions, and a region reduced to a number, in
 Python. Jatiluhur reservoir, West Java.

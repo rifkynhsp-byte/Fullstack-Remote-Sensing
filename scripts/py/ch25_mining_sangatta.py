@@ -1,6 +1,9 @@
 #| title: A coal mine from orbit: footprint, volume and heat (Python)
 #| description: The same footprint, cut-and-fill and thermal analysis as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 25 | Open-pit growth, excavated volume and thermal hot spots near
 Sangatta, East Kalimantan, from public data.

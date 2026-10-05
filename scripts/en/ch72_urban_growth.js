@@ -1,6 +1,9 @@
 //| title: Urban growth: where cities grow, how fast, and where next
 //| description: Jabodetabek's built-up growth since 1975, the SDG 11.3.1 land-use efficiency of fourteen cities, a growth-probability map from a model trained on 2000-2020, and densification from building footprints.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 72 | Urban growth: where Indonesian cities grew, how fast, and where next
  * ---------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 #| title: Three maps, three kinds of colour (Python)
 #| description: The same three CHIRPS maps of Indonesia as the JavaScript tab: a sequential map of how much, a diverging map of wetter or drier, and a categorical map of which season.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 29 | One dataset (CHIRPS pentads), three questions, three colour jobs.
 

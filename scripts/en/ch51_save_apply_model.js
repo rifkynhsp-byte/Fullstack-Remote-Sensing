@@ -1,6 +1,9 @@
 //| title: A model you can hand to someone else
 //| description: Train a Random Forest on satellite embeddings, save it two ways, prove the saved copy gives the same answers, and apply it ever further from home.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 51 | A model you can hand to someone else
  * ---------------------------------------------------------------------------

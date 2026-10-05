@@ -1,6 +1,9 @@
 #| title: reduceRegions: a decade of fire detections per district in Riau (Python)
 #| description: The same per-district and per-year sums as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 7 | FIRMS fire detections summed per Riau district with
 reduceRegions, and per year for the province.

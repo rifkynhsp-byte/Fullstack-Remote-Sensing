@@ -1,6 +1,9 @@
 #| title: An urban planning toolkit for Surabaya: the analysis (R)
 #| description: Reads the hexagon table and OpenStreetMap parks the Python twin built, then maps green cover, park access, heat and density on the H3 grid, fits the two regressions that show how 'green' flips sign, tests the residuals with Moran's I, and ranks greening priorities with a weight-sensitivity test.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 # CHAPTER 73 | An urban planning toolkit  (R twin)
 # Reads data/ch73_surabaya_hex.csv and data/ch73_surabaya_parks.geojson.
 # H3 polygons are rebuilt here with h3jsr if installed; otherwise points are used.

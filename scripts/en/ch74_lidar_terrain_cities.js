@@ -1,6 +1,9 @@
 //| title: LiDAR beyond the forest: terrain and cities
 //| description: What 1 m LiDAR terrain shows at the Oso landslide that a 30 m DEM cannot, and a 3D city from the Dutch AHN4: building height, tree canopy, solar roofs and land below sea level in Rotterdam.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 74 | LiDAR beyond the forest: terrain and cities
  * ---------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 #| title: Platforms and orbits (Python)
 #| description: Orbit period from altitude, a simulated sun-synchronous ground track, real Landsat scene footprints over Java, and real overpass times that prove what "sun-synchronous" means.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P2 | Where the sensor is, and when it passes.
 

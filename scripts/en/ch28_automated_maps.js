@@ -1,6 +1,9 @@
 //| title: Print-ready maps and an automated report
 //| description: A map layout in the Code Editor, then one print-resolution export per district, generated in a loop.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 28 | Map production in the Code Editor
  * ---------------------------------------------------------------------------

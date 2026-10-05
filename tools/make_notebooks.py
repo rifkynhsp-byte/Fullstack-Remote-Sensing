@@ -89,7 +89,7 @@ def notebook(stem: str) -> dict:
         links += [f"[Chapter: {chap[1]}]({SITE}/en/{page})", f"[Bab (Bahasa Indonesia)]({SITE}/id/{page})"]
     if js:
         links.append(f"[Open the JavaScript in the Code Editor](https://code.earthengine.google.com/?scriptPath={GEE_REPO}:{stem})")
-    header = (f"# {title}\n\n**Fullstack Remote Sensing** by Rifky Nauval Hendrawan · {' · '.join(links)}\n\n"
+    header = (f"# {title}\n\n**Fullstack Remote Sensing** · code by **Rifky Nauval Hendrawan, Remote Sensing Specialist** · {' · '.join(links)}\n\n"
               "Run the cells from top to bottom. The first cell installs what Colab lacks, fetches the book's data "
               "and helpers, and signs you in to Earth Engine with your own Google Cloud project "
               "([how to get one](https://developers.google.com/earth-engine/guides/access)).\n\n"

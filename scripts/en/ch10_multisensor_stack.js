@@ -1,6 +1,9 @@
 //| title: A multi sensor analysis ready stack
 //| description: Optical, C band radar, L band radar, terrain and texture, fused into one image.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 10 | The all weather feature stack
  * ---------------------------------------------------------------------------

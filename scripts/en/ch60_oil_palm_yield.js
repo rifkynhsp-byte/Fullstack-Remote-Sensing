@@ -1,6 +1,9 @@
 //| title: From the age of a palm to the fruit it can bear
 //| description: Palm age, GEDI height and height-based biomass, health against palms of the same age, a fresh fruit bunch map and a per-desa summary for Kotawaringin Timur.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 60 | From the age of a palm to the fruit it can bear
  * ---------------------------------------------------------------------------

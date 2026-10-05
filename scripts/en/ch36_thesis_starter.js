@@ -1,6 +1,9 @@
 //| title: A thesis starter: GEDI biomass from embeddings, tested two ways
 //| description: Spread GEDI LiDAR biomass footprints wall to wall with AlphaEarth embeddings, and score the model with random folds and with spatial blocks.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 36 | A one-week starting point for three open topics at once
  * ---------------------------------------------------------------------------

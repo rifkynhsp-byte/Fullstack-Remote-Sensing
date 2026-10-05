@@ -1,6 +1,9 @@
 #| title: Radar water through the seasons, middle Mahakam (Python)
 #| description: The same water frequency map and monthly series as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 10 | Sentinel-1 water frequency and monthly flooded area over the
 middle Mahakam floodplain, 2017 to 2024 (GEE101 study area).

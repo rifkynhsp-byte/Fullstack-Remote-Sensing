@@ -1,6 +1,9 @@
 //| title: The four resolutions
 //| description: One harbour at 250, 30 and 10 m, the data type behind each band, and a count of every image over one city since 1984.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * PRINCIPLES P4 | Spatial, spectral, radiometric, temporal
  * ---------------------------------------------------------------------------

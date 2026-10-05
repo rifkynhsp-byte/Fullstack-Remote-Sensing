@@ -1,6 +1,9 @@
 //| title: Clusters before classes: k-means over the Bandung basin
 //| description: Unsupervised grouping of a cloud-masked Sentinel-2 composite, then a check of what the clusters actually are.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 16 | Before you draw a single training polygon
  * ---------------------------------------------------------------------------

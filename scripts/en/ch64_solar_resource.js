@@ -1,6 +1,9 @@
 //| title: How much electricity could the sun give here?
 //| description: Solar resource from ERA5-Land, a performance ratio calibrated on Cirata floating PV, and the potential of Bandung rooftops, the Saguling reservoir and open land.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 64 | How much electricity could the sun give here?
  * ---------------------------------------------------------------------------

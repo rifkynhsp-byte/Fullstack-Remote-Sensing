@@ -1,6 +1,9 @@
 #| title: One rainfall table, charted badly and well (Python)
 #| description: The same CHIRPS monthly rainfall for six Indonesian cities as the JavaScript tab: a spaghetti chart, small multiples with a range band, a strip plot of dry years, and an interactive heatmap.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 29 | Earth Engine makes one tidy table: monthly CHIRPS rainfall,
 1991-2024, for six cities that sit in different rainfall regimes. Everything

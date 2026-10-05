@@ -1,6 +1,9 @@
 #| title: A chart over time and a time-lapse (Python)
 #| description: The same chart and animation as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 13 | NDVI through time at one Bandung point, and an animated GIF of
 the IKN core zone, 2019 to 2024, in Python.

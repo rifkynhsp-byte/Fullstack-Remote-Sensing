@@ -1,6 +1,9 @@
 //| title: Where is it liveable? A Greater Bandung explorer (Earth Engine App)
 //| description: A complete Earth Engine App: seven liveability indicators from public data, a slider for each weight, a score map that redraws, and a click panel that profiles any place. Publish it from the Code Editor with Apps > New App.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 23 | From script to tool
  * ---------------------------------------------------------------------------

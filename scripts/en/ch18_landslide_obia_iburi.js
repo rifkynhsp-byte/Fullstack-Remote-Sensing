@@ -1,6 +1,9 @@
 //| title: Pixels or objects? Earthquake landslides at Iburi, Hokkaido
 //| description: Before/after Sentinel-2, a pixel rule and an object rule, both scored against a landslide inventory.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 18 | The 6 September 2018 Iburi earthquake triggered thousands of
  * shallow landslides on forested hills around Atsuma. Seen from space they

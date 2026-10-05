@@ -1,6 +1,9 @@
 #| title: Statistics every remote sensing analyst needs (R)
 #| description: The same sample and the same questions in base R and ggplot2: summaries by group, IQR and z-score outliers, the central limit theorem by simulation, a bootstrap confidence interval, t, Wilcoxon (Mann-Whitney) and Kolmogorov-Smirnov tests, and lm with its diagnostic plots.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 # CHAPTER 70 | Statistics every remote sensing analyst needs  (R twin)
 # Reads data/ch70_bandung_lst_sample.csv (drawn from Earth Engine by the Python twin).
 

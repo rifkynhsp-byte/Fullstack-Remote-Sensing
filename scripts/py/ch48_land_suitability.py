@@ -1,6 +1,9 @@
 #| title: Land suitability with the FAO framework (Python)
 #| description: The author's Bentala Aksa land-suitability rules for jarak (Jatropha curcas) in Pangandaran, rebuilt with public layers: suitability classes, the factor that limits each place, and what one wrong input band does to the map.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 48 | Is this land suitable for this crop, and if not, why not?
 

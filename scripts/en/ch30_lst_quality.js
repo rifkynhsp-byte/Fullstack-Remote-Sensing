@@ -1,6 +1,9 @@
 //| title: Before any statistics: what is missing, and why
 //| description: 22 years of daily MODIS land surface temperature over Bandung, checked for missing days and quality flags.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 30 | A data quality check on a satellite time series
  * ---------------------------------------------------------------------------

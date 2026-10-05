@@ -1,6 +1,9 @@
 #| title: Building the open inputs for the Sydney OOH study (Python)
 #| description: Downloads and derives every input of Chapter 65 from open sources - City of Sydney walking counts, employment survey, bus shelters and banners; OpenStreetMap points of interest, roads, stops and bus routes; GHSL building surface and volume, VIIRS night lights and WorldPop age structure from Earth Engine; ABS Census income - into one folder.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 65 | The inputs, rebuilt from open data
 

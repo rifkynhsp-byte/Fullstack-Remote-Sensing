@@ -1,6 +1,9 @@
 #| title: A small U-Net against a Random Forest, Mahakam Delta (Python)
 #| description: Fetch Sentinel-2 patches and WorldCover labels straight from Earth Engine as NumPy arrays, train a U-Net on an ordinary CPU, and score it against a Random Forest on the same held-out block.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 31 | What Earth Engine cannot train.
 

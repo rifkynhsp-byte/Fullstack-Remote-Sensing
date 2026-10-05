@@ -1,6 +1,9 @@
 #| title: Spatial block cross validation (Python)
 #| description: The same block design as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 15 | Block cross validation versus a random split, in Python.
 Whole 5 km blocks go to a fold, so a model is tested on places it has not seen.

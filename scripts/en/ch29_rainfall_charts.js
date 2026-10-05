@@ -1,6 +1,9 @@
 //| title: One rainfall table, charted badly and well
 //| description: CHIRPS monthly rainfall 1991-2024 for six Indonesian cities, charted in the Code Editor.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 29 | The table is the same; the chart is a choice
  * ---------------------------------------------------------------------------

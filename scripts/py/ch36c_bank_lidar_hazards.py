@@ -1,6 +1,9 @@
 #| title: Thesis starters 7-12: LiDAR and hazards (Python)
 #| description: First experiments for the LiDAR and hazard topics: tree-detection sensitivity, height-map disagreement, LiDAR plot placement in embedding space, landslide model transfer, building-footprint gaps, and a radar time series at a landslide event.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 36 | Starters 7 to 12.
 

@@ -1,6 +1,9 @@
 //| title: How deep is the water, from colour alone?
 //| description: Satellite-derived bathymetry for Kepulauan Seribu with the Stumpf log-ratio, calibrated against GEBCO and checked against coral reef zones.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 52 | How deep is the water, from colour alone?
  * ---------------------------------------------------------------------------

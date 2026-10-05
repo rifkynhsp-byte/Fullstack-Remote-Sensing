@@ -1,6 +1,9 @@
 #| title: The carbon balance of a peat landscape (Python)
 #| description: What satellites can and cannot say about the carbon balance of Tanjung Jabung Timur, Jambi: productivity (MODIS GPP and NPP), the biomass stock (GEDI), losses from clearing, burned area, and CO2 from drained peat with IPCC Tier 1 factors.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 42 | A landscape carbon balance, term by term.
 

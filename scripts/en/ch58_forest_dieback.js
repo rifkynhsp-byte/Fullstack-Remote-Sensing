@@ -1,6 +1,9 @@
 //| title: Seeing an outbreak spread, one summer at a time
 //| description: Bark-beetle dieback in the Harz conifers: the summer each stand first lost canopy water, how the outbreak spread, and how long before salvage logging followed.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 58 | Seeing an outbreak spread, one summer at a time
  * ---------------------------------------------------------------------------

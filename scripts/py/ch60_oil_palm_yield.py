@@ -1,6 +1,9 @@
 #| title: Oil palm from age to height, biomass, health and fruit (Python)
 #| description: Building on the planting-year map of the oil palm age chapter (Kotawaringin Timur). GEDI height and GEDI biomass at the same footprints by age, a data-driven height-to-biomass curve, canopy health relative to each palm's own age group from Sentinel-2, and a transparent fresh-fruit-bunch model (age curve and biomass proportion) with annual and monthly totals.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 60 | From the age of a palm to the fruit it can bear.
 

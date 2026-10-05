@@ -1,6 +1,9 @@
 //| title: Radar basics
 //| description: Sentinel-1 ascending and descending over Rinjani to see foreshortening, layover and shadow flip sides; speckle against a multi-date mean; and backscatter by land cover around Jatiluhur.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * PRINCIPLES P5 | Reading a radar image
  * ---------------------------------------------------------------------------

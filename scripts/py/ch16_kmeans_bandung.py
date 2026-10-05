@@ -1,6 +1,9 @@
 #| title: Clusters before classes: k-means over the Bandung basin (Python)
 #| description: The same clustering and cross-tabulation as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 16 | k-means over the Bandung basin, then what the clusters are,
 according to ESA WorldCover.

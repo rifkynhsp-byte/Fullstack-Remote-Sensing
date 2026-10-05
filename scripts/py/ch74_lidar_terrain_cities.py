@@ -1,6 +1,9 @@
 #| title: LiDAR beyond the forest: landslide terrain and a city in 3D (Python)
 #| description: Compares a 1 m LiDAR terrain model with 30 m SRTM and Copernicus DEMs at the 2014 Oso landslide (hillshade, profile, slope distribution, roughness), then uses the Netherlands' 0.5 m AHN4 surface and terrain models to measure building heights, urban tree canopy, rooftop solar potential and land below sea level in central Rotterdam.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 74 | LiDAR beyond the forest: terrain and cities
 

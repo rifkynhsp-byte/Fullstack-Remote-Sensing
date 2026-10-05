@@ -1,6 +1,9 @@
 #| title: The water cycle of a basin (Python)
 #| description: A satellite water balance for the Kapuas basin, West Kalimantan: rainfall (CHIRPS), evapotranspiration (MODIS), storage change (GRACE) and runoff (ERA5-Land), and how well they close.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 40 | The water balance of a river basin, every term from space.
 

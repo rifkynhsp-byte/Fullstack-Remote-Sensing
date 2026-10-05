@@ -1,6 +1,9 @@
 #| title: Exploratory data analysis and graphs that explain themselves (Python)
 #| description: One rainfall table, explored step by step, and five graphs shown twice: the common version and a better one.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 38 | Look before you model, and draw so the reader does not have to
 ask. The data is the CHIRPS monthly rainfall table from chapter “Data Visualisation That Decides Things” (six

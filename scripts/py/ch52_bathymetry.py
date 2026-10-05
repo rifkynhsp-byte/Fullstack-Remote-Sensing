@@ -1,6 +1,9 @@
 #| title: Satellite-derived bathymetry around Kepulauan Seribu (Python)
 #| description: Water depth from Sentinel-2 colour with the Stumpf log-ratio method, calibrated against GEBCO, limited to the shallow, clear water where it works, with Allen Coral Atlas reefs for context.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 52 | How deep is the water, from colour alone?
 

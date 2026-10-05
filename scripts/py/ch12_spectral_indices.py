@@ -1,6 +1,9 @@
 #| title: Spectral indices, and which one separates what (Python)
 #| description: The same indices as the JavaScript tab, run from Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 12 | Band math in Python: NDVI, EVI, SAVI, NDWI, MNDWI, CMRI, MVI.
 Same composite, same formulas, same palettes as the JavaScript tab.

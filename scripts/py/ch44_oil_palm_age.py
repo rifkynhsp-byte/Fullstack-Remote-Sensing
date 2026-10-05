@@ -1,6 +1,9 @@
 #| title: Oil palm age, height and life stage from 34 years of Landsat (Python)
 #| description: Planting year of every oil palm pixel from the Landsat archive, checked against GEDI canopy height, and the area in each life stage, for a plantation landscape in Central Kalimantan.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 44 | How old is this plantation?
 

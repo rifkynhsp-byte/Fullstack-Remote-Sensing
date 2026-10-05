@@ -1,6 +1,9 @@
 //| title: Terrain as an ecological constraint
 //| description: Elevation, slope, aspect and the intertidal envelope that fixes mangrove maps.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 11 | Terrain and hydrological context
  * ---------------------------------------------------------------------------

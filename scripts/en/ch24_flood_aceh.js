@@ -1,6 +1,9 @@
 //| title: Flood: terrain first, then the event, then who was exposed
 //| description: HAND and drainage, Sentinel-1 flood extent for the November 2025 Sumatra floods in Aceh Tamiang, buildings and people inside.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 24 | Flood mapping as a service
  * ---------------------------------------------------------------------------

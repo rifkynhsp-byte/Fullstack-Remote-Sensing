@@ -1,6 +1,9 @@
 //| title: Rice through the clouds
 //| description: Map paddy and count crops per year from Sentinel-1 VH in Karawang, calibrate a yield map to BPS production, and find fields flooded while growing.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 45 | Rice through the clouds
  * ---------------------------------------------------------------------------

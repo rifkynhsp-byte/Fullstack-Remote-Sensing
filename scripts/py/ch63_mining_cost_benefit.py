@@ -1,6 +1,9 @@
 #| title: Mining against the services it removes: an environmental cost and a break-even (Python)
 #| description: Nickel mining around Pomalaa, Kolaka (Southeast Sulawesi). The footprint of forest cleared since 2001 that is still bare, the carbon it held from GEDI biomass, its value at the social cost of carbon, the ecosystem services lost from published unit values, and the break-even net benefit per hectare mining must deliver to outweigh them.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 63 | Does the benefit outweigh the loss?
 

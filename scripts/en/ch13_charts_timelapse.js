@@ -1,6 +1,9 @@
 //| title: A chart over time and a time-lapse
 //| description: Ten years of NDVI at one Bandung point, and the new capital (IKN) being built, 2019 to 2024.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 13 | Two ways to show time: a line and a moving picture
  * ---------------------------------------------------------------------------

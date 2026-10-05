@@ -1,6 +1,9 @@
 //| title: An EUDR screening for a grid of supplier plots
 //| description: Forest at the 31 December 2020 cut-off, loss since 2021, and a status per plot, in a Jambi frontier landscape.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 26 | Forestry, plantations and deforestation-free supply chains
  * ---------------------------------------------------------------------------

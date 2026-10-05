@@ -1,6 +1,9 @@
 //| title: Library: WorldCover labels for the book's five classes
 //| description: worldcoverClasses(aoi) and labelledPoints(aoi): stand-in labels for chapters 15 to 19 until you have field data.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * LIBRARY | book_labels
  * ESA WorldCover 2021 (10 m) has a mangrove class, so it can stand in for

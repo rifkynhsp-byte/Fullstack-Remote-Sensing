@@ -1,6 +1,9 @@
 //| title: From points to trees: the Earth Engine side
 //| description: Earth Engine cannot read a point cloud, so the Code Editor shows what LiDAR is compared with: spaceborne GEDI heights and a satellite canopy height map over a lowland forest.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 32 | Where LiDAR and Earth Engine meet
  * ---------------------------------------------------------------------------

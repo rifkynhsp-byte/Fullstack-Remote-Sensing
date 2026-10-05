@@ -1,6 +1,9 @@
 #| title: An urban planning toolkit: green space, park access, heat and flood exposure in Surabaya (Python)
 #| description: Puts Surabaya on an H3 hexagon grid and answers four planning questions with open data - does the city meet the 30 % green open space rule, how many residents can walk to a park, where should greening go first (a composite index with a weight-sensitivity test), and how much new building since 2016 sits on flood-prone low ground - with regression and Moran's I along the way.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 73 | An urban planning toolkit: Surabaya on a hexagon grid
 

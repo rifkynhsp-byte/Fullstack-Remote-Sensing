@@ -1,6 +1,9 @@
 #| title: Maps that answer questions, beyond the choropleth (R)
 #| description: Indonesia's provinces with population and night lights, drawn as totals against rates, three classification schemes, a bivariate choropleth, a Dorling cartogram and a dot-density map, and Riau's land-cover change 2004-2024 as an alluvial (Sankey) diagram.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 # CHAPTER 69 | Maps that answer questions  (R twin)
 # Reads the layers the Python twin saved from Earth Engine to MAP_DATA.
 # geom_sf draws a labelled lon/lat graticule by default: keep it.

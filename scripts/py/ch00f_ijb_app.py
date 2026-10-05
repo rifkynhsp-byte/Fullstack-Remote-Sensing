@@ -1,6 +1,9 @@
 #| title: IJB at a glance (Python)
 #| description: Drawings of the IJB application for the click-by-click guide: the screen, and for every module the card before you press its button and what appears after. No code is needed to use the app; this script only draws the guide figures.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 PRINCIPLES P6 | A map of the app, drawn for the guide.
 

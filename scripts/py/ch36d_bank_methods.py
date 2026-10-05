@@ -1,6 +1,9 @@
 #| title: Thesis starters 13-15: methods (Python)
 #| description: First experiments for the method topics: random against spatial cross-validation, the area of applicability of a model, and whether an LST trend survives a change of satellite.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 36 | Starters 13 to 15.
 

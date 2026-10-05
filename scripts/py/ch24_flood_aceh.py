@@ -1,6 +1,9 @@
 #| title: Flood: terrain first, then the event, then who was exposed (Python)
 #| description: The same HAND, Sentinel-1 flood extent and exposure count as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 24 | The November 2025 Sumatra floods in Aceh Tamiang: terrain
 (HAND), Sentinel-1 flood extent, and buildings and people inside it.

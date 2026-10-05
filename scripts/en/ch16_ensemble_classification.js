@@ -1,6 +1,9 @@
 //| title: Ensemble land cover classification
 //| description: Split, sample, tune, train three classifiers, vote, and clean up.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 16 | Ensemble supervised classification
  * ---------------------------------------------------------------------------

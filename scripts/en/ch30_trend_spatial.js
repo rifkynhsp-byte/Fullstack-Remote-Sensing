@@ -1,6 +1,9 @@
 //| title: Trends and spatial autocorrelation
 //| description: A per-pixel Sen's slope map of dry-season land surface temperature over West Java, 2003-2024.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 30 | A robust trend for every pixel
  * ---------------------------------------------------------------------------

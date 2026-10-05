@@ -1,6 +1,9 @@
 #| title: Floating solar from space: the Cirata PV plant (Python)
 #| description: The 192 MWp floating solar plant on Cirata reservoir, West Java. Panels are found as reservoir water that stopped being water between 2021 and 2024, separated from older fish cages, measured against the reported 200 ha, and followed month by month through construction with Sentinel-1 radar.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 57 | Watching a power plant appear on a lake.
 

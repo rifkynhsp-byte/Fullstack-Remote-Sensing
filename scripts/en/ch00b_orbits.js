@@ -1,6 +1,9 @@
 //| title: Platforms and orbits
 //| description: Real scene footprints along one Landsat path, and the local time of every pass over one city, straight from the archive metadata.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * PRINCIPLES P2 | Orbits you can read from the archive
  * ---------------------------------------------------------------------------

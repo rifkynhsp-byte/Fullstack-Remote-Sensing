@@ -1,6 +1,9 @@
 //| title: A bushfire from orbit: dryness, progression and burn severity
 //| description: The 2019-20 Black Summer fires in the Wollemi and Blue Mountains, NSW: fuel dryness, fire progression and dNBR severity.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 34 | Fire and bushfire
  * ---------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 #| title: An EUDR screening for a grid of supplier plots (Python)
 #| description: The same cut-off screening as the JavaScript tab, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 26 | EUDR screening: forest at 31 December 2020 (JRC GFC2020),
 loss since (Hansen), a status per plot. A 1 km grid stands in for supplier

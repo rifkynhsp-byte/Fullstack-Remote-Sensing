@@ -1,6 +1,9 @@
 #| title: Low shot mapping with satellite embeddings (Python)
 #| description: The same embedding workflow as the JavaScript tab, plus a learning curve, in Python.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 19 | AlphaEarth annual embeddings: a classifier from a handful of
 points, a similarity search from one point, and a test of the low shot

@@ -1,6 +1,9 @@
 //| title: What satellites can say about biodiversity: habitat
 //| description: Forest amount, core forest and structure inside and outside Bukit Barisan Selatan National Park, 2000 to 2023, with tree crops separated out.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 53 | What satellites can say about biodiversity: habitat
  * ---------------------------------------------------------------------------

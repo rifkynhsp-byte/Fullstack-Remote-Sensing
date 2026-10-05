@@ -1,6 +1,9 @@
 #| title: LiDAR beyond the forest: the analysis (R)
 #| description: Reads the Oso transect and slope statistics and the Rotterdam cell sample and totals that the Python twin drew from Earth Engine, then draws the terrain profile, the height distributions and the roof-slope histogram, and recomputes the city indicators.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 # CHAPTER 74 | LiDAR beyond the forest  (R twin)
 # Reads data/ch74_oso_profile.csv, ch74_oso_slopes.csv, ch74_rotterdam_sample.csv and ch74_rotterdam_totals.csv.
 

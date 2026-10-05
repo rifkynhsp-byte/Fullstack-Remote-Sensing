@@ -1,6 +1,9 @@
 #| title: Windstorm damage to forest: Cyclone Seroja, 2021 (Python)
 #| description: Forest damage from Tropical Cyclone Seroja in Nusa Tenggara Timur, measured as a drop in canopy moisture (NDMI) beyond the normal season, checked with Sentinel-1 radar and summarised per 1 km block.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 46 | Wind damage, separated from the season.
 

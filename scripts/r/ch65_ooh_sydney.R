@@ -1,6 +1,9 @@
 #| title: Out-of-home advertising placement in Sydney (R)
 #| description: Predict weekday pedestrian counts from open urban data with a stacked caret ensemble, combine them with income, population and points of interest in a multi-criteria score for three advertiser types, and rank bus shelters, city banners and bus routes.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 # CHAPTER 65 | Where should an advertiser buy a billboard?
 #
 # Three steps, the same three an out-of-home (OOH) media planner takes:

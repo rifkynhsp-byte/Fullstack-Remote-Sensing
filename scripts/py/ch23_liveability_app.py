@@ -1,6 +1,9 @@
 #| title: Where is it liveable? Greater Bandung (Python)
 #| description: The same seven liveability indicators as the Earth Engine App - heat, greenery, flood-prone land, steep slopes, air quality, services and crowding - computed at 100 m for Greater Bandung, scored with the app's default weights, and profiled for three neighbourhoods.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 23 | From script to tool: a liveability explorer
 

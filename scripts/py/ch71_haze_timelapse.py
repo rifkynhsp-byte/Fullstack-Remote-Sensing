@@ -1,6 +1,9 @@
 #| title: Smoke from space: the 2019 haze as a time-lapse (Python)
 #| description: Animates the 2019 Sumatra and Kalimantan haze in MODIS true colour and in Sentinel-5P carbon monoxide with FIRMS fires, then turns the same data into daily series, a lag analysis of fire against downwind smoke, an anomaly map against 2020 and a longitude-time diagram of the plume.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 71 | Smoke from space: the 2019 haze, frame by frame
 

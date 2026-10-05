@@ -1,6 +1,9 @@
 //| title: Object based classification with SNIC
 //| description: Segment, summarise per object, classify objects, and vectorise for delivery.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 18 | Classifying objects instead of pixels
  * ---------------------------------------------------------------------------

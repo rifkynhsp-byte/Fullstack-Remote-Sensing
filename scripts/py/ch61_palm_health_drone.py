@@ -1,6 +1,9 @@
 #| title: Oil palm crown health from a drone orthophoto (Python)
 #| description: Every palm counted in the drone chapter gets a greenness and a crown-fullness score from the RGB orthophoto; the crowns are grouped into healthy, moderate and poor with k-means, mapped, and shown as a gallery so the classes can be checked by eye.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 61 | Which palms look unwell?
 

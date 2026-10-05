@@ -1,6 +1,9 @@
 #| title: Ensemble land cover from field labels, and an honest validation (Python)
 #| description: The author's 2,320 labelled points in 10 classes on the Riau coast (2023). Five scikit-learn models and two ensembles on satellite embeddings plus terrain, validated with a random split and with spatial blocks; what the global maps call each class; and an Earth Engine ensemble map with a model-agreement layer.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 59 | Many models, one map, and the validation that tells the truth.
 

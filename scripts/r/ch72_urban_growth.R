@@ -1,6 +1,9 @@
 #| title: Urban growth and population: the analysis (R)
 #| description: Reads the GHSL tables and the growth sample the Python twin drew from Earth Engine, then draws the urbanisation chart, the radial sprawl profile and the SDG 11.3.1 scatter, and fits the urban growth model (glm and ranger) with spatially blocked cross-validation.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 # CHAPTER 72 | Urban growth  (R twin)
 # Reads data/ch72_urbanisation.csv, ch72_radial.csv, ch72_sdg11.csv and ch72_growth_sample.csv.
 

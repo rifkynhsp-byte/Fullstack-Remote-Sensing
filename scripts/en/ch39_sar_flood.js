@@ -1,6 +1,9 @@
 //| title: Supervised flood mapping with Sentinel-1
 //| description: The author's GEE101 flood script for the Jakarta New Year flood of 2020, with the band-name bug fixed and accuracy measured on held-out polygons.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 39 | Jakarta, 1 January 2020
  * ---------------------------------------------------------------------------

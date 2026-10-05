@@ -1,6 +1,9 @@
 //| title: Restoration effectiveness, measured three ways
 //| description: Tin-mined land on Bangka since 1995: when it was mined, whether it is green again, and whether its height has come back.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 49 | Restoration effectiveness, measured three ways
  * ---------------------------------------------------------------------------

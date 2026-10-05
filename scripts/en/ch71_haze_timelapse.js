@@ -1,6 +1,9 @@
 //| title: Smoke from space: the 2019 haze as a time-lapse
 //| description: Two animations of the 2019 Sumatra and Kalimantan haze (MODIS true colour, and Sentinel-5P carbon monoxide with FIRMS fires), a daily CO chart for six cities, and the peak-fortnight anomaly against 2020.
 
+// Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+// MIT licence: free to use and adapt; please keep this credit line.
+
 /**
  * CHAPTER 71 | Smoke from space: the 2019 haze, frame by frame
  * ---------------------------------------------------------------------------

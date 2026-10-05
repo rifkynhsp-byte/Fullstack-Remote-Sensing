@@ -1,6 +1,9 @@
 #| title: Solar insight charts (Python)
 #| description: Ten years of hourly PVGIS-ERA5 irradiance for Kupang and Bandung turned into five insight charts - a day-by-hour heatmap, a clearness-index scatter with physical limits, hourly ramp boxes with extreme events, monthly PV yield bars and monthly diurnal small multiples.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 66 | One chart, one question
 

@@ -1,6 +1,9 @@
 #| title: Supervised flood mapping with Sentinel-1 (Python)
 #| description: The Jakarta New Year flood of 2020, mapped with a Random Forest on before and after Sentinel-1 images and the author's labelled polygons, with a band-name bug found, fixed and tested on held-out polygons.
 
+# Fullstack Remote Sensing | Code by Rifky Nauval Hendrawan, Remote Sensing Specialist
+# MIT licence: free to use and adapt; please keep this credit line.
+
 """
 CHAPTER 39 | A flood under cloud, mapped by radar.
 
