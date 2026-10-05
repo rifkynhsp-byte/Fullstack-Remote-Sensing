@@ -17,10 +17,12 @@ be in five years?
                built land, slope, elevation, distance to the city centre and
                population (GHSL 2020)
     train      features in 2017 -> class in 2022
-    how much   the model says WHERE change is likely and INTO WHAT; how MUCH
-               changes comes from the past: the share of the area that changed
-               in the last observed five years (the "quantity" step of every
-               land-change model). Without it the forest over-predicts change.
+    how much   the model says WHERE change is likely; how MUCH comes from the
+               trend (the "quantity" step of every land-change model). Only
+               built land is projected: it is the change with a clear, steady
+               trend. Dynamic World labels of crops, grass and trees flicker
+               from year to year, and a model that lets every class change
+               spends that noise as real change (STEP 4 shows the trap).
     test       features in 2020 -> predicted 2025, scored against the observed
                2025 map and against the simplest forecast of all, "nothing
                changes" (the 2020 map itself)
@@ -109,25 +111,52 @@ def change_rate(a, b):
     return ee.Number(a.neq(b).reduceRegion(ee.Reducer.mean(), AOI, 120, maxPixels=1e10, tileScale=8).values().get(0))
 
 
-def predict(lc_now, rate):
-    """Change the `rate` share of the area with the highest probability of change, each to its most likely new class."""
+def probabilities(lc_now):
+    return features(lc_now).classify(model).arrayFlatten([[f"p{k}" for k in range(len(NAMES))]])
+
+
+def predict_all(lc_now, rate):
+    """The trap: change the `rate` share of the area with the highest probability of change, to its most likely new class."""
     lc_now = ee.Image(lc_now)
-    probs = features(lc_now).classify(model).arrayFlatten([[f"p{k}" for k in range(len(NAMES))]])
+    probs = probabilities(lc_now)
     onehot = ee.Image.cat([lc_now.eq(k) for k in range(len(NAMES))])
-    p_stay = probs.multiply(onehot).reduce("sum")
-    p_change = ee.Image(1).subtract(p_stay).rename("pc")
-    # The most likely class other than the current one.
+    p_change = ee.Image(1).subtract(probs.multiply(onehot).reduce("sum")).rename("pc")
     other = probs.multiply(ee.Image(1).subtract(onehot)).toArray().arrayArgmax().arrayGet([0]).rename("to")
     cut = p_change.reduceRegion(ee.Reducer.percentile([ee.Number(1).subtract(rate).multiply(100)]), AOI, 120,
                                 maxPixels=1e10, tileScale=8).values().get(0)
     return lc_now.where(p_change.gt(ee.Number(cut)), other).rename("lc").toInt()
 
 
+def built_ha(img):
+    return ee.Number(ee.Image.pixelArea().divide(1e4).updateMask(ee.Image(img).eq(4))
+                     .reduceRegion(ee.Reducer.sum(), AOI, 120, maxPixels=1e10, tileScale=8).values().get(0))
+
+
+def built_trend(first, last):
+    """Hectares of new built land per year, a straight line through the annual maps first..last."""
+    years = ee.List.sequence(first, last)
+    fc = ee.FeatureCollection(years.map(lambda y: ee.Feature(None, {"x": y, "y": built_ha(landcover(y))})))
+    return ee.Number(ee.Dictionary(fc.reduceColumns(ee.Reducer.linearFit(), ["x", "y"])).get("scale"))
+
+
+def predict(lc_now, new_ha):
+    """Turn `new_ha` hectares of non-built land into built land, where the model's probability of built is highest."""
+    lc_now = ee.Image(lc_now)
+    p_built = probabilities(lc_now).select("p4").updateMask(lc_now.neq(4).And(lc_now.neq(0)))   # water does not get built
+    n_free = p_built.reduceRegion(ee.Reducer.count(), AOI, SCALE, maxPixels=1e10, tileScale=8).values().get(0)
+    share = ee.Number(new_ha).divide(SCALE * SCALE / 1e4).divide(n_free)
+    cut = p_built.reduceRegion(ee.Reducer.percentile([ee.Number(1).subtract(share).multiply(100).max(0)]), AOI, SCALE,
+                               maxPixels=1e10, tileScale=8).values().get(0)
+    return lc_now.where(p_built.gt(ee.Number(cut)), 4).rename("lc").toInt()
+
+
 # ---------------------------------------------------------------------------
 # STEP 4. The test: predict 2025 from 2020, and compare with what happened
 # ---------------------------------------------------------------------------
-RATE_17_22 = change_rate(lc17, lc22)          # what was known in 2022
-pred25 = predict(lc20, RATE_17_22)
+TREND_17_20 = built_trend(2017, 2020)         # ha of new built land per year, known in 2020
+pred25 = predict(lc20, TREND_17_20.multiply(5))
+RATE_17_22 = change_rate(lc17, lc22)
+pred25_all = predict_all(lc20, RATE_17_22)   # the trap, for comparison
 
 _c = {}
 
@@ -138,7 +167,8 @@ def hindcast_table():
         return _c["hind"]
     obs_change = lc20.neq(lc25)
     rows = []
-    for name, p in (("random forest, 2020 -> 2025", pred25), ("no change (2020 map as the 2025 forecast)", lc20)):
+    for name, p in (("built growth: trend x random forest", pred25), ("every class may change (the trap)", pred25_all),
+                    ("no change (2020 map as the 2025 forecast)", lc20)):
         pred_change = lc20.neq(p)
         hits = obs_change.And(pred_change).And(p.eq(lc25))           # change predicted, to the right class
         wrong = obs_change.And(pred_change).And(p.neq(lc25))         # change predicted, to the wrong class
@@ -157,9 +187,9 @@ def hindcast_table():
 # ---------------------------------------------------------------------------
 # STEP 5. The forecast: 2030 from 2025, then 2035 from the predicted 2030
 # ---------------------------------------------------------------------------
-RATE_20_25 = change_rate(lc20, lc25)          # the latest observed five years
-pred30 = predict(lc25, RATE_20_25)
-pred35 = predict(pred30, RATE_20_25)
+TREND = built_trend(2017, 2025)               # ha of new built land per year, 2017-2025
+pred30 = predict(lc25, TREND.multiply(5))
+pred35 = predict(pred30, TREND.multiply(5))
 
 
 def area_frame():

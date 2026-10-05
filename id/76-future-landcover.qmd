@@ -1,0 +1,129 @@
+# Tutupan Lahan 2030 dan 2035: Prediksi dengan *Machine Learning* {#sec-future-landcover}
+
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Jalankan bab ini**
+
+- `ch76_future_landcover`: [Buka di Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch76_future_landcover) · [Buka di Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch76_future_landcover.ipynb)
+
+*Baru pertama kali? Lampiran A menjelaskan cara masuk ke Earth Engine dan Colab.*
+:::
+<!-- /run-links -->
+
+
+::: {.chapter-goal}
+#### Di bab ini
+Perencana selalu menanyakan peta masa depan: seperti apa wilayah ini pada 2030, pada 2035? Di bab ini Anda membuatnya untuk Bandung Raya dengan *random forest*, bukan dengan rantai Markov klasik. Modelnya diuji dengan jujur lebih dulu, yaitu dengan memprediksi tahun yang datanya sudah ada. Kita juga sengaja masuk ke jebakan paling umum dalam pemodelan perubahan lahan, lalu keluar dengan prakiraan yang bisa dipertanggungjawabkan: ke mana lahan terbangun baru kemungkinan besar tumbuh, dan seberapa luas.
+:::
+
+## Siapa yang memakai ini
+
+| Pengguna | Pertanyaan | Yang diambil dari bab ini |
+|---|---|---|
+| Perencana tata ruang (Bappeda, ATR/BPN) | Ke mana kota akan meluas kalau tidak ada yang berubah? | Prakiraan lahan terbangun 2030 dan 2035 untuk disandingkan dengan RTRW |
+| Dinas lingkungan dan sumber daya air | Daerah resapan dan lahan hijau mana yang tertekan? | Lahan pohon dan pertanian yang diperkirakan terbangun |
+| Pengembang dan penyedia utilitas | Di mana kebutuhan jalan, air, dan listrik akan muncul? | Sel yang paling mungkin menjadi kota, berurutan |
+| Peneliti | Apakah modelnya lebih baik daripada tidak berbuat apa-apa? | *Hindcast*, *Figure of Merit*, dan model nol |
+
+## Mengapa tidak memakai rantai Markov?
+
+Resep klasiknya, CA-Markov, mengerjakan dua hal terpisah. **Rantai Markov** menghitung seberapa sering setiap kelas berubah menjadi kelas lain di antara dua peta, lalu menganggap laju itu akan tetap sama. **Otomaton seluler** kemudian menentukan di mana perubahan itu terjadi, berdasarkan peta kesesuaian dan aturan ketetanggaan. Earth Engine tidak punya alat CA-Markov, dan metodenya pun punya kelemahan: peta kesesuaiannya dibuat dengan tangan.
+
+*Random forest* bisa mempelajari "di mana" langsung dari data. Tunjukkan setiap piksel seperti keadaannya pada 2017 (kelasnya, sekitarnya, kemiringannya, jaraknya ke pusat kota, jumlah penduduknya) beserta keadaannya pada 2022, maka model belajar piksel mana yang cenderung berubah, dan berubah menjadi apa. "Seberapa banyak" tetap harus datang dari tempat lain, dan ternyata itulah keputusan terpenting di bab ini.
+
+## Data
+
+| Lapisan | Dataset | Kegunaan |
+|---|---|---|
+| Tutupan lahan, setiap tahun | Dynamic World V1, label yang paling sering muncul dalam setahun | Label untuk 2017, 2020, 2022, dan 2025, dikelompokkan menjadi 6 kelas |
+| Topografi | Copernicus DEM GLO-30 | Ketinggian dan kemiringan |
+| Penduduk | GHSL P2023A, 2020 | Jumlah penduduk per sel (log) |
+| Pembanding independen | Permukaan terbangun GHSL P2023A, 2025 dan 2030 | Prakiraan dari model lain sebagai pembanding |
+
+Keenam kelasnya adalah air, pohon, rumput dan semak (termasuk vegetasi tergenang Dynamic World), pertanian, terbangun, dan lahan terbuka. Model bekerja pada sel 60 m: cukup rinci untuk prakiraan tingkat kabupaten, tetapi cukup kasar agar dua langkah sampai 2035 tetap berjalan dalam batas Earth Engine.
+
+{{< include _snippets/ch76_future_landcover.qmd >}}
+
+## Bandung Raya saat ini
+
+{{< include _snippets/ch76_future_landcover__ch76-lc-2025.qmd >}}
+
+Dasar cekungan sudah terbangun dari Kota Bandung ke arah Cimahi, Soreang, dan Rancaekek. Tutupan pohon bertahan di lereng gunung api di utara dan selatan, sedangkan lahan pertanian dan sawah masih tersisa terutama di tenggara cekungan, sekitar Ciparay dan Majalaya. Danau di sebelah barat adalah Waduk Saguling.
+
+## Fitur: apa pikselnya, apa yang ada di sekitarnya, di mana letaknya
+
+Untuk setiap sel 60 m, model melihat tujuh belas angka:
+
+- **Apa pikselnya:** enam pita ya/tidak, satu untuk setiap kelas.
+- **Apa yang ada di sekitarnya:** porsi lahan terbangun dalam radius 500 m dan 1,5 km, serta porsi pertanian dan pohon dalam radius 500 m. Kota tumbuh di tepiannya, jadi sel yang dikelilingi bangunan adalah kandidat kuat.
+- **Seberapa jauh dari kota:** jarak ke sel terbangun terdekat dan ke Alun-alun Bandung.
+- **Di mana letaknya:** ketinggian, kemiringan, dan jumlah penduduk.
+
+Semua fitur ini dihitung dari peta kelas, bukan dari citra. Karena itulah model bisa dijalankan ke depan: prediksi 2030 menjadi masukan untuk 2035, dengan ketetanggaan yang dihitung ulang dari peta prediksi, sehingga pertumbuhan bisa memicu pertumbuhan berikutnya.
+
+## Pelatihan: fitur 2017, kelas lima tahun kemudian
+
+Perubahan itu jarang. Kalau pikselnya diambil acak, sebagian besar tidak berubah, dan model belajar bahwa tidak ada yang pernah berubah. Karena itu, separuh dari 8.000 titik latih diambil dari piksel yang kelasnya berubah antara 2017 dan 2022, dan separuhnya dari piksel yang tidak berubah. Model diminta mengeluarkan peluang untuk setiap kelas, bukan hanya satu jawaban.
+
+{{< include _snippets/ch76_future_landcover__ch76-importance.qmd >}}
+
+Topografi dan jarak ke pusat kota menempati urutan teratas, disusul porsi lahan terbangun dalam radius 1,5 km. Hasil ini cocok dengan pengamatan siapa pun yang melihat Bandung tumbuh: kota mengisi lahan datar yang paling dekat lebih dulu.
+
+## Uji sebelum prakiraan
+
+Prakiraan 2030 baru bisa dicek pada 2030. Namun, prakiraan 2025 yang dibuat hanya dengan informasi sampai 2020 bisa dicek sekarang. Uji **hindcast** inilah tabel terpenting di bab ini.
+
+{{< include _snippets/ch76_future_landcover__ch76-hindcast.qmd >}}
+
+Ada tiga prakiraan 2025 yang dibandingkan:
+
+1. **Tanpa perubahan.** Peta 2020 dipakai sebagai prakiraan 2025. Kedengarannya malas, tetapi kesesuaiannya dengan peta 2025 yang teramati mencapai 88 % luas wilayah, karena sebagian besar lahan memang tidak berubah dalam lima tahun. Setiap model harus dinilai terhadap patokan ini.
+2. **Semua kelas boleh berubah.** Ambil porsi wilayah yang berubah antara 2017 dan 2022 (17 %), lalu ubah piksel 2020 sebanyak porsi itu, di tempat yang peluang berubahnya paling tinggi menurut model, menjadi kelas yang paling mungkin. Kesesuaiannya turun menjadi 83 %, lebih buruk daripada tidak berbuat apa-apa.
+3. **Pertumbuhan lahan terbangun: tren dikali *random forest*.** Ambil tren lahan terbangun dari peta 2017-2020, sedikit di atas 1.500 ha per tahun, lalu ubah lahan seluas itu menjadi lahan terbangun di tempat yang peluangnya paling tinggi menurut model. Kesesuaiannya 85 %.
+
+***Figure of Merit*** mengajukan pertanyaan yang lebih tajam: dari semua yang berubah atau diprediksi berubah, berapa bagian yang ditebak dengan benar? Prakiraan tanpa perubahan bernilai 0 karena tidak pernah memprediksi perubahan. Dua prakiraan lainnya menangkap sebagian perubahan yang sebenarnya.
+
+::: {.callout-warning}
+## Kesalahan umum: menganggap derau label sebagai perubahan lahan
+Prakiraan 2 tampak lebih ambisius dan *Figure of Merit*-nya lebih tinggi, jadi mengapa ditolak? Jalankan ke depan, dan model itu memprediksi Bandung Raya kehilangan dua pertiga lahan pertaniannya pada 2030. Itu tidak terjadi dalam lima tahun. Label tahunan Dynamic World berkedip-kedip: sawah yang sama bisa tercatat "pertanian" tahun ini lalu "rumput" atau "pohon" tahun depan, tergantung panen, bera, dan awan. Tujuh belas persen wilayah "berubah" antara 2017 dan 2022, dan sebagian besar sebenarnya bukan perubahan. Model yang disuruh meniru perubahan sebanyak itu akan menghabiskan derau seolah-olah nyata, dan menghabiskannya pada kelas yang paling sering berkedip. Solusinya: proyeksikan hanya perubahan yang trennya jelas dan stabil.
+:::
+
+## Prakiraan: 2030 dan 2035
+
+Tren lahan terbangun selama 2017-2025 sekitar 1.000 ha per tahun. Prakiraan mengubah 5.000 ha menjadi lahan terbangun untuk 2030, berangkat dari peta 2025 yang teramati, lalu 5.000 ha lagi untuk 2035, berangkat dari peta prediksi 2030. Tabel di bawah menunjukkan angka sedikit lebih besar, sekitar 5.500 ha per langkah, karena batasnya diterapkan pada sel 60 m utuh dan luasnya dijumlahkan pada grid yang lebih kasar. Anggap selisih beberapa ratus hektare itu sebagai pembulatan, bukan temuan.
+
+::: {.panel-tabset}
+## 2030
+{{< include _snippets/ch76_future_landcover__ch76-lc-2030.qmd >}}
+
+## 2035
+{{< include _snippets/ch76_future_landcover__ch76-lc-2035.qmd >}}
+
+## Lahan terbangun baru
+{{< include _snippets/ch76_future_landcover__ch76-new-built.qmd >}}
+:::
+
+{{< include _snippets/ch76_future_landcover__ch76-area.qmd >}}
+
+{{< include _snippets/ch76_future_landcover__ch76-area-table.qmd >}}
+
+Lahan terbangun bertambah dari sekitar 66.400 ha pada 2025 menjadi 72.100 ha pada 2030 dan 77.400 ha pada 2035. Sebagian besar berasal dari lahan yang oleh Dynamic World disebut pohon. Di sekitar Bandung, lahan itu umumnya kebun di permukiman, kebun campuran, dan tepi permukiman yang berpohon, bukan hutan rapat. Lahan pertanian berkurang lagi 2.400 ha. Pertumbuhannya bukan satu garis depan yang maju. Yang terjadi adalah pengisian tipis di hampir setiap tepi permukiman, karena model sangat bergantung pada lahan terbangun dalam radius 1,5 km. Pola ini paling terlihat di tiga tempat: lereng utara di atas kota ke arah Lembang, pinggiran selatan sekitar Soreang dan Banjaran, serta sisi timur ke arah Rancaekek dan Cicalengka. Yang pertama perlu diperhatikan perencana: lereng utara adalah Kawasan Bandung Utara, daerah resapan air tanah tempat pemerintah provinsi membatasi pembangunan baru. Model tren tidak mengetahui aturan itu, dan justru karena itulah petanya harus dibaca berdampingan dengan rencana tata ruang.
+
+## Pendapat kedua: proyeksi GHSL
+
+{{< include _snippets/ch76_future_landcover__ch76-ghsl-check.qmd >}}
+
+*Global Human Settlement Layer* juga memproyeksikan permukaan terbangun sampai 2030, dan hasilnya berbeda: nyaris tidak tumbuh. Ada dua penyebab utama. Pertama, kedua produk mendefinisikan "terbangun" secara berbeda: di sini sel GHSL baru dihitung kalau seperlimanya tertutup bangunan, sedangkan Dynamic World menyebut piksel 10 m terbangun kalau tampak terbangun, termasuk permukiman perdesaan, sehingga luas awalnya pun sudah berbeda sepertiga. Kedua, lapisan GHSL 2030 sendiri adalah hasil model, yang diekstrapolasi dari periode lama dengan pertumbuhan yang diredam. Tidak ada yang merupakan kebenaran mutlak. Menampilkan keduanya beserta alasan perbedaannya lebih jujur daripada menyajikan satu angka saja.
+
+::: {.callout-important}
+## Integritas ilmiah: prakiraan adalah skenario
+Prakiraan ini berarti "jika sepuluh tahun ke depan berjalan seperti 2017-2025". Jalan tol baru (Tol Cisumdawu dibuka pada 2023), stasiun kereta cepat (Tegalluar), perubahan rencana tata ruang, atau resesi akan mengubah faktor pendorongnya, dan tidak ada model tren yang bisa mengetahuinya. Sajikan peta 2030 dan 2035 sebagai satu skenario, berdampingan dengan rencana tata ruang, dan sertakan tabel *hindcast* agar pembaca bisa melihat seberapa baik metodenya ketika masih bisa diperiksa.
+:::
+
+## Latihan {.unnumbered}
+
+1. Tambahkan jarak ke Tol Cisumdawu dan ke Stasiun Tegalluar (OpenStreetMap) sebagai fitur. Apakah *hindcast*-nya membaik, dan ke mana prakiraan 2030 bergeser?
+2. Ganti tren garis lurus dengan laju pertumbuhan GHSL. Seberapa berbeda peta 2035-nya, dan mana yang akan Anda pertahankan di depan perencana?
+3. Gunakan modus label tiga tahunan (misalnya 2016-2018 untuk "2017") untuk meredam kedipan Dynamic World, lalu jalankan ulang prakiraan 2. Apakah jebakannya mengecil?
+4. Tumpangkan lahan terbangun baru 2035 pada dataran rendah rawan banjir dari Bab [-@sec-flood] (HAND di bawah 5 m). Berapa hektare pertumbuhan yang diprediksi berada di sana?
+5. Ulangi bab ini untuk pinggiran Jabodetabek (Bab [-@sec-urban-growth]) dan bandingkan trennya dalam hektare per tahun.

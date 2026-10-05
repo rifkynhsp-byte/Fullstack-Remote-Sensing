@@ -297,6 +297,11 @@ def main() -> int:
             written += 1
             item_snippets(py.stem, target_dir)
 
+    # Per-product includes for every script with recorded outputs, whether or not it also has a JavaScript twin.
+    for lang in LANGUAGES:
+        for py in sorted((SCRIPT_DIR / "py").glob("ch*.py")):
+            item_snippets(py.stem, ROOT / lang / "_snippets")
+
     print(f"build_snippets: wrote {written} snippet(s), {fell_back} using fallback")
     return 0
 

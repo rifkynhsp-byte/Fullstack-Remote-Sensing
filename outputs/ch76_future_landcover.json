@@ -1,0 +1,65 @@
+[
+ {
+  "name": "ch76_future_landcover-webmap",
+  "kind": "html",
+  "html": "images/real/ch76_future_landcover-webmap.html",
+  "height": 480,
+  "caption": "Interactive: pan, zoom, switch layers and basemaps, change the overlay opacity."
+ },
+ {
+  "name": "ch76-lc-2025",
+  "kind": "map",
+  "caption": "The most frequent Dynamic World label of 2025, in six classes: the starting point of the forecast.",
+  "image": "images/real/ch76-lc-2025.jpg"
+ },
+ {
+  "name": "ch76-hindcast",
+  "kind": "table",
+  "caption": "The test before the forecast: 2025 predicted from 2020, scored against the observed 2025 map and against 'nothing changes'. Hits, misses and false alarms are shares of the area.",
+  "markdown": "| forecast                                  |   agreement_with_2025 |   observed_change_share |   figure_of_merit |   hits |   misses |   false_alarms |\n|:------------------------------------------|----------------------:|------------------------:|------------------:|-------:|---------:|---------------:|\n| built growth: trend x random forest       |                 0.849 |                   0.122 |             0.088 | 0.0145 |   0.1029 |         0.0430 |\n| every class may change (the trap)         |                 0.828 |                   0.122 |             0.220 | 0.0485 |   0.0504 |         0.0983 |\n| no change (2020 map as the 2025 forecast) |                 0.878 |                   0.122 |             0.000 | 0.0000 |   0.1223 |         0.0000 |"
+ },
+ {
+  "name": "ch76-lc-2030",
+  "kind": "map",
+  "caption": "The model run forward from 2025.",
+  "image": "images/real/ch76-lc-2030.jpg"
+ },
+ {
+  "name": "ch76-lc-2035",
+  "kind": "map",
+  "caption": "Run forward again from the predicted 2030, with neighbourhoods recomputed from that map.",
+  "image": "images/real/ch76-lc-2035.jpg"
+ },
+ {
+  "name": "ch76-new-built",
+  "kind": "map",
+  "caption": "Built land in 2025 and the cells the model expects to become built by 2030 and 2035.",
+  "image": "images/real/ch76-new-built.jpg"
+ },
+ {
+  "name": "ch76-area",
+  "kind": "chart",
+  "caption": "Area per class: observed 2017, 2020 and 2025 (solid), predicted 2030 and 2035 (dashed).",
+  "image": "images/real/ch76-area.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"year,kind,class,ha\n2017,observed,water,4241.9\n2017,observed,trees,57056\n2017,observed,grass and shrub,4558.4\n2017,observed,crops,20784\n2017,observed,built,59766\n2017,observed,bare,217.44\n2020,observed,water,4576.9\n2020,observed,trees,55181\n2020,observed,grass and shrub,3344.1\n2020,observed,crops,19118\n2020,observed,built,64040\n2020,observed,bare,363.72\n2025,observed,water,3946.1\n2025,observed,trees,58684\n2025,observed,grass and shrub,3732.3\n2025,observed,crops,13767\n2025,observed,built,66382\n2025,observed,bare,112.2\n2030,predicted,water,3946.1\n2030,predicted,trees,54105\n2030,predicted,grass and shrub,3669.8\n2030,predicted,crops,12723\n2030,predicted,built,72097\n2030,predicted,bare,82.376\n2035,predicted,water,3946.1\n2035,predicted,trees,50186\n2035,predicted,grass and shrub,3601.7\n2035,predicted,crops,11405\n2035,predicted,built,77418\n2035,predicted,bare,66.753\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_area(df):\n    fig, ax = plt.subplots(figsize=(8, 4))\n    for k, n in enumerate(NAMES):\n        d = df[df[\"class\"] == n].sort_values(\"year\")\n        ax.plot(d.year, d.ha / 1000, marker=\"o\", color=\"#\" + PALETTE[k], label=n, lw=2)\n        p = d[d.kind == \"predicted\"]\n        ax.plot(p.year, p.ha / 1000, marker=\"o\", color=\"#\" + PALETTE[k], lw=2, ls=\"--\")\n    ax.axvspan(2025, 2035.5, color=\"#f0efec\", zorder=0)\n    ax.text(2025.3, ax.get_ylim()[1] * 0.95, \"predicted\", fontsize=8, color=\"#52514e\", va=\"top\")\n    ax.set_ylabel(\"thousand ha\"); ax.set_xticks([2017, 2020, 2025, 2030, 2035])\n    ax.legend(frameon=False, fontsize=8, ncol=3, loc=\"upper center\", bbox_to_anchor=(0.5, 1.18))\n    ax.spines[[\"top\", \"right\"]].set_visible(False)\n    fig.tight_layout()\n    return fig\n\nplot_area(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch76-area-table",
+  "kind": "table",
+  "caption": "Hectares per class, observed and predicted.",
+  "markdown": "| class           |   2017 |   2020 |   2025 |   2030 |   2035 |   change 2025-2035 (ha) |\n|:----------------|-------:|-------:|-------:|-------:|-------:|------------------------:|\n| water           |   4242 |   4577 |   3946 |   3946 |   3946 |                       0 |\n| trees           |  57056 |  55181 |  58684 |  54105 |  50186 |                   -8498 |\n| grass and shrub |   4558 |   3344 |   3732 |   3670 |   3602 |                    -130 |\n| crops           |  20784 |  19118 |  13767 |  12723 |  11405 |                   -2362 |\n| built           |  59766 |  64040 |  66382 |  72097 |  77418 |                   11036 |\n| bare            |    217 |    364 |    112 |     82 |     67 |                     -45 |"
+ },
+ {
+  "name": "ch76-importance",
+  "kind": "chart",
+  "caption": "What the random forest leans on most (top 10 features).",
+  "image": "images/real/ch76-importance.png",
+  "live": "import io\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nDATA = \"\"\"feature,importance\nelev_m,919.39\nkm_to_centre,864.65\nslope_deg,826.56\nshare4_1500,824.04\nshare3_500,737.92\nshare1_500,723.88\nshare4_500,718.72\npeople_log,629.6\nkm_to_built,353.7\nis_3,71.41\nis_1,53.836\nis_4,44.502\nis_2,36.348\nis_0,19.067\nis_5,2.9431\n\"\"\"\ndf = pd.read_csv(io.StringIO(DATA))\n\ndef plot_importance(df):\n    d = df.head(10).iloc[::-1]\n    fig, ax = plt.subplots(figsize=(6, 3.6))\n    ax.barh(d.feature, d.importance, color=\"#2a78d6\")\n    ax.set_xlabel(\"random forest importance\"); ax.spines[[\"top\", \"right\"]].set_visible(False)\n    fig.tight_layout()\n    return fig\n\nplot_importance(df)\nplt.show()\n"
+ },
+ {
+  "name": "ch76-ghsl-check",
+  "kind": "table",
+  "caption": "Built-up growth 2025-2030: this model against the GHSL projection, an independent model.",
+  "markdown": "| source                                       |   built_2025_ha |   built_2030_ha |   growth_pct |\n|:---------------------------------------------|----------------:|----------------:|-------------:|\n| this model (Dynamic World built)             |           66382 |           72097 |          8.6 |\n| GHSL P2023A projection (cells >= 20 % built) |           42183 |           42420 |          0.6 |"
+ }
+]

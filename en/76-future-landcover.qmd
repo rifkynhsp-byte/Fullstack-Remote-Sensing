@@ -1,0 +1,129 @@
+# Land Cover in 2030 and 2035: Predicting with Machine Learning {#sec-future-landcover}
+
+<!-- run-links -->
+::: {.callout-tip .run-links appearance="simple" icon="false"}
+**Run this chapter**
+
+- `ch76_future_landcover`: [Open in Code Editor](https://code.earthengine.google.com/?scriptPath=users/rifkynauvalhsp/Fullstack-Remote-Sensing:ch76_future_landcover) · [Open in Colab](https://colab.research.google.com/github/rifkynhsp-byte/Fullstack-Remote-Sensing/blob/main/notebooks/ch76_future_landcover.ipynb)
+
+*First time? Appendix A shows how to sign in to Earth Engine and Colab.*
+:::
+<!-- /run-links -->
+
+
+::: {.chapter-goal}
+#### In this chapter
+Planners keep asking for a map of the future: what will this district look like in 2030, in 2035? You will build one for Bandung Raya with a random forest instead of the classic Markov chain, test it honestly by predicting a year you already know, fall into the most common trap of land-change modelling on purpose, and come out with a forecast you can defend: where new built land is likely to go, and how much of it.
+:::
+
+## Who uses this
+
+| User | Question | What they take from this chapter |
+|---|---|---|
+| Spatial planners (Bappeda, ATR/BPN) | Where will the city spread if nothing changes? | A 2030 and 2035 built-up forecast to hold against the spatial plan (RTRW) |
+| Water and environment agencies | Which recharge areas and green land are under pressure? | The tree and crop land expected to be built on |
+| Developers and utilities | Where will demand for roads, water and power appear? | The cells most likely to urbanise, ranked |
+| Researchers | Is the model better than doing nothing? | A hindcast, a Figure of Merit and a null model |
+
+## Why not a Markov chain?
+
+The classic recipe, CA-Markov, does two separate things. A **Markov chain** counts how often each class turned into each other class between two maps and assumes the same rates will hold; a **cellular automaton** then decides where those changes land, using suitability maps and neighbourhood rules. Earth Engine has no CA-Markov tool, and the method has a weakness anyway: the suitability maps are drawn by hand.
+
+A random forest can learn the "where" directly from the data. Show it every pixel as it was in 2017 (its class, what surrounds it, its slope, its distance to the city centre, how many people live there) together with what the pixel became in 2022, and it learns which pixels tend to change, and into what. The "how much" still has to come from somewhere, and that turns out to be the important decision of this chapter.
+
+## The data
+
+| Layer | Dataset | Use |
+|---|---|---|
+| Land cover, every year | Dynamic World V1, annual most frequent label | Labels for 2017, 2020, 2022 and 2025, grouped into 6 classes |
+| Terrain | Copernicus DEM GLO-30 | Elevation and slope |
+| Population | GHSL P2023A, 2020 | People per cell (log) |
+| Independent check | GHSL P2023A built-up surface, 2025 and 2030 | Another model's forecast to compare with |
+
+The six classes are water, trees, grass and shrub (with Dynamic World's flooded vegetation), crops, built and bare. The model works on 60 m cells: fine enough for a district forecast, coarse enough to run the two steps to 2035 inside Earth Engine's limits.
+
+{{< include _snippets/ch76_future_landcover.qmd >}}
+
+## Bandung Raya today
+
+{{< include _snippets/ch76_future_landcover__ch76-lc-2025.qmd >}}
+
+The basin floor is built up from Bandung outwards to Cimahi, Soreang and Rancaekek; tree cover holds the volcanic slopes to the north and south; crops and rice fields survive mainly in the south-east of the basin, around Ciparay and Majalaya. The lake in the west is the Saguling reservoir.
+
+## Features: what a pixel is, what surrounds it, where it sits
+
+For every 60 m cell the model sees seventeen numbers:
+
+- **What it is:** six yes/no bands, one per class.
+- **What surrounds it:** the share of built land within 500 m and within 1.5 km, and the share of crops and of trees within 500 m. Cities grow at their edges; a cell surrounded by buildings is a likely candidate.
+- **How far from the city:** distance to the nearest built cell and to the Alun-alun, Bandung's centre.
+- **Where it sits:** elevation, slope and population.
+
+These features are computed from a class map, not from imagery. That is what lets the model run forward: the 2030 prediction becomes the input for 2035, with its neighbourhoods recomputed from the predicted map, so growth can feed further growth.
+
+## Training: 2017 features, the class five years later
+
+Change is rare. If you sample pixels at random, most of them did not change, and the forest learns that nothing ever changes. So half of the 8,000 training points come from pixels whose class did change between 2017 and 2022, and half from pixels that did not. The forest is asked for a probability for each class, not just a single answer.
+
+{{< include _snippets/ch76_future_landcover__ch76-importance.qmd >}}
+
+Terrain and distance to the centre lead, followed by how much built land lies within 1.5 km. That matches what anyone who has watched Bandung grow would say: the city fills the flat land closest to it first.
+
+## The test before the forecast
+
+A forecast of 2030 cannot be checked until 2030. A forecast of 2025 made with only what was known in 2020 can be checked today. This **hindcast** is the most important table in the chapter.
+
+{{< include _snippets/ch76_future_landcover__ch76-hindcast.qmd >}}
+
+Three forecasts of 2025 are compared:
+
+1. **No change.** Use the 2020 map as the 2025 forecast. It sounds lazy, and it agrees with the observed 2025 map on 88 % of the area, because most land does not change in five years. Any model has to be judged against it.
+2. **Every class may change.** Take the share of the area that changed between 2017 and 2022 (17 %), and change that share of 2020 pixels, wherever the forest gives the highest probability of change, into the class it finds most likely. Its agreement drops to 83 %: worse than doing nothing.
+3. **Built growth: trend times random forest.** Take the trend in built land from the 2017-2020 maps, a little over 1,500 ha a year, and turn that much land into built land where the forest gives the highest probability of becoming built. Agreement 85 %.
+
+The **Figure of Merit** asks a sharper question: of everything that changed or was predicted to change, what share did the model get right? No change scores 0, because it never predicts change. The other two catch part of the real change.
+
+::: {.callout-warning}
+## Common failure: spending label noise as land change
+Forecast 2 looks like the more ambitious model and its Figure of Merit is higher, so why reject it? Run it forward and it predicts that Bandung Raya loses two thirds of its cropland by 2030. That does not happen in five years. Dynamic World's annual labels flicker: the same field is "crops" one year and "grass" or "trees" the next as harvests, fallow and cloud change the picture. Seventeen per cent of the area "changed" between 2017 and 2022, and most of that is not change at all. A model told to reproduce that much change spends the noise as if it were real, and it spends it on the classes that flicker most. The fix is to project only what has a clear, steady trend.
+:::
+
+## The forecast: 2030 and 2035
+
+The built-up trend over the full 2017-2025 record is about 1,000 ha a year. The forecast turns 5,000 ha into built land for 2030, starting from the observed 2025 map, then another 5,000 ha for 2035, starting from the predicted 2030 map. The tables below show a little more, about 5,500 ha a step: the cut-off is applied to whole 60 m cells, and areas are summed on a coarser grid. Treat the extra few hundred hectares as rounding, not as a finding.
+
+::: {.panel-tabset}
+## 2030
+{{< include _snippets/ch76_future_landcover__ch76-lc-2030.qmd >}}
+
+## 2035
+{{< include _snippets/ch76_future_landcover__ch76-lc-2035.qmd >}}
+
+## New built land
+{{< include _snippets/ch76_future_landcover__ch76-new-built.qmd >}}
+:::
+
+{{< include _snippets/ch76_future_landcover__ch76-area.qmd >}}
+
+{{< include _snippets/ch76_future_landcover__ch76-area-table.qmd >}}
+
+Built land grows from about 66,400 ha in 2025 to 72,100 ha in 2030 and 77,400 ha in 2035. Most of it comes out of land Dynamic World calls trees: around Bandung that is largely village gardens, mixed tree crops and the wooded edges of settlements, not closed forest. Cropland loses a further 2,400 ha. The growth is not one advancing front. It is thin infill along almost every settlement edge, because the model leans on built land within 1.5 km. It is most visible in three places: the northern slopes above the city towards Lembang, the southern fringe around Soreang and Banjaran, and the east towards Rancaekek and Cicalengka. The first deserves a planner's attention: the northern slopes are Kawasan Bandung Utara, a groundwater recharge area where the provincial government restricts new building. A trend model does not know about that rule, which is exactly why its map should be read next to the spatial plan.
+
+## A second opinion: GHSL's own projection
+
+{{< include _snippets/ch76_future_landcover__ch76-ghsl-check.qmd >}}
+
+The Global Human Settlement Layer also projects built-up surface to 2030, and it disagrees: almost no growth. Two things explain most of the gap. The two products define "built" differently: a GHSL cell counts here only if a fifth of it is covered by buildings, while Dynamic World labels a 10 m pixel built when it looks built, villages included, so the starting areas already differ by a third. And GHSL's 2030 layer is itself a model, extrapolated from older epochs with damped growth. Neither is the truth. Showing both, and saying why they differ, is more honest than presenting one number.
+
+::: {.callout-important}
+## Scientific integrity: a forecast is a scenario
+This forecast reads "if the next ten years behave like 2017-2025". A new toll road (the Cisumdawu toll road opened in 2023), a high-speed rail station (Tegalluar), a spatial-plan change or a recession changes the drivers, and no trend model can know. Present the 2030 and 2035 maps as one scenario, next to the spatial plan, with the hindcast table beside them so readers can see how well the method did when it could be checked.
+:::
+
+## Exercises {.unnumbered}
+
+1. Add distance to the Cisumdawu toll road and to the Tegalluar station (OpenStreetMap) as features. Does the hindcast improve, and where does the 2030 forecast move?
+2. Replace the straight-line trend with the GHSL growth rate. How different is the 2035 map, and which would you defend to a planner?
+3. Use three-year label modes (for example 2016-2018 for "2017") to calm Dynamic World's flicker, and rerun forecast 2. Does the trap shrink?
+4. Overlay the 2035 new built land on the flood-prone low ground of Chapter [-@sec-flood] (HAND below 5 m). How many hectares of predicted growth sit there?
+5. Repeat the chapter for Jabodetabek's fringe (Chapter [-@sec-urban-growth]) and compare the trend in hectares per year.

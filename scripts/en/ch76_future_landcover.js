@@ -6,15 +6,17 @@
  * ---------------------------------------------------------------------------
  * Classic land-change models (Markov chains, CA-Markov) count how often each
  * class turned into each other class and spread that rate over a suitability
- * map. Here a random forest learns where and into what, pixel by pixel; the
- * past rate of change sets how much.
+ * map. Here a random forest learns where change happens, pixel by pixel; the
+ * trend sets how much. Only built land is projected: it is the change with a
+ * clear, steady trend. Letting every class change spends Dynamic World's
+ * year-to-year label flicker as real change (STEP 5 shows the trap).
  *   labels    Dynamic World V1, annual mode, 6 classes: water, trees, grass and
  *             shrub, crops, built, bare
  *   features  at year t: the pixel's class, the share of built, crops and trees
  *             within 500 m and 1.5 km, distance to built land, slope, elevation,
  *             distance to the city centre, population (GHSL 2020)
  *   train     features in 2017 -> class in 2022
- *   how much  the share of the area that changed in the last observed five years
+ *   how much  hectares of new built land per year, a straight line through 2017-2025
  *   test      2020 -> predicted 2025, against the observed 2025 map and against
  *             "nothing changes"
  *   forecast  2025 -> 2030, then the predicted 2030 -> 2035
@@ -70,17 +72,39 @@ var model = ee.Classifier.smileRandomForest({numberOfTrees: 200, minLeafPopulati
   .setOutputMode('MULTIPROBABILITY').train(train, 'next', BANDS);
 
 // ---------------------------------------------------------------------------
-// STEP 4. Predict: where and into what from the model, how much from the past
+// STEP 4. Predict: where from the model, how much from the trend
 // ---------------------------------------------------------------------------
-function changeRate(a, b) {
-  return ee.Number(a.neq(b).reduceRegion({reducer: ee.Reducer.mean(), geometry: AOI, scale: 120, maxPixels: 1e10, tileScale: 8}).values().get(0));
+function probabilities(lc) {
+  return features(lc).classify(model).arrayFlatten([NAMES.map(function (n, k) { return 'p' + k; })]);
 }
-function predict(lcNow, rate) {
+function builtHa(img) {
+  return ee.Number(ee.Image.pixelArea().divide(1e4).updateMask(ee.Image(img).eq(4))
+    .reduceRegion({reducer: ee.Reducer.sum(), geometry: AOI, scale: 120, maxPixels: 1e10, tileScale: 8}).values().get(0));
+}
+function builtTrend(first, last) {        // ha of new built land per year, a straight line through the annual maps
+  var fc = ee.FeatureCollection(ee.List.sequence(first, last).map(function (y) {
+    return ee.Feature(null, {x: y, y: builtHa(landcover(y))});
+  }));
+  return ee.Number(ee.Dictionary(fc.reduceColumns(ee.Reducer.linearFit(), ['x', 'y'])).get('scale'));
+}
+// Turn newHa hectares of non-built land (not water) into built land where P(built) is highest.
+function predict(lcNow, newHa) {
   lcNow = ee.Image(lcNow);
-  var probs = features(lcNow).classify(model).arrayFlatten([NAMES.map(function (n, k) { return 'p' + k; })]);
+  var pBuilt = probabilities(lcNow).select('p4').updateMask(lcNow.neq(4).and(lcNow.neq(0)));
+  var nFree = pBuilt.reduceRegion({reducer: ee.Reducer.count(), geometry: AOI, scale: SCALE, maxPixels: 1e10, tileScale: 8}).values().get(0);
+  var share = ee.Number(newHa).divide(SCALE * SCALE / 1e4).divide(nFree);
+  var cut = pBuilt.reduceRegion({reducer: ee.Reducer.percentile([ee.Number(1).subtract(share).multiply(100).max(0)]),
+                                 geometry: AOI, scale: SCALE, maxPixels: 1e10, tileScale: 8}).values().get(0);
+  return lcNow.where(pBuilt.gt(ee.Number(cut)), 4).rename('lc').toInt();
+}
+// The trap, for comparison: let every class change, as much as the label maps changed.
+function predictAll(lcNow) {
+  lcNow = ee.Image(lcNow);
+  var rate = ee.Number(lc17.neq(lc22).reduceRegion({reducer: ee.Reducer.mean(), geometry: AOI, scale: 120, maxPixels: 1e10, tileScale: 8}).values().get(0));
+  var probs = probabilities(lcNow);
   var onehot = ee.Image.cat(NAMES.map(function (n, k) { return lcNow.eq(k); }));
   var pChange = ee.Image(1).subtract(probs.multiply(onehot).reduce('sum'));
-  var other = probs.multiply(ee.Image(1).subtract(onehot)).toArray().arrayArgmax().arrayGet([0]);   // most likely new class
+  var other = probs.multiply(ee.Image(1).subtract(onehot)).toArray().arrayArgmax().arrayGet([0]);
   var cut = pChange.reduceRegion({reducer: ee.Reducer.percentile([ee.Number(1).subtract(rate).multiply(100)]),
                                   geometry: AOI, scale: 120, maxPixels: 1e10, tileScale: 8}).values().get(0);
   return lcNow.where(pChange.gt(ee.Number(cut)), other).rename('lc').toInt();
@@ -89,7 +113,7 @@ function predict(lcNow, rate) {
 // ---------------------------------------------------------------------------
 // STEP 5. The test before the forecast: 2025 from 2020
 // ---------------------------------------------------------------------------
-var pred25 = predict(lc20, changeRate(lc17, lc22));          // only what was known in 2022
+var pred25 = predict(lc20, builtTrend(2017, 2020).multiply(5));   // only what was known in 2020
 var obsChange = lc20.neq(lc25);
 function score(name, p) {
   var predChange = lc20.neq(p);
@@ -100,15 +124,17 @@ function score(name, p) {
   var denom = ee.Number(s.get('hits')).add(s.get('wrong')).add(s.get('misses')).add(s.get('false_alarms'));
   print(name, s.set('figure_of_merit', ee.Number(s.get('hits')).divide(denom.max(1e-9))));
 }
-score('Random forest, 2020 -> 2025', pred25);
+score('Built growth: trend x random forest, 2020 -> 2025', pred25);
+score('Every class may change (the trap)', predictAll(lc20));
 score('No change (the 2020 map as the 2025 forecast)', lc20);
 
 // ---------------------------------------------------------------------------
 // STEP 6. The forecast: 2030, and 2035 from the predicted 2030
 // ---------------------------------------------------------------------------
-var rate = changeRate(lc20, lc25);                            // the latest observed five years
-var pred30 = predict(lc25, rate);
-var pred35 = predict(pred30, rate);
+var trend = builtTrend(2017, 2025);
+print('New built land per year, 2017-2025 trend (ha)', trend);
+var pred30 = predict(lc25, trend.multiply(5));
+var pred35 = predict(pred30, trend.multiply(5));
 var area = ee.Image.pixelArea().divide(1e4);
 [[2017, lc17], [2020, lc20], [2025, lc25], [2030, pred30], [2035, pred35]].forEach(function (p) {
   print('Hectares per class ' + p[0] + (p[0] > 2025 ? ' (predicted)' : '') + ': 0 water, 1 trees, 2 grass/shrub, 3 crops, 4 built, 5 bare',
